@@ -1,8 +1,8 @@
-<h1>{{Dialog}}</h1>
+<h1>{{title}}</h1>
 <ul class="messages">
     <li *ngFor="let message of messages">
         <div>
-            <span>{{message.out ? "You" : message.user_id}}</span>
+            <span>{{message.out ? user.user_name : message.user_id}}</span>
             <span>{{message.user_id.date}}</span>
         </div>
         <div>
