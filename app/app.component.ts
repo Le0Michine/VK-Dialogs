@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Dialog } from './dialog'
+
+import { messagesFromNick, messagesFromSofy } from './mock-messages'
 
 @Component({
   selector: 'my-app',
@@ -7,9 +10,8 @@ import { Component } from '@angular/core';
 export class AppComponent { 
     title = "Dialogs";
 
-    dialogName = "Nick";
-    previewMessageAuthor = "You";
-    previewMessageText = "Hi where";
-    previewMessageTime = "9.15am";
-    isPreviewMessageRead = false;
+    dialogs: Dialog[] = [
+        {unread: 1, messages: messagesFromNick},
+        {unread: 2, messages: messagesFromSofy}
+    ]
 }

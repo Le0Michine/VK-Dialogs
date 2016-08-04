@@ -1,7 +1,15 @@
 <h1>{{title}}</h1>
-<div>
-    <label class="dialogName">{{dialogName}} </label><label class="messageTime"> {{previewMessageTime}} </label>
-</div>
-<div>
-    <label class=messageAuthor>{{previewMessageAuthor}} </label><label class="messageText"> {{previewMessageText}} </label><label class=messageStatus> {{isPreviewMessageRead}}</label>
-</div>
+<ul class="dialogs">
+    <li *ngFor="let dialog of dialogs">
+        <div>
+            <span>{{dialog.messages[0].title === '...' ? dialog.messages[0].user_id : dialog.messages[0].title}}</span>
+            <span>{{dialog.messages[0].date}}</span>
+        </div>
+        <div>
+            <span>{{dialog.messages[0].out ? "You: " : dialog.messages[0].user_id + ": "}}</span>
+            <span>{{dialog.messages[0].body}}</span>
+            <span>{{dialog.unread > 0 ? dialog.unread : ""}}</span>
+        </div>
+        <span class="messageAuthor"> </span>
+    </li>
+<ul>
