@@ -1,0 +1,14 @@
+<h1>{{title}}</h1>
+<ul class="dialogs">
+    <li *ngFor="let dialog of dialogs" (click)="gotoDialog(dialog)" class="col-1-4">
+        <div>
+            <span>{{dialog.messages[0].title === '...' ? dialog.messages[0].user_id : dialog.messages[0].title}}</span>
+            <span>{{dialog.messages[0].date}}</span>
+        </div>
+        <div>
+            <span>{{dialog.messages[0].out ? "You: " : dialog.messages[0].user_id + ": "}}</span>
+            <span>{{dialog.messages[0].body}}</span>
+            <span>{{dialog.unread > 0 ? dialog.unread : ""}}</span>
+        </div>
+    </li>
+<ul>

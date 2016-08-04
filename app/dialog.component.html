@@ -2,11 +2,12 @@
 <ul class="messages">
     <li *ngFor="let message of messages">
         <div>
-            <span>{{message.user_id}}</span>
+            <span>{{message.out ? "You" : message.user_id}}</span>
             <span>{{message.user_id.date}}</span>
         </div>
         <div>
             <span>{{message.body}}</span>
         </div>
     </li>
+    <button (click)="goBack()">Back</button>
 <ul>
