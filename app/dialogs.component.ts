@@ -12,6 +12,7 @@ import { messagesFromNick, messagesFromSofy } from './mock-messages'
 @Component({
   selector: 'dialogs',
   templateUrl: 'app/dialogs.component.html',
+  styleUrls: ['app/dialogs.component.css'],
   directives: [DialogComponent]
 })
 export class DialogsComponent implements OnInit { 
