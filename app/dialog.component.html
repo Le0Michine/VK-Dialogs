@@ -1,13 +1,40 @@
 <h1>{{title}}</h1>
-<ul class="messages">
-    <li *ngFor="let message of messages">
-        <div>
-            <span>{{message.out ? user.user_name : message.user_id}}</span>
-            <span>{{message.user_id.date}}</span>
-        </div>
-        <div>
-            <span>{{message.body}}</span>
-        </div>
-    </li>
-    <button (click)="goBack()">Back</button>
-<ul>
+	<div id="message_main_block">
+		<div id="message_block_table">
+			<div id="message_block_table_row">
+				<div id="message_block_table_cell">
+					<div id="chat_body">
+						<div id="message_block" *ngFor="let message of messages">
+							<div id="user_avatar">
+								<div id="user_avatar_1">
+									<div id="user_avatar_2">
+										<div id="user_avatar_3">
+											 <img alt="" src="https://pp.vk.me/c633322/v633322814/2bbb3/SsIXFCGkFCA.jpg" id="user_avatar_img" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="message">
+								<div id="user_name_and_date">
+									<div id="user_name_and_date_1">
+										 <a id="user_name">{{message.out ? user.user_name : message.user_id}}</a>
+                                         <span id="message_timestamp"> {{message.date}}</span>
+									</div>
+								</div>
+								<ul id="messages_list">
+									<li id="message_item">
+										<div id="message_body">
+											<div id="message_body_internal">
+												{{message.body}}
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<button (click)="goBack()">Back</button>

@@ -11,7 +11,7 @@ import { messagesFromNick, messagesFromSofy } from './mock-messages'
 @Component({
   selector: 'messges',
   templateUrl: 'app/dialog.component.html',
-  styleUrls: ['app/dialogs.component.css']
+  styleUrls: ['app/dialog.component.css']
 })
 export class DialogComponent { 
     title = "Dialog";

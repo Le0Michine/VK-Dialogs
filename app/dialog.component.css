@@ -1,0 +1,242 @@
+#message_block_main {
+    bottom: 0px;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    top: 0px;
+    width: 550px;
+    perspective-origin: 275px 309.5px;
+    transform-origin: 275px 309.5px;
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}/*#message_block_main*/
+
+#message_block_table {
+    box-shadow: rgb(215, 216, 219) 0px 1px 0px 0px, rgb(227, 228, 232) 0px 0px 0px 1px;
+    display: table;
+    perspective-origin: 275px 884.5px;
+    transform-origin: 275px 884.5px;
+}/*#message_block_table*/
+
+#message_block_table_row {
+    display: table-row;
+}/*#message_block_table_row*/
+
+#message_block_table_cell {
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: bottom;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
+    overflow: hidden;
+    padding: 61px 0px 139px;
+}/*#message_block_table_cell*/
+
+#chat_body {
+    perspective-origin: 275px 765.5px;
+    transform-origin: 275px 765.5px;
+}/*#chat_body*/
+
+#message_block {
+    height: 70px;
+    left: 0px;
+    max-width: 550px;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    width: 550px;
+    perspective-origin: 275px 35px;
+    transform-origin: 275px 35px;
+}/*#message_block*/
+
+#user_avatar {
+    bottom: 24px;
+    height: 36px;
+    left: 36px;
+    position: absolute;
+    right: 478px;
+    top: 10px;
+    width: 36px;
+    z-index: 2;
+    perspective-origin: 18px 18px;
+    transform-origin: 18px 18px;
+}/*#user_avatar*/
+
+#user_avatar_1 {
+    bottom: 0px;
+    float: left;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    top: 0px;
+}/*#user_avatar_1*/
+
+#user_avatar_2 {
+    border-radius: 50% 50% 50% 50%;
+    overflow: hidden;
+}/*#user_avatar_2*/
+
+#user_avatar_3 {
+    height: 37px;
+    width: 38px;
+    perspective-origin: 19px 18.5px;
+    transform-origin: 19px 18.5px;
+    margin: 0px 0px -1px -2px;
+}/*#user_avatar_3*/
+
+#user_avatar_img {
+    color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    display: block;
+    height: 36px;
+    width: 36px;
+    column-rule-color: rgba(0, 0, 0, 0);
+    perspective-origin: 18px 18px;
+    transform-origin: 18px 18px;
+    border: 0px none rgba(0, 0, 0, 0);
+    border-radius: 50% 50% 50% 50%;
+    margin: 0px 0px 1px 2px;
+    outline: rgba(0, 0, 0, 0) none 0px;
+}/*#user_avatar_img*/
+
+#user_avatar_img:after {
+    color: rgba(0, 0, 0, 0);
+    content: '"' '"';
+    cursor: pointer;
+    display: block;
+    height: 36px;
+    left: 0px;
+    position: absolute;
+    top: 0px;
+    width: 36px;
+    column-rule-color: rgba(0, 0, 0, 0);
+    perspective-origin: 18px 18px;
+    transform-origin: 18px 18px;
+    background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
+    border: 0px none rgba(0, 0, 0, 0);
+    border-radius: 50% 50% 50% 50%;
+    outline: rgba(0, 0, 0, 0) none 0px;
+}/*#user_avatar_img:after*/
+
+#user_avatar_img:before {
+    color: rgba(0, 0, 0, 0);
+    content: '"' '"';
+    cursor: pointer;
+    display: block;
+    height: 36px;
+    left: 0px;
+    position: absolute;
+    top: 0px;
+    width: 36px;
+    column-rule-color: rgba(0, 0, 0, 0);
+    perspective-origin: 18px 18px;
+    transform-origin: 18px 18px;
+    border: 0px none rgba(0, 0, 0, 0);
+    outline: rgba(0, 0, 0, 0) none 0px;
+}/*#user_avatar_img:before*/
+
+#message {
+    height: 70px;
+    width: 550px;
+    perspective-origin: 275px 35px;
+    transform-origin: 275px 35px;
+    
+}/*#message*/
+
+#user_name_and_date {
+    width: 550px;
+    perspective-origin: 275px 0px;
+    transform-origin: 275px 0px;
+    
+}/*#user_name_and_date*/
+
+#user_name_and_date_1 {
+    bottom: 43px;
+    color: rgb(147, 147, 147);
+    height: 16px;
+    left: 82px;
+    position: absolute;
+    top: 11px;
+    z-index: 2;
+    column-rule-color: rgb(147, 147, 147);
+    perspective-origin: 38.4844px 8px;
+    transform-origin: 38.4844px 8px;
+    border: 0px none rgb(147, 147, 147);
+    font: normal normal normal normal 12.5px / 14.425px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(147, 147, 147) none 0px;
+}/*#user_name_and_date_1*/
+
+#user_name {
+    color: rgb(66, 100, 139);
+    cursor: pointer;
+    display: inline-block;
+    height: 15px;
+    max-width: 200px;
+    text-align: left;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+    column-rule-color: rgb(66, 100, 139);
+    perspective-origin: 9.875px 7.5px;
+    transform-origin: 9.875px 7.5px;
+    border: 0px none rgb(66, 100, 139);
+    font: normal normal bold normal 12.5px / 15.375px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(66, 100, 139) none 0px;
+    overflow: hidden;
+}/*#user_name*/
+
+#message_timestamp {
+    color: rgba(148, 148, 148, 0.6);
+    column-rule-color: rgba(148, 148, 148, 0.6);
+    border: 0px none rgba(148, 148, 148, 0.6);
+    font: normal normal normal normal 12px / 16.8px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0px 0px 0px 4px;
+    outline: rgba(148, 148, 148, 0.6) none 0px;
+    overflow: hidden;
+    white-space: nowrap;
+}/*#message_timestamp*/
+
+#messages_list {
+    height: 70px;
+    width: 550px;
+    perspective-origin: 275px 35px;
+    transform-origin: 275px 35px;
+    list-style: none outside none;
+    margin: 0px;
+    padding: 0px;
+}/*#messages_list*/
+
+#message_item {
+    bottom: 0px;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 70px;
+    left: 0px;
+    max-width: 542px;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    width: 542px;
+    perspective-origin: 271px 35px;
+    transform-origin: 271px 35px;
+    list-style: none outside none;
+    margin: 0px 4px 4px;
+    padding: 6px 57px 7px 0px;
+}/*#message_item*/
+
+#message_body {
+    height: 36px;
+    overflow-wrap: break-word;
+    width: 387px;
+    word-wrap: break-word;
+    perspective-origin: 193.5px 28.5px;
+    transform-origin: 193.5px 28.5px;
+    font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0px 20px 0px 78px;
+    padding: 21px 0px 0px;
+}/*#message_body*/
+
+#message_body_internal {
+    perspective-origin: 193.5px 18px;
+    transform-origin: 193.5px 18px;
+}/*#message_body_internal*/
