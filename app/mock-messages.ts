@@ -1,7 +1,7 @@
 import { Message } from './message'
 
 export const messagesFromNick: Message[] = [
-    {id: 1, title: "...", body: "Hi", out: true, user_id: 123, date: "8.02pm", read_state: true },
+    {id: 1, title: "...", body: "Hi sda;lkfjklsaj;fjlk oewf hjfhdlajfhuaih fdsh jfhsakl hfjshd ewiu hahfd ljksfd hsdf halsh f", out: true, user_id: 123, date: "8.02pm", read_state: true },
     {id: 1, title: "...", body: "The first message", out: false, user_id: 123, date: "9.02pm", read_state: true },
     {id: 2, title: "...", body: "The second message", out: true, user_id: 123, date: "9.03pm", read_state: true },
     {id: 3, title: "...", body: "The third message", out: false, user_id: 123, date: "9.20pm", read_state: false },
