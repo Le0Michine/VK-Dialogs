@@ -6,6 +6,7 @@ import { User } from './user'
 import { DialogComponent } from './dialog.component'
 import { MessagesService } from './messages-service'
 import { UserService } from './user-service'
+import { VKService } from './vk-service'
 
 import { messagesFromNick, messagesFromSofy } from './mock-messages'
 
@@ -24,7 +25,9 @@ export class DialogsComponent implements OnInit {
         {unread: 2, messages: messagesFromSofy}
     ]
 
-    constructor(private userService: UserService, private router: Router) { }
+    constructor(private userService: UserService, private router: Router, private vkservice: VKService) {
+        this.vkservice.auth();
+    }
 
     gotoDialog(dialog: Dialog) {
         let link: string[];
@@ -38,6 +41,14 @@ export class DialogsComponent implements OnInit {
     }
 
     ngOnInit() {
-      this.userService.getUser(1).then(u => this.user = u);
+        this.userService.getUser(1).subscribe(
+            u => this.user = u, 
+            error => this.errorHandler(error), 
+            () => console.log('user data obtained'));
+    }
+
+    errorHandler(error) {
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
     }
 }
