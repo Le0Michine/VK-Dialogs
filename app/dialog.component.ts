@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Dialog } from './dialog'
 import { Message } from './message'
 import { User } from './user'
 import { MessagesService } from './messages-service'
@@ -26,7 +25,7 @@ export class DialogComponent {
       private route: ActivatedRoute) { }
 
     ngOnInit() {
-      this.userService.getUser(1).subscribe(
+      this.userService.getUser().subscribe(
             u => this.user = u, 
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));

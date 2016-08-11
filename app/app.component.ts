@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Router } from '@angular/router';
-import { Dialog } from './dialog'
-import { Chat } from './dialog'
+import { Message } from './message'
+import { Chat } from './message'
 import { DialogComponent } from './dialog.component'
 import { DialogsComponent } from './dialogs.component'
 import { MessagesService } from './messages-service'
+import { DialogService } from './dialogs-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
 import { VKConsts } from './vk-consts'
@@ -18,7 +19,7 @@ import { messagesFromNick, messagesFromSofy } from './mock-messages'
   selector: 'my-app',
   templateUrl: 'app/app.component.html',
   directives: [ROUTER_DIRECTIVES],
-  providers: [HTTP_PROVIDERS, MessagesService, UserService, VKService],
+  providers: [HTTP_PROVIDERS, MessagesService, UserService, VKService, DialogService],
   precompile: [DialogsComponent, DialogComponent]
 })
 export class AppComponent { 

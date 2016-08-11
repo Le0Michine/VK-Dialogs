@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Dialog } from './dialog'
-import { Chat } from './dialog'
+import { Message } from './message'
+import { Chat } from './message'
 import { User } from './user'
 import { DialogComponent } from './dialog.component'
 import { MessagesService } from './messages-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
+import { DialogService } from './dialogs-service'
+import { DateConverter } from './date-converter'
 
 import { messagesFromNick, messagesFromSofy } from './mock-messages'
 
@@ -20,31 +22,37 @@ export class DialogsComponent implements OnInit {
     title = "Dialogs";
     user: User = new User();
 
-    dialogs: Dialog[] = [
-        {unread: 1, messages: messagesFromNick},
-        {unread: 2, messages: messagesFromSofy}
-    ]
+    dialogs: Message[];
 
-    constructor(private userService: UserService, private router: Router, private vkservice: VKService) {
-        this.vkservice.auth();
-    }
+    constructor(private userService: UserService,
+        private router: Router, 
+        private vkservice: VKService, 
+        private dialogsService: DialogService) { }
 
-    gotoDialog(dialog: Dialog) {
+    gotoDialog(dialog: Message) {
         let link: string[];
         if (dialog instanceof Chat) {
             link = ["/dialog", (dialog as Chat).chat_id.toString(), "chat"];
         }
         else {
-            link = ["/dialog", dialog.messages[0].user_id.toString(), "dialog"];
+            link = ["/dialog", dialog.user_id.toString(), "dialog"];
         }
         this.router.navigate(link);
     }
 
     ngOnInit() {
-        this.userService.getUser(1).subscribe(
+        this.userService.getUser().subscribe(
             u => this.user = u, 
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
+        this.dialogsService.getDialogs().subscribe(
+            dialogs => this.dialogs = dialogs as Message[],
+            error => this.errorHandler(error),
+            () => console.log('dialogs loaded'));
+    }
+
+    convertDate(unixtime: number) {
+        return DateConverter.convertDateTime(unixtime);
     }
 
     errorHandler(error) {

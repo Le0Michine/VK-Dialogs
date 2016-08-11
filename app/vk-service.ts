@@ -10,14 +10,17 @@ import { SessionInfo } from './session-info';
 export class VKService {
     private session_info: SessionInfo;
 
-    constructor(private http: Http) { }
-
     private handleError(error: any) {
         console.error('An error occurred', error);
         return Promise.reject(error.message || error);
     }
 
+    constructor() {
+        this.initializeSeesion();
+    }
+
     auth(force: boolean = false) {
+        console.log('authorization requested');
         this.initializeSeesion();
         if (!this.isSessionValid()) {
             chrome.extension.sendRequest({auth: force ? 'explicit' : 'implicit'}, function(response) {
@@ -50,7 +53,7 @@ export class VKService {
 
     getSession(): SessionInfo {
         if (!this.isSessionValid()) {
-            this.auth(force);  
+            this.auth(true);  
         }
         return this.session_info;
     }
