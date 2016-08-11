@@ -11,7 +11,7 @@ export class Message {
 
     // Date (in Unix time) when the message was sent. 
     // positive number
-    date: number
+    date: string
 
     // Message status (0 — not read, 1 — read). (Not returned for forwarded messages.) 
     // flag, either 1 or 0
@@ -30,18 +30,18 @@ export class Message {
     body: string;
 
     // Array of media-attachments; see Description of "attachments" field. (https://new.vk.com/dev/attachments_m)
-    attachments: any;
+    //attachments: any;
 
     // Array of forwarded messages (if any).
-    fwd_messages: any;
+    //fwd_messages: any;
 
     // Whether the message contains smiles (0 — no, 1 — yes).
     // flag, either 1 or 0
-    emoji: boolean;
+    //emoji: boolean;
 
     // Whether the message is deleted (0 — no, 1 — yes). 
     // flag, either 1 or 0
-    deleted: boolean;
+    //deleted: boolean;
 }
 
 export class Chat extends Message {
