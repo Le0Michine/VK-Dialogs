@@ -20,22 +20,9 @@ export class VKService {
     auth(force: boolean = false) {
         this.initializeSeesion();
         if (!this.isSessionValid()) {
-            let authUrl: string = VKConsts.auth_url 
-                + "client_id=" + VKConsts.client_id
-                + "&scope=" + VKConsts.scope
-                + "&redirect_uri=" + VKConsts.redirect_uri
-                + "&display=" + VKConsts.display
-                + "&response_type=" + VKConsts.response_type
-                + "&v=" + VKConsts.api_version;
-            chrome.tabs.create({
-                url: authUrl,
-                selected: false
-                },
-                function(tab) {
-                    //VKConsts.tab_id = tab.id;
-                    //window.localStorage.setItem(VKConsts.tab_id.toString(), tab.id.toString());
-                }
-            )
+            chrome.extension.sendRequest({auth: force ? 'explicit' : 'implicit'}, function(response) {
+                console.log('implicit authorization');
+            });
         }
         else {
             console.log('already authorised');
@@ -55,22 +42,15 @@ export class VKService {
             this.session_info 
             && this.session_info.access_token 
             && this.session_info.timestamp
-            //&& this.session_info.token_exp
+            && this.session_info.token_exp
             && this.session_info.user_id
-            //&& (Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
+            && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
         );
     }
 
     getSession(): SessionInfo {
         if (!this.isSessionValid()) {
-            this.auth();
-            chrome.extension.onRequest.addListener(
-                function(request, sender, sendResponse) {
-                    if (request.authorised) {
-                        this.initialize_seesion();
-                    }
-                }
-            );   
+            this.auth(force);  
         }
         return this.session_info;
     }

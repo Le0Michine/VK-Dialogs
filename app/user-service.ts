@@ -11,7 +11,7 @@ import { SessionInfo } from './session-info';
 export class UserService {
     constructor(private vkservice: VKService, private http: Http) { }
 
-    getUser(id: number) {
+    getUser() {
         let session = this.vkservice.getSession();
         return this.http.get(VKConsts.api_url + 'users.get?user_ids=' + session.user_id)
                 .map(res => res.json())
