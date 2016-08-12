@@ -69,6 +69,20 @@ export class DialogsComponent implements OnInit {
         return DateConverter.convertDateTime(unixtime);
     }
 
+    getUserName(uid: number) {
+        if (this.users && this.users[uid]) {
+            return this.users[uid].first_name;
+        }
+        return 'undefined'; 
+    }
+
+    getUserPhoto(uid: number) {
+        if (this.users && this.users[uid].photo_50) {
+            return this.users[uid].photo_50;
+        }
+        return 'http://vk.com/images/camera_c.gif';
+    }
+
     errorHandler(error) {
         console.error('An error occurred', error);
         return Promise.reject(error.message || error);

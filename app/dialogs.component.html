@@ -5,7 +5,7 @@
         <div id="user_avatar_div">
 			<div><div><div>
 				<div id="user_avatar_inner_div">
-					<img alt="" [src]="dialog.message.out ? user.photo_50 : users[dialog.message.user_id].photo_50" width="50" height="50" id="user_avatar" />
+					<img alt="" [src]="dialog.message.out ? user.photo_50 : getUserPhoto(dialog.message.user_id)" width="50" height="50" id="user_avatar" />
 				</div>
 			</div></div></div>
 		</div>
@@ -17,14 +17,14 @@
 				<div id="dialog_title_div">
 					 <span id="dialog_title_span">
                         <span>
-                             {{dialog.message.title === ' ... ' ? dialog.message.user_id : dialog.message.title}}
+                             {{dialog.message.title === ' ... ' ? getUserName(dialog.message.user_id) : dialog.message.title}}
                         </span>
                     </span>
 				</div>
 				<div id="message_body">
 				    <span>
                         <span>
-                             {{(dialog.message.out ? user.first_name : dialog.message.user_id) + ': '}}
+                             {{(dialog.message.out ? user.first_name : getUserName(dialog.message.user_id)) + ': '}}
                         </span>
                         {{dialog.message.body}}
                     </span>

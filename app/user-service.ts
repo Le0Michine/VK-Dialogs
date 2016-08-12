@@ -42,7 +42,7 @@ export class UserService {
         let users = {};
         let users_json = result['response'];
         for (let user_json of users_json) {
-            users[user_json.uid] = user_json as User;
+            users[user_json.id] = user_json as User;
         }
         return users;
     }
