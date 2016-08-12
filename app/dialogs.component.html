@@ -5,10 +5,11 @@
         <div id="user_avatar_div">
 			<div><div><div>
 				<div id="user_avatar_inner_div">
-					<img alt="" [src]="dialog.message.out ? user.photo_50 : getUserPhoto(dialog.message.user_id)" width="50" height="50" id="user_avatar" />
+					<img alt="" [src]="dialog.message.chat_id ? 'http://vk.com/images/camera_c.gif' : dialog.message.out ? user.photo_50 : getUserPhoto(dialog.message.user_id)" width="50" height="50" id="user_avatar" />
 				</div>
 			</div></div></div>
 		</div>
+
 		<div id="dialog_div">
 			<div id="dialog_content_div">
 				<div id="last_message_date">
