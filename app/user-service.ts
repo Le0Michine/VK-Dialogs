@@ -12,7 +12,7 @@ import { SessionInfo } from './session-info';
 export class UserService {
     constructor(private vkservice: VKService, private http: Http) { }
 
-    getUser(uids: number[] = null): Observable<{}> {
+    getUsers(uids: number[]): Observable<{}> {
         let session = this.vkservice.getSession();
         let uri = VKConsts.api_url 
             + 'users.get?user_ids=' + (uids != null ? uids.join() : session.user_id) 
@@ -22,6 +22,19 @@ export class UserService {
         return this.http.get(uri)
                 .map(res => res.json())
                 .map(json => this.createUser(json));
+    }
+
+    getUser(uid: number = null): Observable<User> {
+        let session = this.vkservice.getSession();
+        let uri = VKConsts.api_url 
+            + 'users.get?user_ids=' + (uid != null ? uid : session.user_id) 
+            + '&fields=photo_50'
+            + '&access_token=' + session.access_token
+            + '&v=' + VKConsts.api_version;
+        return this.http.get(uri)
+                .map(res => res.json())
+                .map(json => this.createUser(json))
+                .map(dict => dict[Object.keys(dict)[0]] as User);
     }
 
     createUser(result: string): {} {

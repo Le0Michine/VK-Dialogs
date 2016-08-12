@@ -43,7 +43,7 @@ export class DialogsComponent implements OnInit {
 
     ngOnInit() {
         this.userService.getUser().subscribe(
-            u => this.user = u[Object.keys(u)[0]], 
+            u => this.user = u, 
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
 
@@ -58,7 +58,7 @@ export class DialogsComponent implements OnInit {
         for (let dialog of this.dialogs) {
             uids.push(dialog['message']['user_id']);
         }
-        this.userService.getUser(uids).subscribe(
+        this.userService.getUsers(uids).subscribe(
             users => this.users = users,
             error => this.errorHandler(error),
             () => console.log('users loaded')
