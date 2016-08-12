@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import { Observable }     from 'rxjs/Observable';
 
 import { User } from './user';
 import { VKService } from './vk-service';
@@ -11,20 +12,26 @@ import { SessionInfo } from './session-info';
 export class UserService {
     constructor(private vkservice: VKService, private http: Http) { }
 
-    getUser() {
+    getUser(uids: number[] = null): Observable<{}> {
         let session = this.vkservice.getSession();
-        return this.http.get(VKConsts.api_url + 'users.get?user_ids=' + session.user_id)
+        let uri = VKConsts.api_url 
+            + 'users.get?user_ids=' + (uids != null ? uids.join() : session.user_id) 
+            + '&fields=photo_50'
+            + '&access_token=' + session.access_token
+            + '&v=' + VKConsts.api_version;
+        return this.http.get(uri)
                 .map(res => res.json())
                 .map(json => this.createUser(json));
     }
 
-    createUser(result: string) {
+    createUser(result: string): {} {
         console.log('result: ' + result)
-        let user_string = result['response'][0];
-        let user = new User();
-        user.user_id = user_string['uid'];
-        user.user_name = user_string['first_name'];
-        return user;
+        let users = {};
+        let users_json = result['response'];
+        for (let user_json of users_json) {
+            users[user_json.uid] = user_json as User;
+        }
+        return users;
     }
 
     errorHandler(error) {
@@ -33,3 +40,4 @@ export class UserService {
     }
 }
 //54570222
+//https://pp.vk.me/c633322/v633322814/2bbb3/SsIXFCGkFCA.jpg

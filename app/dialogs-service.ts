@@ -20,6 +20,16 @@ export class DialogService {
         return this.http.get(uri).map(response => this.toDialogs(response.json()));
     }
 
+    /*getChatPhoto(ids: number[]): Observable<string[]> {
+        console.log('chat photo requested');
+        let uri: string = VKConsts.api_url + "messages.getChat" 
+            + "?access_token=" + this.vkservice.getSession().access_token
+            + "&chat_ids=" + ids.join()
+            + "&fields=photo_50"
+            + "&v=" + VKConsts.api_version;
+        return this.http.get(uri).map(resp => resp.json()).map(json => this.toChatPhoto(json));
+    }*/
+
     private toDialogs(json): Message[] {
         let count: number = Number(json['response']['count']);
         console.log('dialogs cout ' + count);

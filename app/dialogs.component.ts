@@ -21,6 +21,7 @@ import { messagesFromNick, messagesFromSofy } from './mock-messages'
 export class DialogsComponent implements OnInit { 
     title = "Dialogs";
     user: User = new User();
+    users: {};
 
     dialogs: Message[];
 
@@ -42,13 +43,26 @@ export class DialogsComponent implements OnInit {
 
     ngOnInit() {
         this.userService.getUser().subscribe(
-            u => this.user = u, 
+            u => this.user = u[Object.keys(u)[0]], 
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
+
         this.dialogsService.getDialogs().subscribe(
-            dialogs => this.dialogs = dialogs as Message[],
+            dialogs => { this.dialogs = dialogs as Message[]; this.initUsers(); },
             error => this.errorHandler(error),
             () => console.log('dialogs loaded'));
+    }
+
+    initUsers() {
+        let uids: number[] = [];
+        for (let dialog of this.dialogs) {
+            uids.push(dialog['message']['user_id']);
+        }
+        this.userService.getUser(uids).subscribe(
+            users => this.users = users,
+            error => this.errorHandler(error),
+            () => console.log('users loaded')
+        );
     }
 
     convertDate(unixtime: number) {

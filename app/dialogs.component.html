@@ -5,7 +5,7 @@
         <div id="user_avatar_div">
 			<div><div><div>
 				<div id="user_avatar_inner_div">
-					<img alt="" src="https://pp.vk.me/c633322/v633322814/2bbb3/SsIXFCGkFCA.jpg" width="50" height="50" id="user_avatar" />
+					<img alt="" [src]="dialog.message.out ? user.photo_50 : users[dialog.message.user_id].photo_50" width="50" height="50" id="user_avatar" />
 				</div>
 			</div></div></div>
 		</div>
@@ -24,7 +24,7 @@
 				<div id="message_body">
 				    <span>
                         <span>
-                             {{(dialog.message.out ? user.user_name : dialog.message.user_id) + ': '}}
+                             {{(dialog.message.out ? user.first_name : dialog.message.user_id) + ': '}}
                         </span>
                         {{dialog.message.body}}
                     </span>
