@@ -37,7 +37,6 @@
 }/*#chat_body*/
 
 #message_block {
-    height: 70px;
     left: 0px;
     max-width: 550px;
     position: relative;
@@ -135,7 +134,6 @@
 }/*#user_avatar_img:before*/
 
 #message {
-    height: 70px;
     width: 550px;
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
@@ -197,7 +195,6 @@
 }/*#message_timestamp*/
 
 #messages_list {
-    height: 70px;
     width: 550px;
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
@@ -210,7 +207,6 @@
     bottom: 0px;
     box-sizing: border-box;
     cursor: pointer;
-    height: 70px;
     left: 0px;
     max-width: 542px;
     position: relative;
@@ -225,7 +221,6 @@
 }/*#message_item*/
 
 #message_body {
-    height: 36px;
     overflow-wrap: break-word;
     width: 387px;
     word-wrap: break-word;

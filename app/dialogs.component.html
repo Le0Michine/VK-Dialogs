@@ -5,7 +5,7 @@
         <div id="user_avatar_div">
 			<div><div><div>
 				<div id="user_avatar_inner_div">
-					<img alt="" [src]="dialog.message.chat_id ? 'http://vk.com/images/camera_c.gif' : dialog.message.out ? user.photo_50 : getUserPhoto(dialog.message.user_id)" width="50" height="50" id="user_avatar" />
+					<img alt="" [src]="dialog.chat_id ? 'http://vk.com/images/camera_c.gif' : dialog.out ? user.photo_50 : getUserPhoto(dialog.user_id)" width="50" height="50" id="user_avatar" />
 				</div>
 			</div></div></div>
 		</div>
@@ -13,21 +13,21 @@
 		<div id="dialog_div">
 			<div id="dialog_content_div">
 				<div id="last_message_date">
-					{{convertDate(dialog.message.date)}}
+					{{convertDate(dialog.date)}}
 				</div>
 				<div id="dialog_title_div">
 					 <span id="dialog_title_span">
                         <span>
-                             {{dialog.message.title === ' ... ' ? getUserName(dialog.message.user_id) : dialog.message.title}}
+                             {{dialog.title === ' ... ' ? getUserName(dialog.user_id) : dialog.title}}
                         </span>
                     </span>
 				</div>
 				<div id="message_body">
 				    <span>
                         <span>
-                             {{(dialog.message.out ? user.first_name : getUserName(dialog.message.user_id)) + ': '}}
+                             {{(dialog.out ? user.first_name : getUserName(dialog.user_id)) + ': '}}
                         </span>
-                        {{dialog.message.body}}
+                        {{dialog.body}}
                     </span>
                     <span id="three_dots">...</span>
 				</div>

@@ -32,11 +32,12 @@ export class DialogsComponent implements OnInit {
 
     gotoDialog(dialog: Message) {
         let link: string[];
-        if (dialog instanceof Chat) {
-            link = ["/dialog", (dialog as Chat).chat_id.toString(), "chat"];
+        if ((dialog as Chat).chat_id) {
+            let chat = dialog as Chat;
+            link = ["/dialog", chat.chat_id.toString(), "chat", chat.chat_active.join()];
         }
         else {
-            link = ["/dialog", dialog.user_id.toString(), "dialog"];
+            link = ["/dialog", dialog.user_id.toString(), "dialog", [this.user.id, dialog.user_id].join()];
         }
         this.router.navigate(link);
     }
@@ -56,9 +57,9 @@ export class DialogsComponent implements OnInit {
     initUsers() {
         let uids: number[] = [];
         for (let dialog of this.dialogs) {
-            uids.push(dialog['message']['user_id']);
+            uids.push(dialog.user_id);
         }
-        this.userService.getUsers(uids).subscribe(
+        this.userService.getUsers(uids.join()).subscribe(
             users => this.users = users,
             error => this.errorHandler(error),
             () => console.log('users loaded')

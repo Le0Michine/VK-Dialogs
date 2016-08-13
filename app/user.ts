@@ -1,7 +1,7 @@
 export class User {
     // user ID. 
     // positive number
-    uid: number;
+    id: number;
 
     // first name. 
     // string

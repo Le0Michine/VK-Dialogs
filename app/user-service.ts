@@ -12,10 +12,10 @@ import { SessionInfo } from './session-info';
 export class UserService {
     constructor(private vkservice: VKService, private http: Http) { }
 
-    getUsers(uids: number[]): Observable<{}> {
+    getUsers(uids: string): Observable<{}> {
         let session = this.vkservice.getSession();
         let uri = VKConsts.api_url 
-            + 'users.get?user_ids=' + (uids != null ? uids.join() : session.user_id) 
+            + 'users.get?user_ids=' + uids 
             + '&fields=photo_50'
             + '&access_token=' + session.access_token
             + '&v=' + VKConsts.api_version;
