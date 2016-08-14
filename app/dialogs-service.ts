@@ -40,7 +40,7 @@ export class DialogService {
         let uri: string = VKConsts.api_url + this.get_chat
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version
-            + "&chat_id" + chat_id
+            + "&chat_id=" + chat_id
             + "&fields=first_name,photo_50";
         
         return this.http.get(uri).map(response => this.toUserDict(response.json()));
@@ -48,7 +48,7 @@ export class DialogService {
 
     private toUserDict(json): {} {
         let users = {};
-        for (let user_json of json.users) {
+        for (let user_json of json.response.users) {
             users[user_json.id] = user_json as User;
         }
 

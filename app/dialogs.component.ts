@@ -4,13 +4,10 @@ import { Message } from './message'
 import { Chat } from './message'
 import { User } from './user'
 import { DialogComponent } from './dialog.component'
-import { MessagesService } from './messages-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
 import { DialogService } from './dialogs-service'
 import { DateConverter } from './date-converter'
-
-import { messagesFromNick, messagesFromSofy } from './mock-messages'
 
 @Component({
   selector: 'dialogs',
@@ -25,7 +22,8 @@ export class DialogsComponent implements OnInit {
 
     dialogs: Message[];
 
-    constructor(private userService: UserService,
+    constructor(
+        private userService: UserService,
         private router: Router, 
         private vkservice: VKService, 
         private dialogsService: DialogService) { }
@@ -60,7 +58,7 @@ export class DialogsComponent implements OnInit {
             uids.push(dialog.user_id);
         }
         this.userService.getUsers(uids.join()).subscribe(
-            users => this.users = users,
+            users => { this.users = users; },
             error => this.errorHandler(error),
             () => console.log('users loaded')
         );

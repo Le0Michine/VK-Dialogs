@@ -6,8 +6,6 @@ import { DialogService } from './dialogs-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
 
-import { messagesFromNick, messagesFromSofy } from './mock-messages'
-
 @Component({
     selector: 'messges',
     templateUrl: 'app/dialog.component.html',
@@ -35,15 +33,23 @@ export class DialogComponent {
             let isChat: boolean = type === 'dialog' ? false : true;
 
             this.messagesService.getHistory(id, isChat).subscribe(
-                m => this.history = m,
+                m => { this.history = m; },
                 error => this.errorHandler(error),
                 () => console.log('history loaded'));
 
-            this.userService.getUsers(participants).subscribe(
-                users => this.participants = users,
-                error => this.errorHandler(error),
-                () => console.log('users obtained'));
-      });
+            if (isChat) {
+                this.messagesService.getChatParticipants(id).subscribe(
+                    users => { this.participants = users; },
+                    error => this.errorHandler(error),
+                    () => console.log('chat participants loaded'));
+            }
+            else {
+                this.userService.getUsers(participants).subscribe(
+                    users => { this.participants = users; },
+                    error => this.errorHandler(error),
+                    () => console.log('dialog participants loaded'));
+            } 
+        });
     }
 
     ngOnDestroy() {
