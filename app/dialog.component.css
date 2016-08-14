@@ -1,39 +1,7 @@
-#message_block_main {
-    bottom: 0px;
-    left: 0px;
-    position: relative;
-    right: 0px;
-    text-align: left;
-    top: 0px;
-    width: 550px;
-    perspective-origin: 275px 309.5px;
-    transform-origin: 275px 309.5px;
-    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-}/*#message_block_main*/
-
-#message_block_table {
-    box-shadow: rgb(215, 216, 219) 0px 1px 0px 0px, rgb(227, 228, 232) 0px 0px 0px 1px;
-    display: table;
-    perspective-origin: 275px 884.5px;
-    transform-origin: 275px 884.5px;
-}/*#message_block_table*/
-
-#message_block_table_row {
-    display: table-row;
-}/*#message_block_table_row*/
-
-#message_block_table_cell {
-    box-sizing: border-box;
-    display: table-cell;
-    vertical-align: bottom;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
-    overflow: hidden;
-    padding: 61px 0px 139px;
-}/*#message_block_table_cell*/
-
 #chat_body {
     perspective-origin: 275px 765.5px;
     transform-origin: 275px 765.5px;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
 }/*#chat_body*/
 
 #message_block {
@@ -45,6 +13,7 @@
     width: 550px;
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
 }/*#message_block*/
 
 #user_avatar {
@@ -59,28 +28,6 @@
     perspective-origin: 18px 18px;
     transform-origin: 18px 18px;
 }/*#user_avatar*/
-
-#user_avatar_1 {
-    bottom: 0px;
-    float: left;
-    left: 0px;
-    position: relative;
-    right: 0px;
-    top: 0px;
-}/*#user_avatar_1*/
-
-#user_avatar_2 {
-    border-radius: 50% 50% 50% 50%;
-    overflow: hidden;
-}/*#user_avatar_2*/
-
-#user_avatar_3 {
-    height: 37px;
-    width: 38px;
-    perspective-origin: 19px 18.5px;
-    transform-origin: 19px 18.5px;
-    margin: 0px 0px -1px -2px;
-}/*#user_avatar_3*/
 
 #user_avatar_img {
     color: rgba(0, 0, 0, 0);
@@ -141,13 +88,6 @@
 }/*#message*/
 
 #user_name_and_date {
-    width: 550px;
-    perspective-origin: 275px 0px;
-    transform-origin: 275px 0px;
-    
-}/*#user_name_and_date*/
-
-#user_name_and_date_1 {
     bottom: 43px;
     color: rgb(147, 147, 147);
     height: 16px;
@@ -161,7 +101,7 @@
     border: 0px none rgb(147, 147, 147);
     font: normal normal normal normal 12.5px / 14.425px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(147, 147, 147) none 0px;
-}/*#user_name_and_date_1*/
+}/*#user_name_and_date*/
 
 #user_name {
     color: rgb(66, 100, 139);

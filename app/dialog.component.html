@@ -1,5 +1,3 @@
-<!--<h1>{{title}}</h1>-->
-<!--<button (click)="goBack()">Back</button>-->
 <div id="top_panel">
 	<a (click)="goBack()" id="go_back"> 
 		<div id="left_arrow"></div>
@@ -13,41 +11,25 @@
 	</div>
 	<button id="send_btn" (click)="sendMessage()">Send</button>
 </div>
-<div id="message_main_block">
-	<div id="message_block_table">
-		<div id="message_block_table_row">
-			<div id="message_block_table_cell">
-				<div id="chat_body">
-					<div id="message_block" *ngFor="let message of history">
-						<div id="user_avatar">
-							<div id="user_avatar_1">
-								<div id="user_avatar_2">
-									<div id="user_avatar_3">
-										<img alt="" [src]="message.out ? getUserPhoto(user_id) : getUserPhoto(message.user_id)" id="user_avatar_img" />
-									</div>
-								</div>
-							</div>
-						</div>
-						<div id="message">
-							<div id="user_name_and_date">
-								<div id="user_name_and_date_1">
-									<a id="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
-                                	<span id="message_timestamp"> {{message.date}}</span>
-								</div>
-							</div>
-							<ul id="messages_list">
-								<li id="message_item">
-									<div id="message_body">
-										<div id="message_body_internal">
-											{{message.body}}
-										</div>
-									</div>
-								</li>
-							</ul>
+<div id="chat_body">
+	<div id="message_block" *ngFor="let message of history">
+		<div id="user_avatar">
+			<img alt="" [src]="message.out ? getUserPhoto(user_id) : getUserPhoto(message.user_id)" id="user_avatar_img" />
+		</div>
+		<div id="message">
+			<div id="user_name_and_date">
+				<a id="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
+                <span id="message_timestamp"> {{message.date}}</span>
+			</div>
+			<ul id="messages_list">
+				<li id="message_item">
+					<div id="message_body">
+						<div id="message_body_internal">
+							{{message.body}}
 						</div>
 					</div>
-				</div>
-			</div>
+				</li>
+			</ul>
 		</div>
 	</div>
 </div>
