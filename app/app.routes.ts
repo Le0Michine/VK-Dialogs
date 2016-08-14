@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 
 const routes: RouterConfig = [
   {
-    path: 'dialog/:id/:type/:participants',
+    path: 'dialog/:id/:type/:title/:participants',
     component: DialogComponent
   },
   {

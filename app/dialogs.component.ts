@@ -35,10 +35,17 @@ export class DialogsComponent implements OnInit {
         let link: string[];
         if ((dialog as Chat).chat_id) {
             let chat = dialog as Chat;
-            link = ["/dialog", chat.chat_id.toString(), "chat", chat.chat_active.join()];
+            link = ["/dialog", chat.chat_id.toString(), "chat", chat.title, chat.chat_active.join()];
         }
         else {
-            link = ["/dialog", dialog.user_id.toString(), "dialog", [this.user.id, dialog.user_id].join()];
+            let user: User = this.users[dialog.user_id];
+            let title: string = dialog.title === ' ... ' ? user.first_name + ' ' + user.last_name : dialog.title;
+            link = [
+                "/dialog",
+                dialog.user_id.toString(),
+                "dialog",
+                title,
+                [this.user.id, dialog.user_id].join()];
         }
         this.router.navigate(link);
     }
@@ -53,6 +60,10 @@ export class DialogsComponent implements OnInit {
             dialogs => { this.dialogs = dialogs as Message[]; this.initUsers(); },
             error => this.errorHandler(error),
             () => console.log('dialogs loaded'));
+    }
+
+    ngOnDestroy() {
+        console.log('dialogs component destroy');
     }
 
     initUsers() {

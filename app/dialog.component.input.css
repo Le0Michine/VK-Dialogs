@@ -1,0 +1,94 @@
+#input_box {
+    bottom: 0px;
+    cursor: text;
+    height: 55px;
+    left: 10px;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    top: 0px;
+    width: 378px;
+    perspective-origin: 189px 35px;
+    transform-origin: 189px 35px;
+    border-top: 15px solid rgba(0, 0, 0, 0);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: -15px 0px 10px;
+}/*#input_box*/
+
+#input_label {
+    box-sizing: border-box;
+    bottom: 31px;
+    color: rgb(130, 130, 130);
+    cursor: text;
+    height: 55px;
+    left: -2px;
+    right: 2px;
+    position: absolute;
+    text-align: left;
+    top: 0px;
+    width: 380px;
+    z-index: 5;
+    column-rule-color: rgb(130, 130, 130);
+    perspective-origin: 189px 0px;
+    transform-origin: 189px 0px;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 1px 1px 1px 1px;
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(130, 130, 130) none 0px;
+    padding: 1px;
+    transition: color 0.2s ease 0s;
+}/*#message_input*/
+
+#message_input {
+    box-sizing: border-box;
+    bottom: 31px;
+    color: rgb(130, 130, 130);
+    cursor: text;
+    height: 55px;
+    left: -2px;
+    right: 2px;
+    position: absolute;
+    text-align: left;
+    top: 0px;
+    width: 410px;
+    max-width: 410px;
+    resize: vertical;
+    z-index: 3;
+    column-rule-color: rgb(130, 130, 130);
+    perspective-origin: 189px 0px;
+    transform-origin: 189px 0px;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 1px 1px 1px 1px;
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(130, 130, 130) none 0px;
+    padding: 1px;
+    transition: color 0.2s ease 0s;
+}/*#message_input*/
+
+#send_btn {
+    bottom: 0px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: inline;
+    height: 30px;
+    left: 420px;
+    min-height: 0px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 62.0781px;
+    z-index: 2;
+    column-rule-color: rgb(255, 255, 255);
+    perspective-origin: 31.0312px 15px;
+    transform-origin: 31.0312px 15px;
+    background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 0px none rgb(255, 255, 255);
+    border-radius: 2px 2px 2px 2px;
+    font: normal normal normal normal 12.5px / 15px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(255, 255, 255) none 0px;
+    padding: 7px 16px 8px;
+}/*#send_btn*/
+
+

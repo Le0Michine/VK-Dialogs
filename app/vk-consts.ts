@@ -7,4 +7,5 @@ export class VKConsts {
     public static vk_token_expires_in_id: string = "vk_token_expires_in"
     public static vk_permissions_id: string = "vk_permissions"
     public static vk_auth_timestamp_id: string = "vk_auth_timestamp"
+    public static vk_session_info: string = "vk_session_info"
 }

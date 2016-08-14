@@ -1,4 +1,5 @@
 import { VKConsts } from '../app/vk-consts';
+import { SessionInfo } from '../app/session-info';
 
 export class AuthHelper {
     static client_id: number = 5573653;
@@ -46,6 +47,7 @@ export class AuthHelper {
         chrome.tabs.onUpdated.addListener(function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {
             if (tabId == AuthHelper.tab_id && tab.url.split('#')[0] === AuthHelper.redirect_uri && tab.status === 'complete') {
                 console.log('found auth tab');
+                let session: SessionInfo = new SessionInfo();
                 let query: string[] = tab.url.split('#')[1].split('&');
                 for (let parameter of query) {
                     let key: string = parameter.split('=')[0]; 
@@ -53,16 +55,21 @@ export class AuthHelper {
 
                     switch (key) {
                         case 'access_token':
+                            session.access_token = value;
                             window.localStorage.setItem(VKConsts.vk_access_token_id, value);
                             break;
                         case 'user_id':
+                            session.user_id = value;
                             window.localStorage.setItem(VKConsts.vk_user_id, value);
                             break;
                         case 'expires_in':
+                            session.token_exp = 86400;
                             window.localStorage.setItem(VKConsts.vk_token_expires_in_id, '86400');
                             break;
                     } 
                 }
+                session.timestamp = Math.floor(Date.now() / 1000);
+                window.localStorage.setItem(VKConsts.vk_session_info, JSON.stringify(session));
                 window.localStorage.setItem(VKConsts.vk_auth_timestamp_id, String(Math.floor(Date.now() / 1000)));
                 chrome.tabs.remove(tabId);
                 AuthHelper.tab_id = null;

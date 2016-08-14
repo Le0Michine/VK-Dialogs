@@ -1,0 +1,125 @@
+#top_panel {
+    height: 45px;
+    text-align: left;
+    vertical-align: top;
+    width: 550px;
+    perspective-origin: 275px 22.5px;
+    transform-origin: 275px 22.5px;
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}/*#top_panel*/
+
+#go_back {
+    bottom: 0px;
+    color: rgb(42, 88, 133);
+    cursor: pointer;
+    display: inline-block;
+    height: 17px;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    text-decoration: none;
+    top: 0px;
+    vertical-align: middle;
+    z-index: 2;
+    column-rule-color: rgb(42, 88, 133);
+    perspective-origin: 76.9062px 22.5px;
+    transform-origin: 76.9062px 22.5px;
+    border: 0px none rgb(42, 88, 133);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(42, 88, 133) none 0px;
+    padding: 15px 13px 13px 0px;
+}/*#go_back*/
+
+#go_back:before {
+    bottom: 0px;
+    color: rgb(42, 88, 133);
+    cursor: pointer;
+    display: block;
+    height: 45px;
+    left: 0px;
+    max-width: 240px;
+    position: absolute;
+    right: -30.7656px;
+    text-align: left;
+    top: 0px;
+    z-index: 0;
+    column-rule-color: rgb(42, 88, 133);
+    perspective-origin: 92.2969px 22.5px;
+    transform-origin: 92.2969px 22.5px;
+    border: 0px none rgb(42, 88, 133);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(42, 88, 133) none 0px;
+}/*#go_back:before*/
+
+#left_arrow {
+    bottom: 0px;
+    color: rgb(42, 88, 133);
+    cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    top: 0px;
+    vertical-align: middle;
+    width: 36px;
+    column-rule-color: rgb(42, 88, 133);
+    perspective-origin: 18px 8px;
+    transform-origin: 18px 8px;
+    border: 0px none rgb(42, 88, 133);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(42, 88, 133) none 0px;
+}/*#left_arrow*/
+
+#left_arrow:before {
+    background-position: 2px -324px;
+    bottom: 1.5px;
+    color: rgb(42, 88, 133);
+    content: '';
+    cursor: pointer;
+    display: block;
+    height: 15px;
+    left: 18px;
+    opacity: 0.7;
+    position: absolute;
+    right: 8px;
+    text-align: left;
+    top: 8px;
+    width: 20px;
+    z-index: 0;
+    column-rule-color: rgb(42, 88, 133);
+    perspective-origin: 10px 7.5px;
+    transform-origin: 10px 7.5px;
+    background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
+    border: 0px none rgb(42, 88, 133);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: -8.5px 0px 0px -10px;
+    outline: rgb(42, 88, 133) none 0px;
+}/*#left_arrow:before*/
+
+#dialog_title {
+    bottom: 0px;
+    color: rgb(34, 34, 34);
+    cursor: pointer;
+    display: inline-block;
+    height: 15px;
+    left: 0px;
+    max-width: 235px;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    text-overflow: ellipsis;
+    top: 0px;
+    vertical-align: middle;
+    white-space: nowrap;
+    column-rule-color: rgb(34, 34, 34);
+    perspective-origin: 47.2344px 7.5px;
+    transform-origin: 47.2344px 7.5px;
+    border: 0px none rgb(34, 34, 34);
+    font: normal normal 500 normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0px 3px 0px 0px;
+    outline: rgb(34, 34, 34) none 0px;
+    overflow: hidden;
+}/*#dialog_title*/

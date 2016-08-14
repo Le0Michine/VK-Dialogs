@@ -1,40 +1,53 @@
-<h1>{{title}}</h1>
-<button (click)="goBack()">Back</button>
-	<div id="message_main_block">
-		<div id="message_block_table">
-			<div id="message_block_table_row">
-				<div id="message_block_table_cell">
-					<div id="chat_body">
-						<div id="message_block" *ngFor="let message of history">
-							<div id="user_avatar">
-								<div id="user_avatar_1">
-									<div id="user_avatar_2">
-										<div id="user_avatar_3">
-											 <img alt="" [src]="message.out ? getUserPhoto(user_id) : getUserPhoto(message.user_id)" id="user_avatar_img" />
-										</div>
+<!--<h1>{{title}}</h1>-->
+<!--<button (click)="goBack()">Back</button>-->
+<div id="top_panel">
+	<a (click)="goBack()" id="go_back"> 
+		<div id="left_arrow"></div>
+		<h1 id="dialog_title">{{title}}</h1>
+	</a>
+</div>
+<div id="input_box">
+	<div>
+		<label id="input_label" for="message_input">Type your text here…</label>
+		<textarea id="message_input" (click)="clearLabelContent()" (keypress)="onKeyUp($event)"></textarea>
+	</div>
+	<button id="send_btn" (click)="sendMessage()">Send</button>
+</div>
+<div id="message_main_block">
+	<div id="message_block_table">
+		<div id="message_block_table_row">
+			<div id="message_block_table_cell">
+				<div id="chat_body">
+					<div id="message_block" *ngFor="let message of history">
+						<div id="user_avatar">
+							<div id="user_avatar_1">
+								<div id="user_avatar_2">
+									<div id="user_avatar_3">
+										<img alt="" [src]="message.out ? getUserPhoto(user_id) : getUserPhoto(message.user_id)" id="user_avatar_img" />
 									</div>
 								</div>
 							</div>
-							<div id="message">
-								<div id="user_name_and_date">
-									<div id="user_name_and_date_1">
-										 <a id="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
-                                         <span id="message_timestamp"> {{message.date}}</span>
-									</div>
+						</div>
+						<div id="message">
+							<div id="user_name_and_date">
+								<div id="user_name_and_date_1">
+									<a id="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
+                                	<span id="message_timestamp"> {{message.date}}</span>
 								</div>
-								<ul id="messages_list">
-									<li id="message_item">
-										<div id="message_body">
-											<div id="message_body_internal">
-												{{message.body}}
-											</div>
-										</div>
-									</li>
-								</ul>
 							</div>
+							<ul id="messages_list">
+								<li id="message_item">
+									<div id="message_body">
+										<span id="message_body_internal">
+											{{message.body}}
+										</span>
+									</div>
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>

@@ -9,13 +9,19 @@ import { VKService } from './vk-service'
 @Component({
     selector: 'messges',
     templateUrl: 'app/dialog.component.html',
-    styleUrls: ['app/dialog.component.css']
+    styleUrls: [
+        'app/dialog.component.css',
+        'app/dialog.component.input.css',
+        'app/dialog.component.header.css'
+    ]
 })
 export class DialogComponent { 
     title = "Dialog";
     participants: {} = {};
     user_id: string;
     history: Message[];
+    is_chat: boolean;
+    conversation_id: number;
     sub: any;
 
     constructor (
@@ -27,15 +33,15 @@ export class DialogComponent {
     ngOnInit() {
         this.user_id = this.vkservice.getSession().user_id;
         this.sub = this.route.params.subscribe(params => {
+            this.title = params['title'];
             let id = +params['id'];
             let type = params['type'];
             let participants = params['participants'];
             let isChat: boolean = type === 'dialog' ? false : true;
+            this.is_chat = isChat;
+            this.conversation_id = id;
 
-            this.messagesService.getHistory(id, isChat).subscribe(
-                m => { this.history = m; },
-                error => this.errorHandler(error),
-                () => console.log('history loaded'));
+            this.updateHistory();
 
             if (isChat) {
                 this.messagesService.getChatParticipants(id).subscribe(
@@ -53,7 +59,15 @@ export class DialogComponent {
     }
 
     ngOnDestroy() {
+        console.log('specific dialog component destroy');
         this.sub.unsubscribe();
+    }
+
+    updateHistory() {
+        this.messagesService.getHistory(this.conversation_id, this.is_chat).subscribe(
+            m => { this.history = m; },
+            error => this.errorHandler(error),
+            () => console.log('history loaded'));
     }
 
     goBack() {
@@ -72,6 +86,47 @@ export class DialogComponent {
             return this.participants[uid].photo_50;
         }
         return 'http://vk.com/images/camera_c.gif';
+    }
+
+    clearLabelContent() {
+        let label = document.getElementById('input_label');
+        label.innerText = '';
+    }
+
+    sendMessage() {
+        let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
+        let text = textarea.value.trim();
+        if (!text || text === '') {
+            console.log('message text is empty, nothing to send');
+            return;
+        }
+        this.messagesService.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
+            message => console.log(JSON.stringify(message)),
+            error => this.errorHandler(error),
+            () => { console.log('message sent'); textarea.value = ''; this.updateHistory(); });
+    }
+
+    onKeyPress(keyCode: number) {
+        if (keyCode == 13 /* enter */) {
+            //this.sendMessage();
+        }
+    }
+
+    onKeyUp(event) {
+        if (event.keyCode == 13) {
+            let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
+            var content = textarea.value;  
+            var caret = textarea.selectionStart;
+            if(event.shiftKey){
+                //textarea.value = content.substring(0, caret - 1) + "\n" + content.substring(caret, content.length);
+                //textarea.selectionStart = caret + 1;
+                //event.stopPropagation();
+            } else {
+                //textarea.value = content.substring(0, caret - 1) + content.substring(caret + 1, content.length);
+                //this.sendMessage();
+                //event.stopPropagation();
+            }
+        }
     }
 
     errorHandler(error) {

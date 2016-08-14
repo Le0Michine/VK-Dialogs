@@ -33,11 +33,12 @@ export class VKService {
     }
 
     initializeSeesion() {
-        this.session_info = new SessionInfo();
+        /*this.session_info = new SessionInfo();
         this.session_info.access_token = window.localStorage.getItem(VKConsts.vk_access_token_id);
         this.session_info.user_id = window.localStorage.getItem(VKConsts.vk_user_id);
         this.session_info.token_exp = window.localStorage.getItem(VKConsts.vk_token_expires_in_id);
-        this.session_info.timestamp = window.localStorage.getItem(VKConsts.vk_auth_timestamp_id);
+        this.session_info.timestamp = window.localStorage.getItem(VKConsts.vk_auth_timestamp_id);*/
+        this.session_info = eval('('+window.localStorage.getItem(VKConsts.vk_session_info)+')');
     }
 
     isSessionValid() {
