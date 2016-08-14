@@ -21,7 +21,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         console.log('background init');
-        console.log(this);
         AuthHelper.addRequestListener();
         AuthHelper.addTabListener();
         this.preAuthorize();
