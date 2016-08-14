@@ -24,6 +24,7 @@ export class DialogComponent {
     is_chat: boolean;
     conversation_id: number;
     current_text: string;
+    messages_cache_port: chrome.runtime.Port;
     sub: any;
 
     constructor (
@@ -42,12 +43,8 @@ export class DialogComponent {
             let isChat: boolean = type === 'dialog' ? false : true;
             this.is_chat = isChat;
             this.conversation_id = id;
-            let cachedMessage = window.localStorage.getItem('cached_message_' + id + isChat);
-            if (cachedMessage && cachedMessage != "undefined") {
-                this.clearLabelContent();
-                this.current_text = cachedMessage;
-            }
-            this.resizeInputTextarea();
+            
+            this.restoreCachedMessages(id, isChat);
 
             this.updateHistory();
 
@@ -69,6 +66,16 @@ export class DialogComponent {
     ngOnDestroy() {
         console.log('specific dialog component destroy');
         this.sub.unsubscribe();
+    }
+    
+    restoreCachedMessages(id, isChat) {
+        this.messages_cache_port = chrome.runtime.connect({name:'messages_cache'});
+        let cachedMessage = window.localStorage.getItem('cached_message_' + id + isChat);
+        if (cachedMessage && cachedMessage != "undefined") {
+            this.clearLabelContent();
+            this.current_text = cachedMessage;
+        }
+        this.resizeInputTextarea();
     }
 
     updateHistory() {
@@ -155,7 +162,10 @@ export class DialogComponent {
     }
 
     cacheCurrentMessage() {
-        window.localStorage.setItem('cached_message_' + this.conversation_id + this.is_chat, this.current_text);
+        this.messages_cache_port.postMessage({
+            key: 'cached_message_' + this.conversation_id + this.is_chat,
+            value: this.current_text
+        });        
     }
 
     errorHandler(error) {

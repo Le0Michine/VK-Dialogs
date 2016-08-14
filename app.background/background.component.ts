@@ -25,6 +25,33 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         AuthHelper.addTabListener();
         this.preAuthorize();
         Observable.interval(1000).subscribe(r => {this.i++; chrome.browserAction.setBadgeText({text: String(this.i)});});
+
+
+
+        chrome.runtime.onConnect.addListener(port => {
+            if (port.name === 'messages_cache') {
+                console.log('connected to port: ' + port.name);
+                let key: string;
+                let value: string;
+                let subscription = Observable.interval(3000).subscribe(() => window.localStorage.setItem(key, value));
+                
+                port.onMessage.addListener(message => {
+                    if (key != message['key']) {
+                        window.localStorage.setItem(key, value);
+                        key = message['key'];
+                    }
+                    value = message['value'];                    
+                });
+                port.onDisconnect.addListener(() => {
+                    console.log('port disconnected: ' + port.name);
+                    subscription.unsubscribe();
+                    window.localStorage.setItem(key, value);
+                })
+            }
+            else {
+                console.log('unknown port: ' + port.name);
+            }
+        });
     }
 
     ngOnDestroy() {
