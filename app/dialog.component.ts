@@ -95,7 +95,7 @@ export class DialogComponent {
 
     sendMessage() {
         let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
-        let text = textarea.value.trim();
+        let text = textarea.value.trim().replace(/\r?\n/g, "%0A");
         if (!text || text === '') {
             console.log('message text is empty, nothing to send');
             return;
