@@ -6,10 +6,8 @@
 	<button id="send_btn" (click)="sendMessage()">Send</button>
 </div>
 <div id="input_box">
-	<div>
-		<label id="input_label" for="message_input">Type your text here…</label>
-		<textarea id="message_input" #minput (click)="clearLabelContent()" (keypress)="onKeyPress($event,minput.value)"></textarea>
-	</div>
+	<label id="input_label" for="message_input">Type your text here…</label>
+	<textarea id="message_input" #minput (click)="clearLabelContent()" (keydown)="onKeyPress($event,minput.value)" [(ngModel)]="current_text"></textarea>
 </div>
 <div id="chat_body">
 	<div id="message_block" *ngFor="let message of history">

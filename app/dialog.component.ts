@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Rx';;
 import { Message } from './message'
 import { User } from './user'
 import { DialogService } from './dialogs-service'
@@ -22,6 +23,7 @@ export class DialogComponent {
     history: Message[];
     is_chat: boolean;
     conversation_id: number;
+    current_text: string;
     sub: any;
 
     constructor (
@@ -40,6 +42,12 @@ export class DialogComponent {
             let isChat: boolean = type === 'dialog' ? false : true;
             this.is_chat = isChat;
             this.conversation_id = id;
+            let cachedMessage = window.localStorage.getItem('cached_message_' + id + isChat);
+            if (cachedMessage && cachedMessage != "undefined") {
+                this.clearLabelContent();
+                this.current_text = cachedMessage;
+            }
+            this.resizeInputTextarea();
 
             this.updateHistory();
 
@@ -78,7 +86,7 @@ export class DialogComponent {
         if (this.participants && this.participants[uid]) {
             return this.participants[uid].first_name;
         }
-        return 'undefined'; 
+        return 'loading...'; 
     }
 
     getUserPhoto(uid: number) {
@@ -111,6 +119,43 @@ export class DialogComponent {
             event.preventDefault();
             this.sendMessage();
         }
+        else {
+            this.cacheCurrentMessage();
+        }
+    }
+
+    resizeInputTextarea() {
+        let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
+        let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
+        let outer_div = document.getElementById('input_box');
+        let minHeight = 30;
+
+        let resize = () => {
+            if (!textarea.value) { /* if all the text was cut/deleted */
+                textarea.style.height = minHeight+'px';    
+            }
+            else {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.max(textarea.scrollHeight+5, minHeight)+'px';
+            }
+            outer_div.style.height = textarea.style.height;
+        }
+        /* small timeout to get the already changed text */
+        let delayedResize = () => { window.setTimeout(resize, 100); };
+
+        addListener(textarea, 'change',  resize);
+        addListener(textarea, 'cut',     delayedResize);
+        addListener(textarea, 'paste',   delayedResize);
+        addListener(textarea, 'drop',    delayedResize);
+        addListener(textarea, 'keydown', delayedResize);
+
+        /* need to set value immidiately before resizing */
+        textarea.value = this.current_text;
+        delayedResize();
+    }
+
+    cacheCurrentMessage() {
+        window.localStorage.setItem('cached_message_' + this.conversation_id + this.is_chat, this.current_text);
     }
 
     errorHandler(error) {

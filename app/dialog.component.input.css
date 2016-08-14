@@ -54,7 +54,7 @@
     border-radius: 1px 1px 1px 1px;
     font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(130, 130, 130) none 0px;
-    padding: 0px;
+    padding-bottom: 5px;
     transition: color 0.2s ease 0s;
     border-bottom: 1px solid rgb(231, 232, 236);
 }/*#message_input*/

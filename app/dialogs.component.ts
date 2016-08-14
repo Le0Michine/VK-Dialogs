@@ -86,7 +86,7 @@ export class DialogsComponent implements OnInit {
         if (this.users && this.users[uid]) {
             return this.users[uid].first_name;
         }
-        return 'undefined'; 
+        return 'loading...'; 
     }
 
     getUserPhoto(uid: number) {
