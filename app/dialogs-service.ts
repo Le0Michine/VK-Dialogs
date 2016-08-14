@@ -85,6 +85,7 @@ export class DialogService {
         let dialogs: Message[] = [];
         for (let message_json of messages_json) {
             let m = message_json.message || message_json;
+            //m.body = m.body.replace(/\r?\n/g, "<br>");
             if (m['chat_id']) {
                 let chat: Chat = m as Chat;
                 dialogs.push(chat);

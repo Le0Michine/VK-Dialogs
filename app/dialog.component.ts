@@ -106,26 +106,10 @@ export class DialogComponent {
             () => { console.log('message sent'); textarea.value = ''; this.updateHistory(); });
     }
 
-    onKeyPress(keyCode: number) {
-        if (keyCode == 13 /* enter */) {
-            //this.sendMessage();
-        }
-    }
-
-    onKeyUp(event) {
-        if (event.keyCode == 13) {
-            let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
-            var content = textarea.value;  
-            var caret = textarea.selectionStart;
-            if(event.shiftKey){
-                //textarea.value = content.substring(0, caret - 1) + "\n" + content.substring(caret, content.length);
-                //textarea.selectionStart = caret + 1;
-                //event.stopPropagation();
-            } else {
-                //textarea.value = content.substring(0, caret - 1) + content.substring(caret + 1, content.length);
-                //this.sendMessage();
-                //event.stopPropagation();
-            }
+    onKeyPress(event, value) {
+        if (event.keyCode == 13 && !event.shiftKey) {
+            event.preventDefault();
+            this.sendMessage();
         }
     }
 

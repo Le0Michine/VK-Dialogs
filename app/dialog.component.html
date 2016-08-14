@@ -9,7 +9,7 @@
 <div id="input_box">
 	<div>
 		<label id="input_label" for="message_input">Type your text here…</label>
-		<textarea id="message_input" (click)="clearLabelContent()" (keypress)="onKeyUp($event)"></textarea>
+		<textarea id="message_input" #minput (click)="clearLabelContent()" (keypress)="onKeyPress($event,minput.value)"></textarea>
 	</div>
 	<button id="send_btn" (click)="sendMessage()">Send</button>
 </div>
@@ -38,9 +38,9 @@
 							<ul id="messages_list">
 								<li id="message_item">
 									<div id="message_body">
-										<span id="message_body_internal">
+										<div id="message_body_internal">
 											{{message.body}}
-										</span>
+										</div>
 									</div>
 								</li>
 							</ul>
