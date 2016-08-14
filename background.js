@@ -1,0 +1,1 @@
+System.import('app.background').catch(function(err){ console.error(err); });

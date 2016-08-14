@@ -8,6 +8,7 @@ import { UserService } from './user-service'
 import { VKService } from './vk-service'
 import { DialogService } from './dialogs-service'
 import { DateConverter } from './date-converter'
+import { Observable as Observable1 } from 'rxjs/Rx';
 
 @Component({
   selector: 'dialogs',
@@ -19,6 +20,8 @@ export class DialogsComponent implements OnInit {
     title = "Dialogs";
     user: User = new User();
     users: {};
+
+    i: number = 0;
 
     dialogs: Message[];
 

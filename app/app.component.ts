@@ -10,13 +10,14 @@ import { DialogsComponent } from './dialogs.component'
 import { DialogService } from './dialogs-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
+import { LongPollServerService } from './long-poll-server-service'
 import { VKConsts } from './vk-consts'
 
 @Component({
   selector: 'my-app',
   templateUrl: 'app/app.component.html',
   directives: [ROUTER_DIRECTIVES],
-  providers: [HTTP_PROVIDERS, UserService, VKService, DialogService],
+  providers: [HTTP_PROVIDERS, UserService, VKService, DialogService, LongPollServerService],
   precompile: [DialogsComponent, DialogComponent]
 })
 export class AppComponent { 
