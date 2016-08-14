@@ -2,10 +2,11 @@
     height: 45px;
     text-align: left;
     vertical-align: top;
-    width: 550px;
+    width: 100%;
     perspective-origin: 275px 22.5px;
     transform-origin: 275px 22.5px;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    /*border-bottom: 1px solid rgb(231, 232, 236);*/
 }/*#top_panel*/
 
 #go_back {
@@ -123,3 +124,24 @@
     outline: rgb(34, 34, 34) none 0px;
     overflow: hidden;
 }/*#dialog_title*/
+
+#send_btn {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: inline;
+    min-height: 0px;
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    white-space: nowrap;
+    z-index: 5;
+    column-rule-color: rgb(255, 255, 255);
+    perspective-origin: 31.0312px 15px;
+    transform-origin: 31.0312px 15px;
+    background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 0px none rgb(255, 255, 255);
+    border-radius: 2px 2px 2px 2px;
+    font: normal normal normal normal 12.5px / 15px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(255, 255, 255) none 0px;
+    padding: 7px 16px 8px;
+}/*#send_btn*/

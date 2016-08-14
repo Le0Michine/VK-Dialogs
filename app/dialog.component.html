@@ -3,13 +3,13 @@
 		<div id="left_arrow"></div>
 		<h1 id="dialog_title">{{title}}</h1>
 	</a>
+	<button id="send_btn" (click)="sendMessage()">Send</button>
 </div>
 <div id="input_box">
 	<div>
 		<label id="input_label" for="message_input">Type your text here…</label>
 		<textarea id="message_input" #minput (click)="clearLabelContent()" (keypress)="onKeyPress($event,minput.value)"></textarea>
 	</div>
-	<button id="send_btn" (click)="sendMessage()">Send</button>
 </div>
 <div id="chat_body">
 	<div id="message_block" *ngFor="let message of history">
