@@ -169,10 +169,11 @@
     transform-origin: 193.5px 28.5px;
     font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 20px 0px 78px;
-    padding: 21px 0px 0px;
+    padding: 0px 0px 0px;
 }/*#message_body*/
 
 #message_body_internal {
     perspective-origin: 193.5px 18px;
     transform-origin: 193.5px 18px;
+    white-space: pre-line;
 }/*#message_body_internal*/
