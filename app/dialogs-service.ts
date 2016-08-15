@@ -17,7 +17,11 @@ export class DialogService {
     private get_message: string = "messages.getById";
     private send_message: string = "messages.send";
 
-    constructor(private vkservice: VKService, private http: Http) { }
+    private conversation_port: chrome.runtime.Port;
+
+    constructor(private vkservice: VKService, private http: Http) { 
+        this.conversation_port = chrome.runtime.connect({name: 'conversation'});
+    }
 
     getDialogs(): Observable<Message[]> {
         console.log('dialogs are requested');

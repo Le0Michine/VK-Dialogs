@@ -12,6 +12,7 @@
 </div>
 <div id="chat_body">
 	<div id="message_block" *ngFor="let message of history">
+		<div id="unread" [hidden]="message.read_state"></div>
 		<div id="user_avatar">
 			<img alt="" [src]="message.out ? getUserPhoto(user_id) : getUserPhoto(message.user_id)" id="user_avatar_img" />
 		</div>

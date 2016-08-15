@@ -179,3 +179,12 @@
     transform-origin: 193.5px 18px;
     white-space: pre-line;
 }/*#message_body_internal*/
+
+#unread {
+    width: 90%;
+    top: 0px;
+    bottom: -4px;
+    left: 5%;
+    position: absolute;
+    background: #edf0f5;
+}/*#unread*/

@@ -27,6 +27,7 @@ export class DialogComponent {
     conversation_id: number;
     current_text: string;
     messages_cache_port: chrome.runtime.Port;
+    history_update: any;
     sub: any;
 
     constructor (
@@ -37,6 +38,7 @@ export class DialogComponent {
         private change_detector: ChangeDetectorRef) { }
 
     ngOnInit() {
+        console.log('specific dialog component init');
         this.user_id = this.vkservice.getSession().user_id;
         this.sub = this.route.params.subscribe(params => {
             this.title = params['title'];
@@ -50,6 +52,7 @@ export class DialogComponent {
             this.restoreCachedMessages(id, isChat);
 
             this.updateHistory();
+            this.history_update = Observable.interval(2000).subscribe(() => this.updateHistory());
 
             if (isChat) {
                 this.messagesService.getChatParticipants(id).subscribe(
@@ -75,6 +78,7 @@ export class DialogComponent {
     ngOnDestroy() {
         console.log('specific dialog component destroy');
         this.sub.unsubscribe();
+        this.history_update.unsubscribe();
     }
     
     restoreCachedMessages(id, isChat) {

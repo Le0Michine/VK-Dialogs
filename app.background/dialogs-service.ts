@@ -47,7 +47,7 @@ export class DialogService {
         let uri: string = VKConsts.api_url + this.get_dialogs 
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version;
-        return this.http.get(uri).map(response => this.toMessages(response.json()));
+        return this.http.get(uri).map(response => this.toMessages(response.json(), true));
     }
 
     getHistory(id: number, chat: boolean, count: number = 20) {
@@ -59,7 +59,7 @@ export class DialogService {
             + "&count=" + count
             + "&rev=0";
 
-        return this.http.get(uri).map(response => this.toMessages(response.json()));
+        return this.http.get(uri).map(response => this.toMessages(response.json(), false));
     }
 
     getChatParticipants(chat_id: number): Observable<{}> {
@@ -79,7 +79,7 @@ export class DialogService {
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version
             + "&message_ids=" + ids; 
-        return this.http.get(uri).map(response => this.toMessages(response.json()));
+        return this.http.get(uri).map(response => this.toMessages(response.json(), false));
     }
 
     sendMessage(id: number, message: string, chat: boolean): Observable<Message> {
@@ -103,7 +103,7 @@ export class DialogService {
         return users;
     }
 
-    private toMessages(json): Message[] {
+    private toMessages(json, update_badge: boolean): Message[] {
         if (ErrorHelper.checkErrors(json)) return [];
         json = json.response || json;
         let count: number = Number(json.count);
@@ -111,7 +111,9 @@ export class DialogService {
         let messages_json = json.items;
         let dialogs: Message[] = [];
 
-        this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : '');
+        if (update_badge) {
+            this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : '');
+        }
 
         for (let message_json of messages_json) {
             let m = message_json.message || message_json;
