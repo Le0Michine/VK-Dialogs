@@ -54,12 +54,12 @@ export class AuthHelper {
                     } 
                 }
                 session.timestamp = Math.floor(Date.now() / 1000);
+                console.log('store session');
                 window.localStorage.setItem(VKConsts.vk_session_info, JSON.stringify(session));
                 window.localStorage.setItem(VKConsts.vk_auth_timestamp_id, String(Math.floor(Date.now() / 1000)));
                 chrome.tabs.remove(tabId);
                 AuthHelper.tab_id = null;
                 AuthHelper.authorization_in_progress_count --;
-                chrome.extension.sendRequest({name: 'authorization_completed'});
             }
         });
     }

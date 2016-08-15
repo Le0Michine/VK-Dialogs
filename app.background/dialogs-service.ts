@@ -19,23 +19,17 @@ export class DialogService {
     private cached_dialogs: Message[];
 
     constructor(private vkservice: VKService, private http: Http) {
-        if (vkservice.isSessionValid) {
-            this.startMonitoring();
-        }
-        else {
-            chrome.extension.onRequest.addListener(r => {
-                if (r.name === 'authorization completed') {
-                    this.startMonitoring();
-                }
-            });
-        }
+        console.log('session is valid, start monitoring');
+        this.startMonitoring();
      }
 
     startMonitoring() {
         Observable.interval(2000).subscribe(() => { 
-            this.getDialogs().subscribe(dialogs => {
-                this.cached_dialogs = dialogs;
-            }); 
+            if (this.vkservice.isSessionValid()) {
+                this.getDialogs().subscribe(dialogs => {
+                    this.cached_dialogs = dialogs;
+                });
+            } 
         });
     }
 
@@ -114,9 +108,7 @@ export class DialogService {
         let messages_json = json.items;
         let dialogs: Message[] = [];
 
-        if (json.unread_dialogs) {
-            this.setBadgeNumber(json.unread_dialogs);
-        }
+        this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : '');
 
         for (let message_json of messages_json) {
             let m = message_json.message || message_json;

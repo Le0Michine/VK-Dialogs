@@ -35,6 +35,7 @@ export class VKService {
     }
 
     isSessionValid() {
+        this.initializeSeesion();
         return Boolean(
             this.session_info 
             && this.session_info.access_token 
