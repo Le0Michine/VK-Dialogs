@@ -9,6 +9,7 @@ import { VKService } from './vk-service'
 import { DialogService } from './dialogs-service'
 import { DateConverter } from './date-converter'
 import { Observable as Observable1 } from 'rxjs/Rx';
+import { VKConsts } from './vk-consts';
 
 @Component({
   selector: 'dialogs',
@@ -53,6 +54,11 @@ export class DialogsComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (window.localStorage.getItem(VKConsts.user_denied) == 'true' || this.vkservice.getSession() == null) {
+            this.router.navigate(['/authorize']);
+            return;
+        }
+
         this.userService.getUser().subscribe(
             u => {
                 this.user = u;

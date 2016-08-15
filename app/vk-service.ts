@@ -2,6 +2,7 @@
 import { Injectable }     from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 import { Channels } from '../app.background/channels';
 
@@ -18,16 +19,17 @@ export class VKService {
         return Promise.reject(error.message || error);
     }
 
-    constructor() {
+    constructor(private router: Router) {
         this.initializeSeesion();
     }
 
-    auth(force: boolean = false) {
+    auth(force: boolean = false, manual: boolean = false) {
         console.log('authorization requested');
         this.initializeSeesion();
         RequestHelper.sendRequestToBackground({
             name: Channels.get_session_request,
-            force_auth: force
+            force_auth: force,
+            requested_by_user: manual
         }).subscribe(s => this.session_info = s);
     }
 
@@ -48,7 +50,7 @@ export class VKService {
 
     getSession(): SessionInfo {
         if (!this.isSessionValid()) {
-            this.auth(true);  
+            this.auth(true);
         }
         return this.session_info;
     }

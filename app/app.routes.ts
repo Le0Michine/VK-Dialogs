@@ -2,6 +2,7 @@ import { provideRouter, RouterConfig }  from '@angular/router';
 import { DialogComponent } from './dialog.component';
 import { DialogsComponent } from './dialogs.component';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login.component';
 
 const routes: RouterConfig = [
   {
@@ -11,6 +12,10 @@ const routes: RouterConfig = [
   {
     path: 'dialogs',
     component: DialogsComponent
+  },
+  {
+    path: 'authorize',
+    component: LoginComponent
   },
   {
     path: '',

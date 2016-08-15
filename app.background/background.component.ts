@@ -24,7 +24,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     constructor(
         private http: Http,
         private dialogsService: DialogService,
-        private userService: UserService) { }
+        private userService: UserService,
+        private vkservice: VKService) { }
 
     ngOnInit() {
         console.log('background init');
@@ -48,57 +49,57 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                         sendResponse({data: dialogs});
                         console.log('dialogs sent');
                     });
-                    break;
+                    return true;
                 case Channels.get_history_request:
                     this.dialogsService.getHistory(request.conversation_id, request.is_chat).subscribe(history => {
                         sendResponse({data: history});
                         console.log('history sent');
                     });
-                    break;
+                    return true;
                 case Channels.get_chat_participants_request:
                     this.dialogsService.getChatParticipants(request.chat_id).subscribe(participants => {
-                        sendResponse({data: participants})
-                        console.log('chat participants sent')
+                        sendResponse({data: participants});
+                        console.log('chat participants sent');
                     });
-                    break;
+                    return true;
                 case Channels.get_message_request:
                     this.dialogsService.getMessage(request.message_ids).subscribe(messages => {
-                        sendResponse({data: messages})
-                        console.log('messages sent')
+                        sendResponse({data: messages});
+                        console.log('messages sent');
                     });
-                    break;
+                    return true;
                 case Channels.send_message_request:
                     this.dialogsService.sendMessage(request.user_id, request.message_body, request.is_chat).subscribe(message => {
-                        sendResponse({data: message})
-                        console.log('message id sent')
+                        sendResponse({data: message});
+                        console.log('message id sent');
                     });
-                    break;
+                    return true;
                 case Channels.get_multiple_users_request:
                     this.userService.getUsers(request.user_ids).subscribe(users => {
-                        sendResponse({data: users})
-                        console.log('users sent')
+                        sendResponse({data: users});
+                        console.log('users sent');
                     });
-                    break;
+                    return true;
                 case Channels.get_user_request:
                     this.userService.getUser(request.user_id).subscribe(user => {
                         sendResponse({data: user})
-                        console.log('single user sent')
+                        console.log('single user sent: ' + JSON.stringify(user));
                     });
-                    break;
+                    return true;
                 case Channels.get_session_request:
                     if (request.force_auth) {
-                        console.log('got request about implicit authorization')
-                        AuthHelper.authorize();
+                        console.log('got request about implicit authorization');
+                        AuthHelper.authorize(true, request.requested_by_user);
                     }
                     else {
-                        console.log('got request about explicit authorization')
-                        AuthHelper.authorize(false);
+                        console.log('got request about explicit authorization');
+                        AuthHelper.authorize(false, request.requested_by_user);
                     }
-                    sendResponse({data: ''});
-                    break;
+                    sendResponse({data: this.vkservice.getSession()});
+                    return true;
                 case 'request_error':
                     this.processError(request.error_code);
-                    break;
+                    return true;
             }
         });
     }

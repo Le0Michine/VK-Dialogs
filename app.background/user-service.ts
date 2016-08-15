@@ -13,7 +13,6 @@ import { ObservableExtension } from './observable-extension';
 @Injectable()
 export class UserService {
     private cached_users: {} = {};
-    private cached_user_ids: number[] = [];
 
     constructor(private vkservice: VKService, private http: Http) { }
 
@@ -21,7 +20,7 @@ export class UserService {
         let already_cached = true;
         let users = {};
         for (let uid of uids.split(',').map(id => Number(id))) {
-            if (uid in this.cached_user_ids) {
+            if (uid in this.cached_users) {
                 users[uid] = this.cached_users[uid];
             }
             else {
@@ -45,7 +44,7 @@ export class UserService {
     }
 
     getUser(uid: number = null): Observable<User> {
-        if (uid in this.cached_user_ids) {
+        if (uid ? uid in this.cached_users : this.vkservice.getSession().user_id in this.cached_users) {
             ObservableExtension.resolveOnValue(this.cached_users[uid]);
         }
         let session = this.vkservice.getSession();
@@ -65,7 +64,6 @@ export class UserService {
         let users_json = result['response'];
         for (let user_json of users_json) {
             users[user_json.id] = user_json as User;
-            this.cached_user_ids.push(user_json.id);
             this.cached_users[user_json.id] = user_json as User;;
         }
         return users;

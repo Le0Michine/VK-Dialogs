@@ -13,12 +13,13 @@ import { VKService } from './vk-service'
 import { VKConsts } from './vk-consts'
 
 @Component({
-    selector: 'my-app',
-    templateUrl: 'app/app.component.html',
-    directives: [ROUTER_DIRECTIVES],
-    providers: [HTTP_PROVIDERS, UserService, VKService, DialogService, ChangeDetectorRef],
-    precompile: [DialogsComponent, DialogComponent]
+  selector: 'login',
+  templateUrl: 'app/login.component.html',
 })
-export class AppComponent { 
-    title = "Dialogs";
+export class LoginComponent { 
+    title = "Authorization";
+    constructor(private vkservice: VKService) { }
+    authorize() {
+        this.vkservice.auth(false, true);
+    }
 }

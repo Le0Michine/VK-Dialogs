@@ -8,4 +8,6 @@ export class VKConsts {
     public static vk_permissions_id: string = "vk_permissions"
     public static vk_auth_timestamp_id: string = "vk_auth_timestamp"
     public static vk_session_info: string = "vk_session_info"
+
+    public static user_denied: string = 'user_denied';
 }
