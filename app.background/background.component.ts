@@ -30,7 +30,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         console.log('background init');
         AuthHelper.addTabListener();
         this.preAuthorize();
-        Observable.interval(1000).subscribe(r => {this.i++; chrome.browserAction.setBadgeText({text: String(this.i)});});
+        //Observable.interval(1000).subscribe(r => {this.i++; chrome.browserAction.setBadgeText({text: String(this.i)});});
 
         chrome.runtime.onConnect.addListener(port => {
             if (port.name === Channels.messages_cache_port) {
@@ -44,7 +44,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
             switch (request.name) {
                 case Channels.get_dialogs_request: 
-                    this.dialogsService.getDialogs().subscribe(dialogs => {
+                    this.dialogsService.getCachedDialogs().subscribe(dialogs => {
                         sendResponse({data: dialogs});
                         console.log('dialogs sent');
                     });

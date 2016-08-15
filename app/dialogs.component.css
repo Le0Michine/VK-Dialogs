@@ -131,6 +131,24 @@
     outline: rgba(0, 0, 0, 0) none 0px;
 }/*#user_avatar:before*/
 
+#online_marker:after {
+    border-color: inherit;
+}
+#online_marker:after {
+    bottom: 2%;
+    right: 2%;
+    border: 2px solid #fff;
+    height: 8px;
+    width: 8px;
+    z-index: 100;
+}
+#online_marker:after {
+    content: '';
+    position: absolute;
+    background-color: #8ac176;
+    border-radius: 50%;
+}
+
 #dialog_div {
     bottom: 0px;
     cursor: pointer;

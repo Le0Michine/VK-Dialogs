@@ -17,7 +17,7 @@ export class UserService {
         let session = this.vkservice.getSession();
         let uri = VKConsts.api_url 
             + 'users.get?user_ids=' + uids 
-            + '&fields=photo_50'
+            + '&fields=photo_50,online'
             + '&access_token=' + session.access_token
             + '&v=' + VKConsts.api_version;
         return this.http.get(uri)
@@ -29,7 +29,7 @@ export class UserService {
         let session = this.vkservice.getSession();
         let uri = VKConsts.api_url 
             + 'users.get?user_ids=' + (uid != null ? uid : session.user_id) 
-            + '&fields=photo_50'
+            + '&fields=photo_50,online'
             + '&access_token=' + session.access_token
             + '&v=' + VKConsts.api_version;
         return this.http.get(uri)

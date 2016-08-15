@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs } from '@angular/http';
-import { Observable }     from 'rxjs/Observable';
+import { Observable }     from 'rxjs/Rx';
 
 import { VKConsts } from '../app/vk-consts';
 import { Message, Chat } from '../app/message';
@@ -16,7 +16,36 @@ export class DialogService {
     private get_message: string = "messages.getById";
     private send_message: string = "messages.send";
 
-    constructor(private vkservice: VKService, private http: Http) { }
+    private unread_dialogs_count: number = 0;
+
+    private cached_dialogs: Message[];
+
+    constructor(private vkservice: VKService, private http: Http) {
+        if (vkservice.isSessionValid) {
+            this.startMonitoring();
+        }
+        else {
+            chrome.extension.onRequest.addListener(r => {
+                if (r.name === 'authorization completed') {
+                    this.startMonitoring();
+                }
+            });
+        }
+     }
+
+    startMonitoring() {
+        Observable.interval(2000).subscribe(() => { 
+            this.getDialogs().subscribe(d => this.cached_dialogs = d); 
+        });
+    }
+
+    getCachedDialogs() {
+        if (this.cached_dialogs) {
+            let res = Observable.bindCallback((callback: (dialogs: Message[]) => void) => callback(this.cached_dialogs));
+            return res();
+        }
+        return this.getDialogs();
+    }
 
     getDialogs(): Observable<Message[]> {
         console.log('dialogs are requested');
@@ -84,6 +113,12 @@ export class DialogService {
         console.log('messages cout ' + count);
         let messages_json = json.items;
         let dialogs: Message[] = [];
+
+        if (json.unread_dialogs) {
+            this.unread_dialogs_count = json.unread_dialogs;
+            this.setBadgeNumber(json.unread_dialogs);
+        }
+
         for (let message_json of messages_json) {
             let m = message_json.message || message_json;
             //m.body = m.body.replace(/\r?\n/g, "<br>");
@@ -97,5 +132,9 @@ export class DialogService {
             }
         }
         return dialogs;
+    }
+
+    private setBadgeNumber(n: number) {
+        chrome.browserAction.setBadgeText({text: String(n)});
     }
 }

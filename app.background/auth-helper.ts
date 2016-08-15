@@ -59,6 +59,7 @@ export class AuthHelper {
                 chrome.tabs.remove(tabId);
                 AuthHelper.tab_id = null;
                 AuthHelper.authorization_in_progress_count --;
+                chrome.extension.sendRequest({name: 'authorization_completed'});
             }
         });
     }
