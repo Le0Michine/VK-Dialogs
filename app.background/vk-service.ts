@@ -3,11 +3,10 @@ import { Injectable }     from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
 
-import { Channels } from '../app.background/channels';
+import { VKConsts } from '../app/vk-consts';
+import { SessionInfo } from '../app/session-info';
 
-import { VKConsts } from './vk-consts';
-import { SessionInfo } from './session-info';
-import { RequestHelper } from './request-helper';
+import { AuthHelper } from './auth-helper';
 
 @Injectable()
 export class VKService {
@@ -25,10 +24,10 @@ export class VKService {
     auth(force: boolean = false) {
         console.log('authorization requested');
         this.initializeSeesion();
-        RequestHelper.sendRequestToBackground({
-            name: Channels.get_session_request,
-            force_auth: force
-        }).subscribe(s => this.session_info = s);
+        if (!this.isSessionValid()) {
+            let force = this.session_info ? false : true;
+            AuthHelper.authorize(force);
+        }
     }
 
     initializeSeesion() {
@@ -42,7 +41,7 @@ export class VKService {
             && this.session_info.timestamp
             && this.session_info.token_exp
             && this.session_info.user_id
-            && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
+            && !this.session_info.isExpired
         );
     }
 

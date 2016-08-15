@@ -4,26 +4,30 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HTTP_PROVIDERS, Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { AuthHelper } from './auth-helper';
 import { VKConsts } from '../app/vk-consts';
-import { VKService } from '../app/vk-service';
+
+import { AuthHelper } from './auth-helper';
+import { VKService } from './vk-service';
+import { UserService } from './user-service';
 import { DialogService } from './dialogs-service';
 import { Channels } from './channels';
 
 @Component({
     selector: 'background-app',
     template: '<span>Backgrounf component</span>',
-    providers: [HTTP_PROVIDERS, VKService, DialogService],
+    providers: [HTTP_PROVIDERS, VKService, DialogService, UserService],
     precompile: []
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
     i: number = 0;
 
-    constructor(private http: Http, private dialogsService: DialogService) { }
+    constructor(
+        private http: Http,
+        private dialogsService: DialogService,
+        private userService: UserService) { }
 
     ngOnInit() {
         console.log('background init');
-        AuthHelper.addRequestListener();
         AuthHelper.addTabListener();
         this.preAuthorize();
         Observable.interval(1000).subscribe(r => {this.i++; chrome.browserAction.setBadgeText({text: String(this.i)});});
@@ -68,6 +72,29 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                         sendResponse({data: message})
                         console.log('message id sent')
                     });
+                    break;
+                case Channels.get_multiple_users_request:
+                    this.userService.getUsers(request.user_ids).subscribe(users => {
+                        sendResponse({data: users})
+                        console.log('users sent')
+                    });
+                    break;
+                case Channels.get_user_request:
+                    this.userService.getUser(request.user_id).subscribe(user => {
+                        sendResponse({data: user})
+                        console.log('single user sent')
+                    });
+                    break;
+                case Channels.get_session_request:
+                    if (request.force_auth) {
+                        console.log('got request about implicit authorization')
+                        AuthHelper.authorize();
+                    }
+                    else {
+                        console.log('got request about explicit authorization')
+                        AuthHelper.authorize(false);
+                    }
+                    sendResponse();
                     break;
             }
         });

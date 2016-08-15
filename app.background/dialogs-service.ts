@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs } from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
 
-import { VKService } from '../app/vk-service';
 import { VKConsts } from '../app/vk-consts';
 import { Message, Chat } from '../app/message';
 import { User } from '../app/user';
+
+import { VKService } from './vk-service';
 
 @Injectable()
 export class DialogService {

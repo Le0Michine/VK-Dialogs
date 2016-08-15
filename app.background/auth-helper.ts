@@ -28,21 +28,6 @@ export class AuthHelper {
         chrome.tabs.create({url: authUrl, selected: !background}, tab => AuthHelper.tab_id = tab.id);
     }
 
-    static addRequestListener() {
-        chrome.extension.onRequest.addListener(
-            function(request, sender, sendResponse) {
-                if (request.auth === 'implicit') {
-                    console.log('got request about implicit authorization')
-                    AuthHelper.authorize();
-                }
-                else if (request.auth === 'explicit') {
-                    console.log('got request about explicit authorization')
-                    AuthHelper.authorize(false);
-                }
-            }
-        );
-    }
-
     static addTabListener() {
         chrome.tabs.onUpdated.addListener(function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {
             if (tabId == AuthHelper.tab_id && tab.url.split('#')[0] === AuthHelper.redirect_uri && tab.status === 'complete') {

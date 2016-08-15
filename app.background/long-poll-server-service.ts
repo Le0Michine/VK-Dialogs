@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs } from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
 
+import { VKConsts } from '../app/vk-consts';
+
 import { LongPollServer } from './long-poll-server';
-import { VKConsts } from './vk-consts';
 import { VKService } from './vk-service';
 
 @Injectable()

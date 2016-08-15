@@ -62,7 +62,10 @@ export class DialogComponent {
             }
             else {
                 this.userService.getUsers(participants).subscribe(
-                    users => { this.participants = users; },
+                    users => { 
+                        this.participants = users;
+                        this.change_detector.detectChanges();
+                    },
                     error => this.errorHandler(error),
                     () => console.log('dialog participants loaded'));
             } 
