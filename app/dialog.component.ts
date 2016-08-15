@@ -7,6 +7,7 @@ import { DialogService } from './dialogs-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
 import { Channels } from '../app.background/channels'
+import { DateConverter } from './date-converter'
 
 @Component({
     selector: 'messges',
@@ -222,6 +223,10 @@ export class DialogComponent {
             value: undefined,
             remove: true
         });
+    }
+
+    convertDate(unixtime: number) {
+        return DateConverter.convertDateTime(unixtime);
     }
 
     errorHandler(error) {

@@ -18,7 +18,7 @@
 		<div id="message">
 			<div id="user_name_and_date">
 				<a id="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
-                <span id="message_timestamp"> {{message.date}}</span>
+                <span id="message_timestamp"> {{convertDate(message.date)}}</span>
 			</div>
 			<ul id="messages_list">
 				<li id="message_item">
