@@ -53,6 +53,14 @@ export class DialogService {
 
     getChatParticipants(chat_id: number): Observable<{}> {
         console.log('chat participants requested');
+        return this.sendRequestToBackground({
+            name: Channels.get_chat_participants_request,
+            'chat_id': chat_id
+        });
+    }
+
+    getChatParticipants_old(chat_id: number): Observable<{}> {
+        console.log('chat participants requested');
         let uri: string = VKConsts.api_url + this.get_chat
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version

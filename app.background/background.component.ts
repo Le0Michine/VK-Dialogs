@@ -38,17 +38,25 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         });
 
         chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
-            if (request.name === Channels.get_dialogs_request) {
-                this.dialogsService.getDialogs().subscribe(dialogs => {
-                    sendResponse({data: dialogs});
-                    console.log('dialogs sent');
-                });
-            }
-            else if (request.name === Channels.get_history_request) {
-                this.dialogsService.getHistory(request.conversation_id, request.is_chat).subscribe(history => {
-                    sendResponse({data: history});
-                    console.log('history sent');
-                });
+            switch (request.name) {
+                case Channels.get_dialogs_request: 
+                    this.dialogsService.getDialogs().subscribe(dialogs => {
+                        sendResponse({data: dialogs});
+                        console.log('dialogs sent');
+                    });
+                    break;
+                case Channels.get_history_request:
+                    this.dialogsService.getHistory(request.conversation_id, request.is_chat).subscribe(history => {
+                        sendResponse({data: history});
+                        console.log('history sent');
+                    });
+                    break;
+                case Channels.get_chat_participants_request:
+                    this.dialogsService.getChatParticipants(request.chat_id).subscribe(participants => {
+                        sendResponse({data: participants})
+                        console.log('chat participants sent')
+                    });
+                    break;
             }
         });
     }

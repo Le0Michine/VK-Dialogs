@@ -53,7 +53,10 @@ export class DialogComponent {
 
             if (isChat) {
                 this.messagesService.getChatParticipants(id).subscribe(
-                    users => { this.participants = users; },
+                    users => { 
+                        this.participants = users;
+                        this.change_detector.detectChanges();
+                    },
                     error => this.errorHandler(error),
                     () => console.log('chat participants loaded'));
             }

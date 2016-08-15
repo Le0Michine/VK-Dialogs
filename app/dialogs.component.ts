@@ -95,7 +95,7 @@ export class DialogsComponent implements OnInit {
 
     getUserName(uid: number) {
         if (this.users && this.users[uid]) {
-            return this.users[uid].first_name;
+            return this.users[uid].first_name + ' ' + this.users[uid].last_name;
         }
         return 'loading...'; 
     }
