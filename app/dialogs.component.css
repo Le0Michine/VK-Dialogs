@@ -279,3 +279,28 @@
     outline: rgb(255, 255, 255) none 0px;
     overflow: hidden;
 }/*#unread_marker*/
+
+#unread_count {
+    bottom: 13px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    height: 18px;
+    left: 413px;
+    min-width: 6px;
+    position: absolute;
+    right: 15px;
+    text-align: center;
+    top: 57px;
+    width: 6px;
+    column-rule-color: rgb(255, 255, 255);
+    perspective-origin: 9px 9px;
+    transform-origin: 9px 9px;
+    background: rgb(114, 147, 182) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 0px none rgb(255, 255, 255);
+    border-radius: 18px 18px 18px 18px;
+    font: normal normal 500 normal 11px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    list-style: none outside none;
+    margin: -17px 0px 0px;
+    outline: rgb(255, 255, 255) none 0px;
+    padding: 0px 6px;
+}/*#unread_count*/

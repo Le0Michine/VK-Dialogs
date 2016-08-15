@@ -30,18 +30,21 @@ export class Message {
     body: string;
 
     // Array of media-attachments; see Description of "attachments" field. (https://new.vk.com/dev/attachments_m)
-    //attachments: any;
+    // attachments: any;
 
     // Array of forwarded messages (if any).
-    //fwd_messages: any;
+    // fwd_messages: any;
 
     // Whether the message contains smiles (0 — no, 1 — yes).
     // flag, either 1 or 0
-    //emoji: boolean;
+    // emoji: boolean;
 
     // Whether the message is deleted (0 — no, 1 — yes). 
     // flag, either 1 or 0
-    //deleted: boolean;
+    // deleted: boolean;
+
+    // not a part of api, optional field to store count of unread messages in dialog or chat.
+    unread_count: number;
 }
 
 export class Chat extends Message {

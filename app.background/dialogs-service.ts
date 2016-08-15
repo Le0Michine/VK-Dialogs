@@ -16,8 +16,6 @@ export class DialogService {
     private get_message: string = "messages.getById";
     private send_message: string = "messages.send";
 
-    private unread_dialogs_count: number = 0;
-
     private cached_dialogs: Message[];
 
     constructor(private vkservice: VKService, private http: Http) {
@@ -35,7 +33,9 @@ export class DialogService {
 
     startMonitoring() {
         Observable.interval(2000).subscribe(() => { 
-            this.getDialogs().subscribe(d => this.cached_dialogs = d); 
+            this.getDialogs().subscribe(dialogs => {
+                this.cached_dialogs = dialogs;
+            }); 
         });
     }
 
@@ -55,13 +55,13 @@ export class DialogService {
         return this.http.get(uri).map(response => this.toMessages(response.json()));
     }
 
-    getHistory(id: number, chat: boolean) {
+    getHistory(id: number, chat: boolean, count: number = 20) {
         console.log('history is requested');
         let uri: string = VKConsts.api_url + this.get_history
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version
             + (chat ? "&chat_id=" + id : "&user_id=" + id)
-            + "&count=20"
+            + "&count=" + count
             + "&rev=0";
 
         return this.http.get(uri).map(response => this.toMessages(response.json()));
@@ -115,13 +115,14 @@ export class DialogService {
         let dialogs: Message[] = [];
 
         if (json.unread_dialogs) {
-            this.unread_dialogs_count = json.unread_dialogs;
             this.setBadgeNumber(json.unread_dialogs);
         }
 
         for (let message_json of messages_json) {
             let m = message_json.message || message_json;
-            //m.body = m.body.replace(/\r?\n/g, "<br>");
+            if (message_json.unread) {
+                m.unread_count = message_json.unread;
+            }
             if (m['chat_id']) {
                 let chat: Chat = m as Chat;
                 dialogs.push(chat);

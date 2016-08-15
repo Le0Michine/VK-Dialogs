@@ -33,6 +33,7 @@
                     <span id="three_dots">...</span>
 				</div>
 				<div id="unread_marker" [hidden]="dialog.read_state"></div>
+				<div id="unread_count" [hidden]="!dialog.unread_count">{{dialog.unread_count}}</div>
 			</div>
 		</div>
     </li>
