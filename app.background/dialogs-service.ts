@@ -7,6 +7,7 @@ import { Message, Chat } from '../app/message';
 import { User } from '../app/user';
 
 import { VKService } from './vk-service';
+import { ErrorHelper } from './error-helper';
 
 @Injectable()
 export class DialogService {
@@ -25,7 +26,7 @@ export class DialogService {
 
     startMonitoring() {
         Observable.interval(2000).subscribe(() => { 
-            if (this.vkservice.isSessionValid()) {
+            if (this.vkservice.getSession()) {
                 this.getDialogs().subscribe(dialogs => {
                     this.cached_dialogs = dialogs;
                 });
@@ -93,6 +94,7 @@ export class DialogService {
     }
 
     private toUserDict(json): {} {
+        if (ErrorHelper.checkErrors(json)) return {};
         let users = {};
         for (let user_json of json.response.users) {
             users[user_json.id] = user_json as User;
@@ -102,6 +104,7 @@ export class DialogService {
     }
 
     private toMessages(json): Message[] {
+        if (ErrorHelper.checkErrors(json)) return [];
         json = json.response || json;
         let count: number = Number(json.count);
         console.log('messages cout ' + count);

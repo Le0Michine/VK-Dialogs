@@ -41,7 +41,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             }
         });
 
-        chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             switch (request.name) {
                 case Channels.get_dialogs_request: 
                     this.dialogsService.getCachedDialogs().subscribe(dialogs => {
@@ -94,10 +94,17 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                         console.log('got request about explicit authorization')
                         AuthHelper.authorize(false);
                     }
-                    sendResponse();
+                    sendResponse({data: ''});
+                    break;
+                case 'request_error':
+                    this.processError(request.error_code);
                     break;
             }
         });
+    }
+
+    processError(erorr_code: number) {
+
     }
 
     initMessagesCache(port: chrome.runtime.Port) {

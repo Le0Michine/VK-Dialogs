@@ -48,7 +48,8 @@ export class VKService {
 
     getSession(): SessionInfo {
         if (!this.isSessionValid()) {
-            this.auth(true);  
+            let background: boolean = this.session_info ? this.session_info.isExpired() : false;            
+            this.auth(background);  
         }
         return this.session_info;
     }
