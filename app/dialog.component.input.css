@@ -4,7 +4,8 @@
     height: 30px;
     left: 0px;
     position: fixed;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: hidden;
     z-index: 800;
     right: 0px;
     text-align: left;

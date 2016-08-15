@@ -1,5 +1,6 @@
 #top_panel {
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: hidden;
     position: fixed;
     z-index: 999;
     height: 45px;
