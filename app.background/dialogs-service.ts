@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs } from '@angular/http';
-import { Observable, Scheduler }     from 'rxjs/Rx';
+import { Observable }     from 'rxjs/Observable';
 
-import { VKService } from './vk-service';
-import { VKConsts } from './vk-consts';
-import { Message, Chat } from './message';
-import { User } from './user';
-import { Channels } from '../app.background/channels';
+import { VKService } from '../app/vk-service';
+import { VKConsts } from '../app/vk-consts';
+import { Message, Chat } from '../app/message';
+import { User } from '../app/user';
 
 @Injectable()
 export class DialogService {
@@ -20,10 +19,6 @@ export class DialogService {
 
     getDialogs(): Observable<Message[]> {
         console.log('dialogs are requested');
-        return this.sendRequestToBackground({name: Channels.get_dialogs_request});
-    }
-
-    getDialogs_old() {
         let uri: string = VKConsts.api_url + this.get_dialogs 
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version;
@@ -31,15 +26,6 @@ export class DialogService {
     }
 
     getHistory(id: number, chat: boolean) {
-        console.log('history is requested');
-        return this.sendRequestToBackground({
-            name: Channels.get_history_request,
-            conversation_id: id,
-            is_chat: chat
-        });
-    }
-
-    getHistory_old(id: number, chat: boolean) {
         console.log('history is requested');
         let uri: string = VKConsts.api_url + this.get_history
             + "?access_token=" + this.vkservice.getSession().access_token
@@ -80,19 +66,6 @@ export class DialogService {
             + "&message=" + message 
             + "&notification=1";
         return this.http.get(uri).map(response => response.json().response);
-    }
-
-    private sendRequestToBackground(request: any): Observable<any> {
-        let result = Observable.bindCallback((callback: (dialogs: any) => void) => {
-            chrome.extension.sendRequest(
-                request,
-                (response: any) => {
-                    console.log('response obtained for request: ' + request.name);
-                    callback(response.data);
-                }
-            );
-        });
-        return result();
     }
 
     private toUserDict(json): {} {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Rx';;
 import { Message } from './message'
@@ -6,6 +6,7 @@ import { User } from './user'
 import { DialogService } from './dialogs-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
+import { Channels } from '../app.background/channels'
 
 @Component({
     selector: 'messges',
@@ -31,7 +32,8 @@ export class DialogComponent {
         private messagesService: DialogService,
         private vkservice: VKService, 
         private userService: UserService, 
-        private route: ActivatedRoute) { }
+        private route: ActivatedRoute,
+        private change_detector: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.user_id = this.vkservice.getSession().user_id;
@@ -69,18 +71,20 @@ export class DialogComponent {
     }
     
     restoreCachedMessages(id, isChat) {
-        this.messages_cache_port = chrome.runtime.connect({name:'messages_cache'});
+        this.messages_cache_port = chrome.runtime.connect({name: Channels.messages_cache_port});
         let cachedMessage = window.localStorage.getItem('cached_message_' + id + isChat);
         if (cachedMessage && cachedMessage != "undefined") {
             this.clearLabelContent();
             this.current_text = cachedMessage;
         }
-        this.resizeInputTextarea();
+        this.resizeInputTextarea2();
     }
 
     updateHistory() {
         this.messagesService.getHistory(this.conversation_id, this.is_chat).subscribe(
-            m => { this.history = m; },
+            m => { 
+                this.history = m;
+                this.change_detector.detectChanges(); },
             error => this.errorHandler(error),
             () => console.log('history loaded'));
     }
@@ -118,7 +122,12 @@ export class DialogComponent {
         this.messagesService.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
             message => console.log(JSON.stringify(message)),
             error => this.errorHandler(error),
-            () => { console.log('message sent'); textarea.value = ''; this.updateHistory(); });
+            () => { 
+                console.log('message sent'); 
+                textarea.value = ''; 
+                this.updateHistory(); 
+                this.clearCache(); 
+            });
     }
 
     onKeyPress(event, value) {
@@ -126,16 +135,13 @@ export class DialogComponent {
             event.preventDefault();
             this.sendMessage();
         }
-        else {
-            this.cacheCurrentMessage();
-        }
     }
 
     resizeInputTextarea() {
         let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
         let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
         let outer_div = document.getElementById('input_box');
-        let minHeight = 30;
+        let minHeight = 29;
 
         let resize = () => {
             if (!textarea.value) { /* if all the text was cut/deleted */
@@ -146,17 +152,59 @@ export class DialogComponent {
                 textarea.style.height = Math.max(textarea.scrollHeight+5, minHeight)+'px';
             }
             outer_div.style.height = textarea.style.height;
+            this.cacheCurrentMessage();
         }
         /* small timeout to get the already changed text */
         let delayedResize = () => { window.setTimeout(resize, 100); };
 
+        /* listen for every event which is fired after text is changed */
         addListener(textarea, 'change',  resize);
         addListener(textarea, 'cut',     delayedResize);
         addListener(textarea, 'paste',   delayedResize);
         addListener(textarea, 'drop',    delayedResize);
         addListener(textarea, 'keydown', delayedResize);
 
-        /* need to set value immidiately before resizing */
+        /* need to set value immidiately before initial resizing */
+        textarea.value = this.current_text;
+        delayedResize();
+    } /* 67 chars per string */
+
+    resizeInputTextarea2() {
+        let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
+        let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
+        let outer_div = document.getElementById('input_box');
+        let chat_body = document.getElementById('chat_body');
+        let minHeight = 29;
+        let charsPerLine = 77;
+
+        let resize = () => {            
+            if (!textarea.value) { /* if all the text was cut/deleted */
+                textarea.style.height = minHeight+'px';    
+            }
+            else {
+                let lines = textarea.value.split(/\r?\n/g);
+                let lines_count = lines.length;
+                for (let line of lines) {
+                    lines_count += Math.floor(line.length / charsPerLine);
+                }
+                textarea.style.height = Math.max(lines_count * 17, minHeight)+'px';
+            }
+            outer_div.style.height = textarea.style.height;
+            chat_body.style.top = (Number(textarea.style.height.match(/[0-9]+/g)) + 45) + 'px';
+            this.cacheCurrentMessage();
+        }
+
+        /* small timeout to get the already changed text */
+        let delayedResize = () => { window.setTimeout(resize, 100); };
+
+        /* listen for every event which is fired after text is changed */
+        addListener(textarea, 'change',  resize);
+        addListener(textarea, 'cut',     delayedResize);
+        addListener(textarea, 'paste',   delayedResize);
+        addListener(textarea, 'drop',    delayedResize);
+        addListener(textarea, 'keydown', delayedResize);
+
+        /* need to set value immidiately before initial resizing */
         textarea.value = this.current_text;
         delayedResize();
     }
@@ -166,6 +214,14 @@ export class DialogComponent {
             key: 'cached_message_' + this.conversation_id + this.is_chat,
             value: this.current_text
         });        
+    }
+
+    clearCache() {
+        this.messages_cache_port.postMessage({
+            key: 'cached_message_' + this.conversation_id + this.is_chat,
+            value: undefined,
+            remove: true
+        });
     }
 
     errorHandler(error) {

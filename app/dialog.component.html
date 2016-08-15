@@ -8,6 +8,7 @@
 <div id="input_box">
 	<label id="input_label" for="message_input">Type your text here…</label>
 	<textarea id="message_input" #minput (click)="clearLabelContent()" (keydown)="onKeyPress($event,minput.value)" [(ngModel)]="current_text"></textarea>
+	<div id="hline"></div>
 </div>
 <div id="chat_body">
 	<div id="message_block" *ngFor="let message of history">

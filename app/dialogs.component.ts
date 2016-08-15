@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from './message'
 import { Chat } from './message'
@@ -14,7 +14,8 @@ import { Observable as Observable1 } from 'rxjs/Rx';
   selector: 'dialogs',
   templateUrl: 'app/dialogs.component.html',
   styleUrls: ['app/dialogs.component.css'],
-  directives: [DialogComponent]
+  directives: [DialogComponent],
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogsComponent implements OnInit { 
     title = "Dialogs";
@@ -29,7 +30,8 @@ export class DialogsComponent implements OnInit {
         private userService: UserService,
         private router: Router, 
         private vkservice: VKService, 
-        private dialogsService: DialogService) { }
+        private dialogsService: DialogService,
+        private change_detector: ChangeDetectorRef) { }
 
     gotoDialog(dialog: Message) {
         let link: string[];
@@ -52,12 +54,18 @@ export class DialogsComponent implements OnInit {
 
     ngOnInit() {
         this.userService.getUser().subscribe(
-            u => this.user = u, 
+            u => {
+                this.user = u;
+            }, 
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
 
         this.dialogsService.getDialogs().subscribe(
-            dialogs => { this.dialogs = dialogs as Message[]; this.initUsers(); },
+            dialogs => { 
+                this.dialogs = dialogs as Message[];
+                this.initUsers();
+                this.change_detector.detectChanges();
+            },
             error => this.errorHandler(error),
             () => console.log('dialogs loaded'));
     }
@@ -72,7 +80,10 @@ export class DialogsComponent implements OnInit {
             uids.push(dialog.user_id);
         }
         this.userService.getUsers(uids.join()).subscribe(
-            users => { this.users = users; },
+            users => { 
+                this.users = users; 
+                this.change_detector.detectChanges();
+            },
             error => this.errorHandler(error),
             () => console.log('users loaded')
         );

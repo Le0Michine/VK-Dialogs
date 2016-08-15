@@ -1,10 +1,14 @@
 #top_panel {
+    overflow: scroll;
+    position: fixed;
+    z-index: 999;
     height: 45px;
     text-align: left;
     vertical-align: top;
     width: 100%;
     perspective-origin: 275px 22.5px;
     transform-origin: 275px 22.5px;
+    background-color: #eff0f1;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     /*border-bottom: 1px solid rgb(231, 232, 236);*/
 }/*#top_panel*/

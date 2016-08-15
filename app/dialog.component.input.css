@@ -3,14 +3,16 @@
     cursor: text;
     height: 30px;
     left: 0px;
-    position: relative;
+    position: fixed;
+    overflow: scroll;
+    z-index: 800;
     right: 0px;
     text-align: left;
-    top: 0px;
+    top: 45px;
     perspective-origin: 189px 35px;
     transform-origin: 189px 35px;
     /*border-top: 15px solid rgba(0, 0, 0, 0);*/
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 0px 0px;
     /*border-bottom: 1px solid rgb(231, 232, 236);*/
@@ -25,7 +27,9 @@
     position: absolute;
     text-align: left;
     top: 5px;
-    z-index: 5;
+    width: 90%;
+    height: 100%;
+    z-index: 50;
     column-rule-color: rgb(130, 130, 130);
     perspective-origin: 189px 0px;
     transform-origin: 189px 0px;
@@ -33,6 +37,7 @@
     outline: rgb(130, 130, 130) none 0px;
     padding: 1px;
     transition: color 0.2s ease 0s;
+    /*border-bottom: 1px solid rgb(231, 232, 236);*/
 }/*#message_input*/
 
 #message_input {
@@ -46,17 +51,33 @@
     height: 100%;
     width: 90%;
     resize: none;
-    z-index: 3;
+    z-index: 30;
     column-rule-color: rgb(130, 130, 130);
     perspective-origin: 189px 0px;
     transform-origin: 189px 0px;
-    border: none 1px rgba(0, 0, 0, 0);
-    border-radius: 1px 1px 1px 1px;
+    /* border: none 1px rgba(0, 0, 0, 0); */
+    border: none;
     font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(130, 130, 130) none 0px;
     padding-bottom: 5px;
     transition: color 0.2s ease 0s;
-    border-bottom: 1px solid rgb(231, 232, 236);
+    /* border-bottom: 1px solid rgb(231, 232, 236); */
 }/*#message_input*/
 
+#hline {
+    bottom: 31px;
+    color: rgb(130, 130, 130);
+    left: 5%;
+    position: absolute;
+    bottom: 0px;
+    height: 1px;
+    width: 90%;
+    z-index: 30;
+    column-rule-color: rgb(130, 130, 130);
+    /* border: none 1px rgba(0, 0, 0, 0); */
+    outline: rgb(130, 130, 130) none 0px;
+    padding-bottom: 5px;
+    transition: color 0.2s ease 0s;
+    border-bottom: 1px solid rgb(231, 232, 236);
+}/*#hline*/
 
