@@ -62,6 +62,7 @@ export class DialogsComponent implements OnInit {
         this.userService.getUser().subscribe(
             u => {
                 this.user = u;
+                this.change_detector.detectChanges();
             }, 
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
