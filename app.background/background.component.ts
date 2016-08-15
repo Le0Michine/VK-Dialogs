@@ -57,6 +57,18 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                         console.log('chat participants sent')
                     });
                     break;
+                case Channels.get_message_request:
+                    this.dialogsService.getMessage(request.message_ids).subscribe(messages => {
+                        sendResponse({data: messages})
+                        console.log('messages sent')
+                    });
+                    break;
+                case Channels.send_message_request:
+                    this.dialogsService.sendMessage(request.user_id, request.message_body, request.is_chat).subscribe(message => {
+                        sendResponse({data: message})
+                        console.log('message id sent')
+                    });
+                    break;
             }
         });
     }
