@@ -9,13 +9,14 @@ import { VKConsts } from '../app/vk-consts';
 import { AuthHelper } from './auth-helper';
 import { VKService } from './vk-service';
 import { UserService } from './user-service';
+import { CacheService } from './cache-service';
 import { DialogService } from './dialogs-service';
 import { Channels } from './channels';
 
 @Component({
     selector: 'background-app',
     template: '<span>Backgrounf component</span>',
-    providers: [HTTP_PROVIDERS, VKService, DialogService, UserService],
+    providers: [HTTP_PROVIDERS, VKService, DialogService, UserService, CacheService],
     precompile: []
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
@@ -31,7 +32,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         console.log('background init');
         AuthHelper.addTabListener();
         this.preAuthorize();
-        //Observable.interval(1000).subscribe(r => {this.i++; chrome.browserAction.setBadgeText({text: String(this.i)});});
 
         chrome.runtime.onConnect.addListener(port => {
             if (port.name === Channels.messages_cache_port) {
@@ -65,7 +65,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 case Channels.mark_as_read_request:
                     this.dialogsService.markAsRead(request.message_ids).subscribe(response => {
                         sendResponse({data: response});
-                        console.log('mark as read result: ' + response);
+                        console.log('mark as read result: ' + JSON.stringify(response));
                     });
                     return true;
                 case Channels.get_message_request:

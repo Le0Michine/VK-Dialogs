@@ -20,5 +20,7 @@
         "storage", 
         "http://vk.com/*", 
         "http://*.vk.me/*", 
-        "https://api.vk.com/method/*" ]
+        "https://api.vk.com/method/*",
+        "http://imv4.vk.com/*",
+        "http://*.vk.com/*"]
 }
