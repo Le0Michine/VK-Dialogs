@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message } from './message'
-import { Chat } from './message'
+import { Message, Chat } from './message'
+import { Dialog } from './Dialog'
 import { User } from './user'
 import { DialogComponent } from './dialog.component'
 import { UserService } from './user-service'
@@ -25,7 +25,7 @@ export class DialogsComponent implements OnInit {
 
     i: number = 0;
 
-    dialogs: Message[];
+    dialogs: Dialog[];
 
     constructor(
         private userService: UserService,
@@ -69,7 +69,7 @@ export class DialogsComponent implements OnInit {
 
         this.dialogsService.getDialogs().subscribe(
             dialogs => { 
-                this.dialogs = dialogs as Message[];
+                this.dialogs = dialogs as Dialog[];
                 this.initUsers();
                 this.change_detector.detectChanges();
             },
@@ -84,7 +84,7 @@ export class DialogsComponent implements OnInit {
     initUsers() {
         let uids: number[] = [];
         for (let dialog of this.dialogs) {
-            uids.push(dialog.user_id);
+            uids.push(dialog.message.user_id);
         }
         this.userService.getUsers(uids.join()).subscribe(
             users => { 
@@ -96,8 +96,8 @@ export class DialogsComponent implements OnInit {
         );
     }
 
-    convertDate(unixtime: number) {
-        return DateConverter.convertDateTime(unixtime);
+    formatDate(unixtime: number) {
+        return DateConverter.formatDate(unixtime);
     }
 
     getUserName(uid: number) {

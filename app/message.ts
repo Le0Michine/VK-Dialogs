@@ -42,9 +42,6 @@ export class Message {
     // Whether the message is deleted (0 — no, 1 — yes). 
     // flag, either 1 or 0
     // deleted: boolean;
-
-    // not a part of api, optional field to store count of unread messages in dialog or chat.
-    unread_count: number;
 }
 
 export class Chat extends Message {

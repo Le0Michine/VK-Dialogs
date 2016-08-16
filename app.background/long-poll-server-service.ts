@@ -9,42 +9,41 @@ import { VKService } from './vk-service';
 
 @Injectable()
 export class LongPollServerService {
-    private server_key: string = 'lps_key';
-    private server_address: string = 'lps_address';
-    private server_ts: string = 'lps_ts';
+    private vk_lps: string = 'vk_lps';
     private get_lps: string
 
-    server: LongPollServer;
-
+    server: LongPollServer = null;
 
     constructor(
         private vkservice: VKService,
         private http: Http) { }
 
     private initServer() {
-        let key: string = window.localStorage.getItem(this.server_key);
-        let address: string = window.localStorage.getItem(this.server_address);
-        let ts: number = window.localStorage.getItem(this.server_ts);
+        this.server = eval('(' + window.localStorage.getItem(this.vk_lps) + ')');
 
-        if (!this.server) {
-            if (key && address && ts) {
-                this.server = new LongPollServer();
-                this.server.key = key;
-                this.server.server = address;
-                this.server.ts = ts;
+        if (!this.server || !this.server.key || !this.server.server || !this.server.ts) {
+            if (this.vkservice.getSession() == null) {
+                console.log('not authorized, can\'t get poll server');
+                return;
             }
-            else {
-                if (!this.server || !key || !address || !ts) {
-                    this.server = new LongPollServer();
-                    let uri: string = VKConsts.api_url + this.get_lps
-                        + "?access_token=" + this.vkservice.getSession().access_token
-                        + "&v=" + VKConsts.api_version
-                        + "&use_ssl=1";
-                    this.http.get(uri)
-                        .map(response => response.json().response)
-                        .subscribe(response => this.server = response);
-                }
-            }
+            this.server = new LongPollServer();
+            let uri: string = VKConsts.api_url + this.get_lps
+                + "?access_token=" + this.vkservice.getSession().access_token
+                + "&v=" + VKConsts.api_version
+                + "&use_ssl=1";
+            this.http.get(uri)
+                .map(response => response.json().response)
+                .subscribe(response => {
+                    this.server = response;
+                });
         }
+    }
+
+    public getServer(): LongPollServer {
+        return this.server;
+    }
+
+    public getUpdate() {
+        
     }
 }

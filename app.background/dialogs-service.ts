@@ -4,10 +4,13 @@ import { Observable }     from 'rxjs/Rx';
 
 import { VKConsts } from '../app/vk-consts';
 import { Message, Chat } from '../app/message';
+import { Dialog } from '../app/dialog';
 import { User } from '../app/user';
 
 import { VKService } from './vk-service';
 import { ErrorHelper } from './error-helper';
+import { LongPollServerService } from './long-poll-server-service';
+import { LongPollServer } from './long-poll-server';
 
 @Injectable()
 export class DialogService {
@@ -16,8 +19,9 @@ export class DialogService {
     private get_chat: string = "messages.getChat";
     private get_message: string = "messages.getById";
     private send_message: string = "messages.send";
+    private mark_as_read: string = 'messages.markAsRead';
 
-    private cached_dialogs: Message[];
+    private cached_dialogs: Dialog[];
 
     constructor(private vkservice: VKService, private http: Http) {
         console.log('session is valid, start monitoring');
@@ -34,23 +38,23 @@ export class DialogService {
         });
     }
 
-    getCachedDialogs() {
+    getCachedDialogs(): Observable<Dialog[]> {
         if (this.cached_dialogs) {
-            let res = Observable.bindCallback((callback: (dialogs: Message[]) => void) => callback(this.cached_dialogs));
+            let res = Observable.bindCallback((callback: (dialogs: Dialog[]) => void) => callback(this.cached_dialogs));
             return res();
         }
         return this.getDialogs();
     }
 
-    getDialogs(): Observable<Message[]> {
+    getDialogs(): Observable<Dialog[]> {
         console.log('dialogs are requested');
         let uri: string = VKConsts.api_url + this.get_dialogs 
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version;
-        return this.http.get(uri).map(response => this.toMessages(response.json(), true));
+        return this.http.get(uri).map(response => this.toDialog(response.json()));
     }
 
-    getHistory(id: number, chat: boolean, count: number = 20) {
+    getHistory(id: number, chat: boolean, count: number = 20): Observable<Message[]> {
         console.log('history is requested');
         let uri: string = VKConsts.api_url + this.get_history
             + "?access_token=" + this.vkservice.getSession().access_token
@@ -59,7 +63,7 @@ export class DialogService {
             + "&count=" + count
             + "&rev=0";
 
-        return this.http.get(uri).map(response => this.toMessages(response.json(), false));
+        return this.http.get(uri).map(response => this.toMessages(response.json()));
     }
 
     getChatParticipants(chat_id: number): Observable<{}> {
@@ -79,7 +83,16 @@ export class DialogService {
             + "?access_token=" + this.vkservice.getSession().access_token
             + "&v=" + VKConsts.api_version
             + "&message_ids=" + ids; 
-        return this.http.get(uri).map(response => this.toMessages(response.json(), false));
+        return this.http.get(uri).map(response => this.toMessages(response.json()));
+    }
+
+    markAsRead(ids: string): Observable<number> {
+        console.log('mark as read message(s) with id: ' + ids);
+        let uri: string = VKConsts.api_url + this.mark_as_read
+            + "?access_token=" + this.vkservice.getSession().access_token
+            + "&v=" + VKConsts.api_version
+            + "&message_ids=" + ids; 
+        return this.http.get(uri).map(response => response.json());
     }
 
     sendMessage(id: number, message: string, chat: boolean): Observable<Message> {
@@ -103,33 +116,21 @@ export class DialogService {
         return users;
     }
 
-    private toMessages(json, update_badge: boolean): Message[] {
+    private toDialog(json): Dialog[] {
         if (ErrorHelper.checkErrors(json)) return [];
         json = json.response || json;
-        let count: number = Number(json.count);
-        console.log('messages cout ' + count);
-        let messages_json = json.items;
-        let dialogs: Message[] = [];
+        console.log('dialogs cout ' + json.count);
+        this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : '');
 
-        if (update_badge) {
-            this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : '');
-        }
+        return json.items as Dialog[];
+    }
 
-        for (let message_json of messages_json) {
-            let m = message_json.message || message_json;
-            if (message_json.unread) {
-                m.unread_count = message_json.unread;
-            }
-            if (m['chat_id']) {
-                let chat: Chat = m as Chat;
-                dialogs.push(chat);
-            }
-            else {
-                let message: Message = m as Message;
-                dialogs.push(message);
-            }
-        }
-        return dialogs;
+    private toMessages(json): Message[] {
+        if (ErrorHelper.checkErrors(json)) return [];
+        json = json.response || json;
+        console.log('messages cout ' + json.count);
+
+        return json.items as Message[];
     }
 
     private setBadgeNumber(n: number) {

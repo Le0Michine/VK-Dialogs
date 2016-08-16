@@ -5,6 +5,7 @@ import { Observable, Scheduler }     from 'rxjs/Rx';
 import { VKService } from './vk-service';
 import { VKConsts } from './vk-consts';
 import { Message, Chat } from './message';
+import { Dialog } from './dialog';
 import { User } from './user';
 import { Channels } from '../app.background/channels';
 import { RequestHelper } from './request-helper';
@@ -23,7 +24,7 @@ export class DialogService {
         this.conversation_port = chrome.runtime.connect({name: 'conversation'});
     }
 
-    getDialogs(): Observable<Message[]> {
+    getDialogs(): Observable<Dialog[]> {
         console.log('dialogs are requested');
         return RequestHelper.sendRequestToBackground({name: Channels.get_dialogs_request});
     }
@@ -42,6 +43,14 @@ export class DialogService {
         return RequestHelper.sendRequestToBackground({
             name: Channels.get_chat_participants_request,
             'chat_id': chat_id
+        });
+    }
+
+    markAsRead(ids: string): Observable<number> {
+        console.log('requested message(s) with id: ' + ids);
+        return RequestHelper.sendRequestToBackground({
+            name: Channels.mark_as_read_request,
+            message_ids: ids
         });
     }
 

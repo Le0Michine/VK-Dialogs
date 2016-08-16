@@ -150,3 +150,28 @@
     outline: rgb(255, 255, 255) none 0px;
     padding: 7px 16px 8px;
 }/*#send_btn*/
+
+#mark_as_read_btn {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    min-height: 0px;
+    position: absolute;
+    right: 75px;
+    top: 10px;
+    white-space: nowrap;
+    z-index: 5;
+    column-rule-color: rgb(255, 255, 255);
+    perspective-origin: 31.0312px 15px;
+    transform-origin: 31.0312px 15px;
+    background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 0px none rgb(255, 255, 255);
+    border-radius: 2px 2px 2px 2px;
+    font: normal normal normal normal 12.5px / 15px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(255, 255, 255) none 0px;
+    padding: 7px 16px 8px;
+}/*#mark_as_read_btn*/
+
+#mark_as_read_btn:hover, #send_btn:hover {
+    background: rgba(100, 150, 200, 0.9);
+    border: 1px rgb(0, 0, 0);
+}

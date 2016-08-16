@@ -2,11 +2,11 @@
 <!--<button (click)="convertDate(1231432423)">refresh</button>-->
 <ul id="dialogs_list">
 	<!--<button name="btn" id="btn" (click)="ngOnInit()">refresh</button>-->
-    <li *ngFor="let dialog of dialogs" (click)="gotoDialog(dialog)" id="dialog_li">
+    <li *ngFor="let dialog of dialogs" (click)="gotoDialog(dialog.message)" id="dialog_li">
         <div id="user_avatar_div">
 			<div><div><div>
 				<div id="user_avatar_inner_div">
-					<img alt="" [src]="dialog.chat_id ? 'http://vk.com/images/camera_c.gif' : getUserPhoto(dialog.user_id)" width="50" height="50" id="user_avatar" />
+					<img alt="" [src]="dialog.message.chat_id ? 'http://vk.com/images/camera_c.gif' : getUserPhoto(dialog.message.user_id)" width="50" height="50" id="user_avatar" />
 				</div>
 			</div></div></div>
 		</div>
@@ -14,26 +14,26 @@
 		<div id="dialog_div">
 			<div id="dialog_content_div">
 				<div id="last_message_date">
-					{{convertDate(dialog.date)}}
+					{{dialog.message.date*1000 | date:formatDate(dialog.message.date) }}
 				</div>
 				<div id="dialog_title_div">
 					 <span id="dialog_title_span">
                         <span>
-                             {{dialog.title === ' ... ' ? getUserName(dialog.user_id) : dialog.title}}
+                             {{dialog.message.title === ' ... ' ? getUserName(dialog.message.user_id) : dialog.message.title}}
                         </span>
                     </span>
 				</div>
 				<div id="message_body">
 				    <span>
                         <span>
-                             {{(dialog.out ? user.first_name : getUserName(dialog.user_id)) + ': '}}
+                             {{(dialog.message.out ? user.first_name : getUserName(dialog.message.user_id)) + ': '}}
                         </span>
-                        {{dialog.body}}
+                        {{dialog.message.body}}
                     </span>
                     <span id="three_dots">...</span>
 				</div>
-				<div id="unread_marker" [hidden]="dialog.read_state"></div>
-				<div id="unread_count" [hidden]="!dialog.unread_count">{{dialog.unread_count}}</div>
+				<div id="unread_marker" [hidden]="dialog.message.read_state"></div>
+				<div id="unread_count" [hidden]="!dialog.unread">{{dialog.unread}}</div>
 			</div>
 		</div>
     </li>

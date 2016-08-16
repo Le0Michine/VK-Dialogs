@@ -4,6 +4,7 @@
 		<h1 id="dialog_title">{{title}}</h1>
 	</a>
 	<button id="send_btn" (click)="sendMessage()">Send</button>
+	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">Mark as read</button>
 </div>
 <div id="input_box">
 	<label id="input_label" for="message_input">Type your text here…</label>
@@ -19,7 +20,7 @@
 		<div id="message">
 			<div id="user_name_and_date">
 				<a id="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
-                <span id="message_timestamp"> {{convertDate(message.date)}}</span>
+                <span id="message_timestamp"> {{message.date*1000 | date:formatDate(message.date) }}</span>
 			</div>
 			<ul id="messages_list">
 				<li id="message_item">

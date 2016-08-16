@@ -52,7 +52,7 @@ export class DialogComponent {
             this.restoreCachedMessages(id, isChat);
 
             this.updateHistory();
-            this.history_update = Observable.interval(2000).subscribe(() => this.updateHistory());
+            //this.history_update = Observable.interval(2000).subscribe(() => this.updateHistory());
 
             if (isChat) {
                 this.messagesService.getChatParticipants(id).subscribe(
@@ -78,7 +78,7 @@ export class DialogComponent {
     ngOnDestroy() {
         console.log('specific dialog component destroy');
         this.sub.unsubscribe();
-        this.history_update.unsubscribe();
+        //this.history_update.unsubscribe();
     }
     
     restoreCachedMessages(id, isChat) {
@@ -235,8 +235,27 @@ export class DialogComponent {
         });
     }
 
-    convertDate(unixtime: number) {
-        return DateConverter.convertDateTime(unixtime);
+    formatDate(unixtime: number) {
+        return DateConverter.formatDate(unixtime);
+    }
+
+    markAsRead() {
+        let ids = [];
+        for (let m of this.history) {
+            if (m.out || m.read_state) break;
+            ids.push(m.id);
+        }
+        if (ids.length === 0) {
+            console.log('unread messages was not found');
+        }
+        this.messagesService.markAsRead(ids.join()).subscribe(result => {
+            if (result) {
+                this.updateHistory();
+            }
+            else {
+                console.log('failed to mark messages as read');
+            }
+        });
     }
 
     errorHandler(error) {

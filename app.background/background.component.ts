@@ -62,6 +62,12 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                         console.log('chat participants sent');
                     });
                     return true;
+                case Channels.mark_as_read_request:
+                    this.dialogsService.markAsRead(request.message_ids).subscribe(response => {
+                        sendResponse({data: response});
+                        console.log('mark as read result: ' + response);
+                    });
+                    return true;
                 case Channels.get_message_request:
                     this.dialogsService.getMessage(request.message_ids).subscribe(messages => {
                         sendResponse({data: messages});
