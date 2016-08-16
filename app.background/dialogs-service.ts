@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptionsArgs } from '@angular/http';
+import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
 import { Observable }     from 'rxjs/Rx';
 
 import { VKConsts } from '../app/vk-consts';
@@ -25,10 +25,32 @@ export class DialogService {
 
     server: LongPollServer = null;
 
-    updates_port: chrome.runtime.Port;
+    update_dialogs_port: chrome.runtime.Port;
+    update_messages_port: chrome.runtime.Port;
+    current_dialog_id: number = null;
 
     constructor(private vkservice: VKService, private http: Http, private cache: CacheService) {
-        this.startMonitoring();
+        this.getDialogs().subscribe(dialogs => {
+            this.cache.updateDialogs(dialogs);
+            this.startMonitoring();
+            },
+            error => this.handleError(error)
+        );
+        chrome.runtime.onConnect.addListener(port => {
+            switch (port.name) {
+                case 'dialogs_monitor':
+                    this.update_dialogs_port = port;
+                    this.update_dialogs_port.onDisconnect.addListener(() => this.update_dialogs_port = null);
+                    break;
+                case 'conversation':
+                    this.update_messages_port = port;
+                    this.update_messages_port.onDisconnect.addListener(() => {
+                        this.update_messages_port = null;
+                        this.current_dialog_id = null;
+                    });
+                    break;
+            }
+        });
      }
 
     startMonitoring() {
@@ -61,7 +83,17 @@ export class DialogService {
                 case 4: 
                     /* 4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments -- add a new message */
                     let message = LPSHelper.processMessage(update);
-                    this.updateMessageCache(message);
+                    this.cache.pushMessage(message);
+                    if (this.update_dialogs_port) {
+                        this.update_dialogs_port.postMessage({name: 'dialogs_update', data: this.cache.dialogs_cache});
+                    }
+                    if (this.update_messages_port && this.current_dialog_id 
+                        && (message['chat_id'] === this.current_dialog_id || message.user_id === this.current_dialog_id)) {
+                        this.update_messages_port.postMessage({
+                            name: 'history_update', 
+                            data: this.cache.messages_cache[this.current_dialog_id]
+                        });
+                    }
                     break;
                 case 6: 
                     /* 6,$peer_id,$local_id -- read all incoming messages with $peer_id until $local_id */
@@ -123,7 +155,7 @@ export class DialogService {
             else if (response.failed === 3) {
                 console.log('history became obsolet need to refresh it first')
                 this.getDialogs().subscribe(dialogs => {
-                    this.cache.dialogs_cache = dialogs;
+                    this.cache.updateDialogs(dialogs);
                     server.ts = response.ts;
                     this.nextRequest(server);
                 },
@@ -159,7 +191,7 @@ export class DialogService {
     }
 
     getCachedDialogs(): Observable<Dialog[]> {
-        if (this.cache.dialogs_cache) {
+        if (this.cache.dialogs_cache && this.cache.dialogs_cache.length > 0) {
             let res = Observable.bindCallback((callback: (dialogs: Dialog[]) => void) => callback(this.cache.dialogs_cache));
             return res();
         }
@@ -224,29 +256,6 @@ export class DialogService {
             + "&message=" + message 
             + "&notification=1";
         return this.http.get(uri).map(response => response.json().response);
-    }
-
-    private updateMessageCache(new_message: Message) {
-        let is_chat = (new_message as Chat).chat_id ? true : false;
-        for (let i = 0; i < this.cache.dialogs_cache.length; i++) {
-            if (is_chat && this.cache.dialogs_cache[i].message['chat_id'] === new_message['chat_id'] ||
-                !is_chat && this.cache.dialogs_cache[i].message.user_id === new_message.user_id) {
-
-                if (new_message.id === this.cache.dialogs_cache[i].message.id) {
-                    console.log('the message is already in cache: ' + JSON.stringify(new_message));
-                    break;
-                }
-                
-                this.cache.dialogs_cache[i].message = new_message;
-                if (!new_message.read_state) {
-                    this.cache.dialogs_cache[i].unread++;
-                }
-                else {
-                    this.cache.dialogs_cache[i].unread = 0;
-                }
-                break;
-            }
-        }
     }
 
     private toUserDict(json): {} {

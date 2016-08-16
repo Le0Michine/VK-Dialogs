@@ -27,8 +27,10 @@ export class DialogComponent {
     conversation_id: number;
     current_text: string;
     messages_cache_port: chrome.runtime.Port;
-    history_update: any;
+    //history_update: any;
     sub: any;
+
+    private history_update_port: chrome.runtime.Port;
 
     constructor (
         private messagesService: DialogService,
@@ -72,6 +74,14 @@ export class DialogComponent {
                     error => this.errorHandler(error),
                     () => console.log('dialog participants loaded'));
             } 
+        });
+
+        this.history_update_port = chrome.runtime.connect({name: 'conversation'});
+        this.history_update_port.onMessage.addListener((message: any) => {
+            if (message.name === 'history_update' && message.data) {
+                this.history = message.data;
+                this.change_detector.detectChanges();
+            }
         });
     }
 

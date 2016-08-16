@@ -27,6 +27,8 @@ export class DialogsComponent implements OnInit {
 
     dialogs: Dialog[];
 
+    dialogs_port: chrome.runtime.Port;
+
     constructor(
         private userService: UserService,
         private router: Router, 
@@ -75,6 +77,14 @@ export class DialogsComponent implements OnInit {
             },
             error => this.errorHandler(error),
             () => console.log('dialogs loaded'));
+
+        this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
+        this.dialogs_port.onMessage.addListener((message: any) => {
+            if (message.name === 'dialogs_update' && message.data) {
+                this.dialogs = message.data as Dialog[];
+                this.change_detector.detectChanges();
+            }
+        });
     }
 
     ngOnDestroy() {

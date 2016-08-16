@@ -45,7 +45,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             switch (request.name) {
                 case Channels.get_dialogs_request: 
-                    this.dialogsService.getCachedDialogs().subscribe(dialogs => {
+                    this.dialogsService.getDialogs().subscribe(dialogs => {
                         sendResponse({data: dialogs});
                         console.log('dialogs sent');
                     });
