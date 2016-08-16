@@ -10,6 +10,8 @@ import { User } from '../app/user';
 import { VKService } from './vk-service';
 import { ErrorHelper } from './error-helper';
 import { LongPollServer } from './long-poll-server';
+import { LPSHelper } from './lps-helper';
+import { CacheService } from './cache-service';
 
 @Injectable()
 export class DialogService {
@@ -21,24 +23,27 @@ export class DialogService {
     private mark_as_read: string = 'messages.markAsRead';
     private get_lps: string = 'messages.getLongPollServer';
 
-    private cached_dialogs: Dialog[];
-
     server: LongPollServer = null;
 
     updates_port: chrome.runtime.Port;
 
-    constructor(private vkservice: VKService, private http: Http) {
-        console.log('session is valid, start monitoring');
+    constructor(private vkservice: VKService, private http: Http, private cache: CacheService) {
         this.startMonitoring();
      }
 
     startMonitoring() {
-        this.getLongPollServer().subscribe(server => this.nextRequest(server));
+        console.log('session is valid, start monitoring');
+        this.getLongPollServer().subscribe(
+            server => this.nextRequest(server),
+            error => {
+                console.log('error ocured during lps request: ' + error);
+                console.log('restart monitoring');
+                this.startMonitoring();
+            });
     }
 
     processLongPollResponse(json) {
         let updates = json.updates;
-        let messages = json.messages;
         for (let update of updates) {
             switch (update[0]) {
                 case 0: 
@@ -55,6 +60,8 @@ export class DialogService {
                     break;
                 case 4: 
                     /* 4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments -- add a new message */
+                    let message = LPSHelper.processMessage(update);
+                    this.updateMessageCache(message);
                     break;
                 case 6: 
                     /* 6,$peer_id,$local_id -- read all incoming messages with $peer_id until $local_id */
@@ -97,7 +104,7 @@ export class DialogService {
                     (-1: forever; 0: notifications enabled; other: timestamp for time to switch back on). */
                     break;
                 default:
-                    console.log('unknow code {update[0]} in long poll response: ' + JSON.stringify(json));
+                    console.log('unknow code of update ' +  JSON.stringify(update) + ' in long poll response: ' + JSON.stringify(json));
                     break;
             }
         }
@@ -116,21 +123,28 @@ export class DialogService {
             else if (response.failed === 3) {
                 console.log('history became obsolet need to refresh it first')
                 this.getDialogs().subscribe(dialogs => {
-                    this.cached_dialogs = dialogs;
+                    this.cache.dialogs_cache = dialogs;
                     server.ts = response.ts;
                     this.nextRequest(server);
-                });
+                },
+                error => this.handleError(error));
             }
             else {
-                console.log(new Date(Date.now()) + ' got long poll response: ' + JSON.stringify(response));
+                console.log(new Date(Date.now()) + ' got a long poll response: ' + JSON.stringify(response));
                 server.ts = response.ts;
                 this.processLongPollResponse(response);
                 this.nextRequest(server);
             }
-        })
+        },
+        error => {
+            console.log('error ocured during lp request: ' + error);
+            console.log('trying to reconnect');
+            this.startMonitoring();
+        });
     }
 
     getLongPollServer(): Observable<LongPollServer> {
+        console.log('lps requested');
         let uri: string = VKConsts.api_url + this.get_lps
                 + "?access_token=" + this.vkservice.getSession().access_token
                 + "&v=" + VKConsts.api_version
@@ -139,13 +153,14 @@ export class DialogService {
     }
 
     startLongPollRequest(server: LongPollServer) {
+        console.log(new Date(Date.now()) + ' perform a long poll request');
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
         return this.http.get(uri).map(response => response.json());
     }
 
     getCachedDialogs(): Observable<Dialog[]> {
-        if (this.cached_dialogs) {
-            let res = Observable.bindCallback((callback: (dialogs: Dialog[]) => void) => callback(this.cached_dialogs));
+        if (this.cache.dialogs_cache) {
+            let res = Observable.bindCallback((callback: (dialogs: Dialog[]) => void) => callback(this.cache.dialogs_cache));
             return res();
         }
         return this.getDialogs();
@@ -211,6 +226,29 @@ export class DialogService {
         return this.http.get(uri).map(response => response.json().response);
     }
 
+    private updateMessageCache(new_message: Message) {
+        let is_chat = (new_message as Chat).chat_id ? true : false;
+        for (let i = 0; i < this.cache.dialogs_cache.length; i++) {
+            if (is_chat && this.cache.dialogs_cache[i].message['chat_id'] === new_message['chat_id'] ||
+                !is_chat && this.cache.dialogs_cache[i].message.user_id === new_message.user_id) {
+
+                if (new_message.id === this.cache.dialogs_cache[i].message.id) {
+                    console.log('the message is already in cache: ' + JSON.stringify(new_message));
+                    break;
+                }
+                
+                this.cache.dialogs_cache[i].message = new_message;
+                if (!new_message.read_state) {
+                    this.cache.dialogs_cache[i].unread++;
+                }
+                else {
+                    this.cache.dialogs_cache[i].unread = 0;
+                }
+                break;
+            }
+        }
+    }
+
     private toUserDict(json): {} {
         if (ErrorHelper.checkErrors(json)) return {};
         let users = {};
@@ -240,5 +278,10 @@ export class DialogService {
 
     private setBadgeNumber(n: number) {
         chrome.browserAction.setBadgeText({text: String(n)});
+    }
+
+    private handleError(error: any) {
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
     }
 }
