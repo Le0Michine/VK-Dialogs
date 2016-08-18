@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
 import { Observable }     from 'rxjs/Rx';
+import 'rxjs/add/operator/timeout';
 
 import { VKConsts } from '../app/vk-consts';
 import { Message, Chat } from '../app/message';
@@ -53,10 +54,15 @@ export class DialogService {
         });
      }
 
-    startMonitoring() {
+    startMonitoring(ts: number = null) {
         console.log('session is valid, start monitoring');
         this.getLongPollServer().subscribe(
-            server => this.nextRequest(server),
+            server => {
+                if (ts) {
+                    server.ts = ts;
+                }
+                this.nextRequest(server);
+            },
             error => {
                 console.log('error ocured during lps request: ' + error);
                 console.log('restart monitoring');
@@ -146,11 +152,11 @@ export class DialogService {
         this.startLongPollRequest(server).subscribe(response => {
             if (response.failed === 2) {
                 console.log('lps key expired need to obtain the new one')
-                this.startMonitoring();
+                this.startMonitoring(server.ts);
             }
             else if (response.failed === 3) {
                 console.log('error ocured need to obtain a new lps key')
-                this.startMonitoring();
+                this.startMonitoring(server.ts);
             }
             else if (response.failed === 3) {
                 console.log('history became obsolet need to refresh it first')
@@ -171,7 +177,7 @@ export class DialogService {
         error => {
             console.log('error ocured during lp request: ' + error);
             console.log('trying to reconnect');
-            this.startMonitoring();
+            this.startMonitoring(server.ts);
         });
     }
 
@@ -187,7 +193,7 @@ export class DialogService {
     startLongPollRequest(server: LongPollServer) {
         console.log(new Date(Date.now()) + ' perform a long poll request');
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
-        return this.http.get(uri).map(response => response.json());
+        return this.http.get(uri).timeout(35000, new Error('30s timeout ocured')).map(response => response.json());
     }
 
     getCachedDialogs(): Observable<Dialog[]> {

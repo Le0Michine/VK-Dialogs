@@ -12,15 +12,8 @@ import { RequestHelper } from './request-helper';
 
 @Injectable()
 export class DialogService {
-    private get_dialogs: string = "messages.getDialogs";
-    private get_history: string = "messages.getHistory";
-    private get_chat: string = "messages.getChat";
-    private get_message: string = "messages.getById";
-    private send_message: string = "messages.send";
 
-    constructor(private vkservice: VKService, private http: Http) { 
-        
-    }
+    constructor(private vkservice: VKService, private http: Http) { }
 
     getDialogs(): Observable<Dialog[]> {
         console.log('dialogs are requested');
