@@ -53,7 +53,13 @@ export class CacheService {
         }
     }
 
-    updateHistory(messages) {
-        this.messages_cache[messages[0].chat_id || messages[0].user_id] = messages;
+    updateHistory(messages: Message[]) {
+        this.messages_cache[(messages[0] as Chat).chat_id || messages[0].user_id] = messages;
+    }
+
+    pushUsers(users) {
+        for (let user_id in users) {
+            this.users_cache[user_id] = users[user_id];
+        }
     }
 }

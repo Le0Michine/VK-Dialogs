@@ -13,6 +13,7 @@ import { ErrorHelper } from './error-helper';
 import { LongPollServer } from './long-poll-server';
 import { LPSHelper } from './lps-helper';
 import { CacheService } from './cache-service';
+import { UserService } from './user-service';
 
 @Injectable()
 export class DialogService {
@@ -27,32 +28,80 @@ export class DialogService {
     server: LongPollServer = null;
 
     update_dialogs_port: chrome.runtime.Port;
-    update_messages_port: chrome.runtime.Port;
+    update_history_port: chrome.runtime.Port;
+    update_users_port: chrome.runtime.Port;
     current_dialog_id: number = null;
+    is_chat: boolean = null;
 
-    constructor(private vkservice: VKService, private http: Http, private cache: CacheService) {
+    constructor(private vkservice: VKService, private http: Http, private cache: CacheService, private userService: UserService) {
         this.getDialogs().subscribe(dialogs => {
-            this.cache.updateDialogs(dialogs);
-            this.startMonitoring();
+                this.cache.updateDialogs(dialogs);
+                this.postDialogsUpdate();
+                this.startMonitoring();
+
+                let users = [];
+                for (let dialog of this.cache.dialogs_cache) {
+                    users.push(dialog.message.user_id);
+                }   
+                this.userService.loadUsers(users.join());
             },
             error => this.handleError(error)
         );
         chrome.runtime.onConnect.addListener(port => {
+            console.log(port.name + ' port opened');
             switch (port.name) {
                 case 'dialogs_monitor':
                     this.update_dialogs_port = port;
                     this.update_dialogs_port.onDisconnect.addListener(() => this.update_dialogs_port = null);
+                    this.postDialogsUpdate();
                     break;
-                case 'conversation':
-                    this.update_messages_port = port;
-                    this.update_messages_port.onDisconnect.addListener(() => {
-                        this.update_messages_port = null;
+                case 'history_monitor':
+                    this.update_history_port = port;
+                    this.update_history_port.onMessage.addListener((message: any) => {
+                        if (message.name === 'conversation_id') {
+                            this.current_dialog_id = message.id;
+                            this.is_chat = message.is_chat;
+                            this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
+                                this.cache.updateHistory(history);
+                                this.postHistoryUpdate();
+                                if (this.is_chat) {
+                                    this.getChatParticipants(this.current_dialog_id).subscribe(users => {
+                                        this.cache.pushUsers(users);
+                                        this.userService.postUsersUpdate();
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    this.update_history_port.onDisconnect.addListener(() => {
+                        this.update_history_port = null;
                         this.current_dialog_id = null;
+                        this.is_chat = null;
                     });
                     break;
             }
         });
-     }
+    }
+
+    postDialogsUpdate() {
+        if (this.update_dialogs_port) {
+            console.log('post dialogs_update message');
+            this.update_dialogs_port.postMessage({name: 'dialogs_update', data: this.cache.dialogs_cache});
+        }
+        else {
+            console.log('port dialogs_monitor is closed');
+        }
+    }
+
+    postHistoryUpdate() {
+        if (this.update_history_port && this.current_dialog_id) {
+            console.log('post history_update message');
+            this.update_history_port.postMessage({name: 'history_update', data: this.cache.messages_cache[this.current_dialog_id]});
+        }
+        else {
+            console.log('port history_monitor is closed or current_dialog_id isn\'t specified');
+        }
+    }
 
     startMonitoring(ts: number = null) {
         console.log('session is valid, start monitoring');
@@ -85,21 +134,11 @@ export class DialogService {
                     break;
                 case 3: 
                     /* 3,$message_id,$mask[,$user_id] -- reset message flags (FLAGS&=~$mask) */
+                    this.updateMessages();
                     break;
                 case 4: 
                     /* 4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments -- add a new message */
-                    let message = LPSHelper.processMessage(update);
-                    this.cache.pushMessage(message);
-                    if (this.update_dialogs_port) {
-                        this.update_dialogs_port.postMessage({name: 'dialogs_update', data: this.cache.dialogs_cache});
-                    }
-                    if (this.update_messages_port && this.current_dialog_id 
-                        && (message['chat_id'] === this.current_dialog_id || message.user_id === this.current_dialog_id)) {
-                        this.update_messages_port.postMessage({
-                            name: 'history_update', 
-                            data: this.cache.messages_cache[this.current_dialog_id]
-                        });
-                    }
+                    this.updateMessages();
                     break;
                 case 6: 
                     /* 6,$peer_id,$local_id -- read all incoming messages with $peer_id until $local_id */
@@ -183,17 +222,33 @@ export class DialogService {
 
     getLongPollServer(): Observable<LongPollServer> {
         console.log('lps requested');
-        let uri: string = VKConsts.api_url + this.get_lps
-                + "?access_token=" + this.vkservice.getSession().access_token
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.get_lps
+                + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + "&use_ssl=1";
-        return this.http.get(uri).map(response => response.json().response);
+            return this.http.get(uri).map(response => response.json().response);
+        });
     }
 
     startLongPollRequest(server: LongPollServer) {
         console.log(new Date(Date.now()) + ' perform a long poll request');
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
         return this.http.get(uri).timeout(35000, new Error('30s timeout ocured')).map(response => response.json());
+    }
+
+    updateMessages() {
+        this.getDialogs().subscribe(dialogs => {
+                this.cache.updateDialogs(dialogs);
+                this.postDialogsUpdate();
+            });
+
+            if (this.update_history_port && this.current_dialog_id) {
+                    this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
+                    this.cache.updateHistory(history);
+                    this.postHistoryUpdate();
+            });
+        }
     }
 
     getCachedDialogs(): Observable<Dialog[]> {
@@ -206,62 +261,74 @@ export class DialogService {
 
     getDialogs(): Observable<Dialog[]> {
         console.log('dialogs are requested');
-        let uri: string = VKConsts.api_url + this.get_dialogs 
-            + "?access_token=" + this.vkservice.getSession().access_token
-            + "&v=" + VKConsts.api_version;
-        return this.http.get(uri).map(response => this.toDialog(response.json()));
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.get_dialogs 
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version;
+            return this.http.get(uri).map(response => this.toDialog(response.json()));
+        });
     }
 
     getHistory(id: number, chat: boolean, count: number = 20): Observable<Message[]> {
         console.log('history is requested');
-        let uri: string = VKConsts.api_url + this.get_history
-            + "?access_token=" + this.vkservice.getSession().access_token
-            + "&v=" + VKConsts.api_version
-            + (chat ? "&chat_id=" + id : "&user_id=" + id)
-            + "&count=" + count
-            + "&rev=0";
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.get_history
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version
+                + (chat ? "&chat_id=" + id : "&user_id=" + id)
+                + "&count=" + count
+                + "&rev=0";
 
-        return this.http.get(uri).map(response => this.toMessages(response.json()));
+            return this.http.get(uri).map(response => this.toMessages(response.json()));
+        });
     }
 
     getChatParticipants(chat_id: number): Observable<{}> {
         console.log('chat participants requested');
-        let uri: string = VKConsts.api_url + this.get_chat
-            + "?access_token=" + this.vkservice.getSession().access_token
-            + "&v=" + VKConsts.api_version
-            + "&chat_id=" + chat_id
-            + "&fields=first_name,photo_50";
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.get_chat
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version
+                + "&chat_id=" + chat_id
+                + "&fields=first_name,photo_50";
         
-        return this.http.get(uri).map(response => this.toUserDict(response.json()));
+            return this.http.get(uri).map(response => this.toUserDict(response.json()));
+        });
     }
 
     getMessage(ids: string): Observable<Message[]> {
         console.log('requested message(s) with id: ' + ids);
-        let uri: string = VKConsts.api_url + this.get_message
-            + "?access_token=" + this.vkservice.getSession().access_token
-            + "&v=" + VKConsts.api_version
-            + "&message_ids=" + ids; 
-        return this.http.get(uri).map(response => this.toMessages(response.json()));
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.get_message
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version
+                + "&message_ids=" + ids; 
+            return this.http.get(uri).map(response => this.toMessages(response.json()));
+        });
     }
 
     markAsRead(ids: string): Observable<number> {
         console.log('mark as read message(s) with id: ' + ids);
-        let uri: string = VKConsts.api_url + this.mark_as_read
-            + "?access_token=" + this.vkservice.getSession().access_token
-            + "&v=" + VKConsts.api_version
-            + "&message_ids=" + ids; 
-        return this.http.get(uri).map(response => response.json());
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.mark_as_read
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version
+                + "&message_ids=" + ids; 
+            return this.http.get(uri).map(response => response.json());
+        });
     }
 
     sendMessage(id: number, message: string, chat: boolean): Observable<Message> {
         console.log('sending message');
-        let uri: string = VKConsts.api_url + this.send_message
-            + "?access_token=" + this.vkservice.getSession().access_token
-            + "&v=" + VKConsts.api_version
-            + (chat ? "&chat_id=" : "&user_id=") + id 
-            + "&message=" + message 
-            + "&notification=1";
-        return this.http.get(uri).map(response => response.json().response);
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.send_message
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version
+                + (chat ? "&chat_id=" : "&user_id=") + id 
+                + "&message=" + message 
+                + "&notification=1";
+            return this.http.get(uri).map(response => response.json().response);
+        });
     }
 
     private toUserDict(json): {} {

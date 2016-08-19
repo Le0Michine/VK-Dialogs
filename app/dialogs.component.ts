@@ -27,13 +27,11 @@ export class DialogsComponent implements OnInit {
 
     dialogs: Dialog[];
 
-    dialogs_port: chrome.runtime.Port;
-
     constructor(
         private userService: UserService,
-        private router: Router, 
-        private vkservice: VKService, 
-        private dialogsService: DialogService,
+        private router: Router,
+        private vkservice: VKService,
+        private dialog_service: DialogService,
         private change_detector: ChangeDetectorRef) { }
 
     gotoDialog(dialog: Message) {
@@ -69,41 +67,19 @@ export class DialogsComponent implements OnInit {
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
 
-        this.dialogsService.getDialogs().subscribe(
-            dialogs => { 
-                this.dialogs = dialogs as Dialog[];
-                this.initUsers();
-                this.change_detector.detectChanges();
-            },
-            error => this.errorHandler(error),
-            () => console.log('dialogs loaded'));
+        this.dialog_service.subscribeOnDialogsUpdate(dialogs => {
+            this.dialogs = dialogs;
+            this.change_detector.detectChanges();
+        });
 
-        this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
-        this.dialogs_port.onMessage.addListener((message: any) => {
-            if (message.name === 'dialogs_update' && message.data) {
-                this.dialogs = message.data as Dialog[];
-                this.change_detector.detectChanges();
-            }
+        this.userService.subscribeOnUserUpdate(users => {
+            this.users = users;
+            this.change_detector.detectChanges();
         });
     }
 
     ngOnDestroy() {
         console.log('dialogs component destroy');
-    }
-
-    initUsers() {
-        let uids: number[] = [];
-        for (let dialog of this.dialogs) {
-            uids.push(dialog.message.user_id);
-        }
-        this.userService.getUsers(uids.join()).subscribe(
-            users => { 
-                this.users = users; 
-                this.change_detector.detectChanges();
-            },
-            error => this.errorHandler(error),
-            () => console.log('users loaded')
-        );
     }
 
     formatDate(unixtime: number) {

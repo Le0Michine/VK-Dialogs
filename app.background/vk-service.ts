@@ -26,7 +26,13 @@ export class VKService {
         this.initializeSeesion();
         if (!this.isSessionValid()) {
             let force = this.session_info ? false : true;
-            AuthHelper.authorize(force);
+            let obs = AuthHelper.authorize(force);
+            obs.subscribe(session => {
+                if (session) {
+                    this.session_info = session;
+                }
+            });
+            return obs;
         }
     }
 
@@ -46,12 +52,12 @@ export class VKService {
         );
     }
 
-    getSession(): SessionInfo {
+    getSession(): Observable<SessionInfo> {
         if (!this.isSessionValid()) {
             let background: boolean = this.session_info ? this.session_info.isExpired() : false;            
-            this.auth(background);  
+            return this.auth(background);  
         }
-        return this.session_info;
+        return Observable.bindCallback((callback: (SessionInfo) => void) => callback(this.session_info))();
     }
 }
 

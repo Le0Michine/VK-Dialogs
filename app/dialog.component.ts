@@ -26,11 +26,9 @@ export class DialogComponent {
     is_chat: boolean;
     conversation_id: number;
     current_text: string;
-    messages_cache_port: chrome.runtime.Port;
-    //history_update: any;
     sub: any;
 
-    private history_update_port: chrome.runtime.Port;
+    private messages_cache_port: chrome.runtime.Port;
 
     constructor (
         private messagesService: DialogService,
@@ -53,42 +51,21 @@ export class DialogComponent {
             
             this.restoreCachedMessages(id, isChat);
 
-            this.updateHistory();
-            //this.history_update = Observable.interval(2000).subscribe(() => this.updateHistory());
-
-            if (isChat) {
-                this.messagesService.getChatParticipants(id).subscribe(
-                    users => { 
-                        this.participants = users;
-                        this.change_detector.detectChanges();
-                    },
-                    error => this.errorHandler(error),
-                    () => console.log('chat participants loaded'));
-            }
-            else {
-                this.userService.getUsers(participants).subscribe(
-                    users => { 
-                        this.participants = users;
-                        this.change_detector.detectChanges();
-                    },
-                    error => this.errorHandler(error),
-                    () => console.log('dialog participants loaded'));
-            } 
-        });
-
-        this.history_update_port = chrome.runtime.connect({name: 'conversation'});
-        this.history_update_port.onMessage.addListener((message: any) => {
-            if (message.name === 'history_update' && message.data) {
-                this.history = message.data;
+            this.messagesService.subscribeOnHistoryUpdate(this.conversation_id, this.is_chat, history => {
+                this.history = history as Message[];
                 this.change_detector.detectChanges();
-            }
+            });
+
+            this.userService.subscribeOnUserUpdate(users => {
+                this.participants = users;
+                this.change_detector.detectChanges();
+            });
         });
     }
 
     ngOnDestroy() {
         console.log('specific dialog component destroy');
         this.sub.unsubscribe();
-        //this.history_update.unsubscribe();
     }
     
     restoreCachedMessages(id, isChat) {
@@ -99,15 +76,6 @@ export class DialogComponent {
             this.current_text = cachedMessage;
         }
         this.resizeInputTextarea2();
-    }
-
-    updateHistory() {
-        this.messagesService.getHistory(this.conversation_id, this.is_chat).subscribe(
-            m => { 
-                this.history = m;
-                this.change_detector.detectChanges(); },
-            error => this.errorHandler(error),
-            () => console.log('history loaded'));
     }
 
     goBack() {
@@ -145,8 +113,7 @@ export class DialogComponent {
             error => this.errorHandler(error),
             () => { 
                 console.log('message sent'); 
-                textarea.value = ''; 
-                this.updateHistory(); 
+                textarea.value = '';
                 this.clearCache(); 
             });
     }
@@ -260,7 +227,6 @@ export class DialogComponent {
         }
         this.messagesService.markAsRead(ids.join()).subscribe(result => {
             if (result) {
-                this.updateHistory();
             }
             else {
                 console.log('failed to mark messages as read');

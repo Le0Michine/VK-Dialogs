@@ -5,6 +5,7 @@ import { HTTP_PROVIDERS, Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { VKConsts } from '../app/vk-consts';
+import { SessionInfo } from '../app/session-info';
 
 import { AuthHelper } from './auth-helper';
 import { VKService } from './vk-service';
@@ -30,7 +31,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         console.log('background init');
-        AuthHelper.addTabListener();
         this.preAuthorize();
 
         chrome.runtime.onConnect.addListener(port => {
@@ -93,15 +93,20 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     });
                     return true;
                 case Channels.get_session_request:
+                    let obs: Observable<SessionInfo>;
                     if (request.force_auth) {
                         console.log('got request about implicit authorization');
-                        AuthHelper.authorize(true, request.requested_by_user);
+                        obs = AuthHelper.authorize(true, request.requested_by_user);
                     }
                     else {
                         console.log('got request about explicit authorization');
-                        AuthHelper.authorize(false, request.requested_by_user);
+                        obs = AuthHelper.authorize(false, request.requested_by_user);
                     }
-                    sendResponse({data: this.vkservice.getSession()});
+                    obs.subscribe(session => {
+                        sendResponse({data: session});
+                        },
+                        error => console.log(error)
+                    );
                     return true;
                 case 'request_error':
                     this.processError(request.error_code);
@@ -144,11 +149,11 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private preAuthorize() {
         if (!window.localStorage.getItem(VKConsts.vk_access_token_id) || !window.localStorage.getItem(VKConsts.vk_auth_timestamp_id)) {
             console.log('unable to find auth session data');
-            AuthHelper.authorize(false);        
+            this.vkservice.auth(false);
         }
         else if ((Math.floor(Date.now() / 1000) - Number(window.localStorage.getItem(VKConsts.vk_auth_timestamp_id))) > 86400) {
             console.log('session expired, reauthorize');
-            AuthHelper.authorize();
+            this.vkservice.auth(true);
         }
     }
 }

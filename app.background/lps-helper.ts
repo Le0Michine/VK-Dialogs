@@ -15,9 +15,9 @@ export class LPSHelper {
         let text = update[6];
         let attachments = update[7];
 
-        let is_chat = (flags & message_flags.CHAT) == message_flags.CHAT;
-        let read_state = (flags & message_flags.UNREAD) == message_flags.UNREAD;
-        let out = (flags & message_flags.OUTBOX) == message_flags.OUTBOX;
+        let is_chat = (flags & message_flags.CHAT) != message_flags.CHAT;
+        let read_state = (flags & message_flags.UNREAD) != message_flags.UNREAD;
+        let out = (flags & message_flags.OUTBOX) === message_flags.OUTBOX;
 
         if (is_chat) {
             let m = new Chat();
