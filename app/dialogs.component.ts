@@ -80,6 +80,7 @@ export class DialogsComponent implements OnInit {
 
     ngOnDestroy() {
         console.log('dialogs component destroy');
+        this.dialog_service.unsubscribeFromDialogs();
     }
 
     formatDate(unixtime: number) {

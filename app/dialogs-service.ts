@@ -61,4 +61,9 @@ export class DialogService {
             }
         });
     }
+
+    unsubscribeFromDialogs() {
+        this.dialogs_port.disconnect();
+        this.dialogs_port = null;
+    }
 }
