@@ -12,12 +12,13 @@ import { VKService } from './vk-service';
 import { UserService } from './user-service';
 import { CacheService } from './cache-service';
 import { DialogService } from './dialogs-service';
+import { LPSService } from './lps-service';
 import { Channels } from './channels';
 
 @Component({
     selector: 'background-app',
     template: '<span>Backgrounf component</span>',
-    providers: [HTTP_PROVIDERS, VKService, DialogService, UserService, CacheService],
+    providers: [HTTP_PROVIDERS, VKService, DialogService, UserService, CacheService, LPSService],
     precompile: []
 })
 export class BackgroundComponent implements OnInit, OnDestroy {

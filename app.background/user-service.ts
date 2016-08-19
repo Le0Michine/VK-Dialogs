@@ -10,12 +10,14 @@ import { User } from '../app/user';
 import { VKService } from './vk-service';
 import { ObservableExtension } from './observable-extension';
 import { CacheService } from './cache-service';
+import { LPSService } from './lps-service';
 
 @Injectable()
 export class UserService {
     private update_users_port: chrome.runtime.Port;
 
-    constructor(private vkservice: VKService, private http: Http,  private cache: CacheService) {
+    constructor(private vkservice: VKService, private http: Http,  private cache: CacheService, private lpsService: LPSService) {
+        lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
         chrome.runtime.onConnect.addListener(port => {
             switch (port.name) {
                 case 'users_monitor':
@@ -26,6 +28,12 @@ export class UserService {
                     });
                     break;
             }
+        });
+    }
+
+    updateUsers(uids: string) {
+        this.getUsers(uids).subscribe(users => {
+            this.cache.pushUsers(users);
         });
     }
 
