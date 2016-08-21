@@ -28,7 +28,7 @@ export class DialogsComponent implements OnInit {
     dialogs: Dialog[];
 
     constructor(
-        private userService: UserService,
+        private user_service: UserService,
         private router: Router,
         private vkservice: VKService,
         private dialog_service: DialogService,
@@ -53,13 +53,17 @@ export class DialogsComponent implements OnInit {
         this.router.navigate(link);
     }
 
+    loadOldDialogs() {
+        this.dialog_service.loadOldDialogs();
+    }
+
     ngOnInit() {
         if (window.localStorage.getItem(VKConsts.user_denied) == 'true' || this.vkservice.getSession() == null) {
             this.router.navigate(['/authorize']);
             return;
         }
 
-        this.userService.getUser().subscribe(
+        this.user_service.getUser().subscribe(
             u => {
                 this.user = u;
                 this.change_detector.detectChanges();
@@ -72,7 +76,7 @@ export class DialogsComponent implements OnInit {
             this.change_detector.detectChanges();
         });
 
-        this.userService.subscribeOnUserUpdate(users => {
+        this.user_service.subscribeOnUsersUpdate(users => {
             this.users = users;
             this.change_detector.detectChanges();
         });
@@ -81,6 +85,7 @@ export class DialogsComponent implements OnInit {
     ngOnDestroy() {
         console.log('dialogs component destroy');
         this.dialog_service.unsubscribeFromDialogs();
+        this.user_service.unsubscribeUsersUpdate();
     }
 
     formatDate(unixtime: number) {
@@ -95,7 +100,7 @@ export class DialogsComponent implements OnInit {
     }
 
     getUserPhoto(uid: number) {
-        if (this.users && this.users[uid].photo_50) {
+        if (this.users && this.users[uid] && this.users[uid].photo_50) {
             return this.users[uid].photo_50;
         }
         return 'http://vk.com/images/camera_c.gif';

@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';;
-import { Message } from './message'
-import { User } from './user'
-import { DialogService } from './dialogs-service'
-import { UserService } from './user-service'
-import { VKService } from './vk-service'
-import { Channels } from '../app.background/channels'
-import { DateConverter } from './date-converter'
+import { Observable } from 'rxjs/Rx';
+import { Message } from './message';
+import { User } from './user';
+import { DialogService } from './dialogs-service';
+import { UserService } from './user-service';
+import { VKService } from './vk-service';
+import { Channels } from '../app.background/channels';
+import { DateConverter } from './date-converter';
 
 @Component({
     selector: 'messges',
@@ -56,7 +56,7 @@ export class DialogComponent {
                 this.change_detector.detectChanges();
             });
 
-            this.userService.subscribeOnUserUpdate(users => {
+            this.userService.subscribeOnUsersUpdate(users => {
                 this.participants = users;
                 this.change_detector.detectChanges();
             });

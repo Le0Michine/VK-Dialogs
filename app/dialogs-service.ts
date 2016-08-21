@@ -35,6 +35,15 @@ export class DialogService {
         });
     }
 
+    loadOldDialogs() {
+        if (this.dialogs_port) {
+            this.dialogs_port.postMessage({name: Channels.load_old_dialogs_request});
+        }
+        else {
+            console.log('dialogs_monitor port isn\'t initialized');
+        }
+    }
+
     subscribeOnDialogsUpdate(callback: (x: Dialog[]) => void) {
         this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
         this.dialogs_port.onMessage.addListener((message: any) => {

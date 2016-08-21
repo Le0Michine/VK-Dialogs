@@ -33,7 +33,7 @@ export class UserService {
         });
     }
 
-    subscribeOnUserUpdate(callback: (users: {}) => void) {
+    subscribeOnUsersUpdate(callback: (users: {}) => void) {
         this.users_port = chrome.runtime.connect({name: 'users_monitor'});
         this.users_port.onMessage.addListener((message: any) => {
             if (message.name === 'users_update' && message.data) {
@@ -44,5 +44,10 @@ export class UserService {
                 console.log('unknown message in users_monitor: ' + JSON.stringify(message));
             }
         });
+    }
+
+    unsubscribeUsersUpdate() {
+        this.users_port.disconnect();
+        this.users_port = null;
     }
 }

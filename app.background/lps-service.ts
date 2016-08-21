@@ -28,7 +28,7 @@ export class LPSService {
         this.startMonitoring();
     }
 
-    subscribeOnMessageUpdate(callback) {
+    subscribeOnMessagesUpdate(callback) {
         this.on_message_update = callback;
     }
 

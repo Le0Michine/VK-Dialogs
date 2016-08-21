@@ -15,6 +15,7 @@ import { LPSHelper } from './lps-helper';
 import { CacheService } from './cache-service';
 import { UserService } from './user-service';
 import { LPSService } from './lps-service';
+import { Channels } from './channels';
 
 @Injectable()
 export class DialogService {
@@ -34,6 +35,8 @@ export class DialogService {
     current_dialog_id: number = null;
     is_chat: boolean = null;
 
+    dialogs_count: number = 20; 
+
     constructor(
         private vkservice: VKService,
         private http: Http,
@@ -42,15 +45,15 @@ export class DialogService {
         private lpsService: LPSService) {
 
         this.getDialogs().subscribe(dialogs => {
+                this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
                 this.cache.updateDialogs(dialogs);
-                this.postDialogsUpdate();
-                this.lpsService.subscribeOnMessageUpdate(() => this.updateMessages());
 
                 let users = [];
                 for (let dialog of this.cache.dialogs_cache) {
                     users.push(dialog.message.user_id);
                 }   
                 this.userService.loadUsers(users.join());
+                this.postDialogsUpdate();
             },
             error => this.handleError(error)
         );
@@ -61,6 +64,11 @@ export class DialogService {
                     this.update_dialogs_port = port;
                     this.update_dialogs_port.onDisconnect.addListener(() => this.update_dialogs_port = null);
                     this.postDialogsUpdate();
+                    this.update_dialogs_port.onMessage.addListener((message: any) => {
+                        if (message.name === Channels.load_old_dialogs_request) {
+                            this.loadOldDialogs();
+                        }
+                    });
                     break;
                 case 'history_monitor':
                     this.update_history_port = port;
@@ -132,12 +140,29 @@ export class DialogService {
         return this.getDialogs();
     }
 
+    loadOldDialogs() {
+        console.log('load old dialogs');
+        this.dialogs_count += 20;
+        this.getDialogs().subscribe(dialogs => {
+            this.cache.updateDialogs(dialogs);
+            let users = [];
+            for (let dialog of this.cache.dialogs_cache) {
+                users.push(dialog.message.user_id);
+            }   
+            this.userService.loadUsers(users.join());
+            this.postDialogsUpdate();
+        },
+        error => this.handleError(error),
+        () => console.log('old dialogs loaded'));
+    }
+
     getDialogs(): Observable<Dialog[]> {
         console.log('dialogs are requested');
         return this.vkservice.getSession().concatMap(session => {
             let uri: string = VKConsts.api_url + this.get_dialogs 
                 + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version;
+                + "&v=" + VKConsts.api_version
+                + "&count=" + this.dialogs_count;
             return this.http.get(uri).map(response => this.toDialog(response.json()));
         });
     }

@@ -50,6 +50,7 @@ export class UserService {
     loadUsers(uids: string): void {
         this.getUsers(uids).subscribe(users => {
             this.cache.pushUsers(users);
+            this.postUsersUpdate();
         },
         error => this.errorHandler(error),
         () => console.log('loaded users: ' + uids));
