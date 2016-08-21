@@ -10,6 +10,7 @@ export class CacheService {
     dialogs_cache: Dialog[] = [];
     messages_cache: {} = {}; /* conversation id -> messages list */
     users_cache: {} = {}; /* user id -> user */
+    chats_cache: {} = {}; /* chat id -> users array */
 
     pushMessage(new_message: any) {
         let is_chat = new_message.chat_id ? true : false;
@@ -43,6 +44,10 @@ export class CacheService {
             this.dialogs_cache.push(new_dialog);
             this.messages_cache[is_chat ? new_message['chat_id'] : new_message.user_id] = [new_message];
         }
+    }
+
+    updateChats(chats) {
+        this.chats_cache = chats;
     }
 
     updateDialogs(dialogs: Dialog[]) {

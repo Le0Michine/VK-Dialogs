@@ -47,14 +47,7 @@ export class DialogService {
 
         this.getDialogs().subscribe(dialogs => {
                 this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
-                this.cache.updateDialogs(dialogs);
-
-                let users = [];
-                for (let dialog of this.cache.dialogs_cache) {
-                    users.push(dialog.message.user_id);
-                }   
-                this.userService.loadUsers(users.join());
-                this.postDialogsUpdate();
+                this.loadDialogUsers(dialogs);
             },
             error => this.handleError(error)
         );
@@ -66,6 +59,7 @@ export class DialogService {
                     this.update_dialogs_port.onDisconnect.addListener(() => this.update_dialogs_port = null);
                     this.postDialogsUpdate();
                     this.postDialogsCountUpdate();
+                    this.postChatsUpdate();
                     this.update_dialogs_port.onMessage.addListener((message: any) => {
                         if (message.name === Channels.load_old_dialogs_request) {
                             this.loadOldDialogs();
@@ -125,6 +119,16 @@ export class DialogService {
         }
     }
 
+    postChatsUpdate() {
+        if (this.update_dialogs_port) {
+            console.log('post chats_update message');
+            this.update_dialogs_port.postMessage({name: Channels.update_chats, data: this.cache.chats_cache});
+        }
+        else {
+            console.log('port dialogs_monitor is closed');
+        }
+    }
+
     postDialogsCountUpdate() {
         if (this.update_dialogs_port && this.dialogs_count) {
             console.log('post dialogs_count_update message');
@@ -144,6 +148,7 @@ export class DialogService {
             console.log('port history_monitor is closed or max_messages_count isn\'t specified');
         }
     }
+
     updateMessages() {
         this.getDialogs().subscribe(dialogs => {
                 this.cache.updateDialogs(dialogs);
@@ -158,12 +163,27 @@ export class DialogService {
         }
     }
 
-    getCachedDialogs(): Observable<Dialog[]> {
-        if (this.cache.dialogs_cache && this.cache.dialogs_cache.length > 0) {
-            let res = Observable.bindCallback((callback: (dialogs: Dialog[]) => void) => callback(this.cache.dialogs_cache));
-            return res();
-        }
-        return this.getDialogs();
+    loadDialogUsers(dialogs: Dialog[]) {
+        this.cache.updateDialogs(dialogs);
+        let users = [];
+        let chats = [];
+        for (let dialog of this.cache.dialogs_cache) {
+            if ((dialog.message as Chat).chat_id) {
+                chats.push((dialog.message as Chat).chat_id);
+            }
+            users.push(dialog.message.user_id);
+        }   
+        this.userService.loadUsers(users.join());
+        this.loadChats(chats.join());
+        this.postDialogsUpdate();
+    }
+
+    loadChats(chat_ids: string) {
+        this.getChats(chat_ids).subscribe(chats => {
+            this.cache.updateChats(chats);
+        },
+        error => this.handleError(error),
+        () => console.log('chats loaded'));
     }
 
     loadOldDialogs() {
@@ -173,14 +193,10 @@ export class DialogService {
         }
         console.log('load old dialogs');
         this.dialogs_count += 20;
+        window.setTimeout(() => this.dialogs_count -= 20, 3000*60);
+
         this.getDialogs().subscribe(dialogs => {
-            this.cache.updateDialogs(dialogs);
-            let users = [];
-            for (let dialog of this.cache.dialogs_cache) {
-                users.push(dialog.message.user_id);
-            }   
-            this.userService.loadUsers(users.join());
-            this.postDialogsUpdate();
+            this.loadDialogUsers(dialogs);
         },
         error => this.handleError(error),
         () => console.log('old dialogs loaded'));
@@ -233,9 +249,22 @@ export class DialogService {
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + "&chat_id=" + chat_id
-                + "&fields=first_name,photo_50";
+                + "&fields=photo_50";
         
             return this.http.get(uri).map(response => this.toUserDict(response.json()));
+        });
+    }
+
+    getChats(chat_ids: string): Observable<{}> {
+        console.log('chat participants requested');
+        return this.vkservice.getSession().concatMap(session => {
+            let uri: string = VKConsts.api_url + this.get_chat
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version
+                + "&chat_ids=" + chat_ids
+                + "&fields=photo_50";
+        
+            return this.http.get(uri).map(response => this.toChatDict(response.json()));
         });
     }
 
@@ -272,6 +301,15 @@ export class DialogService {
                 + "&notification=1";
             return this.http.get(uri).map(response => response.json().response);
         });
+    }
+
+    private toChatDict(json): {} {
+        if (ErrorHelper.checkErrors(json)) return {};
+        let chats = {};
+        for (let chat of json.response) {
+            chats[chat.id] = chat;
+        }
+        return chats;
     }
 
     private toUserDict(json): {} {
