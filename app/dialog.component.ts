@@ -31,7 +31,7 @@ export class DialogComponent {
     private messages_cache_port: chrome.runtime.Port;
 
     constructor (
-        private messagesService: DialogService,
+        private messages_service: DialogService,
         private vkservice: VKService, 
         private userService: UserService, 
         private route: ActivatedRoute,
@@ -51,7 +51,7 @@ export class DialogComponent {
             
             this.restoreCachedMessages(id, isChat);
 
-            this.messagesService.subscribeOnHistoryUpdate(this.conversation_id, this.is_chat, history => {
+            this.messages_service.subscribeOnHistoryUpdate(this.conversation_id, this.is_chat, history => {
                 this.history = history as Message[];
                 this.change_detector.detectChanges();
             });
@@ -108,7 +108,7 @@ export class DialogComponent {
             console.log('message text is empty, nothing to send');
             return;
         }
-        this.messagesService.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
+        this.messages_service.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
             message => console.log(JSON.stringify(message)),
             error => this.errorHandler(error),
             () => { 
@@ -225,13 +225,17 @@ export class DialogComponent {
         if (ids.length === 0) {
             console.log('unread messages was not found');
         }
-        this.messagesService.markAsRead(ids.join()).subscribe(result => {
+        this.messages_service.markAsRead(ids.join()).subscribe(result => {
             if (result) {
             }
             else {
                 console.log('failed to mark messages as read');
             }
         });
+    }
+
+    loadOldMessages() {
+        this.messages_service.loadOldMessages();
     }
 
     errorHandler(error) {

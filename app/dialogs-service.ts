@@ -44,6 +44,15 @@ export class DialogService {
         }
     }
 
+    loadOldMessages() {
+        if (this.history_port) {
+            this.history_port.postMessage({name: Channels.load_old_messages_request});
+        }
+        else {
+            console.log('history_monitor port isn\'t initialized');
+        }
+    }
+
     subscribeOnDialogsUpdate(callback: (x: Dialog[]) => void) {
         this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
         this.dialogs_port.onMessage.addListener((message: any) => {

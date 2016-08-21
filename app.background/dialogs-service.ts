@@ -27,14 +27,12 @@ export class DialogService {
     private mark_as_read: string = 'messages.markAsRead';
     private get_lps: string = 'messages.getLongPollServer';
 
-    server: LongPollServer = null;
-
     update_dialogs_port: chrome.runtime.Port;
     update_history_port: chrome.runtime.Port;
-    update_users_port: chrome.runtime.Port;
     current_dialog_id: number = null;
     is_chat: boolean = null;
 
+    messages_count: number = 20;
     dialogs_count: number = 20; 
 
     constructor(
@@ -87,11 +85,15 @@ export class DialogService {
                                 }
                             });
                         }
+                        else if (message.name === Channels.load_old_messages_request) {
+                            this.loadOldMessages();
+                        }
                     });
                     this.update_history_port.onDisconnect.addListener(() => {
                         this.update_history_port = null;
                         this.current_dialog_id = null;
                         this.is_chat = null;
+                        this.messages_count = 20;
                     });
                     break;
             }
@@ -156,6 +158,17 @@ export class DialogService {
         () => console.log('old dialogs loaded'));
     }
 
+    loadOldMessages() {
+        console.log('load old messages');
+        this.messages_count += 20;
+        this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
+            this.cache.updateHistory(history);
+            this.postHistoryUpdate();
+        },
+        error => this.handleError(error),
+        () => console.log('old dialogs loaded'));
+    }
+
     getDialogs(): Observable<Dialog[]> {
         console.log('dialogs are requested');
         return this.vkservice.getSession().concatMap(session => {
@@ -167,14 +180,14 @@ export class DialogService {
         });
     }
 
-    getHistory(id: number, chat: boolean, count: number = 20): Observable<Message[]> {
+    getHistory(id: number, chat: boolean): Observable<Message[]> {
         console.log('history is requested');
         return this.vkservice.getSession().concatMap(session => {
             let uri: string = VKConsts.api_url + this.get_history
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + (chat ? "&chat_id=" + id : "&user_id=" + id)
-                + "&count=" + count
+                + "&count=" + this.messages_count
                 + "&rev=0";
 
             return this.http.get(uri).map(response => this.toMessages(response.json()));

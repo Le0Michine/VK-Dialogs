@@ -1,13 +1,13 @@
 #chat_body {
     position: relative;
     top: 74px;
-    margin-bottom: 20px;
     width: 550px;
-    /*min-height: 100%;*/
+    min-height: 20px;
     perspective-origin: 275px 765.5px;
     transform-origin: 275px 765.5px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
-    padding: 0px 0px 10px;
+    padding: 0px 0px 0px;
+    z-index: 100;
 }/*#chat_body*/
 
 #message_block {
@@ -191,13 +191,73 @@
     background: #edf0f5;
 }/*#unread*/
 
-#chat_body {
-    position: relative;
+#load_old {
+    cursor: pointer;
+    width: 100%;
     bottom: 0px;
-    width: 550px;
-    min-height: 20px;
-    perspective-origin: 275px 765.5px;
-    transform-origin: 275px 765.5px;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
-    z-index: 100;
-}/*#chat_body*/
+    height: 30px;
+    text-align: center;
+    position: relative;
+    margin: 0px 0px 0px;
+    padding: 10px 0px 0px;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
+    border-top: 1px solid rgb(231, 232, 236);
+}
+
+#load_old_link {
+    width: 50%;
+    text-align: center;
+    font: normal normal 500 normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    /*background: rgb(2, 2, 2) none repeat scroll 0% 0% / auto padding-box border-box;*/
+    margin: 0px 0px 0px;
+}
+
+#arrow_down {
+    bottom: 0px;
+    color: rgb(42, 88, 133);
+    cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    left: 0px;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    top: 0px;
+    vertical-align: middle;
+    width: 36px;
+    column-rule-color: rgb(42, 88, 133);
+    perspective-origin: 18px 8px;
+    transform-origin: 18px 8px;
+    border: 0px none rgb(42, 88, 133);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(42, 88, 133) none 0px;
+    transform: rotate(270deg);
+    /*animation: rotating 2s linear infinite;*/
+}/*#arrow_down*/
+
+#arrow_down:before {
+    background-position: 2px -324px;
+    bottom: 1.5px;
+    color: rgb(42, 88, 133);
+    content: '';
+    cursor: pointer;
+    display: block;
+    height: 15px;
+    left: 18px;
+    opacity: 0.7;
+    position: absolute;
+    right: 8px;
+    text-align: left;
+    top: 8px;
+    width: 20px;
+    z-index: 0;
+    column-rule-color: rgb(42, 88, 133);
+    perspective-origin: 10px 7.5px;
+    transform-origin: 10px 7.5px;
+    background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
+    /*background: rgba(0, 0, 0, 0) url("../../loading.png") no-repeat scroll 2px -324px / auto padding-box border-box;*/
+    border: 0px none rgb(42, 88, 133);
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: -8.5px 0px 0px -10px;
+    outline: rgb(42, 88, 133) none 0px;
+}/*#arrow_down:before*/

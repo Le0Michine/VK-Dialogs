@@ -146,7 +146,7 @@ export class LPSService {
                 console.log('error ocured need to obtain a new lps key');
                 this.startMonitoring(server.ts);
             }
-            else if (response.failed === 3) {
+            else if (response.failed === 1) {
                 console.log('history became obsolet need to refresh it first');
                 this.on_message_update();
                 this.on_user_update();
