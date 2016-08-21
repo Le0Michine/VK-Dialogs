@@ -151,8 +151,7 @@ export class DialogService {
 
     updateMessages() {
         this.getDialogs().subscribe(dialogs => {
-                this.cache.updateDialogs(dialogs);
-                this.postDialogsUpdate();
+                this.loadDialogUsers(dialogs);
             });
 
             if (this.update_history_port && this.current_dialog_id) {
