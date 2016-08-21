@@ -58,6 +58,7 @@ export class DialogService {
     }
 
     subscribeOnDialogsCountUpdate(callback: (dialogsCount: number) => void) {
+        this.initializeDialogsMonitor();
         this.dialogs_port.onMessage.addListener((message: any) => {
             if (message.name === Channels.dialogs_count_update) {
                 console.log('got dialogs_count_update message');
@@ -75,15 +76,22 @@ export class DialogService {
         });
     }
 
+    subscribeOnChatsUpdate(callback) {
+        this.initializeDialogsMonitor();
+        this.dialogs_port.onMessage.addListener((message: any) => {
+            if (message.name === Channels.update_chats && message.data) {
+                console.log('got chats_update message');
+                callback(message.data);
+            }
+        });
+    }
+
     subscribeOnDialogsUpdate(callback: (x: Dialog[]) => void) {
-        this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
+        this.initializeDialogsMonitor();
         this.dialogs_port.onMessage.addListener((message: any) => {
             if (message.name === 'dialogs_update' && message.data) {
                 console.log('got dialogs_update message');
                 callback(message.data as Dialog[])
-            }
-            else {
-                console.log('unknown message in dialogs_monitor: ' + JSON.stringify(message));
             }
         });
     }
@@ -96,14 +104,17 @@ export class DialogService {
                 console.log('got history_monitor message');
                 callback(message.data as Message[])
             }
-            else {
-                console.log('unknown message in history_monitor: ' + JSON.stringify(message));
-            }
         });
     }
 
     unsubscribeFromDialogs() {
         this.dialogs_port.disconnect();
         this.dialogs_port = null;
+    }
+
+    private initializeDialogsMonitor() {
+        if (!this.dialogs_port) {
+            this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
+        }
     }
 }
