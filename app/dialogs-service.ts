@@ -53,6 +53,24 @@ export class DialogService {
         }
     }
 
+    subscribeOnDialogsCountUpdate(callback: (dialogsCount: number) => void) {
+        this.dialogs_port.onMessage.addListener((message: any) => {
+            if (message.name === Channels.dialogs_count_update) {
+                console.log('got dialogs_count_update message');
+                callback(message.data);
+            }
+        });
+    }
+
+    subscribeOnMessagesCountUpdate(callback: (messagesCount: number) => void) {
+        this.history_port.onMessage.addListener((message: any) => {
+            if (message.name === Channels.messages_count_update) {
+                console.log('got messages_count_update message');
+                callback(message.data);
+            }
+        });
+    }
+
     subscribeOnDialogsUpdate(callback: (x: Dialog[]) => void) {
         this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
         this.dialogs_port.onMessage.addListener((message: any) => {

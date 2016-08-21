@@ -26,6 +26,7 @@ export class DialogComponent {
     is_chat: boolean;
     conversation_id: number;
     current_text: string;
+    messages_count: number;
     sub: any;
 
     private messages_cache_port: chrome.runtime.Port;
@@ -60,6 +61,8 @@ export class DialogComponent {
                 this.participants = users;
                 this.change_detector.detectChanges();
             });
+
+            this.messages_service.subscribeOnMessagesCountUpdate(count => this.messages_count = count);
         });
     }
 

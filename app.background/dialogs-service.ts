@@ -35,6 +35,9 @@ export class DialogService {
     messages_count: number = 20;
     dialogs_count: number = 20; 
 
+    max_dialogs_count: number;
+    max_messages_count: number;
+
     constructor(
         private vkservice: VKService,
         private http: Http,
@@ -62,6 +65,7 @@ export class DialogService {
                     this.update_dialogs_port = port;
                     this.update_dialogs_port.onDisconnect.addListener(() => this.update_dialogs_port = null);
                     this.postDialogsUpdate();
+                    this.postDialogsCountUpdate();
                     this.update_dialogs_port.onMessage.addListener((message: any) => {
                         if (message.name === Channels.load_old_dialogs_request) {
                             this.loadOldDialogs();
@@ -77,6 +81,7 @@ export class DialogService {
                             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                                 this.cache.updateHistory(history);
                                 this.postHistoryUpdate();
+                                this.postMessagesCountUpdate();
                                 if (this.is_chat) {
                                     this.getChatParticipants(this.current_dialog_id).subscribe(users => {
                                         this.cache.pushUsers(users);
@@ -120,6 +125,25 @@ export class DialogService {
         }
     }
 
+    postDialogsCountUpdate() {
+        if (this.update_dialogs_port && this.dialogs_count) {
+            console.log('post dialogs_count_update message');
+            this.update_dialogs_port.postMessage({name: Channels.dialogs_count_update, data: this.max_dialogs_count});
+        }
+        else {
+            console.log('port dialogs_monitor is closed or max_dialogs_count isn\'t specified');
+        }
+    }
+
+    postMessagesCountUpdate() {
+        if (this.update_history_port && this.messages_count) {
+            console.log('post messages_count_update message');
+            this.update_history_port.postMessage({name: Channels.messages_count_update, data: this.max_messages_count});
+        }
+        else {
+            console.log('port history_monitor is closed or max_messages_count isn\'t specified');
+        }
+    }
     updateMessages() {
         this.getDialogs().subscribe(dialogs => {
                 this.cache.updateDialogs(dialogs);
@@ -143,6 +167,10 @@ export class DialogService {
     }
 
     loadOldDialogs() {
+        if (this.dialogs_count >= this.max_dialogs_count) {
+            console.log('all dialogs are loaded');
+            return;
+        }
         console.log('load old dialogs');
         this.dialogs_count += 20;
         this.getDialogs().subscribe(dialogs => {
@@ -159,6 +187,10 @@ export class DialogService {
     }
 
     loadOldMessages() {
+        if (this.messages_count >= this.max_messages_count) {
+            console.log('all messages are loaded');
+            return;
+        }
         console.log('load old messages');
         this.messages_count += 20;
         this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
@@ -166,7 +198,7 @@ export class DialogService {
             this.postHistoryUpdate();
         },
         error => this.handleError(error),
-        () => console.log('old dialogs loaded'));
+        () => console.log('old messages loaded'));
     }
 
     getDialogs(): Observable<Dialog[]> {
@@ -256,6 +288,8 @@ export class DialogService {
         if (ErrorHelper.checkErrors(json)) return [];
         json = json.response || json;
         console.log('dialogs cout ' + json.count);
+        this.max_dialogs_count = json.count;
+        this.postDialogsCountUpdate();
         this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : '');
 
         return json.items as Dialog[];
@@ -265,6 +299,8 @@ export class DialogService {
         if (ErrorHelper.checkErrors(json)) return [];
         json = json.response || json;
         console.log('messages cout ' + json.count);
+        this.max_messages_count = json.count;
+        this.postMessagesCountUpdate();
 
         return json.items as Message[];
     }

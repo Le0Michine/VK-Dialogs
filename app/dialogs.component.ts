@@ -22,6 +22,7 @@ export class DialogsComponent implements OnInit {
     title = "Dialogs";
     user: User = new User();
     users: {};
+    dialogs_count: number;
 
     i: number = 0;
 
@@ -80,6 +81,8 @@ export class DialogsComponent implements OnInit {
             this.users = users;
             this.change_detector.detectChanges();
         });
+
+        this.dialog_service.subscribeOnDialogsCountUpdate(count => this.dialogs_count = count);
     }
 
     ngOnDestroy() {

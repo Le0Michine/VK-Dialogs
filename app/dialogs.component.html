@@ -38,7 +38,7 @@
 		</div>
     </li>
 </ul>
-<div id="load_old" (click)="loadOldDialogs()">
+<div id="load_old" (click)="loadOldDialogs()" [hidden]="dialogs_count && dialogs_count === dialogs.length">
 	<div id="arrow_down"></div>
 	<a id="load_old_link">Load previous messages</a>
 </div>
