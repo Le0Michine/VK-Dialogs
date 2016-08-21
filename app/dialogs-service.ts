@@ -53,6 +53,10 @@ export class DialogService {
         }
     }
 
+    getChatParticipants(id: number): Observable<{}> {
+        return RequestHelper.sendRequestToBackground({name: Channels.get_chat_participants_request, chat_id: id});
+    }
+
     subscribeOnDialogsCountUpdate(callback: (dialogsCount: number) => void) {
         this.dialogs_port.onMessage.addListener((message: any) => {
             if (message.name === Channels.dialogs_count_update) {

@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import { Message, Chat } from './message'
 import { Dialog } from './Dialog'
 import { User } from './user'
@@ -8,14 +9,15 @@ import { UserService } from './user-service'
 import { VKService } from './vk-service'
 import { DialogService } from './dialogs-service'
 import { DateConverter } from './date-converter'
-import { Observable as Observable1 } from 'rxjs/Rx';
 import { VKConsts } from './vk-consts';
+
+import { DialogViewComponent } from './components/dialog-view.component';
 
 @Component({
   selector: 'dialogs',
   templateUrl: 'app/dialogs.component.html',
   styleUrls: ['app/dialogs.component.css'],
-  directives: [DialogComponent],
+  directives: [DialogComponent, DialogViewComponent],
   //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogsComponent implements OnInit { 
