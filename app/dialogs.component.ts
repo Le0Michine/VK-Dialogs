@@ -127,7 +127,7 @@ export class DialogsComponent implements OnInit {
     getDialogs() {
         let dialogs: DialogToShow[] = [];
         for (let dialog of this.dialogs) {
-            console.log(JSON.stringify(dialog));
+            //console.log(JSON.stringify(dialog));
             let uid = dialog.message.user_id;
             let dts = new DialogToShow();
             dts.message = dialog.message;
