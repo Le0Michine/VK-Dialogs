@@ -47,8 +47,8 @@ export class LPSService {
             },
             error => {
                 console.log('error ocured during lps request: ' + error);
-                console.log('restart monitoring');
-                this.startMonitoring();
+                console.log('restart monitoring in 5 seconds');
+                window.setTimeout(() => this.startMonitoring(), 5000);
             });
     }
 
