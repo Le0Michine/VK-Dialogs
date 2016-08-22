@@ -71,3 +71,14 @@ export class Audio {
     /** link to mp3 */
     url: string;
 }
+
+export class WallPost {
+    /** wall post ID */
+    id: number;
+
+    /** post owner ID */
+    to_id: number;
+
+    /** ID of the user who posted */
+    from_id: number;
+}
