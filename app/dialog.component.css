@@ -48,43 +48,8 @@
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
-}/*.user_avatar_img*/
-
-.user_avatar_img:after {
-    color: rgba(0, 0, 0, 0);
-    content: '"' '"';
-    cursor: pointer;
-    display: block;
-    height: 36px;
-    left: 0px;
-    position: absolute;
-    top: 0px;
-    width: 36px;
-    column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 18px 18px;
-    transform-origin: 18px 18px;
     background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
-    border: 0px none rgba(0, 0, 0, 0);
-    border-radius: 50% 50% 50% 50%;
-    outline: rgba(0, 0, 0, 0) none 0px;
-}/*.user_avatar_img:after*/
-
-.user_avatar_img:before {
-    color: rgba(0, 0, 0, 0);
-    content: '"' '"';
-    cursor: pointer;
-    display: block;
-    height: 36px;
-    left: 0px;
-    position: absolute;
-    top: 0px;
-    width: 36px;
-    column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 18px 18px;
-    transform-origin: 18px 18px;
-    border: 0px none rgba(0, 0, 0, 0);
-    outline: rgba(0, 0, 0, 0) none 0px;
-}/*.user_avatar_img:before*/
+}/*.user_avatar_img*/
 
 .message {
     perspective-origin: 275px 35px;
