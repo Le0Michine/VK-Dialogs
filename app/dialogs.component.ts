@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import { Message, Chat } from './message'
-import { Dialog } from './Dialog'
+import { Message, Chat, CHAT_ACTIONS } from './message'
+import { Dialog, DialogToShow } from './Dialog'
 import { User } from './user'
 import { DialogComponent } from './dialog.component'
 import { UserService } from './user-service'
@@ -10,25 +10,25 @@ import { VKService } from './vk-service'
 import { DialogService } from './dialogs-service'
 import { DateConverter } from './date-converter'
 import { VKConsts } from './vk-consts';
-
-import { DialogViewComponent } from './components/dialog-view.component';
+import { ATTACHMENT_TYPES } from './attachment-data-types';
 
 @Component({
   selector: 'dialogs',
   templateUrl: 'app/dialogs.component.html',
   styleUrls: ['app/dialogs.component.css'],
-  directives: [DialogComponent, DialogViewComponent],
+  directives: [DialogComponent],
   //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogsComponent implements OnInit { 
     title = "Dialogs";
     user: User = new User();
     users: {};
+    chats: {};
     dialogs_count: number;
 
     i: number = 0;
 
-    dialogs: Dialog[];
+    dialogs: Dialog[] = [];
 
     constructor(
         private user_service: UserService,
@@ -85,6 +85,11 @@ export class DialogsComponent implements OnInit {
             this.change_detector.detectChanges();
         });
 
+        this.dialog_service.subscribeOnChatsUpdate(chats => {
+            this.chats = chats;
+            this.change_detector.detectChanges();
+        });
+
         this.dialog_service.subscribeOnDialogsCountUpdate(count => this.dialogs_count = count);
     }
 
@@ -105,11 +110,58 @@ export class DialogsComponent implements OnInit {
         return 'loading...'; 
     }
 
+    getUserFirstName(uid: number) {
+        if (this.users && this.users[uid]) {
+            return this.users[uid].first_name;
+        }
+        return 'loading...'; 
+    }
+
     getUserPhoto(uid: number) {
         if (this.users && this.users[uid] && this.users[uid].photo_50) {
             return this.users[uid].photo_50;
         }
         return 'http://vk.com/images/camera_c.gif';
+    }
+
+    getDialogs() {
+        let dialogs: DialogToShow[] = [];
+        for (let dialog of this.dialogs) {
+            console.log(JSON.stringify(dialog));
+            let uid = dialog.message.user_id;
+            let dts = new DialogToShow();
+            dts.message = dialog.message;
+            dts.unread = dialog.unread;
+            dts.title = dialog.message.title === ' ... ' ? this.getUserName(uid) : dialog.message.title;
+            dts.date_format = DateConverter.formatDate(Number(dialog.message.date));
+            dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
+            
+            if (dialog.message.fwd_messages) {
+                dts.attachment_type = 'Forwarded message';
+            }
+            else if (dialog.message.attachments && dialog.message.attachments[0]) {
+                dts.attachment_type = ATTACHMENT_TYPES[dialog.message.attachments[0].type];
+            }
+            dts.attachment_only = dts.attachment_type != '' && dts.message.body === '';
+
+            let chat = dialog.message as Chat;
+            if (chat.chat_id) {
+                if (chat.photo_50) {
+                    dts.photos = [chat.photo_50];
+                }
+                else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length > 0) {
+                    dts.photos = (this.chats[chat.chat_id].users as User[]).filter(user => user.id != this.user.id).map(user => user.photo_50).slice(0, 4);
+                }
+                else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length == 0 && chat.action) {
+                    chat.read_state = true;
+                }
+            }
+            else if (this.users && this.users[uid] && this.users[uid].photo_50) {
+                dts.photos = [this.users[uid].photo_50];
+            }
+            dialogs.push(dts);
+        }
+        return dialogs;
     }
 
     errorHandler(error) {

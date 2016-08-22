@@ -2,11 +2,11 @@
     background-color: #CFD8DC !important;
     color: white;
 }
-#dialogs_list li.selected:hover {
+.dialogs_list li.selected:hover {
     background-color: #BBD8DC !important;
     color: white;
 }
-#dialogs_list li:hover {
+.dialogs_list li:hover {
     color: #607D8B;
     background-color: #DDD;
 }
@@ -25,7 +25,7 @@
     border-radius: 4px 0 0 4px;
 }
 
-#dialogs_list {
+.dialogs_list {
     box-shadow: rgb(215, 216, 219) 0px 1px 0px 0px, rgb(227, 228, 232) 0px 0px 0px 1px;
     box-sizing: border-box;
     min-height: 100%;
@@ -39,9 +39,9 @@
     list-style: none outside none;
     margin: 0px 0px 0px;
     padding: 0px 0px 0px;
-}/*#dialogs_list*/
+}/*.dialogs_list*/
 
-#dialog_li {
+.dialog_li {
     box-sizing: border-box;
     cursor: pointer;
     display: block;
@@ -50,9 +50,9 @@
     perspective-origin: 275px 35.5px;
     transform-origin: 275px 35.5px;
     padding: 0px 0px 0px 25px;
-}/*#dialog_li*/
+}/*.dialog_li*/
 
-#user_avatar_div {
+.user_avatar_div {
     bottom: 0px;
     left: 0px;
     cursor: pointer;
@@ -64,9 +64,9 @@
     transform-origin: 32px 34.5px;
     border: 0px none rgb(255, 255, 255);
     padding: 11px 14px 8px 0px;
-}/*#user_avatar_div*/
+}/*.user_avatar_div*/
 
-#user_avatar_inner_div {
+.user_avatar_inner_div {
     color: rgb(42, 88, 133);
     height: 51px;
     width: 52px;
@@ -75,15 +75,15 @@
     transform-origin: 26px 25.5px;
     border: 0px none rgb(42, 88, 133);
     outline: rgb(42, 88, 133) none 0px;
-}/*#user_avatar_inner_div*/
+}/*.user_avatar_inner_div*/
 
-#user_avatar {
+.user_avatar {
     color: rgba(0, 0, 0, 0);
     cursor: pointer;
     display: block;
     height: 50px;
-    text-align: left;
     width: 50px;
+    text-align: left;
     column-rule-color: rgba(0, 0, 0, 0);
     perspective-origin: 25px 25px;
     transform-origin: 25px 25px;
@@ -91,50 +91,69 @@
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar*/
-
-#user_avatar:after {
-    color: rgba(0, 0, 0, 0);
-    content: '"' '"';
-    cursor: pointer;
-    display: block;
-    height: 50px;
-    left: 0px;
-    position: absolute;
-    text-align: left;
-    top: 0px;
-    width: 50px;
-    column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 25px 25px;
-    transform-origin: 25px 25px;
     background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
-    border: 0px none rgba(0, 0, 0, 0);
-    border-radius: 50% 50% 50% 50%;
-    outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar:after*/
+}/*.user_avatar*/
 
-#user_avatar:before {
-    color: rgba(0, 0, 0, 0);
-    content: '"' '"';
-    cursor: pointer;
-    display: block;
-    height: 50px;
+.mini_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
     left: 0px;
-    position: absolute;
-    text-align: left;
     top: 0px;
-    width: 50px;
-    column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 25px 25px;
-    transform-origin: 25px 25px;
-    border: 0px none rgba(0, 0, 0, 0);
-    outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar:before*/
+    border-radius: 50% 50% 50% 50%;
+    float:left;
+    margin: 0.5px 0.5px 0.5px 0.5px;
+}
 
-#online_marker:after {
+.top_left_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    top: 0px;
+    border-radius: 100% 0% 0% 0%;
+    float:left;
+    margin: 0px 0.5px 0.5px 0px;
+}
+
+.top_right_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 100% 0% 0%;
+    margin: 0px 0px 0.5px 0.5px;
+}
+
+.bottom_left_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 0% 0% 100%;
+    float: left;
+    margin: 0.5px 0.5px 0px 0px;
+}
+
+.bottom_right_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 0% 100% 0%;
+    margin: 0.5px 0px 0px 0.5px;
+}
+
+.online_marker:after {
     border-color: inherit;
 }
-#online_marker:after {
+.online_marker:after {
     bottom: 2%;
     right: 2%;
     border: 2px solid #fff;
@@ -142,14 +161,14 @@
     width: 8px;
     z-index: 100;
 }
-#online_marker:after {
+.online_marker:after {
     content: '';
     position: absolute;
     background-color: #8ac176;
     border-radius: 50%;
 }
 
-#dialog_div {
+.dialog_div {
     bottom: 0px;
     cursor: pointer;
     height: 71px;
@@ -164,35 +183,35 @@
     border-top: 1px solid rgb(231, 232, 236);
     margin: 0px 0px 0px 64px;
     padding: 0px 15px 0px 0px;
-}/*#dialog_div*/
+}/*.dialog_div*/
 
-#dialog_content_div {
+.dialog_content_div {
     box-sizing: border-box;
     perspective-origin: 223px 35.5px;
     transform-origin: 223px 35.5px;
     padding: 10px 0px;
-}/*#dialog_content_div*/
+}/*.dialog_content_div*/
 
-#last_message_date {
+.last_message_date {
     bottom: 40px;
     color: rgb(147, 147, 147);
     height: 14px;
-    left: 370px;
+    left: 360px;
     opacity: 0.7;
     text-align: right;
     position: absolute;
     right: 15px;
     top: 17px;
-    width: 60px;
+    width: 90px;
     z-index: 0;
     column-rule-color: rgb(147, 147, 147);
     perspective-origin: 22.4688px 7px;
     transform-origin: 22.4688px 7px;
     border: 0px none rgb(147, 147, 147);
     outline: rgb(147, 147, 147) none 0px;
-}/*#last_message_date*/
+}/*.last_message_date*/
 
-#dialog_title_div {
+.dialog_title_div {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: rgb(34, 34, 34);
@@ -211,9 +230,9 @@
     margin: 6px 0px 4px;
     column-rule-color: rgb(34, 34, 34);
     border: 0px none rgb(34, 34, 34);
-}/*#dialog_title_div*/
+}/*.dialog_title_div*/
 
-#dialog_title_span {
+.dialog_title_span {
     height: 15px;
     max-width: 70%;
     width: 89.3281px;
@@ -222,9 +241,9 @@
     outline: rgb(34, 34, 34) none 0px;
     overflow: hidden;
     padding: 0px 0px 1px;
-}/*#dialog_title_span*/
+}/*.dialog_title_span*/
 
-#message_body {
+.message_body {
     color: rgb(139, 147, 155);
     cursor: pointer;
     height: 15px;
@@ -240,9 +259,13 @@
     outline: rgb(139, 147, 155) none 0px;
     overflow: hidden;
     padding: 0px 0px 1px;
-}/*#message_body*/
+}/*.message_body*/
 
-#three_dots {
+.dialog_attachments {
+    color: #4a6f97;
+}
+
+.three_dots {
     color: rgb(101, 101, 101);
     content: '"..."';
     display: none;
@@ -252,9 +275,9 @@
     transform-origin: 50% 50%;
     animation: typer-simple 1.1s linear 0s infinite normal none running;
     outline: rgb(101, 101, 101) none 0px;
-}/*#three_dots*/
+}/*.three_dots*/
 
-#unread_marker {
+.unread_marker {
     bottom: 20px;
     color: rgb(255, 255, 255);
     cursor: pointer;
@@ -278,9 +301,9 @@
     margin: -12px 1px 0px 0px;
     outline: rgb(255, 255, 255) none 0px;
     overflow: hidden;
-}/*#unread_marker*/
+}/*.unread_marker*/
 
-#unread_count {
+.unread_count {
     bottom: 13px;
     color: rgb(255, 255, 255);
     cursor: pointer;
@@ -303,9 +326,9 @@
     margin: -17px 0px 0px;
     outline: rgb(255, 255, 255) none 0px;
     padding: 0px 6px;
-}/*#unread_count*/
+}/*.unread_count*/
 
-#load_old {
+.load_old {
     cursor: pointer;
     width: 100%;
     bottom: 0px;
@@ -318,7 +341,7 @@
     border-top: 1px solid rgb(231, 232, 236);
 }
 
-#load_old_link {
+.load_old_link {
     width: 50%;
     text-align: center;
     font: normal normal 500 normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
@@ -326,7 +349,7 @@
     margin: 0px 0px 0px;
 }
 
-#arrow_down {
+.arrow_down {
     bottom: 0px;
     color: rgb(42, 88, 133);
     cursor: pointer;
@@ -347,9 +370,9 @@
     outline: rgb(42, 88, 133) none 0px;
     transform: rotate(270deg);
     /*animation: rotating 2s linear infinite;*/
-}/*#arrow_down*/
+}/*.arrow_down*/
 
-#arrow_down:before {
+.arrow_down:before {
     background-position: 2px -324px;
     bottom: 1.5px;
     color: rgb(42, 88, 133);
@@ -374,4 +397,4 @@
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: -8.5px 0px 0px -10px;
     outline: rgb(42, 88, 133) none 0px;
-}/*#arrow_down:before*/
+}/*.arrow_down:before*/

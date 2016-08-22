@@ -1,13 +1,39 @@
-<!--<h1>{{title}}</h1>-->
-<!--<button (click)="convertDate(1231432423)">refresh</button>-->
-<ul id="dialogs_list">
-	<!--<button name="btn" id="btn" (click)="ngOnInit()">refresh</button>-->
-    <li *ngFor="let dialog of dialogs" (click)="gotoDialog(dialog.message)" id="dialog_li">
-		<!--<dialog-photo [chat_id]="dialog.message.chat_id" [users_getter]=getParticipants(dialog.message.user_id,dialog.message.chat_id) [current_user]=user ></dialog-photo>-->
-        <dialog-view [users]="users" [current_user]="user" [dialog]="dialog"></dialog-view>
+<ul class="dialogs_list">
+    <li *ngFor="let dialog of getDialogs()" (click)="gotoDialog(dialog.message)" class="dialog_li">
+		<div class="user_avatar_div">
+			<div class="user_avatar_inner_div">
+				<img *ngFor="let img of dialog.photos" [src]="img" class="user_avatar" [class.mini_avatar]="dialog.photos.length > 1" />
+			</div>
+		</div>
+
+		<div class="dialog_div">
+			<div class="dialog_content_div">
+				<div class="last_message_date">
+					{{dialog.message.date*1000 | date:dialog.date_format}}
+				</div>
+				<div class="dialog_title_div">
+					 <span class="dialog_title_span">
+                        <span>
+                             {{dialog.title}}
+                        </span>
+                    </span>
+				</div>
+				<div class="message_body">
+				    <span>
+                        <span>
+                             {{dialog.sender + ': '}}
+                        </span>
+                        {{dialog.message.body}}<span class="dialog_attachments" [hidden]="!dialog.attachment_only">[{{dialog.attachment_type}}]</span>
+                    </span>
+                    <span class="three_dots">...</span>
+				</div>
+				<div class="unread_marker" [hidden]="dialog.message.read_state"></div>
+				<div class="unread_count" [hidden]="!dialog.unread">{{dialog.unread}}</div>
+			</div>
+		</div>
     </li>
 </ul>
-<div id="load_old" (click)="loadOldDialogs()" [hidden]="dialogs_count && dialogs_count === dialogs.length">
-	<div id="arrow_down"></div>
-	<a id="load_old_link">Load previous messages</a>
+<div class="load_old" (click)="loadOldDialogs()" [hidden]="dialogs_count && dialogs_count === dialogs.length">
+	<div class="arrow_down"></div>
+	<a class="load_old_link">Load previous messages</a>
 </div>

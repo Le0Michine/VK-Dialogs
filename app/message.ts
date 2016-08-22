@@ -1,4 +1,7 @@
-
+export let CHAT_ACTIONS = {
+    'chat_photo_remove': 'removed chat photo',
+    'chat_kick_user': 'left chat'
+};
 
 export class Message {
     // Message ID. (Not returned for forwarded messages.) 
@@ -30,18 +33,18 @@ export class Message {
     body: string;
 
     // Array of media-attachments; see Description of "attachments" field. (https://new.vk.com/dev/attachments_m)
-    // attachments: any;
+    attachments: any;
 
     // Array of forwarded messages (if any).
-    // fwd_messages: any;
+    fwd_messages: any;
 
     // Whether the message contains smiles (0 — no, 1 — yes).
     // flag, either 1 or 0
-    // emoji: boolean;
+    emoji: boolean;
 
     // Whether the message is deleted (0 — no, 1 — yes). 
     // flag, either 1 or 0
-    // deleted: boolean;
+    deleted: boolean;
 }
 
 export class Chat extends Message {
@@ -72,4 +75,6 @@ export class Chat extends Message {
     // URL of chat image with width size of 200px. 
     // string
     photo_200: string;
+
+    action: string;
 }
