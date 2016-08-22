@@ -41,7 +41,8 @@ export class DialogsComponent implements OnInit {
         let link: string[];
         if ((dialog as Chat).chat_id) {
             let chat = dialog as Chat;
-            link = ["/dialog", chat.chat_id.toString(), "chat", chat.title, chat.chat_active.join()];
+            let active: string = chat.chat_active.length > 0 ? chat.chat_active.join() : this.user.id.toString();
+            link = ["/dialog", chat.chat_id.toString(), "chat", chat.title, active];
         }
         else {
             let user: User = this.users[dialog.user_id];

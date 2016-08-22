@@ -15,7 +15,17 @@ export class DialogService {
     private dialogs_port: chrome.runtime.Port;
     private history_port: chrome.runtime.Port;
 
-    constructor(private vkservice: VKService, private http: Http) { }
+    private chats;
+
+    constructor(private vkservice: VKService, private http: Http) {
+        this.initializeDialogsMonitor();
+        this.dialogs_port.onMessage.addListener((message: any) => {
+            if (message.name === Channels.update_chats && message.data) {
+                console.log('got chats_update message');
+                this.chats = message.data;
+            }
+        });
+    }
 
     markAsRead(ids: string): Observable<number> {
         console.log('requested message(s) with id: ' + ids);
@@ -84,6 +94,7 @@ export class DialogService {
                 callback(message.data);
             }
         });
+        return this.chats;
     }
 
     subscribeOnDialogsUpdate(callback: (x: Dialog[]) => void) {

@@ -77,13 +77,13 @@
     outline: rgb(42, 88, 133) none 0px;
 }/*#user_avatar_inner_div*/
 
-#user_avatar {
+.user_avatar {
     color: rgba(0, 0, 0, 0);
     cursor: pointer;
     display: block;
     height: 50px;
-    text-align: left;
     width: 50px;
+    text-align: left;
     column-rule-color: rgba(0, 0, 0, 0);
     perspective-origin: 25px 25px;
     transform-origin: 25px 25px;
@@ -91,50 +91,69 @@
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
+    background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
 }/*#user_avatar*/
 
-#user_avatar:after {
-    color: rgba(0, 0, 0, 0);
-    content: '"' '"';
-    cursor: pointer;
-    display: block;
-    height: 50px;
+.mini_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
     left: 0px;
-    position: absolute;
-    text-align: left;
     top: 0px;
-    width: 50px;
-    column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 25px 25px;
-    transform-origin: 25px 25px;
-    background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
-    border: 0px none rgba(0, 0, 0, 0);
     border-radius: 50% 50% 50% 50%;
-    outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar:after*/
+    float:left;
+    margin: 0.5px 0.5px 0.5px 0.5px;
+}
 
-#user_avatar:before {
-    color: rgba(0, 0, 0, 0);
-    content: '"' '"';
-    cursor: pointer;
-    display: block;
-    height: 50px;
+.top_left_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
     left: 0px;
-    position: absolute;
-    text-align: left;
     top: 0px;
-    width: 50px;
-    column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 25px 25px;
-    transform-origin: 25px 25px;
-    border: 0px none rgba(0, 0, 0, 0);
-    outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar:before*/
+    border-radius: 100% 0% 0% 0%;
+    float:left;
+    margin: 0px 0.5px 0.5px 0px;
+}
 
-#online_marker:after {
+.top_right_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 100% 0% 0%;
+    margin: 0px 0px 0.5px 0.5px;
+}
+
+.bottom_left_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 0% 0% 100%;
+    float: left;
+    margin: 0.5px 0.5px 0px 0px;
+}
+
+.bottom_right_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 0% 100% 0%;
+    margin: 0.5px 0px 0px 0.5px;
+}
+
+.online_marker:after {
     border-color: inherit;
 }
-#online_marker:after {
+.online_marker:after {
     bottom: 2%;
     right: 2%;
     border: 2px solid #fff;
@@ -142,7 +161,7 @@
     width: 8px;
     z-index: 100;
 }
-#online_marker:after {
+.online_marker:after {
     content: '';
     position: absolute;
     background-color: #8ac176;
@@ -177,13 +196,13 @@
     bottom: 40px;
     color: rgb(147, 147, 147);
     height: 14px;
-    left: 370px;
+    left: 340px;
     opacity: 0.7;
     text-align: right;
     position: absolute;
     right: 15px;
     top: 17px;
-    width: 60px;
+    width: 90px;
     z-index: 0;
     column-rule-color: rgb(147, 147, 147);
     perspective-origin: 22.4688px 7px;

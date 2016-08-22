@@ -179,10 +179,12 @@ export class DialogService {
 
     loadChats(chat_ids: string) {
         this.getChats(chat_ids).subscribe(chats => {
-            this.cache.updateChats(chats);
-        },
-        error => this.handleError(error),
-        () => console.log('chats loaded'));
+                this.cache.updateChats(chats);
+                this.postChatsUpdate();
+            },
+            error => this.handleError(error),
+            () => console.log('chats loaded')
+        );
     }
 
     loadOldDialogs() {
