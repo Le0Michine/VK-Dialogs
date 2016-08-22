@@ -10,7 +10,7 @@
     z-index: 100;
 }/*#chat_body*/
 
-#message_block {
+.message_block {
     left: 0px;
     max-width: 550px;
     position: relative;
@@ -20,9 +20,9 @@
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
-}/*#message_block*/
+}/*.message_block*/
 
-#user_avatar {
+.user_avatar {
     bottom: 24px;
     height: 36px;
     left: 36px;
@@ -33,9 +33,9 @@
     z-index: 2;
     perspective-origin: 18px 18px;
     transform-origin: 18px 18px;
-}/*#user_avatar*/
+}/*.user_avatar*/
 
-#user_avatar_img {
+.user_avatar_img {
     color: rgba(0, 0, 0, 0);
     cursor: pointer;
     display: block;
@@ -48,9 +48,9 @@
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar_img*/
+}/*.user_avatar_img*/
 
-#user_avatar_img:after {
+.user_avatar_img:after {
     color: rgba(0, 0, 0, 0);
     content: '"' '"';
     cursor: pointer;
@@ -67,9 +67,9 @@
     border: 0px none rgba(0, 0, 0, 0);
     border-radius: 50% 50% 50% 50%;
     outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar_img:after*/
+}/*.user_avatar_img:after*/
 
-#user_avatar_img:before {
+.user_avatar_img:before {
     color: rgba(0, 0, 0, 0);
     content: '"' '"';
     cursor: pointer;
@@ -84,15 +84,15 @@
     transform-origin: 18px 18px;
     border: 0px none rgba(0, 0, 0, 0);
     outline: rgba(0, 0, 0, 0) none 0px;
-}/*#user_avatar_img:before*/
+}/*.user_avatar_img:before*/
 
-#message {
+.message {
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
     
-}/*#message*/
+}/*.message*/
 
-#user_name_and_date {
+.user_name_and_date {
     bottom: 43px;
     color: rgb(147, 147, 147);
     height: 16px;
@@ -106,9 +106,9 @@
     border: 0px none rgb(147, 147, 147);
     font: normal normal normal normal 12.5px / 14.425px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(147, 147, 147) none 0px;
-}/*#user_name_and_date*/
+}/*.user_name_and_date*/
 
-#user_name {
+.user_name {
     color: rgb(66, 100, 139);
     cursor: pointer;
     display: inline-block;
@@ -126,9 +126,9 @@
     font: normal normal bold normal 12.5px / 15.375px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(66, 100, 139) none 0px;
     overflow: hidden;
-}/*#user_name*/
+}/*.user_name*/
 
-#message_timestamp {
+.message_timestamp {
     color: rgba(148, 148, 148, 0.6);
     column-rule-color: rgba(148, 148, 148, 0.6);
     border: 0px none rgba(148, 148, 148, 0.6);
@@ -137,18 +137,18 @@
     outline: rgba(148, 148, 148, 0.6) none 0px;
     overflow: hidden;
     white-space: nowrap;
-}/*#message_timestamp*/
+}/*.message_timestamp*/
 
-#messages_list {
+.messages_list {
     width: 550px;
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
     list-style: none outside none;
     margin: 0px;
     padding: 0px;
-}/*#messages_list*/
+}/*.messages_list*/
 
-#message_item {
+.message_item {
     bottom: 0px;
     box-sizing: border-box;
     cursor: pointer;
@@ -163,9 +163,9 @@
     list-style: none outside none;
     margin: 0px 4px 4px;
     padding: 6px 57px 7px 0px;
-}/*#message_item*/
+}/*.message_item*/
 
-#message_body {
+.message_body {
     overflow-wrap: break-word;
     width: 387px;
     word-wrap: break-word;
@@ -174,22 +174,22 @@
     font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 20px 0px 78px;
     padding: 0px 0px 0px;
-}/*#message_body*/
+}/*.message_body*/
 
-#message_body_internal {
+.message_body_internal {
     perspective-origin: 193.5px 18px;
     transform-origin: 193.5px 18px;
     white-space: pre-line;
-}/*#message_body_internal*/
+}/*.message_body_internal*/
 
-#unread {
+.unread {
     width: 90%;
     top: 0px;
     bottom: -4px;
     left: 5%;
     position: absolute;
     background: #edf0f5;
-}/*#unread*/
+}/*.unread*/
 
 #load_old {
     cursor: pointer;
