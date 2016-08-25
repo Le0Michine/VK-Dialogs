@@ -30,6 +30,19 @@
     color: #4a6f97;
 }
 
+.att_photo {
+    cursor: -webkit-zoom-in;
+    padding: 3px;
+    width: fit-content;
+    border: 1.5px solid;
+    border-radius: 4px;
+    border-color: #4a6f97;
+}
+
+.att_photo_img {
+    max-width: 387px;
+}
+
 .user_avatar {
     bottom: 24px;
     height: 36px;
@@ -74,7 +87,6 @@
 .message {
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
-    
 }/*.message*/
 
 .user_name_and_date {

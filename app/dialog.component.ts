@@ -60,7 +60,6 @@ export class DialogComponent {
             );
 
             this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
-                    console.log('users: ', users[6807492]);
                     this.participants = users;
                     this.change_detector.detectChanges();
                 },
@@ -123,10 +122,10 @@ export class DialogComponent {
     getMessageAttachments(message: Message) {
         let attachments = [];
         if (message.attachments) {
-            console.log('message with attachment: ', message);
             for (let attachment of message.attachments) {
                 if (attachment.type === 'photo') {
-                    attachments.push('[photo]');
+                    attachment.photo.img = attachment.photo.photo_130;
+                    attachments.push(attachment);
                 }
                 else {
                     attachments.push('[' + attachment.type + ']');
@@ -297,6 +296,17 @@ export class DialogComponent {
 
     loadOldMessages() {
         this.messages_service.loadOldMessages();
+    }
+
+    changePhotoSize(img: HTMLImageElement, photo: any) {
+        if (img.src === photo.photo_130) {
+            img.src = photo.photo_604;
+            photo.img = photo.photo_604;
+        }
+        else if (img.src === photo.photo_604) {
+            img.src = photo.photo_130;
+            photo.img = photo.photo_130;
+        }
     }
 
     errorHandler(error) {

@@ -28,7 +28,14 @@
 						<pre class="message_body_internal" [hidden]="!item.body">
 {{item.body}}
 						</pre>
-						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">{{attachment}}</div>
+						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">
+							<div *ngIf="attachment.photo" class="att_photo">
+								<img class="att_photo_img" #att_photo alt="" [src]="attachment.photo.photo_604" (click)="changePhotoSize(att_photo,attachment.photo)" />
+							</div>
+							<div *ngIf="!attachment.type">
+								{{attachment}}
+							</div>
+						</div>
 					</div>
 				</li>
 			</ul>
