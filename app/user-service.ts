@@ -7,7 +7,6 @@ import { Channels } from '../app.background/channels';
 
 import { User } from './user';
 import { VKService } from './vk-service';
-import { VKConsts } from './vk-consts';
 import { SessionInfo } from './session-info';
 import { RequestHelper } from './request-helper';
 

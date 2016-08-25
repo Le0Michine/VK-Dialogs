@@ -10,7 +10,6 @@ import { DialogsComponent } from './dialogs.component'
 import { DialogService } from './dialogs-service'
 import { UserService } from './user-service'
 import { VKService } from './vk-service'
-import { VKConsts } from './vk-consts'
 
 @Component({
   selector: 'login',

@@ -3,7 +3,6 @@ import { Http, Response, RequestOptionsArgs } from '@angular/http';
 import { Observable, Scheduler }     from 'rxjs/Rx';
 
 import { VKService } from './vk-service';
-import { VKConsts } from './vk-consts';
 import { Message, Chat } from './message';
 import { Dialog } from './dialog';
 import { User } from './user';
