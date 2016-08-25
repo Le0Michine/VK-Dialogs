@@ -165,7 +165,22 @@ export class DialogComponent {
 
     sendMessage() {
         let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
-        let text = textarea.value.trim().replace(/\r?\n/g, "%0A");
+        let text = textarea.value.trim()
+            .replace(/\r?\n/g, "%0A")
+            .replace(/!/g,  "%21")
+            .replace(/"/g,  "%22")
+            .replace(/#/g,  "%23")
+            .replace(/\$/g, "%24")
+            .replace(/%/g,  "%25")
+            .replace(/&/g,  "%26")
+            .replace(/'/g,  "%27")
+            .replace(/\(/g, "%28")
+            .replace(/\)/g, "%29")
+            .replace(/\*/g, "%2A")
+            .replace(/\+/g, "%2B")
+            .replace(/,/g,  "%2C")
+            .replace(/-/g,  "%2D");
+
         if (!text || text === '') {
             console.log('message text is empty, nothing to send');
             return;
@@ -315,6 +330,17 @@ export class DialogComponent {
 
     floor(x: number) {
         return Math.floor(x);
+    }
+
+    cutLinks(text: string) {
+        let len = 55;
+        let urls = text.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm);
+        if (!urls) return text;
+        for (let url of urls) {
+            text = text.replace(url, 
+                '<a target="_blank" href="' + url + '" title="' + url + '" style="cursor:pointer;">' + (url.length > len ? (url.slice(0, len) + '..') : url) + '</a>');
+        }
+        return text;
     }
 
     errorHandler(error) {
