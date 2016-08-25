@@ -151,7 +151,6 @@ export class DialogsComponent implements OnInit {
             dts.title = dialog.message.title === ' ... ' ? this.getUserName(uid) : dialog.message.title;
             dts.date_format = DateConverter.formatDate(Number(dialog.message.date));
             dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
-            dts.online = this.users[uid].online;
             
             if (dialog.message.fwd_messages) {
                 dts.attachment_type = 'Forwarded message';
@@ -176,6 +175,7 @@ export class DialogsComponent implements OnInit {
             }
             else if (this.users && this.users[uid] && this.users[uid].photo_50) {
                 dts.photos = [this.users[uid].photo_50];
+                dts.online = this.users[uid].online;
             }
             dialogs.push(dts);
         }
