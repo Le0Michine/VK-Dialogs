@@ -150,22 +150,16 @@
     margin: 0.5px 0px 0px 0.5px;
 }
 
-.online_marker:after {
-    border-color: inherit;
-}
-.online_marker:after {
-    bottom: 2%;
-    right: 2%;
+.online:after {
+    bottom: 25%;
     border: 2px solid #fff;
     height: 8px;
     width: 8px;
-    z-index: 100;
-}
-.online_marker:after {
     content: '';
     position: absolute;
     background-color: #8ac176;
     border-radius: 50%;
+    margin-left: 5px;
 }
 
 .dialog_div {
@@ -311,10 +305,10 @@
     left: 413px;
     min-width: 6px;
     position: absolute;
-    right: 15px;
+    right: 14px;
     text-align: center;
     top: 57px;
-    width: 6px;
+    width: 7px;
     column-rule-color: rgb(255, 255, 255);
     perspective-origin: 9px 9px;
     transform-origin: 9px 9px;
@@ -345,7 +339,6 @@
     width: 50%;
     text-align: center;
     font: normal normal 500 normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    /*background: rgb(2, 2, 2) none repeat scroll 0% 0% / auto padding-box border-box;*/
     margin: 0px 0px 0px;
 }
 
@@ -392,7 +385,6 @@
     perspective-origin: 10px 7.5px;
     transform-origin: 10px 7.5px;
     background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
-    /*background: rgba(0, 0, 0, 0) url("../../loading.png") no-repeat scroll 2px -324px / auto padding-box border-box;*/
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: -8.5px 0px 0px -10px;

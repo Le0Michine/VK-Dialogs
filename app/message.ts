@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export let CHAT_ACTIONS = {
     'chat_photo_remove': 'removed chat photo',
     'chat_kick_user': 'left chat'
@@ -14,7 +16,7 @@ export class Message {
 
     // Date (in Unix time) when the message was sent. 
     // positive number
-    date: string
+    date: number
 
     // Message status (0 — not read, 1 — read). (Not returned for forwarded messages.) 
     // flag, either 1 or 0
@@ -45,6 +47,9 @@ export class Message {
     // Whether the message is deleted (0 — no, 1 — yes). 
     // flag, either 1 or 0
     deleted: boolean;
+
+    // id of sender
+    from_id: number;
 }
 
 export class Chat extends Message {
@@ -77,4 +82,10 @@ export class Chat extends Message {
     photo_200: string;
 
     action: string;
+}
+
+export class MessageToShow {
+    user: User;
+    messages: Message[] = [];
+    date: number;
 }

@@ -13,9 +13,13 @@ import { RequestHelper } from './request-helper';
 
 @Injectable()
 export class UserService {
-    users_port: chrome.runtime.Port;
+    private users_port: chrome.runtime.Port;
 
-    constructor(private vkservice: VKService, private http: Http) { }
+    users_observable: Observable<{}>;
+
+    constructor(private vkservice: VKService, private http: Http) {
+        this.initUsersUpdate();
+    }
 
     private getUsers(uids: string): Observable<{}> {
         console.log('users requested');
@@ -33,21 +37,23 @@ export class UserService {
         });
     }
 
-    subscribeOnUsersUpdate(callback: (users: {}) => void) {
-        this.users_port = chrome.runtime.connect({name: 'users_monitor'});
-        this.users_port.onMessage.addListener((message: any) => {
-            if (message.name === 'users_update' && message.data) {
-                console.log('got users_update message');
-                callback(message.data as User[]);
-            }
-            else {
-                console.log('unknown message in users_monitor: ' + JSON.stringify(message));
-            }
-        });
+    requestUsers() {
+        this.users_port.postMessage({name: Channels.get_users_request});
     }
 
-    unsubscribeUsersUpdate() {
-        this.users_port.disconnect();
-        this.users_port = null;
+    initUsersUpdate() {
+        this.users_port = chrome.runtime.connect({name: 'users_monitor'});
+        this.users_observable = Observable.fromEventPattern(
+            (h: (x: User[]) => void) => this.users_port.onMessage.addListener((message: any) => {
+                if (message.name === 'users_update' && message.data) {
+                    console.log('got users_update message');
+                    h(message.data as User[]);
+                }
+                else {
+                    console.log('unknown message in users_monitor: ' + JSON.stringify(message));
+                }
+            }),
+            (h: (x: User[]) => void) => this.users_port.onMessage.removeListener(h)
+        );
     }
 }

@@ -17,9 +17,12 @@
     right: 0px;
     top: 0px;
     width: 550px;
+    min-height: 55px;
+    height: fit-content;
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
+    flex-direction: column;
 }/*.message_block*/
 
 .user_avatar {
@@ -50,6 +53,18 @@
     outline: rgba(0, 0, 0, 0) none 0px;
     background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
 }/*.user_avatar_img*/
+
+.online:after {
+    bottom: -4%;
+    right: -4%;
+    border: 2px solid #fff;
+    height: 7px;
+    width: 7px;
+    content: '';
+    position: absolute;
+    background-color: #8ac176;
+    border-radius: 50%;
+}
 
 .message {
     perspective-origin: 275px 35px;
@@ -109,8 +124,10 @@
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
     list-style: none outside none;
-    margin: 0px;
-    padding: 0px;
+    padding-left: 0px;
+    padding-bottom: 5px;
+    top: 30px;
+    position: relative;
 }/*.messages_list*/
 
 .message_item {
@@ -126,8 +143,8 @@
     perspective-origin: 271px 35px;
     transform-origin: 271px 35px;
     list-style: none outside none;
-    margin: 0px 4px 4px;
-    padding: 6px 57px 7px 0px;
+    margin: 0px 4px 0px;
+    padding: 0px 50px 0px 0px;
 }/*.message_item*/
 
 .message_body {
@@ -137,7 +154,7 @@
     perspective-origin: 193.5px 28.5px;
     transform-origin: 193.5px 28.5px;
     font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    margin: 0px 20px 0px 78px;
+    margin: 0px 0px 0px 78px;
     padding: 0px 0px 0px;
 }/*.message_body*/
 
@@ -145,15 +162,18 @@
     perspective-origin: 193.5px 18px;
     transform-origin: 193.5px 18px;
     white-space: pre-line;
+    font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0px;
 }/*.message_body_internal*/
 
 .unread {
-    width: 90%;
+    width: 80%;
     top: 0px;
-    bottom: -4px;
-    left: 5%;
+    bottom: 0px;
+    left: 75px;
     position: absolute;
-    background: #edf0f5;
+    /*background: #edf0f5;*/
+    background: rgba(237, 240, 245, 0.6)
 }/*.unread*/
 
 #load_old {
@@ -163,9 +183,9 @@
     height: 30px;
     text-align: center;
     position: relative;
-    margin: 0px 0px 0px;
+    margin: 10px 0px 0px;
     padding: 10px 0px 0px;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
     border-top: 1px solid rgb(231, 232, 236);
 }
 

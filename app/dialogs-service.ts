@@ -15,16 +15,17 @@ export class DialogService {
     private dialogs_port: chrome.runtime.Port;
     private history_port: chrome.runtime.Port;
 
+    chat_observable: Observable<{}>;
+    dialogs_observable: Observable<{}>;
+    history_observable: Observable<{}>;
+
     private chats;
 
     constructor(private vkservice: VKService, private http: Http) {
         this.initializeDialogsMonitor();
-        this.dialogs_port.onMessage.addListener((message: any) => {
-            if (message.name === Channels.update_chats && message.data) {
-                console.log('got chats_update message');
-                this.chats = message.data;
-            }
-        });
+        this.initChatsUpdate();
+        this.initDialogsUpdate();
+        this.initHistoryUpdate();
     }
 
     markAsRead(ids: string): Observable<number> {
@@ -78,6 +79,7 @@ export class DialogService {
     }
 
     subscribeOnMessagesCountUpdate(callback: (messagesCount: number) => void) {
+        this.initializeHistoryMonitor();
         this.history_port.onMessage.addListener((message: any) => {
             if (message.name === Channels.messages_count_update) {
                 console.log('got messages_count_update message');
@@ -86,39 +88,58 @@ export class DialogService {
         });
     }
 
-    subscribeOnChatsUpdate(callback) {
+    initChatsUpdate(): void {
         this.initializeDialogsMonitor();
-        this.dialogs_port.onMessage.addListener((message: any) => {
-            if (message.name === Channels.update_chats && message.data) {
-                console.log('got chats_update message');
-                callback(message.data);
-            }
-        });
-        return this.chats;
+        this.chat_observable = Observable.fromEventPattern(
+            (h: (Object) => void) => this.dialogs_port.onMessage.addListener((message: any) => {
+                if (message.name === Channels.update_chats && message.data) {
+                    console.log('got chats_update message1');
+                    h(message.data);
+            }}),
+            (h: (Object) => void) => this.dialogs_port.onMessage.removeListener(h)
+        );
     }
 
-    subscribeOnDialogsUpdate(callback: (x: Dialog[]) => void) {
+    initDialogsUpdate(): void {
         this.initializeDialogsMonitor();
-        this.dialogs_port.onMessage.addListener((message: any) => {
-            if (message.name === 'dialogs_update' && message.data) {
-                console.log('got dialogs_update message');
-                callback(message.data as Dialog[])
-            }
-        });
+        this.dialogs_observable = Observable.fromEventPattern(
+            (h: (x: Dialog[]) => void) => this.dialogs_port.onMessage.addListener((message: any) => {
+                if (message.name === 'dialogs_update' && message.data) {
+                    console.log('got dialogs_update message');
+                    h(message.data as Dialog[])
+                }
+            }),
+            (h: (x: Dialog[]) => void) => this.dialogs_port.onMessage.removeListener(h)
+        );
     }
 
-    subscribeOnHistoryUpdate(conversation_id, is_chat, callback: (x: Message[]) => void) {
-        this.history_port = chrome.runtime.connect({name: 'history_monitor'});
+    initHistoryUpdate() {
+        this.initializeHistoryMonitor();
+        this.history_observable = Observable.fromEventPattern(
+            (h: (x: Message[]) => void) => {
+                this.history_port.onMessage.addListener((message: any) => {
+                if (message.name === 'history_update' && message.data) {
+                    console.log('got history_monitor message');
+                    h(message.data as Message[])
+                }
+            })},
+            (h: (x: Message[]) => void) => this.history_port.onMessage.removeListener(h)
+        );
+    }
+
+    setCurrentConversation(conversation_id, is_chat) {
         this.history_port.postMessage({name: 'conversation_id', id: conversation_id, is_chat: is_chat});
-        this.history_port.onMessage.addListener((message: any) => {
-            if (message.name === 'history_update' && message.data) {
-                console.log('got history_monitor message');
-                callback(message.data as Message[])
-            }
-        });
     }
 
-    unsubscribeFromDialogs() {
+    requestDialogs() {
+        this.dialogs_port.postMessage({name: Channels.get_dialogs_request});
+    }
+
+    requestChats() {
+        this.dialogs_port.postMessage({name: Channels.get_chats_request});
+    }
+
+    disconnectDialogs(): void {
         this.dialogs_port.disconnect();
         this.dialogs_port = null;
     }
@@ -126,6 +147,12 @@ export class DialogService {
     private initializeDialogsMonitor() {
         if (!this.dialogs_port) {
             this.dialogs_port = chrome.runtime.connect({name: 'dialogs_monitor'});
+        }
+    }
+
+    private initializeHistoryMonitor() {
+        if (!this.history_port) {
+            this.history_port = chrome.runtime.connect({name: 'history_monitor'});
         }
     }
 }

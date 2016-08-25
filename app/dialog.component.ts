@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { Message } from './message';
+import { Observable, Subscription } from 'rxjs/Rx';
+import { Message, MessageToShow } from './message';
 import { User } from './user';
 import { DialogService } from './dialogs-service';
 import { UserService } from './user-service';
@@ -22,26 +22,26 @@ export class DialogComponent {
     title = "Dialog";
     participants: {} = {};
     user_id: string;
-    history: Message[];
+    history: Message[] = [];
     is_chat: boolean;
     conversation_id: number;
     current_text: string;
     messages_count: number;
-    sub: any;
+    subscriptions: Subscription[] = [];
 
     private messages_cache_port: chrome.runtime.Port;
 
     constructor (
         private messages_service: DialogService,
         private vkservice: VKService, 
-        private userService: UserService, 
+        private user_service: UserService, 
         private route: ActivatedRoute,
         private change_detector: ChangeDetectorRef) { }
 
     ngOnInit() {
         console.log('specific dialog component init');
         this.user_id = this.vkservice.getSession().user_id;
-        this.sub = this.route.params.subscribe(params => {
+        let sub = this.route.params.subscribe(params => {
             this.title = params['title'];
             let id = +params['id'];
             let type = params['type'];
@@ -52,23 +52,33 @@ export class DialogComponent {
             
             this.restoreCachedMessages(id, isChat);
 
-            this.messages_service.subscribeOnHistoryUpdate(this.conversation_id, this.is_chat, history => {
-                this.history = history as Message[];
-                this.change_detector.detectChanges();
-            });
+            this.messages_service.setCurrentConversation(this.conversation_id, this.is_chat)
+            this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
+                    this.history = history as Message[];
+                    this.change_detector.detectChanges();
+                })
+            );
 
-            this.userService.subscribeOnUsersUpdate(users => {
-                this.participants = users;
-                this.change_detector.detectChanges();
-            });
+            this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
+                    console.log('users: ', users[6807492]);
+                    this.participants = users;
+                    this.change_detector.detectChanges();
+                },
+                error => this.errorHandler(error),
+                () => console.log('finished users update')
+            ));
+            this.user_service.requestUsers();
 
             this.messages_service.subscribeOnMessagesCountUpdate(count => this.messages_count = count);
         });
+        this.subscriptions.push(sub);
     }
 
     ngOnDestroy() {
         console.log('specific dialog component destroy');
-        this.sub.unsubscribe();
+        for (let sub of this.subscriptions) {
+            sub.unsubscribe();
+        }
     }
     
     restoreCachedMessages(id, isChat) {
@@ -79,6 +89,35 @@ export class DialogComponent {
             this.current_text = cachedMessage;
         }
         this.resizeInputTextarea2();
+    }
+
+    getHistory() {
+        if (this.history.length === 0 || !this.participants[this.history[0].user_id]) {
+            return [];
+        }
+        let history: MessageToShow[] = [];
+        let mts = new MessageToShow();
+        let uid = this.history[0].from_id;
+        mts.user = this.participants[uid];
+        mts.date = this.history[0].date;
+
+        for (let message of this.history) {
+            if (message.from_id === uid 
+                && (mts.messages.length === 0 || (message.date - mts.messages[mts.messages.length - 1].date < 60*5))) {
+                mts.messages.push(message);
+            }
+            else {
+                history.push(mts);
+                mts = new MessageToShow();
+                mts.user = this.participants[message.from_id];
+                mts.messages.push(message);
+                mts.date = message.date; 
+                uid = message.from_id;
+            }
+        }
+        history.push(mts);
+        console.log('history: ', history);
+        return history;
     }
 
     goBack() {

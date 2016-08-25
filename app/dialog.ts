@@ -16,4 +16,5 @@ export class DialogToShow {
     sender: string;
     attachment_only: boolean = false;
     attachment_type: string = '';
+    online: boolean = false;
 }

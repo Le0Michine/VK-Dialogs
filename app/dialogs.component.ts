@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { Message, Chat, CHAT_ACTIONS } from './message'
 import { Dialog, DialogToShow } from './Dialog'
 import { User } from './user'
@@ -29,6 +29,8 @@ export class DialogsComponent implements OnInit {
     i: number = 0;
 
     dialogs: Dialog[] = [];
+
+    subscriptions: Subscription[] = [];
 
     constructor(
         private user_service: UserService,
@@ -75,28 +77,42 @@ export class DialogsComponent implements OnInit {
             error => this.errorHandler(error), 
             () => console.log('user data obtained'));
 
-        this.dialog_service.subscribeOnDialogsUpdate(dialogs => {
-            this.dialogs = dialogs;
-            this.change_detector.detectChanges();
-        });
+        this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
+                this.dialogs = dialogs as Dialog[];
+                this.change_detector.detectChanges();
+            },
+            error => this.errorHandler(error),
+            () => console.log('finished dialogs update')
+        ));
+        this.dialog_service.requestDialogs();
 
-        this.user_service.subscribeOnUsersUpdate(users => {
-            this.users = users;
-            this.change_detector.detectChanges();
-        });
+        this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
+                    this.users = users;
+                    this.change_detector.detectChanges();
+                },
+                error => this.errorHandler(error),
+                () => console.log('finished users update')
+            )
+        );
+        this.user_service.requestUsers();
 
-        this.dialog_service.subscribeOnChatsUpdate(chats => {
-            this.chats = chats;
-            this.change_detector.detectChanges();
-        });
+        this.subscriptions.push(this.dialog_service.chat_observable.subscribe(chats => {
+                this.chats = chats;
+                this.change_detector.detectChanges();
+            },
+            error => this.errorHandler(error),
+            () => console.log('finished chats update'))
+        );
+        this.dialog_service.requestChats();
 
         this.dialog_service.subscribeOnDialogsCountUpdate(count => this.dialogs_count = count);
     }
 
     ngOnDestroy() {
         console.log('dialogs component destroy');
-        this.dialog_service.unsubscribeFromDialogs();
-        this.user_service.unsubscribeUsersUpdate();
+        for (let sub of this.subscriptions) {
+            sub.unsubscribe();
+        }
     }
 
     formatDate(unixtime: number) {
@@ -125,6 +141,7 @@ export class DialogsComponent implements OnInit {
     }
 
     getDialogs() {
+        if (!this.users) return [];
         let dialogs: DialogToShow[] = [];
         for (let dialog of this.dialogs) {
             //console.log(JSON.stringify(dialog));
@@ -135,6 +152,7 @@ export class DialogsComponent implements OnInit {
             dts.title = dialog.message.title === ' ... ' ? this.getUserName(uid) : dialog.message.title;
             dts.date_format = DateConverter.formatDate(Number(dialog.message.date));
             dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
+            dts.online = this.users[uid].online;
             
             if (dialog.message.fwd_messages) {
                 dts.attachment_type = 'Forwarded message';
@@ -146,6 +164,7 @@ export class DialogsComponent implements OnInit {
 
             let chat = dialog.message as Chat;
             if (chat.chat_id) {
+                dts.online = false;
                 if (chat.photo_50) {
                     dts.photos = [chat.photo_50];
                 }
@@ -166,6 +185,6 @@ export class DialogsComponent implements OnInit {
 
     errorHandler(error) {
         console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+        //return Promise.reject(error.message || error);
     }
 }

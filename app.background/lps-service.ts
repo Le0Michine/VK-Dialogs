@@ -46,7 +46,7 @@ export class LPSService {
                 this.nextRequest(server);
             },
             error => {
-                console.log('error ocured during lps request: ' + error);
+                console.log('error ocured during lps request: ', error);
                 console.log('restart monitoring in 5 seconds');
                 window.setTimeout(() => this.startMonitoring(), 5000);
             });
@@ -159,7 +159,7 @@ export class LPSService {
             }
         },
         error => {
-            console.log('error ocured during lp request: ' + error);
+            console.log('error ocured during lp request: ', error);
             console.log('trying to reconnect');
             this.startMonitoring(server.ts);
         });
@@ -172,13 +172,13 @@ export class LPSService {
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + "&use_ssl=1";
-            return this.http.get(uri).map(response => response.json().response);
+            return this.http.get(uri).timeout(35000, new Error('35s timeout occured')).map(response => response.json().response);
         });
     }
 
     private startLongPollRequest(server: LongPollServer) {
         console.log(new Date(Date.now()) + ' perform a long poll request');
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
-        return this.http.get(uri).timeout(35000, new Error('30s timeout ocured')).map(response => response.json());
+        return this.http.get(uri).timeout(35000, new Error('35s timeout occured')).map(response => response.json());
     }
 }

@@ -11,6 +11,7 @@ import { VKService } from './vk-service';
 import { ObservableExtension } from './observable-extension';
 import { CacheService } from './cache-service';
 import { LPSService } from './lps-service';
+import { Channels } from './channels';
 
 @Injectable()
 export class UserService {
@@ -26,13 +27,18 @@ export class UserService {
                     this.update_users_port.onDisconnect.addListener(() => {
                         this.update_users_port = null;
                     });
+                    this.update_users_port.onMessage.addListener((message: any) => {
+                        if(message.name === Channels.get_users_request) {
+                            this.postUsersUpdate();
+                        }
+                    });
                     break;
             }
         });
     }
 
     updateUsers(uids: string) {
-        this.getUsers(uids).subscribe(users => {
+        this.getUsers(uids, true).subscribe(users => {
             this.cache.pushUsers(users);
         });
     }
@@ -56,7 +62,7 @@ export class UserService {
         () => console.log('loaded users: ' + uids));
     }
 
-    getUsers(uids: string): Observable<{}> {
+    getUsers(uids: string, cache: boolean = false): Observable<{}> {
         let already_cached = true;
         let users = {};
         for (let uid of uids.split(',').map(id => Number(id))) {
@@ -68,7 +74,7 @@ export class UserService {
                 break;
             }
         }
-        if (already_cached) {
+        if (already_cached && !cache) {
             return ObservableExtension.resolveOnValue(users);
         }
 

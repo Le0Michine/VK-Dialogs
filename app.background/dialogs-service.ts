@@ -45,8 +45,8 @@ export class DialogService {
         private userService: UserService,
         private lpsService: LPSService) {
 
+        this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
         this.getDialogs().subscribe(dialogs => {
-                this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
                 this.loadDialogUsers(dialogs);
             },
             error => this.handleError(error)
@@ -63,6 +63,12 @@ export class DialogService {
                     this.update_dialogs_port.onMessage.addListener((message: any) => {
                         if (message.name === Channels.load_old_dialogs_request) {
                             this.loadOldDialogs();
+                        }
+                        else if (message.name === Channels.get_chats_request) {
+                            this.postChatsUpdate();
+                        }
+                        else if (message.name === Channels.get_dialogs_request) {
+                            this.postDialogsUpdate();
                         }
                     });
                     break;
@@ -82,7 +88,8 @@ export class DialogService {
                                         this.userService.postUsersUpdate();
                                     });
                                 }
-                            });
+                            },
+                            error => this.handleError(error));
                         }
                         else if (message.name === Channels.load_old_messages_request) {
                             this.loadOldMessages();
@@ -154,11 +161,12 @@ export class DialogService {
                 this.loadDialogUsers(dialogs);
             });
 
-            if (this.update_history_port && this.current_dialog_id) {
-                    this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
+        if (this.update_history_port && this.current_dialog_id) {
+            this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                     this.cache.updateHistory(history);
                     this.postHistoryUpdate();
-            });
+                },
+                error => this.handleError(error));
         }
     }
 
@@ -250,7 +258,7 @@ export class DialogService {
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + "&chat_id=" + chat_id
-                + "&fields=photo_50";
+                + "&fields=photo_50,online";
         
             return this.http.get(uri).map(response => this.toUserDict(response.json()));
         });
@@ -263,7 +271,7 @@ export class DialogService {
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + "&chat_ids=" + chat_ids
-                + "&fields=photo_50";
+                + "&fields=photo_50,online";
         
             return this.http.get(uri).map(response => this.toChatDict(response.json()));
         });
@@ -349,7 +357,7 @@ export class DialogService {
     }
 
     private handleError(error: any) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+        console.error('An error occurred: ', error);
+        //return Promise.reject(error.message || error);
     }
 }

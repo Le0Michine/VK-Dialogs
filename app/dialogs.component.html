@@ -2,7 +2,9 @@
     <li *ngFor="let dialog of getDialogs()" (click)="gotoDialog(dialog.message)" class="dialog_li">
 		<div class="user_avatar_div">
 			<div class="user_avatar_inner_div">
-				<img *ngFor="let img of dialog.photos" [src]="img" class="user_avatar" [class.mini_avatar]="dialog.photos.length > 1" />
+				<div *ngFor="let img of dialog.photos">
+					<img [src]="img" class="user_avatar" [class.mini_avatar]="dialog.photos.length > 1" />
+				</div>
 			</div>
 		</div>
 
@@ -13,16 +15,12 @@
 				</div>
 				<div class="dialog_title_div">
 					 <span class="dialog_title_span">
-                        <span>
-                             {{dialog.title}}
-                        </span>
+                        <span [class.online]="dialog.online">{{dialog.title}}</span>
                     </span>
 				</div>
 				<div class="message_body">
 				    <span>
-                        <span>
-                             {{dialog.sender + ': '}}
-                        </span>
+                        <span>{{dialog.sender + ': '}}</span>
                         {{dialog.message.body}}<span class="dialog_attachments" [hidden]="!dialog.attachment_only">[{{dialog.attachment_type}}]</span>
                     </span>
                     <span class="three_dots">...</span>

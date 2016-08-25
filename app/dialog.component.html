@@ -12,22 +12,22 @@
 	<div id="hline"></div>
 </div>
 <div id="chat_body">
-	<div class="message_block" *ngFor="let message of history">
-		<div class="unread" [hidden]="message.read_state"></div>
-		<div class="user_avatar">
-			<img alt="" [src]="message.out ? getUserPhoto(user_id) : getUserPhoto(message.user_id)" class="user_avatar_img" />
+	<div class="message_block" *ngFor="let message of getHistory()">
+		<div class="user_avatar" [class.online]="message.user.online">
+			<img alt="" [src]="getUserPhoto(message.user.id)" class="user_avatar_img" />
 		</div>
 		<div class="message">
 			<div class="user_name_and_date">
-				<a class="user_name">{{message.out ? getUserName(user_id) : getUserName(message.user_id)}}</a>
+				<a class="user_name">{{getUserName(message.user.id)}}</a>
                 <span class="message_timestamp"> {{message.date*1000 | date:formatDate(message.date) }}</span>
 			</div>
 			<ul class="messages_list">
-				<li class="message_item">
+				<li class="message_item" *ngFor="let item of message.messages">
 					<div class="message_body">
-						<div class="message_body_internal">
-							{{message.body}}<div class="message_attachment" [hidden]="true"></div>
-						</div>
+						<div class="unread" [hidden]="item.read_state"></div>
+						<pre class="message_body_internal">
+{{item.body}}<div class="message_attachment" [hidden]="true"></div>
+						</pre>
 					</div>
 				</li>
 			</ul>
