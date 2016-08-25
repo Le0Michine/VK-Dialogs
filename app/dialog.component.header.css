@@ -2,6 +2,7 @@
     overflow-x: hidden;
     overflow-y: hidden;
     position: fixed;
+    top: 0;
     z-index: 999;
     height: 45px;
     text-align: left;
@@ -11,7 +12,6 @@
     transform-origin: 275px 22.5px;
     background-color: #eff0f1;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    /*border-bottom: 1px solid rgb(231, 232, 236);*/
 }/*#top_panel*/
 
 #go_back {
