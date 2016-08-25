@@ -25,6 +25,11 @@
     flex-direction: column;
 }/*.message_block*/
 
+.message_attachment {
+    height: fit-content;
+    color: #4a6f97;
+}
+
 .user_avatar {
     bottom: 24px;
     height: 36px;
@@ -125,7 +130,7 @@
     transform-origin: 275px 35px;
     list-style: none outside none;
     padding-left: 0px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     top: 30px;
     position: relative;
 }/*.messages_list*/

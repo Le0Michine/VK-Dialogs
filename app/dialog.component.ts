@@ -120,6 +120,25 @@ export class DialogComponent {
         return history;
     }
 
+    getMessageAttachments(message: Message) {
+        let attachments = [];
+        if (message.attachments) {
+            console.log('message with attachment: ', message);
+            for (let attachment of message.attachments) {
+                if (attachment.type === 'photo') {
+                    attachments.push('[photo]');
+                }
+                else {
+                    attachments.push('[' + attachment.type + ']');
+                }
+            }
+        }
+        if (message.fwd_messages) {
+            attachments.push('[fwd_messages]');
+        }
+        return attachments;
+    }
+
     goBack() {
         window.history.back();
     }

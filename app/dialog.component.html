@@ -19,15 +19,16 @@
 		<div class="message">
 			<div class="user_name_and_date">
 				<a class="user_name">{{getUserName(message.user.id)}}</a>
-                <span class="message_timestamp"> {{message.date*1000 | date:formatDate(message.date) }}</span>
+                <span class="message_timestamp">{{message.date*1000 | date:formatDate(message.date) }}</span>
 			</div>
 			<ul class="messages_list">
 				<li class="message_item" *ngFor="let item of message.messages">
 					<div class="message_body">
 						<div class="unread" [hidden]="item.read_state"></div>
-						<pre class="message_body_internal">
-{{item.body}}<div class="message_attachment" [hidden]="true"></div>
+						<pre class="message_body_internal" [hidden]="!item.body">
+{{item.body}}
 						</pre>
+						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">{{attachment}}</div>
 					</div>
 				</li>
 			</ul>

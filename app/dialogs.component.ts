@@ -144,7 +144,6 @@ export class DialogsComponent implements OnInit {
         if (!this.users) return [];
         let dialogs: DialogToShow[] = [];
         for (let dialog of this.dialogs) {
-            //console.log(JSON.stringify(dialog));
             let uid = dialog.message.user_id;
             let dts = new DialogToShow();
             dts.message = dialog.message;
