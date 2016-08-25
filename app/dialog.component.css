@@ -6,7 +6,7 @@
     perspective-origin: 275px 765.5px;
     transform-origin: 275px 765.5px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
-    padding: 0px 0px 3px;
+    padding: 0px 0px 0px;
     z-index: 100;
 }/*#chat_body*/
 
@@ -237,7 +237,6 @@
     bottom: 0px;
     left: 75px;
     position: absolute;
-    /*background: #edf0f5;*/
     background: rgba(237, 240, 245, 1);
     z-index: -1;
 }/*.unread*/
@@ -255,12 +254,16 @@
     border-top: 1px solid rgb(231, 232, 236);
 }
 
+#load_old:hover {
+    background-image: linear-gradient(to right, rgb(255, 255, 255), rgba(66, 100, 139, 0.1), rgb(255, 255, 255)) !important;
+}
+
 #load_old_link {
     width: 50%;
     text-align: center;
     font: normal normal 500 normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    /*background: rgb(2, 2, 2) none repeat scroll 0% 0% / auto padding-box border-box;*/
     margin: 0px 0px 0px;
+    text-decoration: underline;
 }
 
 #arrow_down {
@@ -280,7 +283,6 @@
     perspective-origin: 18px 8px;
     transform-origin: 18px 8px;
     border: 0px none rgb(42, 88, 133);
-    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
     transform: rotate(270deg);
     /*animation: rotating 2s linear infinite;*/
@@ -298,7 +300,6 @@
     opacity: 0.7;
     position: absolute;
     right: 8px;
-    text-align: left;
     top: 8px;
     width: 20px;
     z-index: 0;
@@ -306,9 +307,7 @@
     perspective-origin: 10px 7.5px;
     transform-origin: 10px 7.5px;
     background: rgba(0, 0, 0, 0) url("https://vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
-    /*background: rgba(0, 0, 0, 0) url("../../loading.png") no-repeat scroll 2px -324px / auto padding-box border-box;*/
     border: 0px none rgb(42, 88, 133);
-    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: -8.5px 0px 0px -10px;
     outline: rgb(42, 88, 133) none 0px;
 }/*#arrow_down:before*/
