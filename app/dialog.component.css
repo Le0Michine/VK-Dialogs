@@ -28,15 +28,31 @@
 .message_attachment {
     height: fit-content;
     color: #4a6f97;
+    float: left;
 }
 
 .att_photo {
-    cursor: -webkit-zoom-in;
     padding: 3px;
     width: fit-content;
-    border: 1.5px solid;
+    border: 1px solid;
     border-radius: 4px;
     border-color: #4a6f97;
+    margin: 3px
+}
+
+.clearfix::after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+.zoom_in {
+    cursor: -webkit-zoom-in;
+    height: 130px;
+}
+
+.zoom_out {
+    cursor: -webkit-zoom-out;
 }
 
 .att_photo_img {

@@ -93,7 +93,7 @@ export class DialogService {
         this.chat_observable = Observable.fromEventPattern(
             (h: (Object) => void) => this.dialogs_port.onMessage.addListener((message: any) => {
                 if (message.name === Channels.update_chats && message.data) {
-                    console.log('got chats_update message1');
+                    console.log('got chats_update message');
                     h(message.data);
             }}),
             (h: (Object) => void) => this.dialogs_port.onMessage.removeListener(h)

@@ -12,7 +12,7 @@
 	<div id="hline"></div>
 </div>
 <div id="chat_body">
-	<div class="message_block" *ngFor="let message of getHistory()">
+	<div class="message_block" *ngFor="let message of history_to_show">
 		<div class="user_avatar" [class.online]="message.user.online">
 			<img alt="" [src]="getUserPhoto(message.user.id)" class="user_avatar_img" />
 		</div>
@@ -23,14 +23,14 @@
 			</div>
 			<ul class="messages_list">
 				<li class="message_item" *ngFor="let item of message.messages">
-					<div class="message_body">
+					<div class="message_body clearfix">
 						<div class="unread" [hidden]="item.read_state"></div>
 						<pre class="message_body_internal" [hidden]="!item.body">
 {{item.body}}
 						</pre>
 						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">
 							<div *ngIf="attachment.photo" class="att_photo">
-								<img class="att_photo_img" #att_photo alt="" [src]="attachment.photo.photo_604" (click)="changePhotoSize(att_photo,attachment.photo)" />
+								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
 							</div>
 							<div *ngIf="!attachment.type">
 								{{attachment}}

@@ -29,6 +29,8 @@ export class DialogComponent {
     messages_count: number;
     subscriptions: Subscription[] = [];
 
+    history_to_show: MessageToShow[] = [];
+
     private messages_cache_port: chrome.runtime.Port;
 
     constructor (
@@ -55,6 +57,7 @@ export class DialogComponent {
             this.messages_service.setCurrentConversation(this.conversation_id, this.is_chat)
             this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
                     this.history = history as Message[];
+                    this.history_to_show = this.getHistory();
                     this.change_detector.detectChanges();
                 })
             );
@@ -124,7 +127,7 @@ export class DialogComponent {
         if (message.attachments) {
             for (let attachment of message.attachments) {
                 if (attachment.type === 'photo') {
-                    attachment.photo.img = attachment.photo.photo_130;
+                    console.log('photo: ', attachment.photo);
                     attachments.push(attachment);
                 }
                 else {
@@ -301,11 +304,13 @@ export class DialogComponent {
     changePhotoSize(img: HTMLImageElement, photo: any) {
         if (img.src === photo.photo_130) {
             img.src = photo.photo_604;
-            photo.img = photo.photo_604;
+            img.classList.add('zoom_out');
+            img.classList.remove('zoom_in');
         }
         else if (img.src === photo.photo_604) {
             img.src = photo.photo_130;
-            photo.img = photo.photo_130;
+            img.classList.add('zoom_in');
+            img.classList.remove('zoom_out');
         }
     }
 
