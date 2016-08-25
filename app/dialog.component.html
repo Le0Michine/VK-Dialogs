@@ -14,11 +14,13 @@
 <div id="chat_body">
 	<div class="message_block" *ngFor="let message of history_to_show">
 		<div class="user_avatar" [class.online]="message.user.online">
-			<img alt="" [src]="getUserPhoto(message.user.id)" class="user_avatar_img" />
+			<a [href]="'https://vk.com/id'+message.user.id" target="_blank">
+				<img alt="" [src]="getUserPhoto(message.user.id)" class="user_avatar_img" />
+			</a>
 		</div>
 		<div class="message">
 			<div class="user_name_and_date">
-				<a class="user_name">{{getUserName(message.user.id)}}</a>
+				<a [href]="'https://vk.com/id'+message.user.id" target="_blank" class="user_name">{{getUserName(message.user.id)}}</a>
                 <span class="message_timestamp">{{message.date*1000 | date:formatDate(message.date) }}</span>
 			</div>
 			<ul class="messages_list">
@@ -31,6 +33,11 @@
 						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">
 							<div *ngIf="attachment.photo" class="att_photo">
 								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
+							</div>
+							<div *ngIf="attachment.doc" class="clearfix">
+								<a class="att_doc_icon" [href]="attachment.doc.url" target="_blank"></a>
+								<a class="att_doc" [href]="attachment.doc.url" target="_blank" #att_doc (click)=goToUrl(att_doc.href)>{{attachment.doc.title}}</a>
+								<div class="att_doc_size">{{floor(attachment.doc.size/1000)}} KB</div>
 							</div>
 							<div *ngIf="!attachment.type">
 								{{attachment}}

@@ -91,7 +91,7 @@
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
-    background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
+    background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
 }/*.user_avatar*/
 
 .mini_avatar {
@@ -384,7 +384,7 @@
     column-rule-color: rgb(42, 88, 133);
     perspective-origin: 10px 7.5px;
     transform-origin: 10px 7.5px;
-    background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
+    background: rgba(0, 0, 0, 0) url("https://vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: -8.5px 0px 0px -10px;

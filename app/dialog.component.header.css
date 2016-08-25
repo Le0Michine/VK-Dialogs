@@ -58,6 +58,11 @@
     outline: rgb(42, 88, 133) none 0px;
 }/*#go_back:before*/
 
+#go_back:hover {
+    background-color: rgba(42, 88, 133, 0.1) !important;
+    border-radius: 0 20px 20px 0;
+}
+
 #left_arrow {
     bottom: 0px;
     color: rgb(42, 88, 133);

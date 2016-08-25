@@ -126,8 +126,7 @@ export class DialogComponent {
         let attachments = [];
         if (message.attachments) {
             for (let attachment of message.attachments) {
-                if (attachment.type === 'photo') {
-                    console.log('photo: ', attachment.photo);
+                if (attachment.type === 'photo' || attachment.type === 'doc') {
                     attachments.push(attachment);
                 }
                 else {
@@ -312,6 +311,10 @@ export class DialogComponent {
             img.classList.add('zoom_in');
             img.classList.remove('zoom_out');
         }
+    }
+
+    floor(x: number) {
+        return Math.floor(x);
     }
 
     errorHandler(error) {

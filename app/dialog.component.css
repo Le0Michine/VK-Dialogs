@@ -21,7 +21,7 @@
     height: fit-content;
     perspective-origin: 275px 35px;
     transform-origin: 275px 35px;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
+    /*background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;*/
     flex-direction: column;
 }/*.message_block*/
 
@@ -59,6 +59,39 @@
     max-width: 387px;
 }
 
+.att_doc {
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    font: 14px / 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    color: #42648b;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    line-height: 16px;
+}
+
+.att_doc_size {
+    color: #939393;
+    pointer-events: none;
+}
+
+.att_doc_icon {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    border-radius: 2px;
+    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
 .user_avatar {
     bottom: 24px;
     height: 36px;
@@ -85,7 +118,7 @@
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
-    background: rgb(250, 251, 252) url("https://new.vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
+    background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
 }/*.user_avatar_img*/
 
 .online:after {
@@ -166,7 +199,6 @@
 .message_item {
     bottom: 0px;
     box-sizing: border-box;
-    cursor: pointer;
     left: 0px;
     max-width: 542px;
     position: relative;
@@ -206,7 +238,8 @@
     left: 75px;
     position: absolute;
     /*background: #edf0f5;*/
-    background: rgba(237, 240, 245, 0.6)
+    background: rgba(237, 240, 245, 1);
+    z-index: -1;
 }/*.unread*/
 
 #load_old {
@@ -272,7 +305,7 @@
     column-rule-color: rgb(42, 88, 133);
     perspective-origin: 10px 7.5px;
     transform-origin: 10px 7.5px;
-    background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
+    background: rgba(0, 0, 0, 0) url("https://vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
     /*background: rgba(0, 0, 0, 0) url("../../loading.png") no-repeat scroll 2px -324px / auto padding-box border-box;*/
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
