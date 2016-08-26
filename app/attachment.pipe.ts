@@ -6,7 +6,7 @@ import { Pipe } from '@angular/core';
 export class MessageAttachmentSubTitlePipe {
     transform(attachment) {
         let tmp = attachment.doc || attachment.audio || attachment.video || attachment.wall || attachment.link || {size: -1};
-        if (attachment.doc || attachment.audio) {
+        if (attachment.doc) {
             return Math.floor(tmp.size/1000) + ' KB';
         }
         else if (attachment.wall) {
@@ -15,10 +15,10 @@ export class MessageAttachmentSubTitlePipe {
         else if (attachment.link) {
             return tmp.caption;
         }
-        else if (attachment.video) {
+        else if (attachment.video || attachment.audio) {
             let min = Math.floor(tmp.duration / 60);
             let sec = tmp.duration % 60;
-            return min + ':' + sec;
+            return min + ':' + (sec < 10 ? '0' + sec : sec);
         }
         else {
             return '';

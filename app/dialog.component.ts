@@ -128,7 +128,10 @@ export class DialogComponent {
         let attachments = [];
         if (message.attachments) {
             for (let attachment of message.attachments) {
-                if (attachment.photo || attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.sticker) {
+                if (attachment.photo || attachment.doc || 
+                        attachment.wall || attachment.link || 
+                        attachment.video || attachment.sticker || 
+                        attachment.audio) {
                     attachments.push(attachment);
                 }
                 else {
