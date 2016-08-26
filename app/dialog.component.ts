@@ -66,6 +66,7 @@ export class DialogComponent {
 
             this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
                     this.participants = users;
+                    this.history_to_show = this.getHistory(this.history);
                     this.change_detector.detectChanges();
                 },
                 error => this.errorHandler(error),
