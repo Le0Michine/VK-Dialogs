@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 import { VKConsts } from '../app/vk-consts';
 import { SessionInfo } from '../app/session-info';

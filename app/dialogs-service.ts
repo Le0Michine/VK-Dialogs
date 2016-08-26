@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs } from '@angular/http';
-import { Observable, Scheduler }     from 'rxjs/Rx';
+import { Observable }     from 'rxjs/Observable';
+import { Scheduler }     from 'rxjs/Scheduler';
 
 import { VKService } from './vk-service';
 import { Message, Chat } from './message';

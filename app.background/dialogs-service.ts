@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
-import { Observable }     from 'rxjs/Rx';
+import { Observable }     from 'rxjs/Observable';
+import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/timeout';
 
 import { VKConsts } from '../app/vk-consts';

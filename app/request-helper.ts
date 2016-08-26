@@ -1,4 +1,5 @@
-import { Observable } from 'rxjs/Rx'
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/Observable/bindCallback';
 
 export class RequestHelper {
     public static sendRequestToBackground(request: any): Observable<any> {

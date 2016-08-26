@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
 import { Observable }     from 'rxjs/Observable';
 
 import { VKConsts } from '../app/vk-consts';
@@ -9,7 +8,6 @@ import { User } from '../app/user';
 
 import { ErrorHelper } from './error-helper';
 import { VKService } from './vk-service';
-import { ObservableExtension } from './observable-extension';
 import { CacheService } from './cache-service';
 import { LPSService } from './lps-service';
 import { Channels } from './channels';
@@ -76,7 +74,7 @@ export class UserService {
             }
         }
         if (already_cached && cache) {
-            return ObservableExtension.resolveOnValue(users);
+            return Observable.of(users);
         }
 
         return this.vkservice.getSession().concatMap(session => {
@@ -94,7 +92,7 @@ export class UserService {
     getUser(uid: number = null): Observable<User> {
         return this.vkservice.getSession().concatMap(session => {
             if (uid ? uid in this.cache.users_cache : session.user_id in this.cache.users_cache) {
-                return ObservableExtension.resolveOnValue(this.cache.users_cache[uid ? uid : session.user_id]);
+                return Observable.of(this.cache.users_cache[uid ? uid : session.user_id]);
             }
             let uri = VKConsts.api_url 
                 + 'users.get?user_ids=' + (uid != null ? uid : session.user_id) 
