@@ -5,6 +5,7 @@ export class SessionInfo {
     public timestamp: number;
 
     public isExpired(): boolean {
-        return Math.floor(Date.now() / 1000) - this.timestamp >= this.token_exp;
+        return false;
+        //return Math.floor(Date.now() / 1000) - this.timestamp >= this.token_exp;
     }
 }
