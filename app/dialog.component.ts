@@ -1,27 +1,27 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { Message, MessageToShow } from './message';
-import { User } from './user';
-import { DialogService } from './dialogs-service';
-import { UserService } from './user-service';
-import { VKService } from './vk-service';
-import { Channels } from '../app.background/channels';
-import { DateConverter } from './date-converter';
-import { MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe } from './attachment.pipe';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
+import { Message, MessageToShow } from "./message";
+import { User } from "./user";
+import { DialogService } from "./dialogs-service";
+import { UserService } from "./user-service";
+import { VKService } from "./vk-service";
+import { Channels } from "../app.background/channels";
+import { DateConverter } from "./date-converter";
+import { MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe } from "./attachment.pipe";
 
 @Component({
-    selector: 'messges',
-    templateUrl: 'app/dialog.component.html',
+    selector: "messges",
+    templateUrl: "app/dialog.component.html",
     styleUrls: [
-        'app/dialog.component.css',
-        'app/dialog.component.input.css',
-        'app/dialog.component.header.css'
+        "app/dialog.component.css",
+        "app/dialog.component.input.css",
+        "app/dialog.component.header.css"
     ],
     pipes: [MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe]
 })
-export class DialogComponent { 
+export class DialogComponent {
     title = "Dialog";
     participants: {} = {};
     user_id: string;
@@ -38,26 +38,26 @@ export class DialogComponent {
 
     constructor (
         private messages_service: DialogService,
-        private vkservice: VKService, 
-        private user_service: UserService, 
+        private vkservice: VKService,
+        private user_service: UserService,
         private route: ActivatedRoute,
         private change_detector: ChangeDetectorRef) { }
 
     ngOnInit() {
-        console.log('specific dialog component init');
+        console.log("specific dialog component init");
         this.user_id = this.vkservice.getSession().user_id;
         let sub = this.route.params.subscribe(params => {
-            this.title = params['title'];
-            let id = +params['id'];
-            let type = params['type'];
-            let participants = params['participants'];
-            let isChat: boolean = type === 'dialog' ? false : true;
+            this.title = params["title"];
+            let id = +params["id"];
+            let type = params["type"];
+            let participants = params["participants"];
+            let isChat: boolean = type === "dialog" ? false : true;
             this.is_chat = isChat;
             this.conversation_id = id;
-            
+
             this.restoreCachedMessages(id, isChat);
 
-            this.messages_service.setCurrentConversation(this.conversation_id, this.is_chat)
+            this.messages_service.setCurrentConversation(this.conversation_id, this.is_chat);
             this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
                     this.history = history as Message[];
                     this.history_to_show = this.getHistory(this.history);
@@ -71,7 +71,7 @@ export class DialogComponent {
                     this.change_detector.detectChanges();
                 },
                 error => this.errorHandler(error),
-                () => console.log('finished users update')
+                () => console.log("finished users update")
             ));
             this.user_service.requestUsers();
 
@@ -81,16 +81,16 @@ export class DialogComponent {
     }
 
     ngOnDestroy() {
-        console.log('specific dialog component destroy');
+        console.log("specific dialog component destroy");
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
     }
-    
+
     restoreCachedMessages(id, isChat) {
         this.messages_cache_port = chrome.runtime.connect({name: Channels.messages_cache_port});
-        let cachedMessage = window.localStorage.getItem('cached_message_' + id + isChat);
-        if (cachedMessage && cachedMessage != "undefined") {
+        let cachedMessage = window.localStorage.getItem("cached_message_" + id + isChat);
+        if (cachedMessage && cachedMessage !== "undefined") {
             this.clearLabelContent();
             this.current_text = cachedMessage;
         }
@@ -108,8 +108,8 @@ export class DialogComponent {
         mts.date = messages[0].date;
 
         for (let message of messages) {
-            if (message.from_id === uid 
-                && (mts.messages.length === 0 || (Math.abs(message.date - mts.messages[0].date) < 60*5))) {
+            if (message.from_id === uid
+                && (mts.messages.length === 0 || (Math.abs(message.date - mts.messages[0].date) < 60 * 5))) {
                 mts.messages.push(message);
             }
             else {
@@ -117,12 +117,12 @@ export class DialogComponent {
                 mts = new MessageToShow();
                 mts.user = this.participants[message.from_id] || new User();
                 mts.messages.push(message);
-                mts.date = message.date; 
+                mts.date = message.date;
                 uid = message.from_id;
             }
         }
         history.push(mts);
-        console.log('history: ', history);
+        console.log("history: ", history);
         return history;
     }
 
@@ -130,23 +130,23 @@ export class DialogComponent {
         let attachments = [];
         if (message.attachments) {
             for (let attachment of message.attachments) {
-                if (attachment.photo || attachment.doc || 
-                        attachment.wall || attachment.link || 
-                        attachment.video || attachment.sticker || 
+                if (attachment.photo || attachment.doc ||
+                        attachment.wall || attachment.link ||
+                        attachment.video || attachment.sticker ||
                         attachment.audio) {
                     attachments.push(attachment);
                 }
                 else {
-                    attachments.push('[' + attachment.type + ']');
+                    attachments.push("[" + attachment.type + "]");
                 }
             }
         }
         if (message.fwd_messages) {
             let attachment: any = {};
-            attachment.type = 'fwd';
+            attachment.type = "fwd";
             attachment.fwd = message.fwd_messages;
             attachments.push(attachment);
-            console.log('fwd: ', attachment)
+            console.log("fwd: ", attachment);
         }
         return attachments;
     }
@@ -185,23 +185,23 @@ export class DialogComponent {
         if (this.participants && this.participants[uid]) {
             return this.participants[uid].first_name;
         }
-        return 'loading...'; 
+        return "loading...";
     }
 
     getUserPhoto(uid: number) {
         if (this.participants && this.participants[uid] && this.participants[uid].photo_50) {
             return this.participants[uid].photo_50;
         }
-        return 'http://vk.com/images/camera_c.gif';
+        return "http://vk.com/images/camera_c.gif";
     }
 
     clearLabelContent() {
-        let label = document.getElementById('input_label');
-        label.innerText = '';
+        let label = document.getElementById("input_label");
+        label.innerText = "";
     }
 
     sendMessage() {
-        let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
+        let textarea = document.getElementById("message_input") as HTMLTextAreaElement;
         let text = textarea.value.trim()
             .replace(/\r?\n/g, "%0A")
             .replace(/!/g,  "%21")
@@ -218,22 +218,22 @@ export class DialogComponent {
             .replace(/,/g,  "%2C")
             .replace(/-/g,  "%2D");
 
-        if (!text || text === '') {
-            console.log('message text is empty, nothing to send');
+        if (!text || text === "") {
+            console.log("message text is empty, nothing to send");
             return;
         }
         this.messages_service.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
             message => console.log(JSON.stringify(message)),
             error => this.errorHandler(error),
-            () => { 
-                console.log('message sent'); 
-                textarea.value = '';
-                this.clearCache(); 
+            () => {
+                console.log("message sent");
+                textarea.value = "";
+                this.clearCache();
             });
     }
 
     onKeyPress(event, value) {
-        if (event.keyCode == 13 && !event.shiftKey) {
+        if (event.keyCode === 13 && !event.shiftKey) {
             event.preventDefault();
             this.sendMessage();
         }
@@ -241,30 +241,30 @@ export class DialogComponent {
 
     resizeInputTextarea() {
         let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
-        let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
-        let outer_div = document.getElementById('input_box');
+        let textarea = document.getElementById("message_input") as HTMLTextAreaElement;
+        let outer_div = document.getElementById("input_box");
         let minHeight = 29;
 
         let resize = () => {
             if (!textarea.value) { /* if all the text was cut/deleted */
-                textarea.style.height = minHeight+'px';    
+                textarea.style.height = minHeight + "px";
             }
             else {
-                textarea.style.height = 'auto';
-                textarea.style.height = Math.max(textarea.scrollHeight+5, minHeight)+'px';
+                textarea.style.height = "auto";
+                textarea.style.height = Math.max(textarea.scrollHeight + 5, minHeight) + "px";
             }
             outer_div.style.height = textarea.style.height;
             this.cacheCurrentMessage();
-        }
+        };
         /* small timeout to get the already changed text */
         let delayedResize = () => { window.setTimeout(resize, 100); };
 
         /* listen for every event which is fired after text is changed */
-        addListener(textarea, 'change',  resize);
-        addListener(textarea, 'cut',     delayedResize);
-        addListener(textarea, 'paste',   delayedResize);
-        addListener(textarea, 'drop',    delayedResize);
-        addListener(textarea, 'keydown', delayedResize);
+        addListener(textarea, "change",  resize);
+        addListener(textarea, "cut",     delayedResize);
+        addListener(textarea, "paste",   delayedResize);
+        addListener(textarea, "drop",    delayedResize);
+        addListener(textarea, "keydown", delayedResize);
 
         /* need to set value immidiately before initial resizing */
         textarea.value = this.current_text;
@@ -273,15 +273,15 @@ export class DialogComponent {
 
     resizeInputTextarea2() {
         let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
-        let textarea = document.getElementById('message_input') as HTMLTextAreaElement;
-        let outer_div = document.getElementById('input_box');
-        let chat_body = document.getElementById('chat_body');
+        let textarea = document.getElementById("message_input") as HTMLTextAreaElement;
+        let outer_div = document.getElementById("input_box");
+        let chat_body = document.getElementById("chat_body");
         let minHeight = 29;
         let charsPerLine = 77;
 
-        let resize = () => {            
+        let resize = () => {
             if (!textarea.value) { /* if all the text was cut/deleted */
-                textarea.style.height = minHeight+'px';    
+                textarea.style.height = minHeight + "px";
             }
             else {
                 let lines = textarea.value.split(/\r?\n/g);
@@ -289,22 +289,22 @@ export class DialogComponent {
                 for (let line of lines) {
                     lines_count += Math.floor(line.length / charsPerLine);
                 }
-                textarea.style.height = Math.max(lines_count * 17, minHeight)+'px';
+                textarea.style.height = Math.max(lines_count * 17, minHeight) + "px";
             }
             outer_div.style.height = textarea.style.height;
-            chat_body.style.top = (Number(textarea.style.height.match(/[0-9]+/g)) + 45) + 'px';
+            chat_body.style.top = (Number(textarea.style.height.match(/[0-9]+/g)) + 45) + "px";
             this.cacheCurrentMessage();
-        }
+        };
 
         /* small timeout to get the already changed text */
         let delayedResize = () => { window.setTimeout(resize, 100); };
 
         /* listen for every event which is fired after text is changed */
-        addListener(textarea, 'change',  resize);
-        addListener(textarea, 'cut',     delayedResize);
-        addListener(textarea, 'paste',   delayedResize);
-        addListener(textarea, 'drop',    delayedResize);
-        addListener(textarea, 'keydown', delayedResize);
+        addListener(textarea, "change",  resize);
+        addListener(textarea, "cut",     delayedResize);
+        addListener(textarea, "paste",   delayedResize);
+        addListener(textarea, "drop",    delayedResize);
+        addListener(textarea, "keydown", delayedResize);
 
         /* need to set value immidiately before initial resizing */
         textarea.value = this.current_text;
@@ -313,14 +313,14 @@ export class DialogComponent {
 
     cacheCurrentMessage() {
         this.messages_cache_port.postMessage({
-            key: 'cached_message_' + this.conversation_id + this.is_chat,
+            key: "cached_message_" + this.conversation_id + this.is_chat,
             value: this.current_text
-        });        
+        });
     }
 
     clearCache() {
         this.messages_cache_port.postMessage({
-            key: 'cached_message_' + this.conversation_id + this.is_chat,
+            key: "cached_message_" + this.conversation_id + this.is_chat,
             value: undefined,
             remove: true
         });
@@ -337,13 +337,13 @@ export class DialogComponent {
             ids.push(m.id);
         }
         if (ids.length === 0) {
-            console.log('unread messages was not found');
+            console.log("unread messages was not found");
         }
         this.messages_service.markAsRead(ids.join()).subscribe(result => {
             if (result) {
             }
             else {
-                console.log('failed to mark messages as read');
+                console.log("failed to mark messages as read");
             }
         });
     }
@@ -355,13 +355,13 @@ export class DialogComponent {
     changePhotoSize(img: HTMLImageElement, photo: any) {
         if (img.src === photo.photo_130) {
             img.src = photo.photo_604;
-            img.classList.add('zoom_out');
-            img.classList.remove('zoom_in');
+            img.classList.add("zoom_out");
+            img.classList.remove("zoom_in");
         }
         else if (img.src === photo.photo_604) {
             img.src = photo.photo_130;
-            img.classList.add('zoom_in');
-            img.classList.remove('zoom_out');
+            img.classList.add("zoom_in");
+            img.classList.remove("zoom_out");
         }
     }
 
@@ -374,14 +374,14 @@ export class DialogComponent {
         let urls = text.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[A-ZА-Яа-я\w0-9+&@#\/%=~_|$])/igm);
         if (!urls) return text;
         for (let url of urls) {
-            text = text.replace(url, 
-                '<a target="_blank" href="' + url + '" title="' + url + '" style="cursor:pointer;">' + (url.length > len ? (url.slice(0, len) + '..') : url) + '</a>');
+            text = text.replace(url,
+                "<a target=\"_blank\" href=\"" + url + "\" title=\"" + url + "\" style=\"cursor:pointer;\">" + (url.length > len ? (url.slice(0, len) + "..") : url) + "</a>");
         }
         return text;
     }
 
     errorHandler(error) {
-        console.error('An error occurred', error);
+        console.error("An error occurred", error);
         return Promise.reject(error.message || error);
     }
 }

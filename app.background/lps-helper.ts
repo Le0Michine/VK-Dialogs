@@ -1,7 +1,7 @@
-import { VKConsts } from '../app/vk-consts';
-import { Message, Chat } from '../app/message';
-import { Dialog } from '../app/dialog';
-import { User } from '../app/user';
+import { VKConsts } from "../app/vk-consts";
+import { Message, Chat } from "../app/message";
+import { Dialog } from "../app/dialog";
+import { User } from "../app/user";
 
 export class LPSHelper {
 
@@ -15,8 +15,8 @@ export class LPSHelper {
         let text = update[6];
         let attachments = update[7];
 
-        let is_chat = (flags & message_flags.CHAT) != message_flags.CHAT;
-        let read_state = (flags & message_flags.UNREAD) != message_flags.UNREAD;
+        let is_chat = (flags & message_flags.CHAT) !== message_flags.CHAT;
+        let read_state = (flags & message_flags.UNREAD) !== message_flags.UNREAD;
         let out = (flags & message_flags.OUTBOX) === message_flags.OUTBOX;
 
         if (is_chat) {
@@ -26,7 +26,7 @@ export class LPSHelper {
             m.out = out;
             m.title = subject;
             m.body = text;
-            m.user_id = attachments['from'];
+            m.user_id = attachments["from"];
             m.id = message_id;
             m.date = timestamp;
             return m;

@@ -1,26 +1,25 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { Message, Chat, CHAT_ACTIONS } from './message'
-import { Dialog, DialogToShow } from './Dialog'
-import { User } from './user'
-import { DialogComponent } from './dialog.component'
-import { UserService } from './user-service'
-import { VKService } from './vk-service'
-import { DialogService } from './dialogs-service'
-import { DateConverter } from './date-converter'
-import { VKConsts } from './vk-consts';
-import { ATTACHMENT_TYPES } from './attachment-data-types';
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
+import { Message, Chat, CHAT_ACTIONS } from "./message";
+import { Dialog, DialogToShow } from "./Dialog";
+import { User } from "./user";
+import { DialogComponent } from "./dialog.component";
+import { UserService } from "./user-service";
+import { VKService } from "./vk-service";
+import { DialogService } from "./dialogs-service";
+import { DateConverter } from "./date-converter";
+import { VKConsts } from "./vk-consts";
+import { ATTACHMENT_TYPES } from "./attachment-data-types";
 
 @Component({
-  selector: 'dialogs',
-  templateUrl: 'app/dialogs.component.html',
-  styleUrls: ['app/dialogs.component.css'],
-  directives: [DialogComponent],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "dialogs",
+  templateUrl: "app/dialogs.component.html",
+  styleUrls: ["app/dialogs.component.css"],
+  directives: [DialogComponent]
 })
-export class DialogsComponent implements OnInit { 
+export class DialogsComponent implements OnInit {
     title = "Dialogs";
     user: User = new User();
     users: {};
@@ -49,7 +48,7 @@ export class DialogsComponent implements OnInit {
         }
         else {
             let user: User = this.users[dialog.user_id];
-            let title: string = dialog.title === ' ... ' ? user.first_name + ' ' + user.last_name : dialog.title;
+            let title: string = dialog.title === " ... " ? user.first_name + " " + user.last_name : dialog.title;
             link = [
                 "/dialog",
                 dialog.user_id.toString(),
@@ -65,8 +64,8 @@ export class DialogsComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (window.localStorage.getItem(VKConsts.user_denied) == 'true' || this.vkservice.getSession() == null) {
-            this.router.navigate(['/authorize']);
+        if (window.localStorage.getItem(VKConsts.user_denied) === "true" || this.vkservice.getSession() == null) {
+            this.router.navigate(["/authorize"]);
             return;
         }
 
@@ -74,16 +73,16 @@ export class DialogsComponent implements OnInit {
             u => {
                 this.user = u;
                 this.change_detector.detectChanges();
-            }, 
-            error => this.errorHandler(error), 
-            () => console.log('user data obtained'));
+            },
+            error => this.errorHandler(error),
+            () => console.log("user data obtained"));
 
         this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
                 this.dialogs = dialogs as Dialog[];
                 this.change_detector.detectChanges();
             },
             error => this.errorHandler(error),
-            () => console.log('finished dialogs update')
+            () => console.log("finished dialogs update")
         ));
         this.dialog_service.requestDialogs();
 
@@ -92,7 +91,7 @@ export class DialogsComponent implements OnInit {
                     this.change_detector.detectChanges();
                 },
                 error => this.errorHandler(error),
-                () => console.log('finished users update')
+                () => console.log("finished users update")
             )
         );
         this.user_service.requestUsers();
@@ -102,7 +101,7 @@ export class DialogsComponent implements OnInit {
                 this.change_detector.detectChanges();
             },
             error => this.errorHandler(error),
-            () => console.log('finished chats update'))
+            () => console.log("finished chats update"))
         );
         this.dialog_service.requestChats();
 
@@ -110,7 +109,7 @@ export class DialogsComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        console.log('dialogs component destroy');
+        console.log("dialogs component destroy");
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
@@ -122,23 +121,23 @@ export class DialogsComponent implements OnInit {
 
     getUserName(uid: number) {
         if (this.users && this.users[uid]) {
-            return this.users[uid].first_name + ' ' + this.users[uid].last_name;
+            return this.users[uid].first_name + " " + this.users[uid].last_name;
         }
-        return 'loading...'; 
+        return "loading...";
     }
 
     getUserFirstName(uid: number) {
         if (this.users && this.users[uid]) {
             return this.users[uid].first_name;
         }
-        return 'loading...'; 
+        return "loading...";
     }
 
     getUserPhoto(uid: number) {
         if (this.users && this.users[uid] && this.users[uid].photo_50) {
             return this.users[uid].photo_50;
         }
-        return 'http://vk.com/images/camera_c.gif';
+        return "http://vk.com/images/camera_c.gif";
     }
 
     getDialogs() {
@@ -149,17 +148,17 @@ export class DialogsComponent implements OnInit {
             let dts = new DialogToShow();
             dts.message = dialog.message;
             dts.unread = dialog.unread;
-            dts.title = dialog.message.title === ' ... ' ? this.getUserName(uid) : dialog.message.title;
+            dts.title = dialog.message.title === " ... " ? this.getUserName(uid) : dialog.message.title;
             dts.date_format = DateConverter.formatDate(Number(dialog.message.date));
             dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
-            
+
             if (dialog.message.fwd_messages) {
-                dts.attachment_type = 'Forwarded message';
+                dts.attachment_type = "Forwarded message";
             }
             else if (dialog.message.attachments && dialog.message.attachments[0]) {
                 dts.attachment_type = ATTACHMENT_TYPES[dialog.message.attachments[0].type];
             }
-            dts.attachment_only = dts.attachment_type != '' && dts.message.body === '';
+            dts.attachment_only = dts.attachment_type !== "" && dts.message.body === "";
 
             let chat = dialog.message as Chat;
             if (chat.chat_id) {
@@ -168,9 +167,9 @@ export class DialogsComponent implements OnInit {
                     dts.photos = [chat.photo_50];
                 }
                 else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length > 0) {
-                    dts.photos = (this.chats[chat.chat_id].users as User[]).filter(user => user.id != this.user.id).map(user => user.photo_50).slice(0, 4);
+                    dts.photos = (this.chats[chat.chat_id].users as User[]).filter(user => user.id !== this.user.id).map(user => user.photo_50).slice(0, 4);
                 }
-                else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length == 0 && chat.action) {
+                else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length === 0 && chat.action) {
                     chat.read_state = true;
                 }
             }
@@ -184,7 +183,7 @@ export class DialogsComponent implements OnInit {
     }
 
     errorHandler(error) {
-        console.error('An error occurred', error);
-        //return Promise.reject(error.message || error);
+        console.error("An error occurred", error);
+        // return Promise.reject(error.message || error);
     }
 }

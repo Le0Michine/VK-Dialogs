@@ -1,18 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable }     from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/Observable/of';
+import { Injectable } from "@angular/core";
+import { Http, Response } from "@angular/http";
+import { Observable }     from "rxjs/Observable";
+import "rxjs/add/operator/map";
+import "rxjs/add/Observable/of";
 
-import { VKConsts } from '../app/vk-consts';
-import { SessionInfo } from '../app/session-info';
-import { User } from '../app/user';
+import { VKConsts } from "../app/vk-consts";
+import { SessionInfo } from "../app/session-info";
+import { User } from "../app/user";
 
-import { ErrorHelper } from './error-helper';
-import { VKService } from './vk-service';
-import { CacheService } from './cache-service';
-import { LPSService } from './lps-service';
-import { Channels } from './channels';
+import { ErrorHelper } from "./error-helper";
+import { VKService } from "./vk-service";
+import { CacheService } from "./cache-service";
+import { LPSService } from "./lps-service";
+import { Channels } from "./channels";
 
 @Injectable()
 export class UserService {
@@ -22,14 +22,14 @@ export class UserService {
         lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
         chrome.runtime.onConnect.addListener(port => {
             switch (port.name) {
-                case 'users_monitor':
+                case "users_monitor":
                     this.update_users_port = port;
                     this.postUsersUpdate();
                     this.update_users_port.onDisconnect.addListener(() => {
                         this.update_users_port = null;
                     });
                     this.update_users_port.onMessage.addListener((message: any) => {
-                        if(message.name === Channels.get_users_request) {
+                        if (message.name === Channels.get_users_request) {
                             this.postUsersUpdate();
                         }
                     });
@@ -46,11 +46,11 @@ export class UserService {
 
     postUsersUpdate() {
         if (this.update_users_port) {
-            console.log('post users_update message');
-            this.update_users_port.postMessage({name: 'users_update', data: this.cache.users_cache});
+            console.log("post users_update message");
+            this.update_users_port.postMessage({name: "users_update", data: this.cache.users_cache});
         }
         else {
-            console.log('port users_update is closed');
+            console.log("port users_update is closed");
         }
     }
 
@@ -60,13 +60,13 @@ export class UserService {
             this.postUsersUpdate();
         },
         error => this.errorHandler(error),
-        () => console.log('loaded users: ' + uids));
+        () => console.log("loaded users: " + uids));
     }
 
     getUsers(uids: string, cache: boolean = true): Observable<{}> {
         let already_cached = true;
         let users = {};
-        for (let uid of uids.split(',').map(id => Number(id))) {
+        for (let uid of uids.split(",").map(id => Number(id))) {
             if (uid in this.cache.users_cache) {
                 users[uid] = this.cache.users_cache[uid];
             }
@@ -80,11 +80,11 @@ export class UserService {
         }
 
         return this.vkservice.getSession().concatMap(session => {
-            let uri = VKConsts.api_url 
-                + 'users.get?user_ids=' + uids 
-                + '&fields=photo_50,online'
-                + '&access_token=' + session.access_token
-                + '&v=' + VKConsts.api_version;
+            let uri = VKConsts.api_url
+                + "users.get?user_ids=" + uids
+                + "&fields=photo_50,online"
+                + "&access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version;
             return this.http.get(uri)
                 .map(res => res.json())
                 .map(json => this.toUser(json));
@@ -96,11 +96,11 @@ export class UserService {
             if (uid ? uid in this.cache.users_cache : session.user_id in this.cache.users_cache) {
                 return Observable.of(this.cache.users_cache[uid ? uid : session.user_id]);
             }
-            let uri = VKConsts.api_url 
-                + 'users.get?user_ids=' + (uid != null ? uid : session.user_id) 
-                + '&fields=photo_50,online'
-                + '&access_token=' + session.access_token
-                + '&v=' + VKConsts.api_version;
+            let uri = VKConsts.api_url
+                + "users.get?user_ids=" + (uid != null ? uid : session.user_id)
+                + "&fields=photo_50,online"
+                + "&access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version;
             return this.http.get(uri)
                 .map(res => res.json())
                 .map(json => this.toUser(json))
@@ -114,13 +114,13 @@ export class UserService {
         let users_json = json.response;
         for (let user_json of users_json) {
             users[user_json.id] = user_json as User;
-            this.cache.users_cache[user_json.id] = user_json as User;;
+            this.cache.users_cache[user_json.id] = user_json as User;
         }
         return users;
     }
 
     errorHandler(error) {
-        console.error('An error occurred', error);
-        //return Promise.reject(error.message || error);
+        console.error("An error occurred", error);
+        // return Promise.reject(error.message || error);
     }
 }

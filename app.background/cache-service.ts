@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { VKConsts } from '../app/vk-consts';
-import { Message, Chat } from '../app/message';
-import { Dialog } from '../app/dialog';
-import { User } from '../app/user';
+import { VKConsts } from "../app/vk-consts";
+import { Message, Chat } from "../app/message";
+import { Dialog } from "../app/dialog";
+import { User } from "../app/user";
 
 @Injectable()
 export class CacheService {
@@ -16,17 +16,17 @@ export class CacheService {
         let is_chat = new_message.chat_id ? true : false;
         let inserted = false;
         for (let i = 0; i < this.dialogs_cache.length; i++) {
-            if (is_chat && this.dialogs_cache[i].message['chat_id'] === new_message['chat_id'] ||
+            if (is_chat && this.dialogs_cache[i].message["chat_id"] === new_message["chat_id"] ||
                 !is_chat && this.dialogs_cache[i].message.user_id === new_message.user_id) {
 
                 if (new_message.id === this.dialogs_cache[i].message.id) {
-                    console.log('the message is already in cache: ' + JSON.stringify(new_message));
+                    console.log("the message is already in cache: " + JSON.stringify(new_message));
                     inserted = true;
                     break;
                 }
 
                 this.dialogs_cache[i].message = new_message;
-                this.messages_cache[is_chat ? new_message['chat_id'] : new_message.user_id].push(new_message);
+                this.messages_cache[is_chat ? new_message["chat_id"] : new_message.user_id].push(new_message);
                 if (!new_message.read_state) {
                     this.dialogs_cache[i].unread++;
                 }
@@ -42,7 +42,7 @@ export class CacheService {
             new_dialog.unread = new_message.read_state ? 0 : 1;
             new_dialog.message = new_message;
             this.dialogs_cache.push(new_dialog);
-            this.messages_cache[is_chat ? new_message['chat_id'] : new_message.user_id] = [new_message];
+            this.messages_cache[is_chat ? new_message["chat_id"] : new_message.user_id] = [new_message];
         }
     }
 
@@ -54,7 +54,7 @@ export class CacheService {
         this.dialogs_cache = dialogs;
         this.messages_cache = {};
         for (let dialog of dialogs) {
-            this.messages_cache[dialog.message['chat_id'] || dialog.message.user_id] = dialog.message;
+            this.messages_cache[dialog.message["chat_id"] || dialog.message.user_id] = dialog.message;
         }
     }
 

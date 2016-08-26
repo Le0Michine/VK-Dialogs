@@ -5,6 +5,8 @@
     "node": "registry:dt/node#6.0.0+20160621231320"
   },
   "globalDevDependencies": {
+    "webrtc/mediastream": "registry:dt/webrtc/mediastream#0.0.0+20160317120654",
+    "filesystem": "registry:dt/filesystem#0.0.0+20160316155526",
     "chrome": "registry:dt/chrome#0.0.0+20160724063844"
   }
 }

@@ -1,9 +1,9 @@
 export let ATTACHMENT_TYPES = {
-    'photo': 'photo',
-    'video': 'video',
-    'audio': 'audio',
-    'doc': 'document',
-    'wall': 'wall post'
+    "photo": "photo",
+    "video": "video",
+    "audio": "audio",
+    "doc": "document",
+    "wall": "wall post"
 };
 
 export class Photo {
@@ -55,19 +55,19 @@ export class Video {
 export class Audio {
     /** audio ID */
     aid: number;
-    
+
     /** audio owner ID */
     owner_id: number;
-    
+
     /** artist */
     performer: string;
-    
+
     /** title of the audio */
     title: string;
-    
+
     /** duration of the audio in seconds */
     duration: number;
-    
+
     /** link to mp3 */
     url: string;
 }

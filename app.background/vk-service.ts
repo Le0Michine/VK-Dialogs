@@ -1,19 +1,19 @@
 /// <reference path="../typings/globals/chrome/index.d.ts"/>
-import { Injectable }     from '@angular/core';
-import { Observable }     from 'rxjs/Observable';
-import 'rxjs/add/Observable/bindCallback';
+import { Injectable }     from "@angular/core";
+import { Observable }     from "rxjs/Observable";
+import "rxjs/add/Observable/bindCallback";
 
-import { VKConsts } from '../app/vk-consts';
-import { SessionInfo } from '../app/session-info';
+import { VKConsts } from "../app/vk-consts";
+import { SessionInfo } from "../app/session-info";
 
-import { AuthHelper } from './auth-helper';
+import { AuthHelper } from "./auth-helper";
 
 @Injectable()
 export class VKService {
     private session_info: SessionInfo;
 
     private handleError(error: any) {
-        console.error('An error occurred', error);
+        console.error("An error occurred", error);
         return Promise.reject(error.message || error);
     }
 
@@ -22,7 +22,7 @@ export class VKService {
     }
 
     auth(force: boolean = false) {
-        console.log('authorization requested');
+        console.log("authorization requested");
         this.initializeSeesion();
         if (!this.isSessionValid()) {
             let force = this.session_info ? false : true;
@@ -37,14 +37,14 @@ export class VKService {
     }
 
     initializeSeesion() {
-        this.session_info = eval('('+window.localStorage.getItem(VKConsts.vk_session_info)+')');
+        this.session_info = JSON.parse(window.localStorage.getItem(VKConsts.vk_session_info));
     }
 
     isSessionValid() {
         this.initializeSeesion();
         return Boolean(
-            this.session_info 
-            && this.session_info.access_token 
+            this.session_info
+            && this.session_info.access_token
             && this.session_info.timestamp
             && this.session_info.token_exp
             && this.session_info.user_id
@@ -54,11 +54,9 @@ export class VKService {
 
     getSession(): Observable<SessionInfo> {
         if (!this.isSessionValid()) {
-            let background: boolean = this.session_info ? this.session_info.isExpired() : false;            
-            return this.auth(background);  
+            let background: boolean = this.session_info ? this.session_info.isExpired() : false;
+            return this.auth(background);
         }
         return Observable.bindCallback((callback: (SessionInfo) => void) => callback(this.session_info))();
     }
 }
-
-// https://oauth.vk.com/authorize?client_id=5573653&scope=messages&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&v=5.53
