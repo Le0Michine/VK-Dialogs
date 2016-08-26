@@ -8,8 +8,6 @@
     text-align: left;
     vertical-align: top;
     width: 100%;
-    perspective-origin: 275px 22.5px;
-    transform-origin: 275px 22.5px;
     background-color: #eff0f1;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }/*#top_panel*/
@@ -29,8 +27,6 @@
     vertical-align: middle;
     z-index: 2;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 76.9062px 22.5px;
-    transform-origin: 76.9062px 22.5px;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -51,8 +47,6 @@
     top: 0px;
     z-index: 0;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 92.2969px 22.5px;
-    transform-origin: 92.2969px 22.5px;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -78,8 +72,6 @@
     vertical-align: middle;
     width: 36px;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 18px 8px;
-    transform-origin: 18px 8px;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -102,8 +94,6 @@
     width: 20px;
     z-index: 0;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 10px 7.5px;
-    transform-origin: 10px 7.5px;
     background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
@@ -127,8 +117,6 @@
     vertical-align: middle;
     white-space: nowrap;
     column-rule-color: rgb(34, 34, 34);
-    perspective-origin: 47.2344px 7.5px;
-    transform-origin: 47.2344px 7.5px;
     border: 0px none rgb(34, 34, 34);
     font: normal normal 500 normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 3px 0px 0px;
@@ -147,8 +135,6 @@
     white-space: nowrap;
     z-index: 5;
     column-rule-color: rgb(255, 255, 255);
-    perspective-origin: 31.0312px 15px;
-    transform-origin: 31.0312px 15px;
     background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     border-radius: 2px 2px 2px 2px;
@@ -167,8 +153,6 @@
     white-space: nowrap;
     z-index: 5;
     column-rule-color: rgb(255, 255, 255);
-    perspective-origin: 31.0312px 15px;
-    transform-origin: 31.0312px 15px;
     background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     border-radius: 2px 2px 2px 2px;

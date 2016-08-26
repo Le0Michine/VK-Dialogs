@@ -7,6 +7,7 @@ import { VKConsts } from '../app/vk-consts';
 import { SessionInfo } from '../app/session-info';
 import { User } from '../app/user';
 
+import { ErrorHelper } from './error-helper';
 import { VKService } from './vk-service';
 import { ObservableExtension } from './observable-extension';
 import { CacheService } from './cache-service';
@@ -38,7 +39,7 @@ export class UserService {
     }
 
     updateUsers(uids: string) {
-        this.getUsers(uids, true).subscribe(users => {
+        this.getUsers(uids, false).subscribe(users => {
             this.cache.pushUsers(users);
         });
     }
@@ -62,7 +63,7 @@ export class UserService {
         () => console.log('loaded users: ' + uids));
     }
 
-    getUsers(uids: string, cache: boolean = false): Observable<{}> {
+    getUsers(uids: string, cache: boolean = true): Observable<{}> {
         let already_cached = true;
         let users = {};
         for (let uid of uids.split(',').map(id => Number(id))) {
@@ -74,7 +75,7 @@ export class UserService {
                 break;
             }
         }
-        if (already_cached && !cache) {
+        if (already_cached && cache) {
             return ObservableExtension.resolveOnValue(users);
         }
 
@@ -107,9 +108,10 @@ export class UserService {
         });
     }
 
-    private toUser(result: string): {} {
+    private toUser(json): {} {
+        if (ErrorHelper.checkErrors(json)) return {};
         let users = {};
-        let users_json = result['response'];
+        let users_json = json.response;
         for (let user_json of users_json) {
             users[user_json.id] = user_json as User;
             this.cache.users_cache[user_json.id] = user_json as User;;

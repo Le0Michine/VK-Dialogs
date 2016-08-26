@@ -76,10 +76,12 @@ export class DialogService {
                     this.update_history_port = port;
                     this.update_history_port.onMessage.addListener((message: any) => {
                         if (message.name === 'conversation_id') {
+                            this.messages_count = 20;
                             this.current_dialog_id = message.id;
                             this.is_chat = message.is_chat;
                             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                                 this.cache.updateHistory(history);
+                                this.loadUsersFromMessages(history);
                                 this.postHistoryUpdate();
                                 this.postMessagesCountUpdate();
                                 if (this.is_chat) {
@@ -164,6 +166,7 @@ export class DialogService {
         if (this.update_history_port && this.current_dialog_id) {
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                     this.cache.updateHistory(history);
+                    this.loadUsersFromMessages(history);
                     this.postHistoryUpdate();
                 },
                 error => this.handleError(error));
@@ -179,10 +182,28 @@ export class DialogService {
                 chats.push((dialog.message as Chat).chat_id);
             }
             users.push(dialog.message.user_id);
+            if (dialog.message.fwd_messages) {
+                for (let fwd of dialog.message.fwd_messages) {
+                    users.push(fwd.user_id);
+                }
+            }
         }   
         this.userService.loadUsers(users.join());
         this.loadChats(chats.join());
         this.postDialogsUpdate();
+    }
+
+    loadUsersFromMessages(messages: Message[]) {
+        let ids: any = messages
+                .map(msg => msg.fwd_messages ? 
+                    [msg.user_id].concat(msg.fwd_messages.map(m => m.user_id)) : 
+                    [msg.user_id]).concat() as number[][];
+        /** deflate */
+        ids = [].concat.apply([], ids) as number[];
+        /** distinct */
+        ids = ids.filter((value, i, self) => self.indexOf(value) === i);
+        ids = ids.filter((value, i, self) => this.cache.users_cache[value] ? false : true);
+        this.userService.loadUsers(ids.join());
     }
 
     loadChats(chat_ids: string) {
@@ -220,6 +241,7 @@ export class DialogService {
         this.messages_count += 20;
         this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
             this.cache.updateHistory(history);
+            this.loadUsersFromMessages(history);
             this.postHistoryUpdate();
         },
         error => this.handleError(error),

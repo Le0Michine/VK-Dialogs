@@ -24,7 +24,7 @@ export class User {
     // returns URL of square photo of the user with 50 pixels in width.  
     // In case user does not have a photo, http://vk.com/images/camera_c.gif is returned. 
     // string
-    photo_50: string;   
+    photo_50: string = 'http://vk.com/images/camera_c.gif';   
 }
 
 /*

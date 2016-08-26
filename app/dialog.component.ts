@@ -8,6 +8,7 @@ import { UserService } from './user-service';
 import { VKService } from './vk-service';
 import { Channels } from '../app.background/channels';
 import { DateConverter } from './date-converter';
+import { MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe } from './attachment.pipe';
 
 @Component({
     selector: 'messges',
@@ -16,7 +17,8 @@ import { DateConverter } from './date-converter';
         'app/dialog.component.css',
         'app/dialog.component.input.css',
         'app/dialog.component.header.css'
-    ]
+    ],
+    pipes: [MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe]
 })
 export class DialogComponent { 
     title = "Dialog";
@@ -57,7 +59,7 @@ export class DialogComponent {
             this.messages_service.setCurrentConversation(this.conversation_id, this.is_chat)
             this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
                     this.history = history as Message[];
-                    this.history_to_show = this.getHistory();
+                    this.history_to_show = this.getHistory(this.history);
                     this.change_detector.detectChanges();
                 })
             );
@@ -93,25 +95,25 @@ export class DialogComponent {
         this.resizeInputTextarea2();
     }
 
-    getHistory() {
-        if (this.history.length === 0 || !this.participants[this.history[0].user_id]) {
+    getHistory(messages: Message[]) {
+        if (messages.length === 0 || !this.participants[messages[0].user_id]) {
             return [];
         }
         let history: MessageToShow[] = [];
         let mts = new MessageToShow();
-        let uid = this.history[0].from_id;
-        mts.user = this.participants[uid];
-        mts.date = this.history[0].date;
+        let uid = messages[0].from_id;
+        mts.user = this.participants[uid] || new User();
+        mts.date = messages[0].date;
 
-        for (let message of this.history) {
+        for (let message of messages) {
             if (message.from_id === uid 
-                && (mts.messages.length === 0 || (message.date - mts.messages[mts.messages.length - 1].date < 60*5))) {
+                && (mts.messages.length === 0 || (Math.abs(message.date - mts.messages[0].date) < 60*5))) {
                 mts.messages.push(message);
             }
             else {
                 history.push(mts);
                 mts = new MessageToShow();
-                mts.user = this.participants[message.from_id];
+                mts.user = this.participants[message.from_id] || new User();
                 mts.messages.push(message);
                 mts.date = message.date; 
                 uid = message.from_id;
@@ -126,7 +128,7 @@ export class DialogComponent {
         let attachments = [];
         if (message.attachments) {
             for (let attachment of message.attachments) {
-                if (attachment.type === 'photo' || attachment.type === 'doc') {
+                if (attachment.photo || attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.sticker) {
                     attachments.push(attachment);
                 }
                 else {
@@ -135,9 +137,39 @@ export class DialogComponent {
             }
         }
         if (message.fwd_messages) {
-            attachments.push('[fwd_messages]');
+            let attachment: any = {};
+            attachment.type = 'fwd';
+            attachment.fwd = message.fwd_messages;
+            attachments.push(attachment);
+            console.log('fwd: ', attachment)
         }
         return attachments;
+    }
+
+    convertFwdMessages(messages: any[]) {
+        /** body, date, user_id, attachments */
+        let result: any[] = [];
+        if (!messages || messages.length === 0) return [];
+        let mts: any = {};
+        mts.date = messages[0].date;
+        mts.user = this.participants[messages[0].user_id] || new User();
+        mts.user_id = messages[0].user_id;
+        mts.messages = [messages[0]];
+        for (let i = 1; i < messages.length; i++) {
+            if (mts.user_id === messages[i].user_id) {
+                mts.messages.push(messages[i]);
+            }
+            else {
+                result.push(mts);
+                mts = {};
+                mts.date = messages[i].date;
+                mts.user = this.participants[messages[i].user_id] || new User();
+                mts.user_id = messages[0].user_id;
+                mts.messages = [messages[i]];
+            }
+        }
+        result.push(mts);
+        return result;
     }
 
     goBack() {
@@ -334,7 +366,7 @@ export class DialogComponent {
 
     cutLinks(text: string) {
         let len = 55;
-        let urls = text.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm);
+        let urls = text.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[A-ZА-Яа-я\w0-9+&@#\/%=~_|$])/igm);
         if (!urls) return text;
         for (let url of urls) {
             text = text.replace(url, 

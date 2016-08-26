@@ -24,18 +24,56 @@
                 <span class="message_timestamp">{{message.date*1000 | date:formatDate(message.date) }}</span>
 			</div>
 			<ul class="messages_list">
-				<li class="message_item" *ngFor="let item of message.messages" id="item.id">
+				<li class="message_item" *ngFor="let item of message.messages" id="{{item.id}}">
 					<div class="message_body clearfix">
-						<div class="unread" [hidden]="item.read_state"></div>
+						<div class="unread" *ngIf="!item.read_state"></div>
 						<pre class="message_body_internal" [hidden]="!item.body" [innerHTML]="cutLinks(item.body)"></pre>
+						<div *ngIf="item.action" class="chat_action">{{item | chat_action}}</div>
 						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">
 							<div *ngIf="attachment.photo" class="att_photo">
 								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
 							</div>
-							<div *ngIf="attachment.doc" class="clearfix">
-								<a class="att_doc_icon" [href]="attachment.doc.url" target="_blank"></a>
-								<a class="att_doc" [href]="attachment.doc.url" target="_blank" #att_doc (click)=goToUrl(att_doc.href)>{{attachment.doc.title}}</a>
-								<div class="att_doc_size">{{floor(attachment.doc.size/1000)}} KB</div>
+							<div *ngIf="attachment.sticker" class="">
+								<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
+							</div>
+							<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
+								<a class="att_doc_icon {{attachment | attachment_icon}}" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
+								<a class="att_doc" [href]="attachment | attachment_url:item.user_id" target="_blank">{{attachment | attachment_title}}</a>
+								<div class="att_doc_size">{{attachment | attachment_size}}</div>
+							</div>
+
+							<!-- fwd messages -->
+							<div *ngIf="attachment.fwd" class="fwd_messages">
+								<div *ngFor="let mts of convertFwdMessages(attachment.fwd)">
+									<div class="fwd_msg_block">
+										<div class="fwd_user_avatar" [class.online]="mts.user.online">
+											<a [href]="'https://vk.com/id'+mts.user.id" target="_blank">
+												<img alt="" [src]="getUserPhoto(mts.user.id)" class="user_avatar_img" />
+											</a>
+										</div>
+										<div class="fwd_message">
+											<div class="fwd_user_name_and_date">
+												<a [href]="'https://vk.com/id'+message.user.id" target="_blank" class="fwd_user_name">{{getUserName(mts.user.id)}}</a>
+                								<br><span class="fwd_message_timestamp">{{mts.date*1000 | date:formatDate(mts.date)}}</span>
+											</div>
+											<ul class="fwd_messages_list">
+												<li class="fwd_message_body" *ngFor="let msg of mts.messages">
+													<pre class="fwd_message_body_internal">{{msg.body}}</pre>
+													<div class="fwd_message_attachment" *ngFor="let fwd_att of getMessageAttachments(msg)">
+														<div *ngIf="fwd_att.photo" class="att_photo">
+															<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />
+														</div>
+														<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio" class="clearfix">
+															<a class="att_doc_icon {{fwd_att | attachment_icon}}" [href]="fwd_att | attachment_url:item.user_id" target="_blank"></a>
+															<a class="att_doc" [href]="fwd_att | attachment_url:item.user_id" target="_blank">{{fwd_att | attachment_title}}</a>
+															<div class="att_doc_size">{{fwd_att | attachment_size}}</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div *ngIf="!attachment.type">
 								{{attachment}}
@@ -46,7 +84,7 @@
 			</ul>
 		</div>
 	</div>
-	<div id="load_old" (click)="loadOldMessages()" [hidden]="messages_count && messages_count === history.length">
+	<div id="load_old" (click)="loadOldMessages()" *ngIf="messages_count && messages_count != history.length">
 		<div id="arrow_down"></div>
 		<a id="load_old_link">Load previous messages</a>
 	</div>

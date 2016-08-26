@@ -3,8 +3,6 @@
     top: 74px;
     width: 550px;
     min-height: 20px;
-    perspective-origin: 275px 765.5px;
-    transform-origin: 275px 765.5px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
     padding: 0px 0px 0px;
     z-index: 100;
@@ -19,9 +17,6 @@
     width: 550px;
     min-height: 55px;
     height: fit-content;
-    perspective-origin: 275px 35px;
-    transform-origin: 275px 35px;
-    /*background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;*/
     flex-direction: column;
 }/*.message_block*/
 
@@ -59,10 +54,73 @@
     max-width: 387px;
 }
 
+.fwd_msg_block {
+    width: 300px;
+}
+
+.fwd_messages {
+    border-left: 2px rgba(66, 100, 139, 0.3)  solid;
+    clear: both;
+    left: 3px;
+    position: relative;
+    float: none;
+    padding-left: 3px;
+}
+
+.fwd_user_avatar {
+    bottom: 24px;
+    height: 36px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    width: 36px;
+    z-index: 2;
+    float: left;
+    margin-bottom: 3px;
+}
+
+.fwd_messages_list {
+    list-style: none outside none;
+    padding: 3px 0 0 0;
+}
+
+.fwd_message_timestamp {
+    left: 10px;
+    position: relative;
+    font: normal normal normal normal 12px / 16.8px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.fwd_user_name {
+    left: 10px;
+    top: -2px;
+    width: fit-content;
+    position: relative;
+    text-decoration: none;
+    color: rgb(66, 100, 139);
+    font: normal normal bold normal 12.5px / 15.375px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(66, 100, 139) none 0px;
+    overflow: hidden;
+}
+
+.fwd_message_body_internal {
+    white-space: pre-line;
+    margin: 2px 0 0 5px;
+    color: black;
+    font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.fwd_message_attachment {
+    padding-top: 3px; 
+}
+
 .att_doc {
     cursor: pointer;
     display: inline-block;
-    text-align: center;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 250px;
     text-decoration: none;
     vertical-align: middle;
     font: 14px / 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -76,6 +134,8 @@
 .att_doc_size {
     color: #939393;
     pointer-events: none;
+    text-align: left;
+    white-space: nowrap;
 }
 
 .att_doc_icon {
@@ -85,11 +145,26 @@
     height: 30px;
     margin-right: 8px;
     border-radius: 2px;
-    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     box-sizing: border-box;
+}
+
+.att_doc_img {
+    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat;
+}
+
+.att_vid_img {
+    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat 0px -120px;
+}
+
+.att_aud_img {
+    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat 0px -90px;
+}
+
+.att_url_img {
+    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat 0px -180px;
 }
 
 .user_avatar {
@@ -101,9 +176,7 @@
     top: 10px;
     width: 36px;
     z-index: 2;
-    perspective-origin: 18px 18px;
-    transform-origin: 18px 18px;
-}/*.user_avatar*/
+}
 
 .user_avatar_img {
     color: rgba(0, 0, 0, 0);
@@ -112,14 +185,12 @@
     height: 36px;
     width: 36px;
     column-rule-color: rgba(0, 0, 0, 0);
-    perspective-origin: 18px 18px;
-    transform-origin: 18px 18px;
     border: 0px none rgba(0, 0, 0, 0);
     border-radius: 50% 50% 50% 50%;
     margin: 0px 0px 1px 2px;
     outline: rgba(0, 0, 0, 0) none 0px;
     background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
-}/*.user_avatar_img*/
+}
 
 .online:after {
     bottom: -4%;
@@ -134,8 +205,7 @@
 }
 
 .message {
-    perspective-origin: 275px 35px;
-    transform-origin: 275px 35px;
+    width: fit-content;
 }/*.message*/
 
 .user_name_and_date {
@@ -147,8 +217,6 @@
     top: 11px;
     z-index: 2;
     column-rule-color: rgb(147, 147, 147);
-    perspective-origin: 38.4844px 8px;
-    transform-origin: 38.4844px 8px;
     border: 0px none rgb(147, 147, 147);
     font: normal normal normal normal 12.5px / 14.425px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(147, 147, 147) none 0px;
@@ -166,8 +234,6 @@
     vertical-align: top;
     white-space: nowrap;
     column-rule-color: rgb(66, 100, 139);
-    perspective-origin: 9.875px 7.5px;
-    transform-origin: 9.875px 7.5px;
     border: 0px none rgb(66, 100, 139);
     font: normal normal bold normal 12.5px / 15.375px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(66, 100, 139) none 0px;
@@ -187,8 +253,6 @@
 
 .messages_list {
     width: 550px;
-    perspective-origin: 275px 35px;
-    transform-origin: 275px 35px;
     list-style: none outside none;
     padding-left: 0px;
     padding-bottom: 10px;
@@ -205,8 +269,6 @@
     right: 0px;
     top: 0px;
     width: 542px;
-    perspective-origin: 271px 35px;
-    transform-origin: 271px 35px;
     list-style: none outside none;
     margin: 0px 4px 0px;
     padding: 0px 50px 0px 0px;
@@ -216,20 +278,24 @@
     overflow-wrap: break-word;
     width: 387px;
     word-wrap: break-word;
-    perspective-origin: 193.5px 28.5px;
-    transform-origin: 193.5px 28.5px;
     font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 0px 0px 78px;
     padding: 0px 0px 0px;
 }/*.message_body*/
 
 .message_body_internal {
-    perspective-origin: 193.5px 18px;
-    transform-origin: 193.5px 18px;
     white-space: pre-line;
     font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px;
 }/*.message_body_internal*/
+
+.chat_action {
+    font: italic 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    color: #777;
+    min-height: 35px;
+}
 
 .unread {
     width: 80%;
@@ -280,8 +346,6 @@
     vertical-align: middle;
     width: 36px;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 18px 8px;
-    transform-origin: 18px 8px;
     border: 0px none rgb(42, 88, 133);
     outline: rgb(42, 88, 133) none 0px;
     transform: rotate(270deg);
@@ -304,8 +368,6 @@
     width: 20px;
     z-index: 0;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 10px 7.5px;
-    transform-origin: 10px 7.5px;
     background: rgba(0, 0, 0, 0) url("https://vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     margin: -8.5px 0px 0px -10px;

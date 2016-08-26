@@ -31,8 +31,6 @@
     min-height: 100%;
     text-align: left;
     width: 550px;
-    perspective-origin: 275px 1442.5px;
-    transform-origin: 275px 1442.5px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
     border-radius: 2px 2px 2px 2px;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
@@ -47,8 +45,6 @@
     display: block;
     height: 71px;
     width: 550px;
-    perspective-origin: 275px 35.5px;
-    transform-origin: 275px 35.5px;
     padding: 0px 0px 0px 25px;
 }/*.dialog_li*/
 
@@ -172,8 +168,6 @@
     text-align: left;
     top: 0px;
     width: 446px;
-    perspective-origin: 230.5px 36px;
-    transform-origin: 230.5px 36px;
     border-top: 1px solid rgb(231, 232, 236);
     margin: 0px 0px 0px 64px;
     padding: 0px 15px 0px 0px;
@@ -181,8 +175,6 @@
 
 .dialog_content_div {
     box-sizing: border-box;
-    perspective-origin: 223px 35.5px;
-    transform-origin: 223px 35.5px;
     padding: 10px 0px;
 }/*.dialog_content_div*/
 
@@ -199,8 +191,6 @@
     width: 90px;
     z-index: 0;
     column-rule-color: rgb(147, 147, 147);
-    perspective-origin: 22.4688px 7px;
-    transform-origin: 22.4688px 7px;
     border: 0px none rgb(147, 147, 147);
     outline: rgb(147, 147, 147) none 0px;
 }/*.last_message_date*/
@@ -219,8 +209,6 @@
     text-align: left;
     top: 0px;
     width: 446px;
-    perspective-origin: 223px 9.5px;
-    transform-origin: 223px 9.5px;
     margin: 6px 0px 4px;
     column-rule-color: rgb(34, 34, 34);
     border: 0px none rgb(34, 34, 34);
@@ -230,8 +218,6 @@
     height: 15px;
     max-width: 70%;
     width: 89.3281px;
-    perspective-origin: 44.6563px 8px;
-    transform-origin: 44.6563px 8px;
     outline: rgb(34, 34, 34) none 0px;
     overflow: hidden;
     padding: 0px 0px 1px;
@@ -247,8 +233,6 @@
     white-space: nowrap;
     width: 379.094px;
     column-rule-color: rgb(139, 147, 155);
-    perspective-origin: 189.547px 8px;
-    transform-origin: 189.547px 8px;
     border: 0px none rgb(101, 101, 101);
     outline: rgb(139, 147, 155) none 0px;
     overflow: hidden;
@@ -265,8 +249,6 @@
     display: none;
     vertical-align: bottom;
     column-rule-color: rgb(101, 101, 101);
-    perspective-origin: 50% 50%;
-    transform-origin: 50% 50%;
     animation: typer-simple 1.1s linear 0s infinite normal none running;
     outline: rgb(101, 101, 101) none 0px;
 }/*.three_dots*/
@@ -285,8 +267,6 @@
     top: 55px;
     width: 8px;
     column-rule-color: rgb(255, 255, 255);
-    perspective-origin: 4px 4px;
-    transform-origin: 4px 4px;
     background: rgba(147, 173, 200, 0.901961) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     border-radius: 50% 50% 50% 50%;
@@ -310,8 +290,6 @@
     top: 57px;
     width: 7px;
     column-rule-color: rgb(255, 255, 255);
-    perspective-origin: 9px 9px;
-    transform-origin: 9px 9px;
     background: rgb(114, 147, 182) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     border-radius: 18px 18px 18px 18px;
@@ -361,8 +339,6 @@
     vertical-align: middle;
     width: 36px;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 18px 8px;
-    transform-origin: 18px 8px;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -387,8 +363,6 @@
     width: 20px;
     z-index: 0;
     column-rule-color: rgb(42, 88, 133);
-    perspective-origin: 10px 7.5px;
-    transform-origin: 10px 7.5px;
     background: rgba(0, 0, 0, 0) url("https://vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
