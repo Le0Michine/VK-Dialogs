@@ -33,7 +33,7 @@
 							<div *ngIf="attachment.photo" class="att_photo">
 								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
 							</div>
-							<div *ngIf="attachment.sticker" class="">
+							<div *ngIf="attachment.sticker">
 								<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
 							</div>
 							<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
@@ -62,6 +62,9 @@
 													<div class="fwd_message_attachment" *ngFor="let fwd_att of getMessageAttachments(msg)">
 														<div *ngIf="fwd_att.photo" class="att_photo">
 															<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />
+														</div>
+														<div *ngIf="attachment.sticker">
+															<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
 														</div>
 														<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio" class="clearfix">
 															<a class="att_doc_icon {{fwd_att | attachment_icon}}" [href]="fwd_att | attachment_url:item.user_id" target="_blank"></a>
