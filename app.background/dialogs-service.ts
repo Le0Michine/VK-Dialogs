@@ -3,6 +3,7 @@ import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/htt
 import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/timeout';
+import 'rxjs/add/operator/map';
 
 import { VKConsts } from '../app/vk-consts';
 import { Message, Chat } from '../app/message';
