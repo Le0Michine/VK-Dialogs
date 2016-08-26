@@ -132,6 +132,7 @@ export class LPSService {
             this.on_message_update();
         }
         if (user_ids.length > 0) {
+            console.log('need to update the following users: ', user_ids);
             this.on_user_update(user_ids.join());
         }
     }
@@ -149,7 +150,7 @@ export class LPSService {
             else if (response.failed === 1) {
                 console.log('history became obsolet need to refresh it first');
                 this.on_message_update();
-                this.on_user_update();
+                //this.on_user_update();
             }
             else {
                 console.log(new Date(Date.now()) + ' got a long poll response: ' + JSON.stringify(response));
