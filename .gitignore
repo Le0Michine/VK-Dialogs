@@ -5,3 +5,4 @@ app.background/*.js
 app/*.map
 *.map
 npm-debug.log
+public/
