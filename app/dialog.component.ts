@@ -9,7 +9,6 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { DateConverter } from "./date-converter";
-import { MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe } from "./attachment.pipe";
 
 @Component({
     selector: "messges",
@@ -18,8 +17,7 @@ import { MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachm
         "app/dialog.component.css",
         "app/dialog.component.input.css",
         "app/dialog.component.header.css"
-    ],
-    pipes: [MessageAttachmentSubTitlePipe, MessageAttachmentUrlPipe, MessageAttachmentTitlePipe, MessageAttachmentIconPipe, ChatActionPipe]
+    ]
 })
 export class DialogComponent {
     title = "Dialog";

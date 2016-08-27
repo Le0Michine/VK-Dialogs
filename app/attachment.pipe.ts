@@ -1,5 +1,5 @@
 import { Pipe } from "@angular/core";
-// import { TranslateService } from "ng2-translate/ng2-translate";
+import { TranslateService } from "ng2-translate/ng2-translate";
 
 @Pipe({
     name: "attachment_size"
@@ -75,29 +75,5 @@ export class MessageAttachmentIconPipe {
         if (atttachment.doc || atttachment.wall) return "att_doc_img";
         if (atttachment.audio) return "att_aud_img";
         return "att_doc_img";
-    }
-}
-
-@Pipe({
-    name: "chat_action"
-})
-export class ChatActionPipe {
-    // constructor(private translator: TranslateService) { }
-
-    transform(message) {
-        console.log("action: ", message);
-        switch (message.action) {
-            case "chat_kick_user":
-                // return this.translator.instant("USER_LEFT_THE_CHAT");
-                return "user left the conversation";
-            case "chat_photo_remove":
-                return "user removed chat cover";
-            case "chat_photo_update":
-                return "user updated chat cover";
-            case "chat_create":
-                return "user created a chat";
-            default:
-                return "unknown action: " + message.action;
-        }
     }
 }

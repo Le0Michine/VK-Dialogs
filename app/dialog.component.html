@@ -28,7 +28,7 @@
 					<div class="message_body clearfix">
 						<div class="unread" *ngIf="!item.read_state"></div>
 						<pre class="message_body_internal" [hidden]="!item.body" [innerHTML]="cutLinks(item.body)"></pre>
-						<div *ngIf="item.action" class="chat_action">{{item | chat_action}}</div>
+						<div *ngIf="item.action" class="chat_action">{{ 'actions.' + item.action | translate:{user: getUserName(message.user.id)} }}</div>
 						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">
 							<div *ngIf="attachment.photo" class="att_photo">
 								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />

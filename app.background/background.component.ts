@@ -1,7 +1,7 @@
 /// <reference path="../typings/globals/chrome/index.d.ts"/>
 
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { HTTP_PROVIDERS, Http } from "@angular/http";
+import { Http } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/Observable/interval";
 
@@ -11,16 +11,12 @@ import { SessionInfo } from "../app/session-info";
 import { AuthHelper } from "./auth-helper";
 import { VKService } from "./vk-service";
 import { UserService } from "./user-service";
-import { CacheService } from "./cache-service";
 import { DialogService } from "./dialogs-service";
-import { LPSService } from "./lps-service";
 import { Channels } from "./channels";
 
 @Component({
     selector: "background-app",
     template: "<span>Background component</span>",
-    providers: [HTTP_PROVIDERS, VKService, DialogService, UserService, CacheService, LPSService],
-    precompile: []
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
     i: number = 0;

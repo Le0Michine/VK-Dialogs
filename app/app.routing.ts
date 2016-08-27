@@ -1,10 +1,11 @@
-import { provideRouter, RouterConfig }  from "@angular/router";
+import { ModuleWithProviders }  from "@angular/core";
+import { provideRouter, RouterConfig, RouterModule, Routes }  from "@angular/router";
 import { DialogComponent } from "./dialog.component";
 import { DialogsComponent } from "./dialogs.component";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login.component";
 
-const routes: RouterConfig = [
+const routes: Routes = [
   {
     path: "dialog/:id/:type/:title/:participants",
     component: DialogComponent
@@ -24,6 +25,4 @@ const routes: RouterConfig = [
   }
 ];
 
-export const appRouterProviders = [
-  provideRouter(routes)
-];
+export const routing: ModuleWithProviders = RouterModule.forRoot(routes);

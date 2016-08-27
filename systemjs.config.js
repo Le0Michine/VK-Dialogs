@@ -16,6 +16,7 @@
   var packages = {
     'app':                        { main: 'main.js',  defaultExtension: 'js' },
     'app.background':             { main: 'main.js',  defaultExtension: 'js' },
+    'ng2-translate':              { defaultExtension: 'js'},
     'rxjs':                       { defaultExtension: 'js' },
     //'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
   };
@@ -23,7 +24,7 @@
     'common',
     'compiler',
     'core',
-    //'forms',
+    'forms',
     'http',
     'platform-browser',
     'platform-browser-dynamic',

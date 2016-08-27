@@ -1,12 +1,12 @@
 {
   "globalDependencies": {
-    "core-js": "registry:dt/core-js#0.0.0+20160602141332",
+    "core-js": "registry:dt/core-js#0.0.0+20160725163759",
     "jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
-    "node": "registry:dt/node#6.0.0+20160621231320"
+    "node": "registry:dt/node#6.0.0+20160826120425"
   },
   "globalDevDependencies": {
-    "webrtc/mediastream": "registry:dt/webrtc/mediastream#0.0.0+20160317120654",
+    "chrome": "registry:dt/chrome#0.0.0+20160724063844",
     "filesystem": "registry:dt/filesystem#0.0.0+20160316155526",
-    "chrome": "registry:dt/chrome#0.0.0+20160724063844"
+    "webrtc/mediastream": "registry:dt/webrtc/mediastream#0.0.0+20160317120654"
   }
 }
