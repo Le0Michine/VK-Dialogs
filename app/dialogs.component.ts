@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { Message, Chat, CHAT_ACTIONS } from "./message";
+import { Message, Chat } from "./message";
 import { Dialog, DialogToShow } from "./Dialog";
 import { User } from "./user";
 import { DialogComponent } from "./dialog.component";
@@ -18,7 +17,7 @@ import { VKConsts } from "./vk-consts";
   styleUrls: ["app/dialogs.component.css"],
   directives: [DialogComponent]
 })
-export class DialogsComponent implements OnInit {
+export class DialogsComponent implements OnInit, OnDestroy {
     title = "Dialogs";
     user: User = new User();
     users: {};
@@ -112,10 +111,6 @@ export class DialogsComponent implements OnInit {
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
-    }
-
-    formatDate(unixtime: number) {
-        return DateConverter.formatDate(unixtime);
     }
 
     getUserName(uid: number) {
