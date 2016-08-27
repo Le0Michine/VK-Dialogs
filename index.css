@@ -59,7 +59,7 @@ body {
     column-rule-color: rgb(42, 88, 133);
     perspective-origin: 10px 7.5px;
     transform-origin: 10px 7.5px;
-    background: rgba(0, 0, 0, 0) url("assets/icons/loading.png") no-repeat scroll 3px 0px / auto padding-box border-box;
+    background: rgba(0, 0, 0, 0) url("icons/loading.png") no-repeat scroll 3px 0px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: -8.5px 0px 0px -10px;
