@@ -98,7 +98,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                         obs = AuthHelper.authorize(false, request.requested_by_user);
                     }
                     obs.subscribe(session => {
-                        sendResponse({data: session});
+                            if (request.requested_by_user || request.force_auth) return;
+                            sendResponse({data: session});
                         },
                         error => console.log(error)
                     );
