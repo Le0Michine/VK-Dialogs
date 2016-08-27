@@ -12,12 +12,14 @@ export class AuthHelper {
     static response_type: string = "token";
     static tab_id: number;
     static authorization_in_progress_count: number = 0;
+    static current_authorisation: Observable<any>;
 
     static authorize(background: boolean = true, requested_by_user: boolean = false): Observable<SessionInfo> {
         console.log("start authorization");
         if (AuthHelper.authorization_in_progress_count > 0) {
             console.log("another authorisation in progress, cancel request");
-            return Observable.bindCallback((callback: (SessionInfo) => void) => callback(null))();
+            if (requested_by_user) chrome.tabs.update(AuthHelper.tab_id, {active: true});
+            return AuthHelper.current_authorisation;
         }
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" && !requested_by_user) {
             return Observable.bindCallback((callback: (SessionInfo) => void) => callback(null))();
@@ -37,13 +39,21 @@ export class AuthHelper {
             AuthHelper.addTabListener(callback);
             chrome.tabs.create({url: authUrl, selected: !background}, tab => AuthHelper.tab_id = tab.id);
         });
-        return observable();
+        AuthHelper.current_authorisation = observable();
+        return AuthHelper.current_authorisation;
     }
 
     private static addTabListener(callback) {
+        chrome.tabs.onRemoved.addListener(function(tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) {
+            if (tabId === AuthHelper.tab_id) {
+                AuthHelper.authorization_in_progress_count --;
+            }
+        });
         chrome.tabs.onUpdated.addListener(function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {
             if (tabId === AuthHelper.tab_id && tab.url.split("#")[0] === AuthHelper.redirect_uri && tab.status === "complete") {
                 console.log("found auth tab");
+                AuthHelper.authorization_in_progress_count --;
+                AuthHelper.current_authorisation = null;
                 let session: SessionInfo = new SessionInfo();
                 let query: string[] = tab.url.split("#")[1].split("&");
                 let error: any;
@@ -87,7 +97,6 @@ export class AuthHelper {
                     window.localStorage.setItem(VKConsts.vk_auth_timestamp_id, String(Math.floor(Date.now() / 1000)));
                     callback(session);
                 }
-                AuthHelper.authorization_in_progress_count --;
                 chrome.tabs.remove(tabId);
                 AuthHelper.tab_id = null;
             }
