@@ -10,7 +10,17 @@ export class AppComponent {
     title = "Dialogs";
 
     constructor(translate: TranslateService) {
-        translate.setDefaultLang("ru");
-        translate.use("ru");
+        translate.setDefaultLang("en");
+        chrome.storage.sync.get({ "currentLang": "ru" }, (items) => {
+            console.log("got settings: ", items);
+            translate.use(items["currentLang"]);
+        });
+        chrome.storage.onChanged.addListener(function(changes, namespace) {
+            if ("currentLang" in changes) {
+                let change = changes["currentLang"];
+                console.log(`detect language changing from ${change.oldValue} to ${change.newValue}`);
+                translate.use(change.newValue);
+            }
+        });
     }
 }
