@@ -1,5 +1,6 @@
 <div id="auth">
-    <span>You are not authorized. 
-Please click "Authorize" and allow access from VK.</span>
-	<button id="auth_btn" (click)="authorize()">Authorize</button>
+    <p id="warning">{{ 'not_authorized' | translate }}</p>
+    <p id="btn_panel">
+        <button id="auth_btn" (click)="authorize()">{{ 'authorize_btn' | translate }}</button>
+    </p>
 </div>

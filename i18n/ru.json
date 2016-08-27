@@ -2,6 +2,8 @@
     "mark_as_read": "Прочитать",
     "send": "Отправить",
     "load_previous_messages": "Загрузить предыдущие сообщения",
+    "not_authorized": "Вы не авторизованы. Нажмите \"Авторизация\" и разрешите доступ к вашему аккаунту VK.",
+    "authorize_btn": "Авторизация",
     "actions": {
         "chat_kick_user": "{{user}} покинул беседу",
         "chat_photo_remove": "{{user}} удалил фото беседы",
