@@ -1,8 +1,8 @@
-import { NgModule }      from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import { NgModule }      from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { HttpModule } from "@angular/http";
 
-import { BackgroundComponent }  from './background.component';
+import { BackgroundComponent }  from "./background.component";
 import { VKService } from "./vk-service";
 import { UserService } from "./user-service";
 import { CacheService } from "./cache-service";
