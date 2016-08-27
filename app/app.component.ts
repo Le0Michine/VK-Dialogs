@@ -11,6 +11,7 @@ export class AppComponent {
 
     constructor(translate: TranslateService) {
         translate.setDefaultLang("en");
+        translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
         chrome.storage.sync.get({ "currentLang": "ru" }, (items) => {
             console.log("got settings: ", items);
             translate.use(items["currentLang"]);
