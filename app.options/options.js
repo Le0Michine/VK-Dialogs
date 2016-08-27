@@ -1,26 +1,36 @@
 // Saves options to chrome.storage
 function save_options() {
-    var lang = document.getElementById("lang").value;
+    var lang = document.getElementById("targetLangSel").value;
     chrome.storage.sync.set({
         currentLang: lang
     }, function() {
         // Update status to let user know options were saved.
-        var status = document.getElementById('status');
-        status.textContent = 'Options saved.';
+        var status = document.getElementById('saveStatus');
+
+        status.style.display = "";
+        status.style.transition = "opacity 0.4s ease-out";
+        status.style.opacity = "1";
         setTimeout(function() {
-            status.textContent = '';
-        }, 750);
+            status.style.transition = "opacity 0.4s ease-out";
+            status.style.opacity = "0";
+        }, 1000);
     });
 }
 
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 function restore_options() {
-  // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({ "currentLang": "ru" }, function(items) {
         console.log("got settings: ", items);
-        document.getElementById("lang").value = items.currentLang;
+        document.getElementById("targetLangSel").value = items.currentLang;
     });
 }
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click', save_options);
+
+function onload() {
+    restore_options();
+    console.dir(document.getElementById('saveBtn'));
+    document.getElementById('saveBtn').addEventListener('click', save_options);
+    document.getElementById('resetBtn').addEventListener('click', restore_options);
+}
+document.addEventListener('DOMContentLoaded', onload);
+console.dir(document.getElementById('saveBtn'));

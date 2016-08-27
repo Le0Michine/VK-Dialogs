@@ -1,0 +1,133 @@
+.buttons {
+    clear: left;
+    padding: 2em 0 0.7em;
+}
+
+.jfk-button-action {
+    box-shadow: none;
+    background-color: #4d90fe;
+    background-image: linear-gradient(top,#4d90fe,#4787ed);
+    background-image: -webkit-linear-gradient(top,#4d90fe,#4787ed);
+    border: 1px solid #3079ed;
+    color: #fff;
+}
+
+.jfk-button {
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    margin-right: 16px;
+    height: 27px;
+    line-height: 27px;
+    min-width: 54px;
+    display: inline-block;
+    outline: 0px;
+    padding: 0 8px;
+}
+
+.jfk-button-action.jfk-button-clear-outline {
+    box-shadow: none;
+    outline: none;
+}
+
+#saveBtn:hover {
+    background-color: #357ae8;
+    background-image: -webkit-linear-gradient(top,#4d90fe,#357ae8);
+    background-image: linear-gradient(top,#4d90fe,#357ae8);
+    border: 1px solid #2f5bb7;
+    border-bottom-color: #2f5bb7;
+}
+
+#resetBtn:hover {
+    background-color: #f8f8f8;
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: linear-gradient(top,#f8f8f8,#f1f1f1);
+    border: 1px solid #c6c6c6;
+    color: #333;
+}
+
+.jfk-button-standard {
+    box-shadow: none;
+    background-color: #f5f5f5;
+    background-image: linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+    color: #444;
+    border: 1px solid #dcdcdc;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+#saveStatus {
+    background-color: #fff1a8;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px;
+}
+
+#content {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 40px auto 20px;
+    padding: 32px;
+    width: 650px;
+}
+
+body {
+    background-color: #eee;
+    font-family: arial,sans-serif;
+    font-size: 13px;
+}
+
+.option_row {
+    display: table-row;
+}
+
+.option_name {
+    display: table-cell;
+    font-weight: bold;
+    margin-top: 3px;
+    padding-right: 16px;
+    padding-top: 16px;
+    white-space: nowrap;
+}
+
+.option_picker {
+    display: table-cell;
+}
+
+option {
+    font-weight: normal;
+    display: block;
+    white-space: pre;
+    min-height: 1.2em;
+    padding: 0px 2px 1px;
+}
+
+h1 {
+    color: #333333;
+    font-size: 1.5em;
+    margin: 0.7em 0;
+    text-align: center;
+    font-weight: bold;
+    transition: opacity .25s ease-in-out;
+    animation: fadeOut 1s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+#logo {
+    background-color: #2a5885;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#logo_title {
+    top: 0px;
+    display: inline;
+}
