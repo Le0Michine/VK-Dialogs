@@ -9,7 +9,8 @@
     "postinstall": "typings install",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "typings": "typings"
+    "typings": "typings",
+    "tslint": "tslint -c tslint.json app*/*.ts"
   },
   "license": "ISC",
   "dependencies": {
