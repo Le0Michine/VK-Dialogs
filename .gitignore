@@ -6,3 +6,4 @@ app/*.map
 *.map
 npm-debug.log
 public/
+dist/
