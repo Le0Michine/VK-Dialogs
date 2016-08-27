@@ -152,19 +152,19 @@
 }
 
 .att_doc_img {
-    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat;
+    background: url("../assets/icons/doc_icons.png") no-repeat;
 }
 
 .att_vid_img {
-    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat 0px -120px;
+    background: url("../assets/icons/doc_icons.png") no-repeat 0px -120px;
 }
 
 .att_aud_img {
-    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat 0px -90px;
+    background: url("../assets/icons/doc_icons.png") no-repeat 0px -90px;
 }
 
 .att_url_img {
-    background: url(https://vk.com/images/icons/doc_icons.png) no-repeat 0px -180px;
+    background: url("../assets/icons/doc_icons.png") no-repeat 0px -180px;
 }
 
 .user_avatar {
@@ -368,7 +368,7 @@
     width: 20px;
     z-index: 0;
     column-rule-color: rgb(42, 88, 133);
-    background: rgba(0, 0, 0, 0) url("https://vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
+    background: rgba(0, 0, 0, 0) url("../assets/icons/im_actions.png") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     margin: -8.5px 0px 0px -10px;
     outline: rgb(42, 88, 133) none 0px;

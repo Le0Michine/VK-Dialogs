@@ -94,7 +94,7 @@
     width: 20px;
     z-index: 0;
     column-rule-color: rgb(42, 88, 133);
-    background: rgba(0, 0, 0, 0) url("https://new.vk.com/images/icons/im_actions.png?3") no-repeat scroll 2px -324px / auto padding-box border-box;
+    background: rgba(0, 0, 0, 0) url("../assets/icons/im_actions.png") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: -8.5px 0px 0px -10px;
