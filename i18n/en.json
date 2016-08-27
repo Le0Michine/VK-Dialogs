@@ -1,8 +1,18 @@
 {
+    "mark_as_read": "Mark as read",
+    "send": "Send",
+    "load_previous_messages": "Load previous messages",
     "actions": {
         "chat_kick_user": "{{user}} left the conversation",
         "chat_photo_remove": "{{user}} removed the conversation cover",
         "chat_photo_update": "{{user}} updated the conversation cover",
         "chat_create": "{{user}} created a conversation"
+    },
+    "attachment": {
+        "photo": "photo",
+        "video": "video",
+        "audio": "audio",
+        "doc": "document",
+        "wall": "wall post"
     }
 }

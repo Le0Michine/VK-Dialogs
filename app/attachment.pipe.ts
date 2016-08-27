@@ -5,13 +5,15 @@ import { TranslateService } from "ng2-translate/ng2-translate";
     name: "attachment_size"
 })
 export class MessageAttachmentSubTitlePipe {
+    constructor(private translate: TranslateService) { }
+
     transform(attachment) {
         let tmp = attachment.doc || attachment.audio || attachment.video || attachment.wall || attachment.link || {size: -1};
         if (attachment.doc) {
             return Math.floor(tmp.size / 1000) + " KB";
         }
         else if (attachment.wall) {
-            return "wall post";
+            return this.translate.instant("attachment.wall");
         }
         else if (attachment.link) {
             return tmp.caption;

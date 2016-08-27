@@ -21,7 +21,7 @@
 				<div class="message_body">
 				    <span>
                         <span>{{dialog.sender + ': '}}</span>
-                        {{dialog.message.body}}<span class="dialog_attachments" [hidden]="!dialog.attachment_only">[{{dialog.attachment_type}}]</span>
+                        {{dialog.message.body}}<span class="dialog_attachments" [hidden]="!dialog.attachment_only">[{{ 'attachment.' + dialog.attachment_type | translate }}]</span>
                     </span>
                     <span class="three_dots">...</span>
 				</div>
@@ -33,5 +33,5 @@
 </ul>
 <div class="load_old" (click)="loadOldDialogs()" [hidden]="dialogs_count && dialogs_count === dialogs.length">
 	<div class="arrow_down"></div>
-	<a class="load_old_link">Load previous messages</a>
+	<a class="load_old_link">{{ 'load_previous_messages' | translate }}</a>
 </div>

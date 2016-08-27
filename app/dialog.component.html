@@ -3,8 +3,8 @@
 		<div id="left_arrow"></div>
 		<h1 id="dialog_title">{{title}}</h1>
 	</a>
-	<button id="send_btn" (click)="sendMessage()">Send</button>
-	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">Mark as read</button>
+	<button id="send_btn" (click)="sendMessage()">{{ 'send' | translate }}</button>
+	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">{{ 'mark_as_read' | translate }}</button>
 </div>
 <div id="input_box">
 	<label id="input_label" for="message_input">Type your text here…</label>
@@ -89,6 +89,6 @@
 	</div>
 	<div id="load_old" (click)="loadOldMessages()" *ngIf="messages_count && messages_count != history.length">
 		<div id="arrow_down"></div>
-		<a id="load_old_link">Load previous messages</a>
+		<a id="load_old_link">{{ 'load_previous_messages' | translate }}</a>
 	</div>
 </div>

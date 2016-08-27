@@ -1,11 +1,3 @@
-export let ATTACHMENT_TYPES = {
-    "photo": "photo",
-    "video": "video",
-    "audio": "audio",
-    "doc": "document",
-    "wall": "wall post"
-};
-
 export class Photo {
     /** photo ID */
     pid: number;

@@ -127,11 +127,11 @@
 #send_btn {
     color: rgb(255, 255, 255);
     cursor: pointer;
-    display: inline;
     min-height: 0px;
-    position: absolute;
+    position: relative;
     right: 5px;
     top: 10px;
+    float: right;
     white-space: nowrap;
     z-index: 5;
     column-rule-color: rgb(255, 255, 255);
@@ -147,8 +147,9 @@
     color: rgb(255, 255, 255);
     cursor: pointer;
     min-height: 0px;
-    position: absolute;
-    right: 75px;
+    position: relative;
+    float: right;
+    right: 10px;
     top: 10px;
     white-space: nowrap;
     z-index: 5;

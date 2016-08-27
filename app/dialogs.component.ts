@@ -11,7 +11,6 @@ import { VKService } from "./vk-service";
 import { DialogService } from "./dialogs-service";
 import { DateConverter } from "./date-converter";
 import { VKConsts } from "./vk-consts";
-import { ATTACHMENT_TYPES } from "./attachment-data-types";
 
 @Component({
   selector: "dialogs",
@@ -156,7 +155,7 @@ export class DialogsComponent implements OnInit {
                 dts.attachment_type = "Forwarded message";
             }
             else if (dialog.message.attachments && dialog.message.attachments[0]) {
-                dts.attachment_type = ATTACHMENT_TYPES[dialog.message.attachments[0].type];
+                dts.attachment_type = dialog.message.attachments[0].type;
             }
             dts.attachment_only = dts.attachment_type !== "" && dts.message.body === "";
 
