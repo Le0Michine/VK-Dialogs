@@ -2,6 +2,7 @@ const gulp = require("gulp");
 const del = require("del");
 const typescript = require("gulp-typescript");
 const tslint = require("gulp-tslint");
+const sourcemaps = require('gulp-sourcemaps');
 
 const tscConfig = require("./tsconfig.json");
 
@@ -11,6 +12,15 @@ gulp.task("clean", function () {
 });
 
 // TypeScript compile
+gulp.task("compile:sourcemaps", ["clean"], function () {
+    return gulp
+        .src(sourcests)
+        .pipe(sourcemaps.init())
+        .pipe(typescript(tscConfig.compilerOptions))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest("dist/"));
+});
+
 gulp.task("compile", ["clean"], function () {
     return gulp
         .src(sourcests)
@@ -48,8 +58,10 @@ gulp.task("tslint", function() {
         .pipe(tslint.report());
 });
 
-gulp.task("build", ["tslint", "compile", "copy:assets", "copy:libs"]);
-gulp.task("default", ["build"]);
+gulp.task("build:dev", ["tslint", "compile:sourcemaps", "copy:assets", "copy:libs"]);
+gulp.task("build:prod", ["tslint", "compile", "copy:assets", "copy:libs"]);
+
+gulp.task("default", ["build:dev"]);
 
 const sourcests = ["app/*.ts","app.background/*.ts","*.ts"];
 
