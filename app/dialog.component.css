@@ -1,22 +1,20 @@
 #chat_body {
     position: relative;
-    width: 550px;
-    max-height: 495px;
-    min-height: 20px;
+    width: 100%;
+    top: 0;
+    height: 490px;
     overflow-y: scroll;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
+    overflow-x: hidden;
+    background: rgb(255, 255, 255) padding-box;
     padding: 0px 0px 0px;
-    z-index: 100;
-    -webkit-overflow-scrolling: touch;
 }/*#chat_body*/
 
 .message_block {
     left: 0px;
-    max-width: 550px;
     position: relative;
     right: 0px;
     top: 0px;
-    width: 550px;
+    width: 100%;
     min-height: 55px;
     height: fit-content;
     flex-direction: column;
@@ -255,7 +253,7 @@
 }/*.message_timestamp*/
 
 .messages_list {
-    width: 550px;
+    width: 100%;
     list-style: none outside none;
     padding-left: 0px;
     padding-bottom: 10px;

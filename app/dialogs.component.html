@@ -30,8 +30,8 @@
 			</div>
 		</div>
     </li>
+	<div class="load_old" (click)="loadOldDialogs()" [hidden]="dialogs_count && dialogs_count === dialogs.length">
+		<div class="arrow_down"></div>
+		<a class="load_old_link">{{ 'load_previous_messages' | translate }}</a>
+	</div>
 </ul>
-<div class="load_old" (click)="loadOldDialogs()" [hidden]="dialogs_count && dialogs_count === dialogs.length">
-	<div class="arrow_down"></div>
-	<a class="load_old_link">{{ 'load_previous_messages' | translate }}</a>
-</div>

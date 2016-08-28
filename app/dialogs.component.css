@@ -30,6 +30,11 @@
     box-sizing: border-box;
     min-height: 100%;
     text-align: left;
+    position: relative;
+    top: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     width: 550px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
     border-radius: 2px 2px 2px 2px;

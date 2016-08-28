@@ -11,7 +11,7 @@ import { Channels } from "../app.background/channels";
 import { DateConverter } from "./date-converter";
 
 @Component({
-    selector: "messges",
+    selector: "messages",
     templateUrl: "app/dialog.component.html",
     styleUrls: [
         "app/dialog.component.css",
