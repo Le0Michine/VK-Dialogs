@@ -56,8 +56,8 @@ export class DialogComponent {
             this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
                     this.history = history as Message[];
                     this.history_to_show = this.getHistory(this.history);
-                    console.log('history converted');
-                    console.log('force update 1');
+                    console.log("history converted");
+                    console.log("force update 1");
                     this.change_detector.detectChanges();
                 })
             );
@@ -66,7 +66,7 @@ export class DialogComponent {
             this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
                     this.participants = users;
                     this.history_to_show = this.getHistory(this.history);
-                    console.log('force update 2');
+                    console.log("force update 2");
                     this.change_detector.detectChanges();
                 },
                 error => this.errorHandler(error),
@@ -92,7 +92,7 @@ export class DialogComponent {
         value[key] = "";
 
         chrome.storage.sync.get(value, (value: any) => {
-            console.log('restored message: ', value);
+            console.log("restored message: ", value);
             if (value[key]) {
                 this.clearLabelContent();
                 this.current_text = value[key] as string;
@@ -102,7 +102,7 @@ export class DialogComponent {
     }
 
     getHistory(messages: Message[]) {
-        console.log('convert history');
+        console.log("convert history");
         if (messages.length === 0 || !this.participants[messages[0].user_id]) {
             return [];
         }
@@ -133,7 +133,7 @@ export class DialogComponent {
     }
 
     getMessageAttachments(message: Message) {
-        console.log('get attachments');
+        console.log("get attachments");
         let attachments = [];
         if (message.attachments) {
             for (let attachment of message.attachments) {
@@ -161,7 +161,7 @@ export class DialogComponent {
 
     convertFwdMessages(messages: any[]) {
         /** body, date, user_id, attachments */
-        console.log('convert forwarded messages');
+        console.log("convert forwarded messages");
         let result: any[] = [];
         if (!messages || messages.length === 0) return [];
         let mts: any = {};
@@ -207,7 +207,7 @@ export class DialogComponent {
     }
 
     clearLabelContent() {
-        console.log('clear label');
+        console.log("clear label");
         let label = document.getElementById("input_label");
         label.innerText = "";
     }
