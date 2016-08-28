@@ -31,12 +31,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         console.log("background init");
         this.preAuthorize();
 
-        chrome.runtime.onConnect.addListener(port => {
-            if (port.name === Channels.messages_cache_port) {
-                this.initMessagesCache(port);
-            }
-        });
-
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             switch (request.name) {
                 case Channels.get_dialogs_request:
@@ -72,7 +66,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 case Channels.send_message_request:
                     this.dialogsService.sendMessage(request.user_id, request.message_body, request.is_chat).subscribe(message => {
                         sendResponse({data: message});
-                        console.log("message id sent");
+                        console.log("message id sent: ", message);
                     });
                     return true;
                 case Channels.get_multiple_users_request:
@@ -113,29 +107,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     processError(erorr_code: number) {
 
-    }
-
-    initMessagesCache(port: chrome.runtime.Port) {
-        console.log("connected to port: " + port.name);
-        let key: string;
-        let value: string;
-        let subscription = Observable.interval(3000).subscribe(() => window.localStorage.setItem(key, value));
-
-        port.onMessage.addListener(message => {
-            if (message["remove"]) {
-                window.localStorage.removeItem(message["key"]);
-            }
-            else if (key !== message["key"]) {
-                window.localStorage.setItem(key, value);
-                key = message["key"];
-            }
-            value = message["value"];
-        });
-        port.onDisconnect.addListener(() => {
-            console.log("port disconnected: " + port.name);
-            subscription.unsubscribe();
-            window.localStorage.setItem(key, value);
-        });
     }
 
     ngOnDestroy() {

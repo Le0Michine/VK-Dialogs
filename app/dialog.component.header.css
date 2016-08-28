@@ -1,7 +1,7 @@
 #top_panel {
     overflow-x: hidden;
     overflow-y: hidden;
-    position: fixed;
+    position: relative;
     top: 0;
     z-index: 999;
     height: 45px;

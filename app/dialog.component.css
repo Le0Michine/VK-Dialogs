@@ -1,11 +1,13 @@
 #chat_body {
     position: relative;
-    top: 74px;
     width: 550px;
+    max-height: 495px;
     min-height: 20px;
+    overflow-y: scroll;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
     padding: 0px 0px 0px;
     z-index: 100;
+    -webkit-overflow-scrolling: touch;
 }/*#chat_body*/
 
 .message_block {
@@ -47,6 +49,7 @@
 }
 
 .zoom_out {
+    min-height: 130px;
     cursor: -webkit-zoom-out;
 }
 

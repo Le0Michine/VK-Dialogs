@@ -125,7 +125,7 @@ export class LPSService {
                     (-1: forever; 0: notifications enabled; other: timestamp for time to switch back on). */
                     break;
                 default:
-                    console.log("unknow code of update " +  JSON.stringify(update) + " in long poll response: " + JSON.stringify(json));
+                    console.warn(`unknow code of update ${JSON.stringify(update)} in long poll response: ${JSON.stringify(json)}`);
                     break;
             }
         }

@@ -8,8 +8,7 @@
 </div>
 <div id="input_box">
 	<label id="input_label" for="message_input">Type your text here…</label>
-	<textarea id="message_input" #minput (click)="clearLabelContent()" (keydown)="onKeyPress($event,minput.value)" [(ngModel)]="current_text"></textarea>
-	<div id="hline"></div>
+	<div contenteditable="true" id="message_input" #minput (click)="clearLabelContent()" (keydown)="onKeyPress($event,minput.value)"></div>
 </div>
 <div id="chat_body">
 	<div class="message_block" *ngFor="let message of history_to_show">
@@ -29,7 +28,7 @@
 						<div class="unread" *ngIf="!item.read_state"></div>
 						<pre class="message_body_internal" [hidden]="!item.body" [innerHTML]="cutLinks(item.body)"></pre>
 						<div *ngIf="item.action" class="chat_action">{{ 'actions.' + item.action | translate:{user: getUserName(message.user.id)} }}</div>
-						<div class="message_attachment" *ngFor="let attachment of getMessageAttachments(item)">
+						<div class="message_attachment" *ngFor="let attachment of item.attachments">
 							<div *ngIf="attachment.photo" class="att_photo">
 								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
 							</div>
@@ -44,8 +43,8 @@
 
 							<!-- fwd messages -->
 							<div *ngIf="attachment.fwd" class="fwd_messages">
-								<div *ngFor="let mts of convertFwdMessages(attachment.fwd)">
-									<div class="fwd_msg_block">
+								<div *ngFor="let mts of attachment.fwd">
+									<div class="fwd_msg_block" *ngIf="mts.user">
 										<div class="fwd_user_avatar" [class.online]="mts.user.online">
 											<a [href]="'https://vk.com/id'+mts.user.id" target="_blank">
 												<img alt="" [src]="getUserPhoto(mts.user.id)" class="user_avatar_img" />
@@ -59,7 +58,7 @@
 											<ul class="fwd_messages_list">
 												<li class="fwd_message_body" *ngFor="let msg of mts.messages">
 													<pre class="fwd_message_body_internal">{{msg.body}}</pre>
-													<div class="fwd_message_attachment" *ngFor="let fwd_att of getMessageAttachments(msg)">
+													<div class="fwd_message_attachment" *ngFor="let fwd_att of msg.attachments">
 														<div *ngIf="fwd_att.photo" class="att_photo">
 															<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />
 														</div>

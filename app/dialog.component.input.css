@@ -1,15 +1,14 @@
 #input_box {
     bottom: 0px;
     cursor: text;
-    height: 30px;
+    height: fit-content;
     left: 0px;
-    position: fixed;
+    position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
     z-index: 800;
     right: 0px;
     text-align: left;
-    top: 45px;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 0px 0px;
@@ -21,54 +20,42 @@
     bottom: 31px;
     color: rgb(130, 130, 130);
     cursor: text;
-    left: 5.5%;
+    left: 15px;
     position: absolute;
     text-align: left;
-    top: 5px;
+    top: 9px;
     width: 90%;
     height: 100%;
     z-index: 50;
     column-rule-color: rgb(130, 130, 130);
     font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(130, 130, 130) none 0px;
-    padding: 1px;
+    padding: 5px 5% 10px 5%;
     transition: color 0.2s ease 0s;
-    /*border-bottom: 1px solid rgb(231, 232, 236);*/
-}/*#message_input*/
+}/*#input_label*/
 
 #message_input {
-    bottom: 31px;
-    color: rgb(130, 130, 130);
-    cursor: text;
+    box-sizing: border-box;
     left: 5%;
-    position: absolute;
-    text-align: left;
     top: 5px;
-    height: 100%;
-    width: 90%;
-    resize: none;
-    z-index: 30;
-    column-rule-color: rgb(130, 130, 130);
-    border: none;
+    width: 470px;
+    max-width: 470px;
+    cursor: text;
+    position: relative;
+    max-height: 300px;
+    min-height: 55px;
+    overflow-wrap: break-word;
+    text-align: left;
+    outline: none;
+    word-wrap: break-word;
+    perspective-origin: 189px 27.5px;
+    transform-origin: 189px 27.5px;
+    border-bottom: 1px solid rgb(228, 230, 233);
+    border-radius: 1px 1px 1px 1px;
     font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    outline: rgb(130, 130, 130) none 0px;
-    padding-bottom: 5px;
-    transition: color 0.2s ease 0s;
+    overflow: auto;
+    padding: 6px 15px 7px 15px;
+    transition: border-bottom-color 0.3s linear 0s;
+    margin-bottom: 5px;
+    z-index: 55;
 }/*#message_input*/
-
-#hline {
-    bottom: 31px;
-    color: rgb(130, 130, 130);
-    left: 5%;
-    position: absolute;
-    bottom: 0px;
-    height: 1px;
-    width: 90%;
-    z-index: 30;
-    column-rule-color: rgb(130, 130, 130);
-    outline: rgb(130, 130, 130) none 0px;
-    padding-bottom: 5px;
-    transition: color 0.2s ease 0s;
-    border-bottom: 1px solid rgb(231, 232, 236);
-}/*#hline*/
-
