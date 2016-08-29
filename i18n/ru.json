@@ -16,6 +16,7 @@
         "video": "видео",
         "audio": "аудио",
         "doc": "документ",
-        "wall": "запись на стене"
+        "wall": "запись на стене",
+        "fwd_messages": "Forwarded messages"
     }
 }

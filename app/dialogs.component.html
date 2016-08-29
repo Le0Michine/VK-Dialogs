@@ -1,5 +1,5 @@
 <ul class="dialogs_list">
-    <li *ngFor="let dialog of getDialogs()" (click)="gotoDialog(dialog.message)" class="dialog_li">
+    <li *ngFor="let dialog of dialogs_to_show" (click)="gotoDialog(dialog.message)" class="dialog_li">
 		<div class="user_avatar_div">
 			<div class="user_avatar_inner_div">
 				<div *ngFor="let img of dialog.photos">

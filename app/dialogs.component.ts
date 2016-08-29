@@ -24,6 +24,8 @@ export class DialogsComponent implements OnInit, OnDestroy {
     chats: {};
     dialogs_count: number;
 
+    dialogs_to_show = [];
+
     i: number = 0;
 
     dialogs: Dialog[] = [];
@@ -70,6 +72,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         this.user_service.getUser().subscribe(
             u => {
                 this.user = u;
+                this.dialogs_to_show = this.getDialogs();
                 this.change_detector.detectChanges();
             },
             error => this.errorHandler(error),
@@ -77,6 +80,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
                 this.dialogs = dialogs as Dialog[];
+                this.dialogs_to_show = this.getDialogs();
                 this.change_detector.detectChanges();
             },
             error => this.errorHandler(error),
@@ -86,6 +90,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
                     this.users = users;
+                    this.dialogs_to_show = this.getDialogs();
                     this.change_detector.detectChanges();
                 },
                 error => this.errorHandler(error),
@@ -96,6 +101,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.dialog_service.chat_observable.subscribe(chats => {
                 this.chats = chats;
+                this.dialogs_to_show = this.getDialogs();
                 this.change_detector.detectChanges();
             },
             error => this.errorHandler(error),
@@ -147,7 +153,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
             dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
 
             if (dialog.message.fwd_messages) {
-                dts.attachment_type = "Forwarded message";
+                dts.attachment_type = "fwd_messages";
             }
             else if (dialog.message.attachments && dialog.message.attachments[0]) {
                 dts.attachment_type = dialog.message.attachments[0].type;
@@ -163,7 +169,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
                 else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length > 0) {
                     dts.photos = (this.chats[chat.chat_id].users as User[]).filter(user => user.id !== this.user.id).map(user => user.photo_50).slice(0, 4);
                 }
-                else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length === 0 && chat.action) {
+                if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length === 0 && chat.action) {
                     chat.read_state = true;
                 }
             }
