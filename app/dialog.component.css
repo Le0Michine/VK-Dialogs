@@ -309,7 +309,7 @@
     bottom: 0px;
     left: 75px;
     position: absolute;
-    background: rgba(237, 240, 245, 0.3);
+    background: rgba(237, 240, 245, 1);
     z-index: 10;
 }/*.unread*/
 
