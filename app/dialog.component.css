@@ -170,6 +170,10 @@
     background: url("../icons/doc_icons.png") no-repeat 0px -180px;
 }
 
+.att_zip_img {
+    background: url("../icons/doc_icons.png") no-repeat 0px -30px;
+}
+
 .user_avatar {
     bottom: 24px;
     height: 36px;

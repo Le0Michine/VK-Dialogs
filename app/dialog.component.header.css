@@ -130,7 +130,7 @@
     min-height: 0px;
     position: relative;
     right: 5px;
-    top: 10px;
+    top: 7px;
     float: right;
     white-space: nowrap;
     z-index: 5;
@@ -150,7 +150,7 @@
     position: relative;
     float: right;
     right: 10px;
-    top: 10px;
+    top: 7px;
     white-space: nowrap;
     z-index: 5;
     column-rule-color: rgb(255, 255, 255);

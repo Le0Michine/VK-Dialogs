@@ -74,6 +74,7 @@ export class MessageAttachmentTitlePipe {
 export class MessageAttachmentIconPipe {
     transform(atttachment) {
         if (atttachment.video) return "att_vid_img";
+        if (atttachment.doc && atttachment.doc.ext === "zip") return "att_zip_img";
         if (atttachment.doc || atttachment.wall) return "att_doc_img";
         if (atttachment.audio) return "att_aud_img";
         return "att_doc_img";
