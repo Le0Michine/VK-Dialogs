@@ -7,9 +7,11 @@
     "type_text_here": "Вводите сообщение здесь…",
     "actions": {
         "chat_kick_user": "{{user}} покинул беседу",
+        "chat_kick_user2": "{{user}} исключил(а) {{user2}}",
         "chat_photo_remove": "{{user}} удалил фото беседы",
         "chat_photo_update": "{{user}} добавил фото беседы",
-        "chat_create": "{{user}} создал беседу"
+        "chat_create": "{{user}} создал беседу",
+        "chat_invite_user": "{{user}} пригласил(а) {{user2}}"
     },
     "attachment": {
         "photo": "фото",

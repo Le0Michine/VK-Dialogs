@@ -374,3 +374,7 @@
     margin: -8.5px 0px 0px -10px;
     outline: rgb(42, 88, 133) none 0px;
 }/*.arrow_down:before*/
+
+.chat_action {
+    font-style: italic;
+}

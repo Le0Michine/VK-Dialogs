@@ -80,3 +80,30 @@ export class MessageAttachmentIconPipe {
         return "att_doc_img";
     }
 }
+
+@Pipe({
+    name: "chat_action",
+    pure: false
+})
+export class ChatActionPipe {
+    transform(message) {
+        let action = {};
+        switch (message.action) {
+            case "chat_kick_user":
+                if (message.action_mid !== message.user_id) {
+                    return "actions.chat_kick_user2";
+                }
+                else {
+                    return "actions.chat_kick_user";
+                }
+            case "chat_photo_remove":
+                return "actions.chat_photo_remove";
+            case "chat_photo_update":
+                return "actions.chat_photo_update";
+            case "chat_create":
+                return "actions.chat_create";
+            case "chat_invite_user":
+                return "actions.chat_invite_user";
+        }
+    }
+}
