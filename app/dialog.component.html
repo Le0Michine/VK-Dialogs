@@ -7,7 +7,7 @@
 	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">{{ 'mark_as_read' | translate }}</button>
 </div>
 <div id="input_box">
-	<label id="input_label" for="message_input">Type your text here…</label>
+	<label id="input_label" for="message_input">{{ 'type_text_here' | translate }}</label>
 	<div contenteditable="true" id="message_input" #minput (click)="clearLabelContent()" (keydown)="onKeyPress($event,minput.value)"></div>
 </div>
 <div id="chat_body">
