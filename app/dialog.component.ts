@@ -113,9 +113,9 @@ export class DialogComponent {
         mts.date = messages[0].date;
 
         for (let message of messages) {
+            message.attachments = this.getMessageAttachments(message);
             if (message.from_id === uid
                 && (mts.messages.length === 0 || (Math.abs(message.date - mts.messages[0].date) < 60 * 5))) {
-                    message.attachments = this.getMessageAttachments(message);
                     mts.messages.push(message);
             }
             else {
@@ -140,7 +140,7 @@ export class DialogComponent {
                 if (attachment.photo || attachment.doc ||
                         attachment.wall || attachment.link ||
                         attachment.video || attachment.sticker ||
-                        attachment.audio) {
+                        attachment.audio || attachment.fwd) {
                     attachments.push(attachment);
                 }
                 else {
@@ -152,7 +152,6 @@ export class DialogComponent {
             let attachment: any = {};
             attachment.type = "fwd";
             attachment.fwd = this.convertFwdMessages(message.fwd_messages);
-            attachment.fwd = message.fwd_messages;
             attachments.push(attachment);
             console.log("fwd: ", attachment);
         }
@@ -168,10 +167,11 @@ export class DialogComponent {
         mts.date = messages[0].date;
         mts.user = this.participants[messages[0].user_id] || new User();
         mts.user_id = messages[0].user_id;
+        messages[0].attachments = this.getMessageAttachments(messages[0]);
         mts.messages = [messages[0]];
         for (let i = 1; i < messages.length; i++) {
+            messages[i].attachments = this.getMessageAttachments(messages[i]);
             if (mts.user_id === messages[i].user_id) {
-                messages[i].attachments = this.getMessageAttachments(messages[i]);
                 mts.messages.push(messages[i]);
             }
             else {
