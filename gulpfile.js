@@ -34,6 +34,12 @@ gulp.task("copy:libs", ["clean"], function() {
     .pipe(gulp.dest("dist"))
 });
 
+
+gulp.task("copy:ts", ["clean"], function() {
+    return gulp.src(['app*/*.ts','*.ts'],{base: "./"})
+    .pipe(gulp.dest("dist"))
+});
+
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task("copy:assets", ["clean"], function() {
     return gulp.src(
@@ -58,7 +64,7 @@ gulp.task("tslint", function() {
         .pipe(tslint.report());
 });
 
-gulp.task("build:dev", ["tslint", "compile:sourcemaps", "copy:assets", "copy:libs"]);
+gulp.task("build:dev", ["tslint", "compile:sourcemaps", "copy:ts", "copy:assets", "copy:libs"]);
 gulp.task("build:prod", ["tslint", "compile", "copy:assets", "copy:libs"]);
 
 gulp.task("default", ["build:dev"]);
