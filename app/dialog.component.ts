@@ -140,10 +140,10 @@ export class DialogComponent {
                 if (attachment.photo || attachment.doc ||
                         attachment.wall || attachment.link ||
                         attachment.video || attachment.sticker ||
-                        attachment.audio || attachment.fwd) {
+                        attachment.audio) {
                     attachments.push(attachment);
                 }
-                else {
+                else if (!attachment.fwd) {
                     attachments.push("[" + attachment.type + "]");
                 }
             }
