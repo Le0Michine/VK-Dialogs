@@ -32,6 +32,8 @@ export class DialogComponent {
 
     history_to_show: MessageToShow[] = [];
 
+    message_is_sending: boolean = false;
+
     constructor (
         private messages_service: DialogService,
         private vkservice: VKService,
@@ -213,6 +215,9 @@ export class DialogComponent {
     }
 
     sendMessage() {
+        if (this.message_is_sending) return;
+        this.message_is_sending = true;
+
         let messageInput = document.getElementById("message_input") as HTMLDivElement;
         let text = messageInput.innerText.trim()
             .replace(/%/g,  "%25")
@@ -236,11 +241,15 @@ export class DialogComponent {
         }
         this.messages_service.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
             message => console.log("result: " + JSON.stringify(message)),
-            error => this.errorHandler(error),
+            error => {
+                this.errorHandler(error);
+                this.message_is_sending = false;
+            },
             () => {
                 console.log("message sent");
                 messageInput.innerText = "";
                 this.clearCache();
+                this.message_is_sending = false;
             });
     }
 
@@ -292,8 +301,9 @@ export class DialogComponent {
     }
 
     clearCache() {
-        let key: string = "cached_message_" + this.conversation_id + this.is_chat;
+        let key = "cached_message_" + this.conversation_id + this.is_chat;
         chrome.storage.sync.remove(key);
+        this.current_text = "";
     }
 
     formatDate(unixtime: number) {
