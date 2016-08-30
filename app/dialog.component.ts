@@ -281,6 +281,9 @@ export class DialogComponent {
         /* small timeout to get the already changed text */
         let delayedUpdate = () => { window.setTimeout(updateValue, 100); };
 
+        /* to allow paste only plain text */
+        addListener(input, "paste", (event) => setInterval(() => input.innerText = input.innerText, 0));
+
         /* listen for every event which is fired after text is changed */
         addListener(input, "change",  delayedUpdate);
         addListener(input, "cut",     delayedUpdate);
