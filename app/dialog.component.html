@@ -1,7 +1,7 @@
 <div id="messages"><div id="top_panel">
 	<a (click)="goBack()" id="go_back"> 
 		<div id="left_arrow"></div>
-		<h1 id="dialog_title">{{title}}</h1>
+		<h1 id="dialog_title">{{ title }}</h1>
 	</a>
 	<button id="send_btn" (click)="sendMessage()">{{ 'send' | translate }}</button>
 	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">{{ 'mark_as_read' | translate }}</button>
