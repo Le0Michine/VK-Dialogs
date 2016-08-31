@@ -80,9 +80,10 @@ export class DialogService {
                             this.messages_count = 20;
                             this.current_dialog_id = message.id;
                             this.is_chat = message.is_chat;
+                            this.postHistoryUpdate();
                             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                                 if (history) {
-                                    this.cache.updateHistory(history.items, history.count);
+                                    this.cache.pushHistory(history.items, history.count);
                                     this.loadUsersFromMessages(history.items);
                                     this.postHistoryUpdate();
                                     this.postMessagesCountUpdate();
@@ -124,7 +125,7 @@ export class DialogService {
     postHistoryUpdate() {
         if (this.update_history_port && this.current_dialog_id) {
             console.log("post history_update message");
-            this.update_history_port.postMessage({name: "history_update", data: this.cache.getHistory(this.current_dialog_id)});
+            this.update_history_port.postMessage({name: "history_update", data: this.cache.getHistory(this.current_dialog_id).slice(0, this.messages_count)});
         }
         else {
             console.log("port history_monitor is closed or current_dialog_id isn't specified");
@@ -169,9 +170,10 @@ export class DialogService {
         if (this.update_history_port && this.current_dialog_id) {
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                     if (!history) return;
-                    this.cache.updateHistory(history.items, history.count);
-                    this.loadUsersFromMessages(history.items);
-                    this.postHistoryUpdate();
+                    if (this.cache.pushHistory(history.items, history.count)) {
+                        this.loadUsersFromMessages(history.items);
+                        this.postHistoryUpdate();
+                    }
                 },
                 error => this.handleError(error)
             );
@@ -244,11 +246,16 @@ export class DialogService {
         }
         console.log("load old messages");
         this.messages_count += 20;
+        if (this.cache.getHistory(this.current_dialog_id).length >= this.messages_count) {
+            this.postHistoryUpdate();
+            return;
+        }
         this.getHistory(this.current_dialog_id, this.is_chat, 20, this.cache.getLastMessageId(this.current_dialog_id)).subscribe(history => {
             if (!history) return;
-            this.cache.pushHistory(history.items as Message[], history.count);
-            this.loadUsersFromMessages(history.items);
-            this.postHistoryUpdate();
+            if (this.cache.pushHistory(history.items as Message[], history.count)) {
+                this.loadUsersFromMessages(history.items);
+                this.postHistoryUpdate();
+            }
         },
         error => this.handleError(error),
         () => console.log("old messages loaded"));

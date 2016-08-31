@@ -24,27 +24,39 @@ export class CacheService {
         // }
     }
 
-    updateHistory(messages: Message[], count: number = null) {
+    private updateHistory(messages: Message[], count: number = null) {
         let conversation_id = (messages[0] as Chat).chat_id || messages[0].user_id;
         if (!this.messages_cache[conversation_id]) this.messages_cache[conversation_id] = {};
         this.messages_cache[conversation_id].messages = messages;
         if (count) this.messages_cache[conversation_id].count = count;
     }
 
-    pushHistory(messages: Message[], count: number = null) {
+    /** count -- total amount of messages */
+    pushHistory(messages: Message[], count: number = null): boolean {
         let conversation_id = (messages[0] as Chat).chat_id || messages[0].user_id;
         if (this.messages_cache[conversation_id] && this.messages_cache[conversation_id].messages) {
             let i = this.messages_cache[conversation_id].messages.findIndex((m: Message) => m.id === messages[0].id);
             if (i === -1) {
-                this.messages_cache[conversation_id].messages = messages;
+                i = this.messages_cache[conversation_id].messages.findIndex((m: Message) => m.id === messages[messages.length - 1].id);
+                if (i === -1) { /** cache is invalid, refreshing */
+                    this.updateHistory(messages, count);
+                }
+                else { /** add messages to the begining */
+                    let tmp = this.messages_cache[conversation_id].messages;
+                    this.messages_cache[conversation_id].messages = messages.concat(tmp.slice(i + 1, tmp.length - i));
+                }
             }
-            else {
-                this.messages_cache[conversation_id].messages = this.messages_cache[conversation_id].messages.splice(0, i).concat(messages);
+            else if (i === 0) { /** nothing to update */
+                return false;
+            }
+            else { /** add messages to the end */
+                this.messages_cache[conversation_id].messages = this.messages_cache[conversation_id].messages.slice(0, i).concat(messages);
             }
         }
         else {
             this.updateHistory(messages, count);
         }
+        return true;
     }
 
     getLastMessageId(conversation_id: number) {
