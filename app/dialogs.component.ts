@@ -48,7 +48,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         }
         else {
             let user: User = this.users[dialog.user_id];
-            let title: string = dialog.title === " ... " ? user.first_name + " " + user.last_name : dialog.title;
+            let title: string = !dialog.title || dialog.title === " ... " ? user.first_name + " " + user.last_name : dialog.title;
             link = [
                 "/dialog",
                 dialog.user_id.toString(),
@@ -148,7 +148,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
             let dts = new DialogToShow();
             dts.message = dialog.message;
             dts.unread = dialog.unread;
-            dts.title = dialog.message.title === " ... " ? this.getUserName(uid) : dialog.message.title;
+            dts.title = !dialog.message.title || dialog.message.title === " ... " ? this.getUserName(uid) : dialog.message.title;
             dts.date_format = DateConverter.formatDate(Number(dialog.message.date));
             dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
 
