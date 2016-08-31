@@ -8,43 +8,9 @@ import { User } from "../app/user";
 @Injectable()
 export class CacheService {
     dialogs_cache: Dialog[] = [];
-    messages_cache: {} = {}; /* conversation id -> messages list */
+    messages_cache: {} = {}; /* conversation id -> { messages list, messages count } */
     users_cache: {} = {}; /* user id -> user */
     chats_cache: {} = {}; /* chat id -> users array */
-
-    pushMessage(new_message: any) {
-        let is_chat = new_message.chat_id ? true : false;
-        let inserted = false;
-        for (let i = 0; i < this.dialogs_cache.length; i++) {
-            if (is_chat && this.dialogs_cache[i].message["chat_id"] === new_message["chat_id"] ||
-                !is_chat && this.dialogs_cache[i].message.user_id === new_message.user_id) {
-
-                if (new_message.id === this.dialogs_cache[i].message.id) {
-                    console.log("the message is already in cache: " + JSON.stringify(new_message));
-                    inserted = true;
-                    break;
-                }
-
-                this.dialogs_cache[i].message = new_message;
-                this.messages_cache[is_chat ? new_message["chat_id"] : new_message.user_id].push(new_message);
-                if (!new_message.read_state) {
-                    this.dialogs_cache[i].unread++;
-                }
-                else {
-                    this.dialogs_cache[i].unread = 0;
-                }
-                inserted = true;
-                break;
-            }
-        }
-        if (!inserted) {
-            let new_dialog = new Dialog();
-            new_dialog.unread = new_message.read_state ? 0 : 1;
-            new_dialog.message = new_message;
-            this.dialogs_cache.push(new_dialog);
-            this.messages_cache[is_chat ? new_message["chat_id"] : new_message.user_id] = [new_message];
-        }
-    }
 
     updateChats(chats) {
         this.chats_cache = chats;
@@ -53,13 +19,47 @@ export class CacheService {
     updateDialogs(dialogs: Dialog[]) {
         this.dialogs_cache = dialogs;
         this.messages_cache = {};
-        for (let dialog of dialogs) {
-            this.messages_cache[dialog.message["chat_id"] || dialog.message.user_id] = dialog.message;
+        // for (let dialog of dialogs) {
+            // this.messages_cache[dialog.message["chat_id"] || dialog.message.user_id] = dialog.message;
+        // }
+    }
+
+    updateHistory(messages: Message[], count: number = null) {
+        let conversation_id = (messages[0] as Chat).chat_id || messages[0].user_id;
+        if (!this.messages_cache[conversation_id]) this.messages_cache[conversation_id] = {};
+        this.messages_cache[conversation_id].messages = messages;
+        if (count) this.messages_cache[conversation_id].count = count;
+    }
+
+    pushHistory(messages: Message[], count: number = null) {
+        let conversation_id = (messages[0] as Chat).chat_id || messages[0].user_id;
+        if (this.messages_cache[conversation_id] && this.messages_cache[conversation_id].messages) {
+            let i = this.messages_cache[conversation_id].messages.findIndex((m: Message) => m.id === messages[0].id);
+            if (i === -1) {
+                this.messages_cache[conversation_id].messages = messages;
+            }
+            else {
+                this.messages_cache[conversation_id].messages = this.messages_cache[conversation_id].messages.splice(0, i).concat(messages);
+            }
+        }
+        else {
+            this.updateHistory(messages, count);
         }
     }
 
-    updateHistory(messages: Message[]) {
-        this.messages_cache[(messages[0] as Chat).chat_id || messages[0].user_id] = messages;
+    getLastMessageId(conversation_id: number) {
+        let l = this.messages_cache[conversation_id].messages.length;
+        return this.messages_cache[conversation_id].messages[l - 1].id;
+    }
+
+    getHistory(conversation_id: number) {
+        let h = this.messages_cache[conversation_id];
+        return h ? h.messages : [];
+    }
+
+    getMessagesCount(conversation_id: number) {
+        let h = this.messages_cache[conversation_id];
+        return h ? h.count : 0;
     }
 
     pushUsers(users) {

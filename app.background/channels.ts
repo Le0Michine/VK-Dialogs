@@ -3,7 +3,6 @@ export class Channels {
     public static get_dialogs_request: string = "get_dialogs";
     public static get_chats_request: string = "get_chats";
     public static get_history_request: string = "get_history";
-    public static get_message_request: string = "get_message";
     public static get_user_request: string = "get_user";
     public static get_users_request: string = "get_users";
     public static send_message_request: string = "send_message";

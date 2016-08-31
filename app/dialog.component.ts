@@ -104,8 +104,8 @@ export class DialogComponent {
     }
 
     getHistory(messages: Message[]) {
-        console.log("convert history");
-        if (messages.length === 0 || !this.participants[messages[0].user_id]) {
+        console.log("convert history: ", messages);
+        if (!messages.length || !this.participants[messages[0].user_id]) {
             return [];
         }
         let history: MessageToShow[] = [];

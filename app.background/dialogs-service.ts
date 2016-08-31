@@ -38,7 +38,6 @@ export class DialogService {
     dialogs_count: number = 20;
 
     max_dialogs_count: number;
-    max_messages_count: number;
 
     constructor(
         private vkservice: VKService,
@@ -82,10 +81,12 @@ export class DialogService {
                             this.current_dialog_id = message.id;
                             this.is_chat = message.is_chat;
                             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
-                                this.cache.updateHistory(history);
-                                this.loadUsersFromMessages(history);
-                                this.postHistoryUpdate();
-                                this.postMessagesCountUpdate();
+                                if (history) {
+                                    this.cache.updateHistory(history.items, history.count);
+                                    this.loadUsersFromMessages(history.items);
+                                    this.postHistoryUpdate();
+                                    this.postMessagesCountUpdate();
+                                }
                                 if (this.is_chat) {
                                     this.getChatParticipants(this.current_dialog_id).subscribe(users => {
                                         this.cache.pushUsers(users);
@@ -123,7 +124,7 @@ export class DialogService {
     postHistoryUpdate() {
         if (this.update_history_port && this.current_dialog_id) {
             console.log("post history_update message");
-            this.update_history_port.postMessage({name: "history_update", data: this.cache.messages_cache[this.current_dialog_id]});
+            this.update_history_port.postMessage({name: "history_update", data: this.cache.getHistory(this.current_dialog_id)});
         }
         else {
             console.log("port history_monitor is closed or current_dialog_id isn't specified");
@@ -153,7 +154,7 @@ export class DialogService {
     postMessagesCountUpdate() {
         if (this.update_history_port && this.messages_count) {
             console.log("post messages_count_update message");
-            this.update_history_port.postMessage({name: Channels.messages_count_update, data: this.max_messages_count});
+            this.update_history_port.postMessage({name: Channels.messages_count_update, data: this.cache.getMessagesCount(this.current_dialog_id)});
         }
         else {
             console.log("port history_monitor is closed or max_messages_count isn't specified");
@@ -167,11 +168,13 @@ export class DialogService {
 
         if (this.update_history_port && this.current_dialog_id) {
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
-                    this.cache.updateHistory(history);
-                    this.loadUsersFromMessages(history);
+                    if (!history) return;
+                    this.cache.updateHistory(history.items, history.count);
+                    this.loadUsersFromMessages(history.items);
                     this.postHistoryUpdate();
                 },
-                error => this.handleError(error));
+                error => this.handleError(error)
+            );
         }
     }
 
@@ -235,15 +238,16 @@ export class DialogService {
     }
 
     loadOldMessages() {
-        if (this.messages_count >= this.max_messages_count) {
+        if (this.messages_count >= this.cache.getMessagesCount(this.current_dialog_id)) {
             console.log("all messages are loaded");
             return;
         }
         console.log("load old messages");
         this.messages_count += 20;
-        this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
-            this.cache.updateHistory(history);
-            this.loadUsersFromMessages(history);
+        this.getHistory(this.current_dialog_id, this.is_chat, 20, this.cache.getLastMessageId(this.current_dialog_id)).subscribe(history => {
+            if (!history) return;
+            this.cache.pushHistory(history.items as Message[], history.count);
+            this.loadUsersFromMessages(history.items);
             this.postHistoryUpdate();
         },
         error => this.handleError(error),
@@ -261,17 +265,19 @@ export class DialogService {
         });
     }
 
-    getHistory(id: number, chat: boolean): Observable<Message[]> {
-        console.log("history is requested");
+    getHistory(id: number, chat: boolean, count: number = 20, from_id: number = null): Observable<any> {
+        console.log("history is requested. id:" + id + ", chat:" + chat + ", cout:" + count + ", from_id:" + from_id);
         return this.vkservice.getSession().concatMap(session => {
             let uri: string = VKConsts.api_url + this.get_history
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + (chat ? "&chat_id=" + id : "&user_id=" + id)
-                + "&count=" + this.messages_count
+                + (from_id ? "&start_message_id=" + from_id : "")
+                + "&count=" + count
                 + "&rev=0";
 
-            return this.http.get(uri).map(response => this.toMessages(response.json()));
+            return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
+            /** response: {count: number, items: Message[]} */
         });
     }
 
@@ -301,14 +307,15 @@ export class DialogService {
         });
     }
 
-    getMessage(ids: string): Observable<Message[]> {
+    /** to remove */
+    private getMessage(ids: string): Observable<Message[]> {
         console.log("requested message(s) with id: " + ids);
         return this.vkservice.getSession().concatMap(session => {
             let uri: string = VKConsts.api_url + this.get_message
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
                 + "&message_ids=" + ids;
-            return this.http.get(uri).map(response => this.toMessages(response.json()));
+            return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
         });
     }
 
@@ -364,16 +371,6 @@ export class DialogService {
         this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : "");
 
         return json.items as Dialog[];
-    }
-
-    private toMessages(json): Message[] {
-        if (ErrorHelper.checkErrors(json)) return [];
-        json = json.response || json;
-        console.log("messages cout " + json.count);
-        this.max_messages_count = json.count;
-        this.postMessagesCountUpdate();
-
-        return json.items as Message[];
     }
 
     private setBadgeNumber(n: number) {
