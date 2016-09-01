@@ -107,7 +107,7 @@
 
 .fwd_message_body_internal {
     white-space: pre-line;
-    margin: 2px 0 0 5px;
+    margin: 5px 0 0 5px;
     color: black;
     font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }
