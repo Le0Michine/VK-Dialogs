@@ -111,7 +111,7 @@ module.exports = [{
         { from: 'src/node_modules/systemjs/dist/system.src.js', to: "./node_modules/systemjs/dist", toType: "dir", flatten: true }
       ], 
       {
-        ignore: [ ],
+        ignore: [ "typings.json", "gulpfile.js", "package.json", "tsconfig.json", "tslint.json" ],
         // By default, we only copy modified files during 
         // a watch or webpack-dev-server build. Setting this 
         // to `true` copies all files. 
