@@ -96,7 +96,7 @@ export class DialogComponent {
         chrome.storage.sync.get(value, (value: any) => {
             console.log("restored message: ", value);
             if (value[key]) {
-                this.clearLabelContent();
+                this.hideLabelContent();
                 this.current_text = value[key] as string;
             }
             this.updateCachedMessage();
@@ -210,10 +210,15 @@ export class DialogComponent {
         return "http://vk.com/images/camera_c.gif";
     }
 
-    clearLabelContent() {
-        console.log("clear label");
+    hideLabelContent() {
         let label = document.getElementById("input_label");
-        label.innerText = "";
+        label.style.display = "none";
+    }
+
+    showLabelContent(content: string) {
+        if (content) return;
+        let label = document.getElementById("input_label");
+        label.style.display = "block";
     }
 
     sendMessage() {
@@ -271,6 +276,7 @@ export class DialogComponent {
 
         let updateValue = () => {
             this.current_text = input.innerText;
+            if (this.current_text) this.hideLabelContent();
             this.cacheCurrentMessage();
             let current_height = Math.max(55, Math.min(input.scrollHeight, 200));
             if (current_height !== last_height) {

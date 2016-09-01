@@ -36,7 +36,7 @@ export class CacheService {
         let conversation_id = (messages[0] as Chat).chat_id || messages[0].user_id;
         if (this.messages_cache[conversation_id] && this.messages_cache[conversation_id].messages) {
             let i = this.messages_cache[conversation_id].messages.findIndex((m: Message) => m.id === messages[0].id);
-            if (i === -1) {
+            if (i === -1 || i === 0 && this.getMessageCache(messages[0]) !== this.getMessageCache(this.messages_cache[conversation_id][0])) {
                 i = this.messages_cache[conversation_id].messages.findIndex((m: Message) => m.id === messages[messages.length - 1].id);
                 if (i === -1) { /** cache is invalid, refreshing */
                     this.updateHistory(messages, count);
@@ -78,5 +78,9 @@ export class CacheService {
         for (let user_id in users) {
             this.users_cache[user_id] = users[user_id];
         }
+    }
+
+    private getMessageCache(message: Message) {
+        return "" + message.id + message.read_state + message.out + message.date + message.user_id;
     }
 }

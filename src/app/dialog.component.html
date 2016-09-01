@@ -8,7 +8,7 @@
 </div>
 <div id="input_box">
 	<label id="input_label" for="message_input">{{ 'type_text_here' | translate }}</label>
-	<div contenteditable="true" id="message_input" #minput (click)="clearLabelContent()" (keydown)="onKeyPress($event,minput.value)"></div>
+	<div contenteditable="true" id="message_input" #minput (click)="hideLabelContent()" (blur)="showLabelContent(minput.innerText)" (keydown)="onKeyPress($event,minput.innerText)"></div>
 </div>
 <div id="chat_body">
 	<div class="message_block" *ngFor="let message of history_to_show">

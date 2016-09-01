@@ -170,10 +170,9 @@ export class DialogService {
         if (this.update_history_port && this.current_dialog_id) {
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                     if (!history) return;
-                    if (this.cache.pushHistory(history.items, history.count)) {
-                        this.loadUsersFromMessages(history.items);
-                        this.postHistoryUpdate();
-                    }
+                    this.cache.pushHistory(history.items, history.count)
+                    this.loadUsersFromMessages(history.items);
+                    this.postHistoryUpdate();
                 },
                 error => this.handleError(error)
             );
