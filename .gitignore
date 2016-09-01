@@ -1,9 +1,9 @@
+src/node_modules/
 node_modules/
-typings/
-app/*.js
-app.background/*.js
-app/*.map
+src/typings/
+src/app/*.js
+src/app.background/*.js
+src/app/*.map
 *.map
-npm-debug.log
-public/
-dist/
+src/npm-debug.log
+src/dist/

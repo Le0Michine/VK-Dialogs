@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { Message, Chat } from "./message";
-import { Dialog, DialogToShow } from "./Dialog";
+import { Dialog, DialogToShow } from "./dialog";
 import { User } from "./user";
 import { DialogComponent } from "./dialog.component";
 import { UserService } from "./user-service";
