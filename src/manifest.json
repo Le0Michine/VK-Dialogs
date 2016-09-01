@@ -21,14 +21,19 @@
         "16": "icons/icon_16.png",
         "48": "icons/icon_48.png"
     },
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*"],
+        "css": ["app.pagecontent/style.css"],
+        "js": ["app.pagecontent/fastresponse.js"]
+    }],
     "permissions": [ 
         "tabs",
-        "storage", 
-        "management", 
+        "storage",
+        "management",
         "notifications",
-        "storage", 
-        "http://vk.com/*", 
-        "http://*.vk.me/*", 
+        "storage",
+        "http://vk.com/*",
+        "http://*.vk.me/*",
         "https://api.vk.com/method/*",
         "http://imv4.vk.com/*",
         "http://*.vk.com/*"]
