@@ -117,7 +117,9 @@ export class DialogComponent {
         for (let message of messages) {
             message.attachments = this.getMessageAttachments(message);
             if (message.from_id === uid
-                && (mts.messages.length === 0 || (Math.abs(message.date - mts.messages[0].date) < 60 * 5))) {
+                && (mts.messages.length === 0 
+                    || (Math.abs(message.date - mts.messages[mts.messages.length - 1].date) < 60 * 5 
+                        && message.read_state === mts.messages[mts.messages.length - 1].read_state))) {
                     mts.messages.push(message);
             }
             else {

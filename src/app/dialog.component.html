@@ -12,6 +12,7 @@
 </div>
 <div id="chat_body">
 	<div class="message_block" *ngFor="let message of history_to_show">
+		<div class="unread" *ngIf="!message.messages[0].read_state"></div>
 		<div class="user_avatar" [class.online]="message.user.online">
 			<a [href]="'https://vk.com/id'+message.user.id" target="_blank">
 				<img alt="" [src]="getUserPhoto(message.user.id)" class="user_avatar_img" />
@@ -25,7 +26,6 @@
 			<ul class="messages_list">
 				<li class="message_item" *ngFor="let item of message.messages" id="{{item.id}}">
 					<div class="message_body clearfix">
-						<div class="unread" *ngIf="!item.read_state"></div>
 						<pre class="message_body_internal" [hidden]="!item.body" [innerHTML]="cutLinks(item.body)"></pre>
 						<div *ngIf="item.action" class="chat_action">{{ item | chat_action | translate:{"user": getUserName(item.user_id), "user2": getUserName(item.action_mid)} }}</div>
 						<div class="message_attachment" *ngFor="let attachment of item.attachments">
