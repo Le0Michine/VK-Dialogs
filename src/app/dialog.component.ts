@@ -332,6 +332,7 @@ export class DialogComponent {
         }
         this.messages_service.markAsRead(ids.join()).subscribe(result => {
             if (result) {
+                console.log("marked as read");
             }
             else {
                 console.log("failed to mark messages as read");
