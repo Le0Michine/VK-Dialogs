@@ -1,0 +1,23 @@
+{
+    "appName": {
+        "message": "Чат для ВК"
+    },
+    "appDesc": {
+        "message": "Messenger for VK in extension popup."
+    },
+    "chromeExtOptions": {
+        "message": "Настройки расширения"
+    },
+    "langOptions": {
+        "message": "Язык:"
+    },
+    "optionsSaved": {
+        "message": "Настройки сохранены."
+    },
+    "saveBtn": {
+        "message": "Сохранить"
+    },
+    "resetBtn": {
+        "message": "Сбросить"
+    }
+}

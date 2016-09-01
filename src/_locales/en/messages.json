@@ -1,0 +1,23 @@
+{
+    "appName": {
+        "message": "Messeneger for VK"
+    },
+    "appDesc": {
+        "message": "Messenger for VK in extension popup."
+    },
+    "chromeExtOptions": {
+        "message": "Chrome Extension Options"
+    },
+    "langOptions": {
+        "message": "My primary language:"
+    },
+    "optionsSaved": {
+        "message": "Options saved."
+    },
+    "saveBtn": {
+        "message": "Save"
+    },
+    "resetBtn": {
+        "message": "Reset"
+    }
+}
