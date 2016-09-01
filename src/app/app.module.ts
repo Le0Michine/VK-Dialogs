@@ -1,3 +1,4 @@
+/// <reference path="../node_modules/@types/node/index.d.ts"/>
 import { NgModule, ChangeDetectorRef }      from "@angular/core";
 import { FormsModule }      from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";

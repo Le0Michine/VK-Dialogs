@@ -33,6 +33,7 @@
     "zone.js": "^0.6.17"
   },
   "devDependencies": {
+    "@types/node": "^6.0.38",
     "concurrently": "^2.0.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",

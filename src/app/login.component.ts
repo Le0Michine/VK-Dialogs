@@ -13,8 +13,8 @@ import { VKService } from "./vk-service";
 
 @Component({
   selector: "login",
-  templateUrl: "app/login.component.html",
-  styleUrls: [ "app/login.component.css" ]
+  templateUrl: "login.component.html",
+  styleUrls: [ "login.component.css" ]
 })
 export class LoginComponent {
     constructor(private vkservice: VKService) { }

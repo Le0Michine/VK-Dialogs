@@ -12,11 +12,11 @@ import { DateConverter } from "./date-converter";
 
 @Component({
     selector: "messages",
-    templateUrl: "app/dialog.component.html",
+    templateUrl: "dialog.component.html",
     styleUrls: [
-        "app/dialog.component.css",
-        "app/dialog.component.input.css",
-        "app/dialog.component.header.css"
+        "dialog.component.css",
+        "dialog.component.input.css",
+        "dialog.component.header.css"
     ]
 })
 export class DialogComponent {

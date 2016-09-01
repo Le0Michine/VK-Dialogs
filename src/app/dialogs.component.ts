@@ -13,8 +13,8 @@ import { VKConsts } from "./vk-consts";
 
 @Component({
   selector: "dialogs",
-  templateUrl: "app/dialogs.component.html",
-  styleUrls: ["app/dialogs.component.css"],
+  templateUrl: "dialogs.component.html",
+  styleUrls: ["dialogs.component.css"],
   directives: [DialogComponent]
 })
 export class DialogsComponent implements OnInit, OnDestroy {
