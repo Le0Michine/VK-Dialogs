@@ -34,6 +34,8 @@ export class DialogComponent {
 
     message_is_sending: boolean = false;
 
+    current_message_port: chrome.runtime.Port;
+
     constructor (
         private messages_service: DialogService,
         private vkservice: VKService,
@@ -86,6 +88,8 @@ export class DialogComponent {
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
+        this.current_message_port.disconnect();
+        this.current_message_port = null;
     }
 
     restoreCachedMessages(id, isChat) {
@@ -305,10 +309,13 @@ export class DialogComponent {
     }
 
     cacheCurrentMessage() {
+        if (!this.current_message_port) {
+            this.current_message_port = chrome.runtime.connect({ name: Channels.messages_cache_port });
+        }
         let key = "cached_message_" + this.conversation_id + this.is_chat;
         let value = {};
         value[key] = this.current_text;
-        chrome.storage.sync.set(value);
+        this.current_message_port.postMessage(value);
     }
 
     clearCache() {

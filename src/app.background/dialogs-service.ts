@@ -108,6 +108,19 @@ export class DialogService {
                         this.messages_count = 20;
                     });
                     break;
+                case Channels.messages_cache_port:
+                    let current_message = {};
+                    port.onMessage.addListener((value) => {
+                        current_message = value;
+                    });
+                    let subscription = Observable.interval(10000).subscribe(() => {
+                        chrome.storage.sync.set(current_message);
+                    });
+                    port.onDisconnect.addListener(() => {
+                        subscription.unsubscribe();
+                        chrome.storage.sync.set(current_message);
+                    });
+                    break;
             }
         });
     }
