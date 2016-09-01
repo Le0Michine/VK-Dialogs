@@ -87,7 +87,7 @@ const dependencies = [
         "node_modules/rxjs/add/Observable/interval.js",
         "node_modules/rxjs/add/Observable/bindCallback.js",
         "node_modules/rxjs/add/operator/map.js",
-        "node_modules/rxjs/add/Observable/of.js",
+        "node_modules/rxjs/add/observable/of.js",
         "node_modules/rxjs/add/operator/concatMap.js",
         "node_modules/rxjs/add/operator/timeout.js",
         "node_modules/rxjs/Observable.js",
