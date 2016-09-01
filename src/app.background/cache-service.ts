@@ -16,12 +16,33 @@ export class CacheService {
         this.chats_cache = chats;
     }
 
-    updateDialogs(dialogs: Dialog[]) {
+    private updateDialogs(dialogs: Dialog[]) {
         this.dialogs_cache = dialogs;
-        this.messages_cache = {};
+        // this.messages_cache = {};
         // for (let dialog of dialogs) {
             // this.messages_cache[dialog.message["chat_id"] || dialog.message.user_id] = dialog.message;
         // }
+    }
+
+    pushDialogs(dialogs: Dialog[]) {
+        let firstId = dialogs[0].message.id;
+        let lastId = dialogs[0].message.id;
+        let i = this.dialogs_cache.findIndex(x => x.message.id === firstId);
+        if (i === -1 || i === 0 && this.getMessageCache(dialogs[0].message) !== this.getMessageCache(this.dialogs_cache[0].message)) {
+            i = this.dialogs_cache.findIndex(x => x.message.id === lastId);
+            if (i === -1) {
+                this.updateDialogs(dialogs);
+            }
+            else {
+                this.dialogs_cache = dialogs.concat(this.dialogs_cache.slice(i + 1, this.dialogs_cache.length - 1));
+            }
+        }
+        else if (i === 0) {
+            return false;
+        }
+        else {
+            this.dialogs_cache = this.dialogs_cache.slice(0, i).concat(dialogs);
+        }
     }
 
     private updateHistory(messages: Message[], count: number = null) {
@@ -62,6 +83,10 @@ export class CacheService {
     getLastMessageId(conversation_id: number) {
         let l = this.messages_cache[conversation_id].messages.length;
         return this.messages_cache[conversation_id].messages[l - 1].id;
+    }
+
+    getLastDialogMessageId(): number {
+        return this.dialogs_cache[this.dialogs_cache.length - 1].message.id;
     }
 
     getHistory(conversation_id: number) {

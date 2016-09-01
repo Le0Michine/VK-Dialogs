@@ -57,7 +57,10 @@ export class DialogService {
             switch (port.name) {
                 case "dialogs_monitor":
                     this.update_dialogs_port = port;
-                    this.update_dialogs_port.onDisconnect.addListener(() => this.update_dialogs_port = null);
+                    this.update_dialogs_port.onDisconnect.addListener(() => {
+                        this.update_dialogs_port = null;
+                        this.dialogs_count = 20;
+                    });
                     this.postDialogsUpdate();
                     this.postDialogsCountUpdate();
                     this.postChatsUpdate();
@@ -128,7 +131,7 @@ export class DialogService {
     postDialogsUpdate() {
         if (this.update_dialogs_port) {
             console.log("post dialogs_update message");
-            this.update_dialogs_port.postMessage({name: "dialogs_update", data: this.cache.dialogs_cache});
+            this.update_dialogs_port.postMessage({name: "dialogs_update", data: this.cache.dialogs_cache.slice(0, this.dialogs_count)});
         }
         else {
             console.log("port dialogs_monitor is closed");
@@ -193,7 +196,7 @@ export class DialogService {
     }
 
     loadDialogUsers(dialogs: Dialog[]) {
-        this.cache.updateDialogs(dialogs);
+        this.cache.pushDialogs(dialogs);
         let users = [];
         let chats = [];
         for (let dialog of this.cache.dialogs_cache) {
@@ -243,8 +246,11 @@ export class DialogService {
         console.log("load old dialogs");
         this.dialogs_count += 20;
         window.setTimeout(() => this.dialogs_count -= 20, 3000 * 60);
+        if (this.dialogs_count <= this.cache.dialogs_cache.length) {
+            this.postDialogsUpdate();
+        }
 
-        this.getDialogs().subscribe(dialogs => {
+        this.getDialogs(20, this.cache.getLastDialogMessageId()).subscribe(dialogs => {
             this.loadDialogUsers(dialogs);
         },
         error => this.handleError(error),
@@ -273,13 +279,14 @@ export class DialogService {
         () => console.log("old messages loaded"));
     }
 
-    getDialogs(): Observable<Dialog[]> {
+    getDialogs(count: number = 20, from_id: number = null): Observable<Dialog[]> {
         console.log("dialogs are requested");
         return this.vkservice.getSession().concatMap(session => {
             let uri: string = VKConsts.api_url + this.get_dialogs
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
-                + "&count=" + this.dialogs_count;
+                + "&count=" + count
+                + (from_id ? "&start_message_id=" + from_id : "");
             return this.http.get(uri).map(response => this.toDialog(response.json()));
         });
     }
