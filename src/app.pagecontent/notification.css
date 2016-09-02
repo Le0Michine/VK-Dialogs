@@ -1,15 +1,3 @@
-#injected_div {
-    z-index: 999;
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    min-height: 80px;
-    max-height: 160px;
-    width: 300px;
-    background: rgb(255, 255, 255);
-    border: 1px solid black;
-}
-
 .user_avatar {
     position: relative;
     height: 50px;
@@ -22,7 +10,6 @@
 
 .dialog {
     box-sizing: border-box;
-    cursor: pointer;
     display: block;
     min-height: 71px;
     width: 100%;
@@ -34,10 +21,7 @@
     left: 0px;
     height: 50px;
     width: 50px;
-    cursor: pointer;
-    float: left;
     position: relative;
-    text-align: left;
     border: 0px none rgb(255, 255, 255);
 }
 
@@ -56,9 +40,8 @@
     white-space: nowrap;
     color: rgb(34, 34, 34);
     display: block;
-    cursor: pointer;
-    top: 10px;
     max-height: 20px;
+    top: 0;
     left: 0;
     right: 0;
     position: relative;
@@ -75,11 +58,12 @@
 
 .message_body {
     color: rgb(139, 147, 155);
-    position: absolute;
-    top: 30px;
-    max-width: 85%;
+    position: relative;
+    top: 5px;
+    max-width: 100%;
     text-align: left;
-    text-overflow: ellipsis;
+    text-overflow: break-word;
+    word-wrap: break-word;
     white-space: nowrap;
     border: 0px none rgb(101, 101, 101);
     overflow: hidden;
@@ -96,4 +80,76 @@
     vertical-align: bottom;
     column-rule-color: rgb(101, 101, 101);
     outline: rgb(101, 101, 101) none 0px;
+}
+
+#frResponse {
+    position: relative;
+    width: 100%;
+    min-height: 40px;
+    height: fit-content;
+    top: 0;
+    bottom: 0;
+}
+
+#frMessage {
+    display: block;
+    clear: both;
+    position: relative;
+    width: 100%;
+    max-height: 90%;
+    top: 0;
+    height: fit-content;
+}
+
+#frInput {
+    position: relative;
+    border: 0 none;
+    border-bottom: 1px solid rgb(228, 230, 233);
+    background: rgba(0,0,0,0);
+    margin: 0 10px;
+    z-index: 10;
+    width: 200px;
+    top: 7px;
+    height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#input_label {
+    box-sizing: border-box;
+    bottom: 31px;
+    color: rgb(130, 130, 130);
+    cursor: text;
+    left: 7px;
+    position: absolute;
+    text-align: left;
+    top: 9px;
+    width: 90%;
+    height: 100%;
+    z-index: 1;
+    column-rule-color: rgb(130, 130, 130);
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    outline: rgb(130, 130, 130) none 0px;
+    padding: 5px 5% 10px 0;
+    transition: color 0.2s ease 0s;
+}
+
+#frSendBtn {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    position: relative;
+    right: 5px;
+    top: 7px;
+    float: right;
+    white-space: nowrap;
+    background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 0px none rgb(255, 255, 255);
+    border-radius: 2px 2px 2px 2px;
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    padding: 7px 16px 8px;
+    z-index: 50;
+}
+
+#frSendBtn:hover {
+    background: rgba(100, 150, 200, 0.9);
 }

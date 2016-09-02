@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+</head>
+    <link rel="stylesheet" href="notification.css">
+<body>
+<div id="injected_div" class="dialog">
+    <table><tbody>
+        <tr id="frMessage">
+            <td>
+                <div class="user_avatar_div">
+                    <img src="https://vk.com/images/camera_c.gif" class="user_avatar" />
+                </div>
+            </td>
+            <td>
+                <div class="dialog_div">
+                    <div class="dialog_title_div">
+                        <span class="dialog_title_span">{{dialog_title}}</span>
+                    </div>
+                    <div class="message_body">
+                        <span><span>{{dialog_sender}}</span>{{message_body}}</span>
+                        <span class="three_dots">...</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="frResponse">
+                    <label id="input_label" for="message_input">{{type_here}}</label>
+                    <input type="text" id="frInput"></input>
+                    <button id="frSendBtn">Send</button>
+                </div>
+            </td>
+        </tr>
+    </tbody></table>
+</div>
+</body>
+
+</html>

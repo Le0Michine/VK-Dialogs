@@ -1,0 +1,10 @@
+.css-isolation-popup {
+    z-index: 999;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    min-height: 80px;
+    width: 20%;
+    background: rgb(255, 255, 255);
+    border: 1px solid black;
+}

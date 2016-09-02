@@ -22,10 +22,11 @@
         "48": "icons/icon_48.png"
     },
     "content_scripts": [{
-        "matches": ["http://*/*", "https://*/*"],
-        "css": ["app.pagecontent/notification.css"],
+        "matches": ["<all_urls>", "http://*/*", "https://*/*"],
+        "css": ["app.pagecontent/iframe.css"],
         "js": ["app.pagecontent/fastresponse.js"]
     }],
+    "web_accessible_resources" : ["app.pagecontent/notification.html"],
     "permissions": [
         "tabs",
         "storage",
