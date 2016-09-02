@@ -23,10 +23,10 @@
     },
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
-        "css": ["app.pagecontent/style.css"],
+        "css": ["app.pagecontent/notification.css"],
         "js": ["app.pagecontent/fastresponse.js"]
     }],
-    "permissions": [ 
+    "permissions": [
         "tabs",
         "storage",
         "management",

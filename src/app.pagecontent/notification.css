@@ -1,108 +1,88 @@
 #injected_div {
     z-index: 999;
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 10px;
+    right: 10px;
     min-height: 80px;
-    min-width: 400px;
+    max-height: 160px;
+    width: 300px;
     background: rgb(255, 255, 255);
     border: 1px solid black;
 }
 
 .user_avatar {
-    color: rgba(0, 0, 0, 0);
-    cursor: pointer;
-    display: block;
     position: relative;
-    margin: 10px 0 10px 0;
     height: 50px;
     width: 50px;
-    text-align: left;
-    border: 0px none rgba(0, 0, 0, 0);
+    border: 0 none;
     border-radius: 50% 50% 50% 50%;
     outline: rgba(0, 0, 0, 0) none 0px;
     background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
 }
 
-.dialog_li {
+.dialog {
     box-sizing: border-box;
     cursor: pointer;
     display: block;
-    height: 71px;
-    width: 550px;
-    padding: 0px 0px 0px 10px;
+    min-height: 71px;
+    width: 100%;
+    padding: 5px;
 }
 
 .user_avatar_div {
     bottom: 0px;
     left: 0px;
+    height: 50px;
+    width: 50px;
     cursor: pointer;
     float: left;
-    height: 50px;
+    position: relative;
     text-align: left;
-    width: 50px;
     border: 0px none rgb(255, 255, 255);
 }
 
 .dialog_div {
-    bottom: 0px;
-    cursor: pointer;
-    height: 71px;
-    left: 0px;
-    position: relative;
-    right: 0px;
+    bottom: 0;
+    right: 0;
+    left: 70px;
+    top: 0;
+    position: absolute;
     text-align: left;
-    top: 0px;
-    width: 446px;
-    border-top: 1px solid rgb(231, 232, 236);
-    margin: 0px 0px 0px 64px;
-    padding: 0px 15px 0px 0px;
-}
-
-.dialog_content_div {
-    box-sizing: border-box;
-    padding: 10px 0px;
+    border: 0 none;
 }
 
 .dialog_title_div {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: rgb(34, 34, 34);
-    display: inline-block;
-    bottom: 0px;
+    display: block;
     cursor: pointer;
-    height: 19px;
-    left: 0px;
+    top: 10px;
+    max-height: 20px;
+    left: 0;
+    right: 0;
     position: relative;
-    right: 0px;
     text-align: left;
-    top: 0px;
-    width: 446px;
-    margin: 6px 0px 4px;
-    border: 0px none rgb(34, 34, 34);
+    border: 0 none;
 }
 
 .dialog_title_span {
     height: 15px;
     max-width: 70%;
-    width: 89.3281px;
-    outline: rgb(34, 34, 34) none 0px;
     overflow: hidden;
     padding: 0px 0px 1px;
 }
 
 .message_body {
     color: rgb(139, 147, 155);
-    cursor: pointer;
-    height: 15px;
+    position: absolute;
+    top: 30px;
     max-width: 85%;
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 379.094px;
     border: 0px none rgb(101, 101, 101);
     overflow: hidden;
-    padding: 0px 0px 1px;
 }
 
 .dialog_attachments {
