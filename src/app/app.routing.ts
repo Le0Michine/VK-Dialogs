@@ -7,7 +7,7 @@ import { LoginComponent } from "./login.component";
 
 const routes: Routes = [
   {
-    path: "dialog/:id/:type/:title/:participants",
+    path: "dialog/:id/:type/:title",
     component: DialogComponent
   },
   {

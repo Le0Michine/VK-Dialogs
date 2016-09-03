@@ -41,10 +41,9 @@ export class DialogsComponent implements OnInit, OnDestroy {
 
     gotoDialog(dialog: Message) {
         let link: string[];
-        if ((dialog as Chat).chat_id) {
-            let chat = dialog as Chat;
-            let active: string = chat.chat_active.length > 0 ? chat.chat_active.join() : this.user.id.toString();
-            link = ["/dialog", chat.chat_id.toString(), "chat", chat.title, active];
+        let chat = dialog as Chat;
+        if (chat.chat_id) {
+            link = ["/dialog", chat.chat_id.toString(), "chat", chat.title];
         }
         else {
             let user: User = this.users[dialog.user_id];
@@ -53,8 +52,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
                 "/dialog",
                 dialog.user_id.toString(),
                 "dialog",
-                title,
-                [this.user.id, dialog.user_id].join()];
+                title];
         }
         this.router.navigate(link);
     }
@@ -68,15 +66,22 @@ export class DialogsComponent implements OnInit, OnDestroy {
             this.router.navigate(["/authorize"]);
             return;
         }
+        
+        chrome.runtime.sendMessage({ name: "last_opened" }, response => {
+            if (response.last_opened) {
+                let last_opened = response.last_opened;
+                this.router.navigate(["/dialog", last_opened.id, last_opened.type, last_opened.title]);
+            }
+        });
 
-        this.user_service.getUser().subscribe(
+        this.subscriptions.push(this.user_service.getUser().subscribe(
             u => {
                 this.user = u;
                 this.dialogs_to_show = this.getDialogs();
                 this.change_detector.detectChanges();
             },
             error => this.errorHandler(error),
-            () => console.log("user data obtained"));
+            () => console.log("user data obtained")));
 
         this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
                 this.dialogs = dialogs as Dialog[];

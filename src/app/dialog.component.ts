@@ -48,14 +48,20 @@ export class DialogComponent {
         this.user_id = this.vkservice.getSession().user_id;
         let sub = this.route.params.subscribe(params => {
             this.title = params["title"];
-            let id = +params["id"];
+            this.conversation_id = +params["id"];
             let type = params["type"];
-            let participants = params["participants"];
-            let isChat: boolean = type === "dialog" ? false : true;
-            this.is_chat = isChat;
-            this.conversation_id = id;
+            this.is_chat = type === "dialog" ? false : true;
 
-            this.restoreCachedMessages(id, isChat);
+            chrome.runtime.sendMessage({
+                name: "last_opened",
+                last_opened: {
+                    id: this.conversation_id,
+                    title: this.title,
+                    type: this.is_chat ? "chat" : "dialog"
+                }
+            });
+
+            this.restoreCachedMessages(this.conversation_id, this.is_chat);
 
             this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
                     this.history = history as Message[];
@@ -196,6 +202,11 @@ export class DialogComponent {
     }
 
     goBack() {
+        chrome.runtime.sendMessage({
+            name: "last_opened",
+            last_opened: null,
+            go_back: true
+        });
         this.cacheCurrentMessage();
         window.history.back();
     }

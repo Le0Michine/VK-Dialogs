@@ -20,6 +20,7 @@ import { Channels } from "./channels";
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
     i: number = 0;
+    last_opened_conversation: any = null;
 
     constructor(
         private http: Http,
@@ -33,6 +34,20 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             switch (request.name) {
+                case "last_opened":
+                    if (request.last_opened) {
+                        console.log("set last opened");
+                        this.last_opened_conversation = request.last_opened;
+                    }
+                    else if (request.go_back) {
+                        console.log("go back");
+                        this.last_opened_conversation = null;
+                    }
+                    else {
+                        console.log("get last opened");
+                        sendResponse({ last_opened: this.last_opened_conversation });
+                    }
+                    return false;
                 case Channels.get_dialogs_request:
                     this.dialogsService.getDialogs().subscribe(dialogs => {
                         sendResponse({data: dialogs});
