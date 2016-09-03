@@ -13,7 +13,6 @@ import { User } from "../app/user";
 import { VKService } from "./vk-service";
 import { ErrorHelper } from "./error-helper";
 import { LongPollServer } from "./long-poll-server";
-import { LPSHelper } from "./lps-helper";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
