@@ -11,22 +11,25 @@
         "page": "background.html"
     },
     "browser_action": {
-        "default_icon": "icons/icon.png",
+        "default_icon": "icons/VK_icon.png",
         "default_popup": "index.html"
     },
     "icons":
     {
-        "128": "icons/icon_128.png",
-        "64": "icons/icon_128.png",
-        "16": "icons/icon_16.png",
-        "48": "icons/icon_48.png"
+        "128": "icons/VK_icon.png",
+        "64": "icons/VK_icon.png",
+        "16": "icons/VK_icon.png",
+        "48": "icons/VK_icon.png"
     },
-    "content_scripts": [{
-        "matches": ["<all_urls>", "http://*/*", "https://*/*"],
-        "css": ["app.pagecontent/iframe.css"],
-        "js": ["app.pagecontent/fastresponse.js"]
-    }],
-    "web_accessible_resources" : ["app.pagecontent/notification.html"],
+    // "content_scripts": [{
+    //     "matches": ["<all_urls>", "http://*/*", "https://*/*"],
+    //     "css": ["app.pagecontent/iframe.css"],
+    //     "js": ["app.pagecontent/fastresponse.js"]
+    // }],
+    // "web_accessible_resources" : [
+    //     "app.pagecontent/notification.html",
+    //     "app.pagecontent/notification.css",
+    //     "icons/im_actions.png"],
     "permissions": [
         "tabs",
         "storage",

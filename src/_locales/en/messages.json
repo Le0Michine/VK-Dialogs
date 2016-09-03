@@ -19,5 +19,8 @@
     },
     "resetBtn": {
         "message": "Reset"
+    },
+    "sendBtn": {
+        "message": "Send"
     }
 }

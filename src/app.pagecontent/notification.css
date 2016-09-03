@@ -1,5 +1,33 @@
+body, html, tbody {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body, html {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+table {
+    width: 100%;
+    margin: 0;
+}
+
+tr, td {
+    width: 100%;
+    border: 0 none;
+    outline: none;
+}
+
+.user_avatar_cell {
+    height: 50px;
+    width: 50px;
+}
+
 .user_avatar {
     position: relative;
+    top: 0;
     height: 50px;
     width: 50px;
     border: 0 none;
@@ -8,81 +36,73 @@
     background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
 }
 
-.dialog {
-    box-sizing: border-box;
-    display: block;
-    min-height: 71px;
+#dialog_table {
+    height: 70%;
     width: 100%;
-    padding: 5px;
-}
-
-.user_avatar_div {
-    bottom: 0px;
-    left: 0px;
-    height: 50px;
-    width: 50px;
+    padding: 5px 5px 0 5px;
     position: relative;
-    border: 0px none rgb(255, 255, 255);
+    box-sizing: border-box;
 }
 
-.dialog_div {
+#response_table {
+    height: 20%;
+    position: relative;
     bottom: 0;
-    right: 0;
-    left: 70px;
-    top: 0;
-    position: absolute;
-    text-align: left;
-    border: 0 none;
+    padding: 0 5px 5px 5px;
+    box-sizing: border-box;
 }
 
-.dialog_title_div {
+.dialog_cell {
+    text-align: left;
+    border: 1px solid black;
+}
+
+.dialog_title_cell {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: rgb(34, 34, 34);
-    display: block;
-    max-height: 20px;
-    top: 0;
-    left: 0;
-    right: 0;
-    position: relative;
+    max-height: 25px;
     text-align: left;
-    border: 0 none;
+    padding: 3px;
 }
 
-.dialog_title_span {
+#dialog_title {
     height: 15px;
     max-width: 70%;
     overflow: hidden;
-    padding: 0px 0px 1px;
+    padding: 0;
+    margin: 0;
 }
 
-.message_body {
+#author {
+    white-space: pre-line;
+    margin: 0;
+    color: black;
+    font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+#message_body {
     color: rgb(139, 147, 155);
-    position: relative;
-    top: 5px;
     max-width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 3px;
     text-align: left;
-    text-overflow: break-word;
-    word-wrap: break-word;
-    white-space: nowrap;
-    border: 0px none rgb(101, 101, 101);
-    overflow: hidden;
+}
+
+#message_body > div {
+    display: block;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;
 }
 
 .dialog_attachments {
     color: #4a6f97;
 }
 
-.three_dots {
-    color: rgb(101, 101, 101);
-    content: '"..."';
-    display: none;
-    vertical-align: bottom;
-    column-rule-color: rgb(101, 101, 101);
-    outline: rgb(101, 101, 101) none 0px;
-}
-
-#frResponse {
+#input_cell {
     position: relative;
     width: 100%;
     min-height: 40px;
@@ -91,40 +111,38 @@
     bottom: 0;
 }
 
-#frMessage {
-    display: block;
-    clear: both;
-    position: relative;
-    width: 100%;
-    max-height: 90%;
-    top: 0;
-    height: fit-content;
+#button_cell {
+    width: 20%;
+    min-width: 30px;
 }
 
-#frInput {
+#message_row {
+    height: fit-content;
+    border: 1px solid black;
+}
+
+input {
     position: relative;
     border: 0 none;
     border-bottom: 1px solid rgb(228, 230, 233);
     background: rgba(0,0,0,0);
-    margin: 0 10px;
     z-index: 10;
-    width: 200px;
-    top: 7px;
+    width: 100%;
     height: 30px;
     padding-left: 5px;
     padding-right: 5px;
+    box-sizing: border-box;
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 #input_label {
     box-sizing: border-box;
-    bottom: 31px;
     color: rgb(130, 130, 130);
     cursor: text;
-    left: 7px;
+    left: 5px;
     position: absolute;
     text-align: left;
-    top: 9px;
-    width: 90%;
+    width: 100%;
     height: 100%;
     z-index: 1;
     column-rule-color: rgb(130, 130, 130);
@@ -134,13 +152,10 @@
     transition: color 0.2s ease 0s;
 }
 
-#frSendBtn {
+button {
     color: rgb(255, 255, 255);
     cursor: pointer;
     position: relative;
-    right: 5px;
-    top: 7px;
-    float: right;
     white-space: nowrap;
     background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
@@ -148,8 +163,69 @@
     font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     padding: 7px 16px 8px;
     z-index: 50;
+    outline: none;
 }
 
-#frSendBtn:hover {
+button:hover {
     background: rgba(100, 150, 200, 0.9);
+}
+
+a.boxclose{
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+.boxclose:before {
+    background-position: 2px 2px;
+    bottom: 7.5px;
+    color: rgb(42, 88, 133);
+    content: '';
+    cursor: pointer;
+    display: block;
+    height: 15px;
+    opacity: 0.7;
+    position: absolute;
+    width: 20px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0) url("../icons/im_actions.png") no-repeat scroll 2px -270px / auto padding-box border-box;
+    margin: 0 0 0 -15px;
+    outline: rgb(42, 88, 133) none 0px;
+}
+
+.clearfix::after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    border-left: none;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
+
+body::-webkit-scrollbar, html::-webkit-scrollbar {
+    width: 0;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s linear;
+}
+
+.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: 1s;
+    top: 0;
 }

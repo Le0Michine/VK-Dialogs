@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/http";
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/operator/timeout";
@@ -25,7 +25,10 @@ export class LPSService {
     private on_message_update: any = () => {};
     private on_user_update: any = (user_ids: string) => {};
 
-    constructor(private http: Http, private vkservice: VKService) {
+    constructor(
+        private http: Http,
+        private vkservice: VKService) {
+
         this.startMonitoring();
     }
 
@@ -77,6 +80,7 @@ export class LPSService {
                     break;
                 case 4:
                     /* 4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments -- add a new message */
+                    // this.processNewMessage(update);
                     messagesUpdate++;
                     break;
                 case 6:
@@ -183,4 +187,26 @@ export class LPSService {
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
         return this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json());
     }
+
+    /* [0: 4, 1: $message_id, 2: $flags, 3: $from_id, 4: $timestamp, 5: $subject, 6: $text, 7: $attachments] -- add a new message */
+    private processNewMessage(update: string[]) {
+        let id = update[1];
+        let user_id = update[7]["from"];
+        let chat = user_id ? true : false;
+        if (!chat) user_id = update[3];
+        let title = update[5];
+        let text = update[6];
+        let flags = Number(update[2]);
+        let read_state = (flags & message_flags.UNREAD) !== message_flags.UNREAD;
+
+        /*this.users.getUser(user_id).subscribe(user => {
+            let fullName = user.first_name + " " + user.last_name;
+            if (!chat) title = user.first_name + " " + user.last_name;
+            this.notification.sendChromeNotification(id, text, title, chat ? fullName : null, user.photo_50);
+        });*/
+    }  
 }
+
+const enum message_flags {
+    UNREAD = 1, OUTBOX = 2, REPLIED = 4, IMPORTANT = 8, CHAT = 16, FRIENDS = 32, SPAM = 64, DELЕTЕD = 128, FIXED = 256, MEDIA = 512
+};

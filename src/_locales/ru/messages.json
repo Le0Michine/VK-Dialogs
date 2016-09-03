@@ -19,5 +19,8 @@
     },
     "resetBtn": {
         "message": "Сбросить"
+    },
+    "sendBtn": {
+        "message": "Отправить"
     }
 }

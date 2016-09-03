@@ -2,39 +2,43 @@
 <html>
 <head>
 </head>
-    <link rel="stylesheet" href="notification.css">
+<!--    <link rel="stylesheet" href="notification.css">
+    <script src="notification.js"></script>-->
 <body>
-<div id="injected_div" class="dialog">
-    <table><tbody>
-        <tr id="frMessage">
-            <td>
-                <div class="user_avatar_div">
-                    <img src="https://vk.com/images/camera_c.gif" class="user_avatar" />
-                </div>
+<table id="dialog_table">
+    <tbody>
+        <tr id="message_row">
+            <td class="user_avatar_cell" rowspan="2" valign="top">
+                <img id="user_photo" src="https://vk.com/images/camera_c.gif" class="user_avatar" />
             </td>
-            <td>
-                <div class="dialog_div">
-                    <div class="dialog_title_div">
-                        <span class="dialog_title_span">{{dialog_title}}</span>
-                    </div>
-                    <div class="message_body">
-                        <span><span>{{dialog_sender}}</span>{{message_body}}</span>
-                        <span class="three_dots">...</span>
-                    </div>
-                </div>
+            <td class="dialog_title_cell">
+                <p id="dialog_title">{{dialog_title}}</p><a id="closeBtn" class="boxclose"></a>
             </td>
         </tr>
         <tr>
-            <td>
-                <div id="frResponse">
-                    <label id="input_label" for="message_input">{{type_here}}</label>
-                    <input type="text" id="frInput"></input>
-                    <button id="frSendBtn">Send</button>
+            <td id="message_body" class="clearfix" valign="top">
+                <div>
+                    <pre id="author">{{author_name}}<span id="message_text">{{message_text}}</span></pre>
                 </div>
             </td>
         </tr>
-    </tbody></table>
-</div>
-</body>
+    </tbody>
+</table>
+<table id="response_table">
+    <tbody>
+        <tr>
+            <td id="input_cell">
+                <label id="input_label" for="message_input">{{type_here}}</label>
+                <input type="text" id="message_input"></input>
+            </td>
+            <td id="button_cell">
+                <button id="sendBtn">{{send}}</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-</html>
+</div>
+<!--</body>
+
+</html>-->
