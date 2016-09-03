@@ -106,6 +106,6 @@ export class CacheService {
     }
 
     private getMessageCache(message: Message) {
-        return "" + message.id + message.read_state + message.out + message.date + message.user_id;
+        return message ? "" + message.id + message.read_state + message.out + message.date + message.user_id : undefined;
     }
 }
