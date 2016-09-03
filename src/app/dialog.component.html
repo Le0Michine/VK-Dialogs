@@ -86,7 +86,7 @@
 			</ul>
 		</div>
 	</div>
-	<div id="load_old" (click)="loadOldMessages()" *ngIf="messages_count && messages_count != history.length">
+	<div id="load_old" (click)="loadOldMessages()" *ngIf="!messages_count || messages_count > history.length">
 		<div id="arrow_down"></div>
 		<a id="load_old_link">{{ 'load_previous_messages' | translate }}</a>
 	</div>
