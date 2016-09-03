@@ -322,6 +322,9 @@ export class DialogComponent {
         let key = "cached_message_" + this.conversation_id + this.is_chat;
         chrome.storage.sync.remove(key);
         this.current_text = "";
+        let value = {};
+        value[key] = null;
+        this.current_message_port.postMessage(value);
     }
 
     formatDate(unixtime: number) {
