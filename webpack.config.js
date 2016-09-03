@@ -100,7 +100,7 @@ module.exports = [{
     new CopyWebpackPlugin([ 
         { from: 'src/icons', to: "./icons", toType: "dir" },
         { from: 'src/app.options', to: "./app.options", toType: "dir" },
-        { from: 'src/app.pagecontent', to: "./app.pagecontent", toType: "dir" },
+//        { from: 'src/app.pagecontent', to: "./app.pagecontent", toType: "dir" },
         { from: 'src/i18n', to: "./i18n", toType: "dir" },
         { from: 'src/_locales', to: "./_locales", toType: "dir" },
         { from: 'src/*.html', to: "./", toType: "dir", flatten: true },
