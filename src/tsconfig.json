@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es5",
     "module": "commonjs",
     "outDir": "dist/",
     "moduleResolution": "node",
@@ -12,6 +12,7 @@
   },
   "exclude" : [
     "node_modules",
-    "typings"
+    "typings/globals/es6-shim/index.d.ts",
+    "typings/index.d.ts"
   ]
 }
