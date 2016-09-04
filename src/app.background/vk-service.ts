@@ -1,4 +1,3 @@
-/// <reference path="../typings/globals/chrome/index.d.ts"/>
 import { Injectable }     from "@angular/core";
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/Observable/bindCallback";
@@ -14,7 +13,7 @@ export class VKService {
 
     private handleError(error: any) {
         console.error("An error occurred", error);
-        return Promise.reject(error.message || error);
+        // return Promise.reject(error.message || error);
     }
 
     constructor() {

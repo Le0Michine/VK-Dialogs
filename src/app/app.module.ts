@@ -1,7 +1,6 @@
-/// <reference path="../node_modules/@types/node/index.d.ts"/>
 import { NgModule, ChangeDetectorRef }      from "@angular/core";
 import { FormsModule }      from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { BrowserModule, DomSanitizer } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
 
@@ -14,7 +13,7 @@ import { routing } from "./app.routing";
 import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
-import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe, ChatActionPipe } from "./attachment.pipe";
+import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe, ChatActionPipe, SafePipe } from "./attachment.pipe";
 
 @NgModule({
     imports: [
@@ -33,7 +32,8 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         MessageAttachmentSubTitlePipe,
         MessageAttachmentTitlePipe,
         MessageAttachmentUrlPipe,
-        ChatActionPipe
+        ChatActionPipe,
+        SafePipe
     ],
     bootstrap: [
         AppComponent
@@ -41,8 +41,7 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
     providers: [
         UserService,
         VKService,
-        DialogService,
-        ChangeDetectorRef
+        DialogService
     ]
 })
 export class AppModule { }

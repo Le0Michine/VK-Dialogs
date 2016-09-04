@@ -1,5 +1,3 @@
-/// <reference path="../typings/globals/chrome/index.d.ts"/>
-
 import { Injectable } from "@angular/core";
 import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/http";
 import { Observable }     from "rxjs/Observable";

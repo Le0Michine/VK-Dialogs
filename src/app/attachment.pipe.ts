@@ -1,4 +1,5 @@
 import { Pipe } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "ng2-translate/ng2-translate";
 
 @Pipe({
@@ -87,7 +88,6 @@ export class MessageAttachmentIconPipe {
 })
 export class ChatActionPipe {
     transform(message) {
-        let action = {};
         switch (message.action) {
             case "chat_kick_user":
                 if (message.action_mid !== message.user_id) {
@@ -105,5 +105,14 @@ export class ChatActionPipe {
             case "chat_invite_user":
                 return "actions.chat_invite_user";
         }
+    }
+}
+
+@Pipe({ name: "safe" })
+export class SafePipe {
+    constructor(private sanitizer: DomSanitizer) { }
+
+    transform(html) {
+        return this.sanitizer.bypassSecurityTrustHtml(html);
     }
 }

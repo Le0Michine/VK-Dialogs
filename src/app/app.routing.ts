@@ -1,5 +1,5 @@
 import { ModuleWithProviders }  from "@angular/core";
-import { provideRouter, RouterConfig, RouterModule, Routes }  from "@angular/router";
+import { RouterModule, Routes }  from "@angular/router";
 import { DialogComponent } from "./dialog.component";
 import { DialogsComponent } from "./dialogs.component";
 import { AppComponent } from "./app.component";

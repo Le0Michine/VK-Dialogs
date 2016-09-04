@@ -36,7 +36,9 @@ module.exports = [{
       },
       { 
         test: /\.js$/,
-        loader: 'uglify'
+        exclude: '/node_modules/',
+        loader: 'babel',
+        query: { compact: true, presets: ['es2015'], minified: true, comments: false }
       },
       {
         test: /\.html$/,

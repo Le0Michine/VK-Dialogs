@@ -395,6 +395,6 @@ export class DialogComponent {
 
     errorHandler(error) {
         console.error("An error occurred", error);
-        return Promise.reject(error.message || error);
+        // return Promise.reject(error.message || error);
     }
 }

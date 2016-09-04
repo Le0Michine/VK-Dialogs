@@ -1,4 +1,3 @@
-/// <reference path="../typings/globals/chrome/index.d.ts"/>
 import { Component } from "@angular/core";
 import { TranslateService } from "ng2-translate/ng2-translate";
 

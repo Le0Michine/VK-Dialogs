@@ -1,7 +1,4 @@
-/// <reference path="../typings/globals/chrome/index.d.ts"/>
 import { Component } from "@angular/core";
-import { HTTP_PROVIDERS } from "@angular/http";
-import { ROUTER_DIRECTIVES } from "@angular/router";
 import { Router } from "@angular/router";
 import { Message } from "./message";
 import { Chat } from "./message";

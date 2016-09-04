@@ -1,5 +1,3 @@
-/// <reference path="../typings/globals/chrome/index.d.ts"/>
-
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Http } from "@angular/http";
 import { Observable } from "rxjs/Observable";
