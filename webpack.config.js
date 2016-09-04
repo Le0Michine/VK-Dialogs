@@ -62,42 +62,6 @@ module.exports = [{
       lowerCaseAttributeNames: false, // do not call .toLowerCase for each attribute name (Angular2 use camelCase attributes)
     }
   },
-  'uglify-loader': {
-    compress: {
-        warnings: false,
-        properties: true,
-        sequences: true,
-        dead_code: true,
-        conditionals: true,
-        comparisons: true,
-        evaluate: true,
-        booleans: true,
-        unused: true,
-        loops: true,
-        hoist_funs: true,
-        cascade: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true,
-        //drop_console: true,
-        drop_debugger: true,
-        //unsafe: true,
-        hoist_vars: true,
-        negate_iife: true,
-        //side_effects: true
-        screw_ie8: true
-      },
-      mangle: {
-        toplevel: true,
-        sort: true,
-        eval: true,
-        properties: true
-      },
-      output: {
-        space_colon: false,
-        comments: false
-      }
-  },
   plugins: [
     new CopyWebpackPlugin([ 
         { from: 'src/icons', to: "./icons", toType: "dir" },
@@ -125,6 +89,42 @@ module.exports = [{
     new CleanWebpackPlugin(['./out/*'], {
       verbose: true, 
       dry: false
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        warnings: false,
+        properties: true,
+        sequences: true,
+        dead_code: true,
+        conditionals: true,
+        comparisons: true,
+        evaluate: true,
+        booleans: true,
+        unused: true,
+        loops: true,
+        hoist_funs: true,
+        cascade: true,
+        if_return: true,
+        join_vars: true,
+        //drop_console: true,
+        drop_debugger: true,
+        //unsafe: true,
+        hoist_vars: true,
+        negate_iife: true,
+        //side_effects: true,
+        screw_ie8: true
+      },
+      mangle: {
+        toplevel: true,
+        sort: true,
+        eval: true,
+        properties: true
+      },
+      output: {
+        space_colon: false,
+        comments: false
+      }
     })
   ]
 }]
