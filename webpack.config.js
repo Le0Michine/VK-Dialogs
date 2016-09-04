@@ -42,7 +42,7 @@ module.exports = [{
       },
       {
         test: /\.html$/,
-        loaders: ['raw-loader', 'html-minify-loader']
+        loaders: ['raw-loader'/*, 'html-minify-loader'*/]
       },
       {
         test: /\.css$/,
@@ -125,6 +125,6 @@ module.exports = [{
         space_colon: false,
         comments: false
       }
-    })
+    })/**/
   ]
 }]
