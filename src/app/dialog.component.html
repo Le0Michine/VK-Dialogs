@@ -5,6 +5,7 @@
 	</a>
 	<button id="send_btn" (click)="sendMessage()">{{ 'send' | translate }}</button>
 	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">{{ 'mark_as_read' | translate }}</button>
+	<div class="emoji_smile_icon" (click)="expandEmoji()"><emoji (onSelect)="onEmojiSelect($event)"></emoji></div>
 </div>
 <div id="input_box">
 	<label id="input_label" for="message_input">{{ 'type_text_here' | translate }}</label>

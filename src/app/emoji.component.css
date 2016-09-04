@@ -1,0 +1,58 @@
+#emoji_control {
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.71);
+    border-radius: 5px;
+    background: #FFFFFF;
+    position: fixed;
+    top: 40px;
+    right: 70px;
+    width: 291px;
+    height: 0;
+    padding: 10px 0 10px 5px;
+    transition: height .5s;
+    visibility: hidden;
+}
+
+#emoji_arrow {
+    position: absolute;
+    top: 23px;
+    right: 50px;
+    width: 15px;
+    height: 7px;
+    background: url('../icons/arrow_bottom.png');
+    transform: rotate(180deg);
+    z-index: 10;
+}
+
+#emoji_wrapper {
+    overflow-y: scroll;
+    overflow-x: hidden; 
+    height: 100%;
+    position: relative;
+    padding: 5px 0 5px 0;
+}
+
+a {
+    display: inline-block;
+    position: relative;
+    color: #428bca;
+    text-decoration: none;
+    background: 0 0;
+    cursor: pointer;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 7px 4px 0 4px;
+}
+
+a:hover {
+    cursor: pointer;
+    outline-style: dashed;
+    outline-color: #428bca;
+    outline-width: 2px;
+}
+
+img {
+    vertical-align: middle;
+    border: 0;
+    background-position: 0 0;
+}

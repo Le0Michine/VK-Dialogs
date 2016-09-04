@@ -166,3 +166,12 @@
     background: rgba(100, 150, 200, 0.9);
     border: 1px rgb(0, 0, 0);
 }
+
+.emoji_smile_icon {
+    float: right;
+    margin: 10px 10px;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background: url(../icons/smile_icon.png) no-repeat 4px 4px;
+}

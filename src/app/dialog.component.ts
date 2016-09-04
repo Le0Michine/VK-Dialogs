@@ -397,4 +397,23 @@ export class DialogComponent {
         console.error("An error occurred", error);
         // return Promise.reject(error.message || error);
     }
+
+    expandEmoji() {
+        var emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
+        if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
+            emoji_wrapper.style.height = "0";
+            setTimeout(() => emoji_wrapper.style.visibility = "hidden", 500);
+        }
+        else {
+            emoji_wrapper.style.height = 160 + "px";
+            emoji_wrapper.style.visibility = "visible";
+        }
+    }
+
+    onEmojiSelect(emoji: string) {
+        let input = document.getElementById("message_input");
+        this.hideLabelContent();
+        this.cacheCurrentMessage();
+        input.innerHTML = input.innerHTML + emoji;
+    }
 }

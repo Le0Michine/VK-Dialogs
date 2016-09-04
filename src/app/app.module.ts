@@ -8,6 +8,7 @@ import { AppComponent }  from "./app.component";
 import { DialogsComponent }  from "./dialogs.component";
 import { DialogComponent }  from "./dialog.component";
 import { LoginComponent }  from "./login.component";
+import { EmojiComponent }  from "./emoji.component";
 import { routing } from "./app.routing";
 
 import { DialogService } from "./dialogs-service";
@@ -28,6 +29,7 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         DialogComponent,
         DialogsComponent,
         LoginComponent,
+        EmojiComponent,
         MessageAttachmentIconPipe,
         MessageAttachmentSubTitlePipe,
         MessageAttachmentTitlePipe,
