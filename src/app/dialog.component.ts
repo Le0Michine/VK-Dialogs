@@ -398,16 +398,32 @@ export class DialogComponent {
         // return Promise.reject(error.message || error);
     }
 
-    expandEmoji() {
+    toggleEmoji() {
         var emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
-            emoji_wrapper.style.height = "0";
-            setTimeout(() => emoji_wrapper.style.visibility = "hidden", 500);
+            this.collapseEmoji(emoji_wrapper);
         }
         else {
             emoji_wrapper.style.height = 160 + "px";
             emoji_wrapper.style.visibility = "visible";
+            emoji_wrapper.onmouseenter = () => this.onEmojiMouseEnter();
         }
+    }
+
+    onEmojiMouseEnter() {
+        console.log("onmouseenter");
+        var emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
+        emoji_wrapper.onmouseenter = null;
+        emoji_wrapper.onmouseleave = () => {console.log("onmouseleave"); this.collapseEmoji(emoji_wrapper);};
+    }
+
+    collapseEmoji(emoji_wrapper: HTMLDivElement) {
+        emoji_wrapper.style.height = "0";
+        emoji_wrapper.onmouseleave = null;
+        setTimeout(() => {
+            emoji_wrapper.style.visibility = "hidden";
+            emoji_wrapper.onmouseenter = () => this.onEmojiMouseEnter();
+        }, 500);
     }
 
     onEmojiSelect(emoji: string) {
