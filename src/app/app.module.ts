@@ -14,6 +14,7 @@ import { routing } from "./app.routing";
 import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
+import { EmojiService } from "./emoji-service";
 import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe, ChatActionPipe, SafePipe, CutLinksPipe } from "./attachment.pipe";
 
 @NgModule({
@@ -44,7 +45,8 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
     providers: [
         UserService,
         VKService,
-        DialogService
+        DialogService,
+        EmojiService
     ]
 })
 export class AppModule { }
