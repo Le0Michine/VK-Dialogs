@@ -14,7 +14,7 @@ import { routing } from "./app.routing";
 import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
-import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe, ChatActionPipe, SafePipe } from "./attachment.pipe";
+import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe, ChatActionPipe, SafePipe, CutLinksPipe } from "./attachment.pipe";
 
 @NgModule({
     imports: [
@@ -35,7 +35,8 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         MessageAttachmentTitlePipe,
         MessageAttachmentUrlPipe,
         ChatActionPipe,
-        SafePipe
+        SafePipe,
+        CutLinksPipe
     ],
     bootstrap: [
         AppComponent
