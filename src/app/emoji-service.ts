@@ -26,7 +26,7 @@ export class EmojiService {
 
     private emoji_dec_codes = [];
 
-    private template = "<div style=\"font-size: 20px; color: #428bca; display: inline-block; margin-left: 2px;\">{{emoji}}</div>";
+    private template = "<div style=\"font-size: 35px; color: #428bca; display: inline-block; margin-left: 2px; font-family: -apple-system EmojiOneColor\">{{emoji}}</div>";
 
     constructor() {
         /** Emoticons */

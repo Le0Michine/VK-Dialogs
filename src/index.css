@@ -70,3 +70,17 @@ dialogs {
 body::-webkit-scrollbar, html::-webkit-scrollbar {
     width: 0;
 }
+
+@font-face {
+    font-family: EmojiOneColor;
+    src: url(fonts/EmojiOneColor-SVGinOT.ttf);
+    text-decoration: none;
+	font-style: normal;
+}
+
+@font-face {
+    font-family: Symbola;
+    src: url(fonts/unicode-fonts-for-ancient-scripts_symbola/Symbola.ttf);
+    text-decoration: none;
+	font-style: normal;
+}
