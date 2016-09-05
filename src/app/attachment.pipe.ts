@@ -2,6 +2,8 @@ import { Pipe } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "ng2-translate/ng2-translate";
 
+import { EmojiService } from "./emoji-service";
+
 @Pipe({
     name: "attachment_size"
 })
@@ -114,5 +116,44 @@ export class SafePipe {
 
     transform(html) {
         return this.sanitizer.bypassSecurityTrustHtml(html);
+    }
+}
+
+@Pipe({ name: "cut_links" })
+export class CutLinksPipe {
+    transform(text) {
+        let len = 55;
+        let urls = text.match(/(?:(?:https?|ftp|file|chrome):\/\/|www\.|ftp\.)(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[A-ZА-Яа-я\w0-9+&@#\/%=~_|$])/igm);
+        if (!urls) return text;
+        for (let url of urls) {
+            text = text.replace(url,
+                "<a target=\"_blank\" href=\"" + url + "\" title=\"" + url + "\" style=\"cursor:pointer;\">" + (url.length > len ? (url.slice(0, len) + "..") : url) + "</a>");
+        }
+        return text;
+    }
+}
+
+@Pipe({ name: "emoji" })
+export class EmojiPipe {
+    private emoji_chars = [];
+
+    constructor(private emoji: EmojiService) {
+        this.emoji_chars = this.emoji.getEmojiChars();
+    }
+
+    transform(text) {
+        // let regexp = new RegExp("\uD83D\uDE01|\uD83D\uDE4F|...");
+        for (let emoji of this.emoji_chars) {
+            let e = this.getEmojiChar(emoji);
+            text = text.replace(e, this.emoji.wrapEmoji(e));
+        }
+        return text;
+    }
+
+    private getEmojiChar(emoji_code) {
+        /** create div to translate emoji code to emoji char */
+        let div = document.createElement("div");
+        div.innerHTML = emoji_code;
+        return div.innerHTML.toString();
     }
 }

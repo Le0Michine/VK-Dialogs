@@ -26,6 +26,8 @@ export class EmojiService {
 
     private emoji_dec_codes = [];
 
+    private template = "<div style=\"font-size: 20px; color: #428bca; display: inline-block; margin-left: 2px;\">{{emoji}}</div>";
+
     constructor() {
         /** Emoticons */
         this.addEmojiRange(this.emoticons_start, this.emoticons_end);
@@ -45,6 +47,10 @@ export class EmojiService {
 
     getEmojiChars() {
         return this.emoji_dec_codes;
+    }
+
+    wrapEmoji(emoji) {
+        return this.template.replace("{{emoji}}", emoji);
     }
 
     private addEmojiRange(start_hex: string, end_hex: string) {
