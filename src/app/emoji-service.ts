@@ -19,6 +19,8 @@ export class EmojiService {
     private add_emoticons_end = "1F636";
     private transport_map_start = "1F680";
     private transport_map_end = "1F6C0";
+    private add_transport_map_start = "1F681";
+    private add_transport_map_end = "1F6C5";
     private dingbats_start = "2702";
     private dingbats_end = "27B0";
     private enclosed_chars_start = "24C2";
@@ -38,11 +40,14 @@ export class EmojiService {
         /** Transport and map symbols */
         this.addEmojiRange(this.transport_map_start, this.transport_map_end);
 
+        /** Additional transport and map symbols */
+        this.addEmojiRange(this.add_transport_map_start, this.add_transport_map_end);
+
         /** Dingbats */
         this.addEmojiRange(this.dingbats_start, this.dingbats_end);
 
         /** Enclosed characters */
-        // this.addEmojiRange(this.enclosed_chars_start, this.enclosed_chars_end);
+        this.addEmojiRange(this.enclosed_chars_start, this.enclosed_chars_end);
     }
 
     getEmojiChars() {
@@ -58,7 +63,9 @@ export class EmojiService {
         let end_dec = parseInt(end_hex, 16);
 
         for (let i = start_dec; i <= end_dec; i++) {
-            this.emoji_dec_codes.push(i.toString(16));
+            let emoji = twemoji.convert.fromCodePoint(i.toString(16));
+            if (twemoji.parse(emoji) === emoji) continue; /** if emoji isn't supported by twemoji */
+            this.emoji_dec_codes.push(emoji);
         }
     }
 }

@@ -1,3 +1,4 @@
+///<reference path="../twemoji.d.ts"/>
 import { Pipe } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "ng2-translate/ng2-translate";
@@ -141,19 +142,7 @@ export class EmojiPipe {
         this.emoji_chars = this.emoji.getEmojiChars();
     }
 
-    transform(text, codepoint) {
-        // let regexp = new RegExp("\uD83D\uDE01|\uD83D\uDE4F|...");
-        /*for (let emoji of this.emoji_chars) {
-            let e = this.getEmojiChar(emoji);
-            text = text.replace(e, this.emoji.wrapEmoji(e));
-        }*/
-        return codepoint ? twemoji.parse(twemoji.convert.fromCodePoint(text)) : twemoji.parse(text);
-    }
-
-    private getEmojiChar(emoji_code) {
-        /** create div to translate emoji code to emoji char */
-        let div = document.createElement("div");
-        div.innerHTML = emoji_code;
-        return div.innerHTML.toString();
+    transform(text) {
+        return twemoji.parse(text);
     }
 }

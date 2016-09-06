@@ -84,3 +84,22 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
     text-decoration: none;
 	font-style: normal;
 }
+
+img.emoji {
+    display: inline-block;
+    color: #428bca;
+    text-decoration: none;
+    background: 0 0;
+    cursor: pointer;
+    font-size: 25px;
+    width: 25px;
+    height: 25px;
+    font-family: -apple-system EmojiOneColor;
+    background-position: 0 0;
+    border: 0;
+}
+
+span > img.emoji {
+    width: 15px;
+    height: 15px;
+}

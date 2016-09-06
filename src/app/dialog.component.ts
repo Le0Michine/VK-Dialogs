@@ -388,7 +388,7 @@ export class DialogComponent {
     }
 
     toggleEmoji() {
-        var emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
+        let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
             this.collapseEmoji(emoji_wrapper);
         }
@@ -401,7 +401,7 @@ export class DialogComponent {
 
     onEmojiMouseEnter() {
         console.log("onmouseenter");
-        var emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
+        let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         emoji_wrapper.onmouseenter = null;
         emoji_wrapper.onmouseleave = () => {console.log("onmouseleave"); this.collapseEmoji(emoji_wrapper);};
     }

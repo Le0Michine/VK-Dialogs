@@ -8,17 +8,16 @@ import { EmojiService } from "./emoji-service";
     styleUrls: [ "emoji.component.css" ]
 })
 export class EmojiComponent {
-    private emoji_dec_codes = [];
+    private emoji_code_points = [];
 
     @Output() onSelect = new EventEmitter<string>();
 
     constructor(private emoji: EmojiService) {
-        this.emoji_dec_codes = emoji.getEmojiChars();
+        this.emoji_code_points = emoji.getEmojiChars();
     }
 
-    selectEmoji(emoji_a) {
-        let emoji = emoji_a.innerHTML.toString();
-        this.onSelect.emit(emoji);
+    selectEmoji(emoji_code_point) {
+        this.onSelect.emit(emoji_code_point);
     }
 }
 

@@ -41,9 +41,12 @@ a {
     font-size: 25px;
     width: 25px;
     height: 25px;
-    padding: 7px 4px 0 4px;
+    padding: 3px;
     /*font-family: EmojiOneColor;*/
     font-family: -apple-system EmojiOneColor;
+    background-position: 0 0;
+    border: 0;
+    vertical-align: middle;
 }
 
 a:hover {
@@ -51,10 +54,4 @@ a:hover {
     outline-style: dashed;
     outline-color: #428bca;
     outline-width: 2px;
-}
-
-img {
-    vertical-align: middle;
-    border: 0;
-    background-position: 0 0;
 }
