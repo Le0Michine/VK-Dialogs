@@ -231,7 +231,8 @@
 .message_body {
     color: rgb(139, 147, 155);
     cursor: pointer;
-    height: 15px;
+    min-height: 15px;
+    max-height: 20px;
     max-width: 85%;
     text-align: left;
     text-overflow: ellipsis;

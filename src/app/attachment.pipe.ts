@@ -3,8 +3,6 @@ import { Pipe } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "ng2-translate/ng2-translate";
 
-import { EmojiService } from "./emoji-service";
-
 @Pipe({
     name: "attachment_size"
 })
@@ -136,12 +134,6 @@ export class CutLinksPipe {
 
 @Pipe({ name: "emoji" })
 export class EmojiPipe {
-    private emoji_chars = [];
-
-    constructor(private emoji: EmojiService) {
-        this.emoji_chars = this.emoji.getEmojiChars();
-    }
-
     transform(text) {
         return twemoji.parse(text);
     }

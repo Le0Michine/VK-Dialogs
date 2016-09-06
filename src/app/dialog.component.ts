@@ -395,11 +395,12 @@ export class DialogComponent {
     toggleEmoji() {
         let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
-            this.collapseEmoji(emoji_wrapper);
+            //this.collapseEmoji(emoji_wrapper);
         }
         else {
-            emoji_wrapper.style.height = 160 + "px";
+            emoji_wrapper.style.height = "210px";
             emoji_wrapper.style.visibility = "visible";
+            emoji_wrapper.style.display = "block";
             emoji_wrapper.onmouseenter = () => this.onEmojiMouseEnter();
         }
     }
@@ -408,7 +409,7 @@ export class DialogComponent {
         console.log("onmouseenter");
         let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         emoji_wrapper.onmouseenter = null;
-        emoji_wrapper.onmouseleave = () => {console.log("onmouseleave"); this.collapseEmoji(emoji_wrapper);};
+        setTimeout(() => emoji_wrapper.onmouseleave = () => this.collapseEmoji(emoji_wrapper), 300);
     }
 
     collapseEmoji(emoji_wrapper: HTMLDivElement) {
@@ -416,8 +417,8 @@ export class DialogComponent {
         emoji_wrapper.onmouseleave = null;
         setTimeout(() => {
             emoji_wrapper.style.visibility = "hidden";
-            emoji_wrapper.onmouseenter = () => this.onEmojiMouseEnter();
-        }, 500);
+            emoji_wrapper.style.display = "none";
+        }, 300);
     }
 
     onEmojiSelect(emoji: string) {
@@ -430,12 +431,13 @@ export class DialogComponent {
     getInputMessage() {
         let div = document.getElementById("message_input");
         let html = div.innerHTML;
-        let matches = html.match(/<img.*?>/g);
+        let matches = html.match(/<div.*?><img.*?><\/div>/g);
+        if (!matches) return div.innerText.trim();
         for (let m of matches) {
             let emoji = m.match(/alt=".*?"/g)[0].split("\"")[1];
             html = html.replace(m, emoji);
         }
-        return html;
+        return html.trim();
     }
 
     updateInputMessage() {

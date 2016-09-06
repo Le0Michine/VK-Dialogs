@@ -117,14 +117,14 @@ export class DialogService {
                     });
                     let subscription = Observable.interval(10000).subscribe(() => {
                         let key = Object.keys(current_message)[0];
-                        if (current_message[key]) {
+                        if (key) {
                             chrome.storage.sync.set(current_message);
                         }
                     });
                     port.onDisconnect.addListener(() => {
                         subscription.unsubscribe();
                         let key = Object.keys(current_message)[0];
-                        if (current_message[key]) {
+                        if (key) {
                             chrome.storage.sync.set(current_message);
                         }
                     });

@@ -11,8 +11,11 @@ export class RequestHelper {
                     console.log("response obtained for request: " + request.name);
                     if (!response || !response.data) {
                         console.log("response has incorrect format: " + JSON.stringify(response));
+                        callback(null);
                     }
-                    callback(response.data);
+                    else {
+                        callback(response.data);
+                    }
                 }
             );
         });

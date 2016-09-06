@@ -5,53 +5,81 @@
     position: fixed;
     top: 40px;
     right: 70px;
-    width: 270px;
+    width: 286px;
     height: 0;
-    padding: 10px 0 10px 5px;
-    transition: height .5s;
+    padding: 5px 3px 10px 3px;
+    transition: height .4s;
     visibility: hidden;
-}
-
-#emoji_arrow {
-    position: absolute;
-    top: 23px;
-    right: 50px;
-    width: 15px;
-    height: 7px;
-    background: url('../icons/arrow_bottom.png');
-    transform: rotate(180deg);
-    z-index: 10;
 }
 
 #emoji_wrapper {
     overflow-y: scroll;
-    overflow-x: hidden; 
-    height: 100%;
-    position: relative;
+    overflow-x: hidden;
+    max-height: 85%;
     padding: 5px 0 5px 0;
+    background-color: #EEEEEE;
+    transition: height .2s;
+    border-radius: 0 0 5px 5px;
 }
 
-a {
-    display: inline-block;
-    position: relative;
-    color: #428bca;
-    text-decoration: none;
-    background: 0 0;
-    cursor: pointer;
-    font-size: 25px;
-    width: 25px;
-    height: 25px;
-    padding: 3px;
-    /*font-family: EmojiOneColor;*/
-    font-family: -apple-system EmojiOneColor;
-    background-position: 0 0;
-    border: 0;
-    vertical-align: middle;
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,300');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 300ms cubic-bezier(.4, 0, .2, 1);
 }
 
-a:hover {
-    cursor: pointer;
-    outline-style: dashed;
-    outline-color: #428bca;
-    outline-width: 2px;
+button {
+  background: 0 0;
+  color: rgba(0, 0, 0, .7);
+  cursor: pointer;
+  font-size: 17px;
+  border: 0;
+  padding: 0 2px 0 2px;
+  transition: height .2s;
+}
+
+.emoji-header {
+  background-color: #FFFFFF;
+  max-height: 17%;
+  transition: height .2s;
+}
+
+button:active {
+  background-color: #CCCCCC;
+  outline: none;
+}
+
+.selected-item {
+    background-color: #EEEEEE;
+    border-radius: 5px 5px 0 0;
+    outline: none;
+}
+
+.hor-flex-parent {
+  display: flex !important;
+  flex-direction: row;
+  width: 100%;
+}
+
+.flex-kid {
+  flex: 0;
+}
+
+.flex-outcast {
+  flex: none;
+}
+
+.menu-tabs > .menu-item {
+  text-align: center;
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+    transition: visibility .3s;
 }

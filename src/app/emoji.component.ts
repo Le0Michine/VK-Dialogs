@@ -9,6 +9,10 @@ import { EmojiService } from "./emoji-service";
 })
 export class EmojiComponent {
     private emoji_code_points = [];
+    private current_tab: HTMLButtonElement = null;
+    private current_page: HTMLDivElement = null;
+
+    private selected_tab_class = "selected-item";
 
     @Output() onSelect = new EventEmitter<string>();
 
@@ -16,8 +20,37 @@ export class EmojiComponent {
         this.emoji_code_points = emoji.getEmojiChars();
     }
 
+    ngOnInit() {
+        let emoji_wrapper = document.getElementById("emoji_wrapper");
+        for (let i = 0; i < emoji_wrapper.children.length; i++) {
+            emoji_wrapper.children[i].innerHTML = twemoji.parse(emoji_wrapper.children[i].innerHTML);
+        }
+        let emoji_imgs = document.getElementsByClassName("emoji");
+        for (let i = 0; i < emoji_imgs.length; i++) {
+            let emoji_img = emoji_imgs.item(i) as HTMLImageElement;
+            if (emoji_img) {
+                emoji_img.onclick = () => this.selectEmoji(emoji_img.alt);
+            }
+        }
+        this.current_tab = document.getElementsByClassName(this.selected_tab_class).item(0) as HTMLButtonElement;
+        this.current_page = document.getElementById("default_page") as HTMLDivElement;
+    }
+
     selectEmoji(emoji_code_point) {
         this.onSelect.emit(emoji_code_point);
+    }
+
+    selectTab(tab: HTMLButtonElement, page: HTMLDivElement) {
+        let hidden_class = "hidden";
+
+        this.current_tab.classList.remove(this.selected_tab_class);
+        tab.classList.add(this.selected_tab_class);
+
+        this.current_page.classList.add(hidden_class);
+        page.classList.remove(hidden_class)
+
+        this.current_tab = tab;
+        this.current_page = page;
     }
 }
 

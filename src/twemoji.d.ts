@@ -1,5 +1,5 @@
 declare namespace twemoji {
-    function parse(text: string): string;
+    function parse(what: string, how?: any): string;
 }
 
 declare namespace twemoji.convert {
