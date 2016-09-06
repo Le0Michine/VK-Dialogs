@@ -58,7 +58,7 @@ export class EmojiService {
         let end_dec = parseInt(end_hex, 16);
 
         for (let i = start_dec; i <= end_dec; i++) {
-            this.emoji_dec_codes.push("&#" + i);
+            this.emoji_dec_codes.push(i.toString(16));
         }
     }
 }

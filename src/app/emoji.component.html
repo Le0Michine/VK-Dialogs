@@ -1,7 +1,8 @@
 <!--<div id="emoji_arrow"></div>-->
 <div id="emoji_control">
     <div id="emoji_wrapper">
-        <a *ngFor="let emoji of emoji_dec_codes" #emoji_link innerHTML="{{ emoji }}" (click)="selectEmoji(emoji_link)"></a>
+        <!--<a *ngFor="let e of emoji_dec_codes" #emoji_link innerHTML="{{ e }}" (click)="selectEmoji(emoji_link)"></a>-->
+        <a *ngFor="let e of emoji_dec_codes" #emoji_link [innerHTML]="e | emoji:true | safe" (click)="selectEmoji(emoji_link)"></a>
         <!--<a class="button" *ngFor="let code of emoji_codes">
             <img alt=&#x1F64F class="emoji" src="http://vk.com/images/emoji/{{ code }}.png" />
         </a>-->

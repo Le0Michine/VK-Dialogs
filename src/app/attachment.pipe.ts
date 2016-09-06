@@ -141,13 +141,13 @@ export class EmojiPipe {
         this.emoji_chars = this.emoji.getEmojiChars();
     }
 
-    transform(text) {
+    transform(text, codepoint) {
         // let regexp = new RegExp("\uD83D\uDE01|\uD83D\uDE4F|...");
         /*for (let emoji of this.emoji_chars) {
             let e = this.getEmojiChar(emoji);
             text = text.replace(e, this.emoji.wrapEmoji(e));
         }*/
-        return twemoji.parse(text);
+        return codepoint ? twemoji.parse(twemoji.convert.fromCodePoint(text)) : twemoji.parse(text);
     }
 
     private getEmojiChar(emoji_code) {
