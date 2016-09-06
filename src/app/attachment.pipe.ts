@@ -143,11 +143,11 @@ export class EmojiPipe {
 
     transform(text) {
         // let regexp = new RegExp("\uD83D\uDE01|\uD83D\uDE4F|...");
-        for (let emoji of this.emoji_chars) {
+        /*for (let emoji of this.emoji_chars) {
             let e = this.getEmojiChar(emoji);
             text = text.replace(e, this.emoji.wrapEmoji(e));
-        }
-        return text;
+        }*/
+        return twemoji.parse(text);
     }
 
     private getEmojiChar(emoji_code) {

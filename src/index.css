@@ -80,7 +80,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 
 @font-face {
     font-family: Symbola;
-    src: url(fonts/unicode-fonts-for-ancient-scripts_symbola/Symbola.ttf);
+    src: url(fonts/Symbola.ttf);
     text-decoration: none;
 	font-style: normal;
 }
