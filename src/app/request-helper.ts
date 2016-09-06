@@ -9,7 +9,7 @@ export class RequestHelper {
                 request,
                 (response: any) => {
                     console.log("response obtained for request: " + request.name);
-                    if (!response.data) {
+                    if (!response || !response.data) {
                         console.log("response has incorrect format: " + JSON.stringify(response));
                     }
                     callback(response.data);

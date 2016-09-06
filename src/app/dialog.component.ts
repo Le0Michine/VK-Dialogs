@@ -127,8 +127,8 @@ export class DialogComponent {
         for (let message of messages) {
             message.attachments = this.getMessageAttachments(message);
             if (message.from_id === uid
-                && (mts.messages.length === 0 
-                    || (Math.abs(message.date - mts.messages[mts.messages.length - 1].date) < 60 * 5 
+                && (mts.messages.length === 0
+                    || (Math.abs(message.date - mts.messages[mts.messages.length - 1].date) < 60 * 5
                         && message.read_state === mts.messages[mts.messages.length - 1].read_state))) {
                     mts.messages.push(message);
             }
@@ -240,8 +240,7 @@ export class DialogComponent {
         if (this.message_is_sending) return;
         this.message_is_sending = true;
 
-        let messageInput = document.getElementById("message_input") as HTMLDivElement;
-        let text = messageInput.innerText.trim()
+        let text = this.getInputMessage().trim()
             .replace(/%/g,  "%25")
             .replace(/\n/g, "%0A")
             .replace(/!/g,  "%21")
@@ -269,8 +268,8 @@ export class DialogComponent {
             },
             () => {
                 console.log("message sent");
-                messageInput.innerText = "";
                 this.clearCache();
+                this.updateInputMessage();
                 this.message_is_sending = false;
             });
     }
@@ -290,7 +289,7 @@ export class DialogComponent {
         let last_height = 55;
 
         let updateValue = () => {
-            this.current_text = input.innerText;
+            this.current_text = this.getInputMessage();
             if (this.current_text) this.hideLabelContent();
             this.cacheCurrentMessage();
             let current_height = Math.max(55, Math.min(input.scrollHeight, 200));
@@ -305,17 +304,23 @@ export class DialogComponent {
         let delayedUpdate = () => { window.setTimeout(updateValue, 100); };
 
         /* to allow paste only plain text */
-        addListener(input, "paste", (event) => setInterval(() => input.innerText = input.innerText, 0));
+        /* addListener(input, "paste", (event) => setInterval(() => {
+            this.current_text = this.cleanInputText();
+            this.updateInputMessage();
+            console.log("on paste");
+            event.stopPropagation();
+            event.preventDefault();
+        }, 0)); */
 
         /* listen for every event which is fired after text is changed */
         addListener(input, "change",  delayedUpdate);
         addListener(input, "cut",     delayedUpdate);
-        addListener(input, "paste",   delayedUpdate);
+        // addListener(input, "paste",   delayedUpdate);
         addListener(input, "drop",    delayedUpdate);
         addListener(input, "keydown", delayedUpdate);
 
         /* need to set value immidiately before initial resizing */
-        input.innerText = this.current_text;
+        this.updateInputMessage();
         updateValue();
     }
 
@@ -416,9 +421,32 @@ export class DialogComponent {
     }
 
     onEmojiSelect(emoji: string) {
-        let input = document.getElementById("message_input");
         this.hideLabelContent();
         this.cacheCurrentMessage();
-        input.innerHTML = input.innerHTML + emoji;
+        this.current_text += emoji;
+        this.updateInputMessage();
+    }
+
+    getInputMessage() {
+        let div = document.getElementById("message_input");
+        let html = div.innerHTML;
+        let matches = html.match(/<img.*?>/g);
+        for (let m of matches) {
+            let emoji = m.match(/alt=".*?"/g)[0].split("\"")[1];
+            html = html.replace(m, emoji);
+        }
+        return html;
+    }
+
+    updateInputMessage() {
+        let div = document.getElementById("message_input");
+        div.innerHTML = twemoji.parse(this.current_text);
+    }
+
+    cleanInputText() {
+        let text = this.getInputMessage();
+        let div = document.createElement("div");
+        div.innerHTML = text;
+        return div.innerText;
     }
 }
