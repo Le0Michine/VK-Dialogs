@@ -2,7 +2,7 @@
     "mark_as_read": "Mark as read",
     "send": "Send",
     "load_previous_messages": "Load previous messages",
-    "not_authorized": "You are not authorized.\r\nPlease click \"Authorize\" and allow access from VK.",
+    "not_authorized": "You are not authorized.\r\nPlease click \"Authorize\" to access your VK data.",
     "authorize_btn": "Authorize",
     "type_text_here": "Type your text here…",
     "actions": {

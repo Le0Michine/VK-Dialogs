@@ -50,7 +50,6 @@ button > div.emojicon {
 
 #emoji_wrapper > div > .emojicon:hover {
     cursor: pointer;
-    outline-style: dashed;
-    outline-color: #428bca;
-    outline-width: 2px;
+    background-color: rgba(66, 139, 202, .5);
+    border-radius: 50%;
 }

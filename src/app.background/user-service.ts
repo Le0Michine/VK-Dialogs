@@ -55,6 +55,7 @@ export class UserService {
     }
 
     loadUsers(uids: string): void {
+        if (!uids || uids.length === 0) return;
         this.getUsers(uids).subscribe(users => {
             this.cache.pushUsers(users);
             this.postUsersUpdate();
