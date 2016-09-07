@@ -431,7 +431,7 @@ export class DialogComponent {
     getInputMessage() {
         let div = document.getElementById("message_input");
         let html = div.innerHTML;
-        let matches = html.match(/<div.*?><img.*?><\/div>/g);
+        let matches = html.match(/(<div.*?>)?<img.*?>(<\/div>)?/g);
         if (!matches) return div.innerText.trim();
         for (let m of matches) {
             let emoji = m.match(/alt=".*?"/g)[0].split("\"")[1];
