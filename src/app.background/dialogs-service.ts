@@ -250,7 +250,9 @@ export class DialogService {
         }
         console.log("load old dialogs");
         this.dialogs_count += 20;
-        window.setTimeout(() => this.dialogs_count -= 20, 3000 * 60);
+        window.setTimeout(() => {
+            this.dialogs_count = Math.max(20, this.dialogs_count - 20), 3000 * 60;
+        }, 3000 * 60);
         if (this.dialogs_count <= this.cache.dialogs_cache.length) {
             this.postDialogsUpdate();
         }
