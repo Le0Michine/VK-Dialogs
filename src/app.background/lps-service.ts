@@ -28,7 +28,7 @@ export class LPSService {
         private http: Http,
         private vkservice: VKService) {
 
-        this.startMonitoring();
+        this.startMonitoring(Number(window.localStorage.getItem("lps_timstamp")));
     }
 
     subscribeOnMessagesUpdate(callback) {
@@ -133,7 +133,7 @@ export class LPSService {
                     (-1: forever; 0: notifications enabled; other: timestamp for time to switch back on). */
                     break;
                 default:
-                    console.warn(`unknow code of update ${JSON.stringify(update)} in long poll response: ${JSON.stringify(json)}`);
+                    console.warn(`UNKNOWN CODE OF UPDATE ${JSON.stringify(update)} in long poll response: ${JSON.stringify(json)}`);
                     break;
             }
         }
@@ -157,7 +157,7 @@ export class LPSService {
                 this.startMonitoring(server.ts);
             }
             else if (response.failed === 1) {
-                console.log("history became obsolet need to refresh it first");
+                console.log("history became obsolete need to refresh it first");
                 this.on_message_update();
                 // this.on_user_update();
             }
@@ -165,8 +165,8 @@ export class LPSService {
                 console.log(new Date(Date.now()) + " got a long poll response: " + JSON.stringify(response));
                 server.ts = response.ts;
                 this.processLongPollResponse(response);
-                this.nextRequest(server);
             }
+            this.nextRequest(server);
         },
         error => {
             console.log("error ocured during lp request: ", error);
