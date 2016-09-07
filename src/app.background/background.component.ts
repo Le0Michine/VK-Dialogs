@@ -42,6 +42,9 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             switch (request.name) {
+                case "set_online":
+                    this.setOnline();
+                    return false;
                 case "last_opened":
                     if (request.last_opened) {
                         console.log("set last opened");
@@ -139,5 +142,20 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             console.log("session expired, reauthorize");
             this.vkservice.auth(true);
         }
+    }
+
+    private setOnline() {
+        chrome.storage.sync.get({"setOnline": true}, (value: any) => {
+            console.log("got online options: ", value);
+            if (value.setOnline) {
+                this.vkservice.setOnline();
+                this.vkservice.getSession().subscribe(session => {
+                    this.userService.updateUsers(session.user_id);
+                });
+            }
+            else {
+                console.log("shadow mode, don't set user online");
+            }
+        });
     }
 }

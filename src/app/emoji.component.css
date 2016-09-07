@@ -10,6 +10,7 @@
     padding: 5px 3px 10px 3px;
     transition: height .4s;
     visibility: hidden;
+    z-index: 9999;
 }
 
 #emoji_wrapper {

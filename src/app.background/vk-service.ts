@@ -1,22 +1,25 @@
 import { Injectable }     from "@angular/core";
 import { Observable }     from "rxjs/Observable";
+import { Http }     from "@angular/http";
 import "rxjs/add/Observable/bindCallback";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
-
+import { ErrorHelper } from "./error-helper";
 import { AuthHelper } from "./auth-helper";
 
 @Injectable()
 export class VKService {
     private session_info: SessionInfo;
 
+    private set_online = "account.setOnline";
+
     private handleError(error: any) {
         console.error("An error occurred", error);
         // return Promise.reject(error.message || error);
     }
 
-    constructor() {
+    constructor(private http: Http) {
         this.initializeSeesion();
     }
 
@@ -62,5 +65,29 @@ export class VKService {
     logoff() {
         this.session_info = null;
         window.localStorage.removeItem(VKConsts.vk_session_info)
+    }
+
+    setOnline() {
+        this.getSession().concatMap(session => {
+            console.log("set online, got session: ", session);
+            if (!session) {
+
+            }
+            let uri: string = VKConsts.api_url + this.set_online
+                + "?access_token=" + session.access_token
+                + "&v=" + VKConsts.api_version;
+
+            return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
+            /** response: {count: number, items: Message[]} */
+        }).subscribe((result => {
+            if (result === 1) {
+                console.log("user online");
+            }
+            else {
+                console.log("filed to set online");
+            }
+        },
+        error => console.error("Error occured while setting online: ", error),
+        () => console.log("set online reqest completed")));
     }
 }

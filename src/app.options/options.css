@@ -131,3 +131,10 @@ h1 {
     top: 0px;
     display: inline;
 }
+
+.checkbox {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border: 1px solid #cacaca;
+}

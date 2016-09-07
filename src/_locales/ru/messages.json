@@ -11,6 +11,9 @@
     "langOptions": {
         "message": "Язык:"
     },
+    "privacyOptions": {
+        "message": "Настройки приватности:"
+    },
     "optionsSaved": {
         "message": "Настройки сохранены."
     },
@@ -22,5 +25,8 @@
     },
     "sendBtn": {
         "message": "Отправить"
+    },
+    "setOnlineOption": {
+        "message": "Виден \"в сети\""
     }
 }

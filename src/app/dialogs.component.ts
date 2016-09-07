@@ -70,7 +70,9 @@ export class DialogsComponent implements OnInit, OnDestroy {
             document.body.style.minHeight = "500px";
             document.body.style.width = "550px";
         }
-        
+
+        this.vkservice.setOnline();
+
         chrome.runtime.sendMessage({ name: "last_opened" }, response => {
             if (response.last_opened) {
                 let last_opened = response.last_opened;

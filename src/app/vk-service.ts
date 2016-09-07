@@ -54,4 +54,8 @@ export class VKService {
         }
         return this.session_info;
     }
+
+    setOnline() {
+        chrome.runtime.sendMessage({name: "set_online"});
+    }
 }

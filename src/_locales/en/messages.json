@@ -11,6 +11,9 @@
     "langOptions": {
         "message": "My primary language:"
     },
+    "privacyOptions": {
+        "message": "Privacy settings:"
+    },
     "optionsSaved": {
         "message": "Options saved."
     },
@@ -22,5 +25,8 @@
     },
     "sendBtn": {
         "message": "Send"
+    },
+    "setOnlineOption": {
+        "message": "Shown as \"online\""
     }
 }
