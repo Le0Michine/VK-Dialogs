@@ -48,6 +48,7 @@ export class VKService {
     }
 
     getSession(): SessionInfo {
+        this.initializeSeesion();
         if (!this.isSessionValid()) {
             this.auth(true);
         }

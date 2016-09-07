@@ -65,7 +65,7 @@ module.exports = [{
   plugins: [
     new CopyWebpackPlugin([ 
         { from: 'src/icons', to: "./icons", toType: "dir" },
-        { from: 'src/fonts', to: "./fonts", toType: "dir" },
+//        { from: 'src/fonts', to: "./fonts", toType: "dir" },
         { from: 'src/app.options', to: "./app.options", toType: "dir" },
 //        { from: 'src/app.pagecontent', to: "./app.pagecontent", toType: "dir" },
         { from: 'src/i18n', to: "./i18n", toType: "dir" },

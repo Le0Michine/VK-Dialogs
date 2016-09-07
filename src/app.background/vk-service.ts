@@ -56,6 +56,11 @@ export class VKService {
             let background: boolean = this.session_info ? this.session_info.isExpired() : false;
             return this.auth(background);
         }
-        return Observable.bindCallback((callback: (SessionInfo) => void) => callback(this.session_info))();
+        return Observable.of(this.session_info);
+    }
+
+    logoff() {
+        this.session_info = null;
+        window.localStorage.removeItem(VKConsts.vk_session_info)
     }
 }

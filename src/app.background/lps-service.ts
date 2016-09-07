@@ -43,6 +43,11 @@ export class LPSService {
         console.log("session is valid, start monitoring");
         this.getLongPollServer().subscribe(
             server => {
+                if (!server) {
+                    console.log("unable to get lps server, restart in 5 seconds");
+                    window.setTimeout(() => this.startMonitoring(), 5000);
+                    return;
+                }
                 if (ts) {
                     server.ts = ts;
                 }
@@ -173,6 +178,10 @@ export class LPSService {
     private getLongPollServer(): Observable<LongPollServer> {
         console.log("lps requested");
         return this.vkservice.getSession().concatMap(session => {
+            console.log("got session: ", session);
+            if (!session) {
+                return Observable.of(null);
+            }
             let uri: string = VKConsts.api_url + this.get_lps
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version

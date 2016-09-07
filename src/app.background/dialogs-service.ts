@@ -289,6 +289,10 @@ export class DialogService {
     getDialogs(count: number = 20, from_id: number = null): Observable<Dialog[]> {
         console.log("dialogs are requested");
         return this.vkservice.getSession().concatMap(session => {
+            console.log("get session: ", session);
+            if (!session) {
+                return Observable.of([]);
+            }
             let uri: string = VKConsts.api_url + this.get_dialogs
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
@@ -330,6 +334,10 @@ export class DialogService {
     getChats(chat_ids: string): Observable<{}> {
         console.log("chat participants requested");
         return this.vkservice.getSession().concatMap(session => {
+            console.log("getting chat, got session: ", session);
+            if (!session) {
+                return Observable.of({});
+            }
             let uri: string = VKConsts.api_url + this.get_chat
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version
@@ -411,7 +419,7 @@ export class DialogService {
     }
 
     private handleError(error: any) {
-        console.error("An error occurred: ", error);
+        console.error("An error occurred in background-dialog-service: ", error);
         // return Promise.reject(error.message || error);
     }
 }

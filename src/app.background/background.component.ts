@@ -30,6 +30,16 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         console.log("background init");
         this.preAuthorize();
 
+        chrome.contextMenus.removeAll();
+        chrome.contextMenus.create({
+        title: "Log Off",
+        contexts: ["browser_action"],
+        onclick: () => {
+            console.log("LOG OFF");
+            window.localStorage.setItem(VKConsts.user_denied, "true");
+            this.vkservice.logoff();
+        }});
+
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             switch (request.name) {
                 case "last_opened":

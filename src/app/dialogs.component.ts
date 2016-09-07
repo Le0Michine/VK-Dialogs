@@ -65,6 +65,11 @@ export class DialogsComponent implements OnInit, OnDestroy {
             this.router.navigate(["/authorize"]);
             return;
         }
+        else {
+            /** set popup size */
+            document.body.style.minHeight = "500px";
+            document.body.style.width = "550px";
+        }
         
         chrome.runtime.sendMessage({ name: "last_opened" }, response => {
             if (response.last_opened) {

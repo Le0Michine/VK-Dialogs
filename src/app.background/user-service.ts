@@ -80,6 +80,10 @@ export class UserService {
         }
 
         return this.vkservice.getSession().concatMap(session => {
+            console.log("getting users, got session: ", session);
+            if (!session) {
+                return Observable.of({});
+            }
             let uri = VKConsts.api_url
                 + "users.get?user_ids=" + uids
                 + "&fields=photo_50,online"

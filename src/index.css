@@ -6,8 +6,8 @@ h1 {
 html, body {
   margin: 0;
   background-color: rgba(0, 0, 0, 0.2);
-  min-height: 500px;
-  width: 550px;
+  /*min-height: 500px;
+  width: 550px;*/
   overflow: hidden;
 }
 
@@ -69,18 +69,4 @@ dialogs {
 
 body::-webkit-scrollbar, html::-webkit-scrollbar {
     width: 0;
-}
-
-@font-face {
-    font-family: EmojiOneColor;
-    src: url(fonts/EmojiOneColor-SVGinOT.ttf);
-    text-decoration: none;
-	font-style: normal;
-}
-
-@font-face {
-    font-family: Symbola;
-    src: url(fonts/Symbola.ttf);
-    text-decoration: none;
-	font-style: normal;
 }

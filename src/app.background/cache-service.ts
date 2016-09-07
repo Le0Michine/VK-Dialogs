@@ -17,6 +17,7 @@ export class CacheService {
     }
 
     private updateDialogs(dialogs: Dialog[]) {
+        console.log("update dialogs");
         this.dialogs_cache = dialogs;
         // this.messages_cache = {};
         // for (let dialog of dialogs) {
@@ -25,6 +26,7 @@ export class CacheService {
     }
 
     pushDialogs(dialogs: Dialog[]) {
+        if (!dialogs || dialogs.length === 0) return;
         let firstId = dialogs[0].message.id;
         let lastId = dialogs[0].message.id;
         let i = this.dialogs_cache.findIndex(x => x.message.id === firstId);
@@ -86,6 +88,7 @@ export class CacheService {
     }
 
     getLastDialogMessageId(): number {
+        if (this.dialogs_cache.length === 0) return null;
         return this.dialogs_cache[this.dialogs_cache.length - 1].message.id;
     }
 

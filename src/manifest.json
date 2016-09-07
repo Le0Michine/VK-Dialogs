@@ -36,6 +36,7 @@
         "management",
         "notifications",
         "storage",
+        "contextMenus",
         "http://vk.com/*",
         "http://*.vk.me/*",
         "https://api.vk.com/method/*",
