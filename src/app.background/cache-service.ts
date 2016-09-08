@@ -31,7 +31,7 @@ export class CacheService {
         let firstId = dialogs[0].message.id;
         let lastId = dialogs[0].message.id;
         let i = this.dialogs_cache.findIndex(x => x.message.id === firstId);
-        if (i === -1 || i === 0 && this.getMessageCache(dialogs[0].message) !== this.getMessageCache(this.dialogs_cache[0].message)) {
+        if (i === -1 || i === 0) {
             i = this.dialogs_cache.findIndex(x => x.message.id === lastId);
             if (i === -1) {
                 this.updateDialogs(dialogs);
