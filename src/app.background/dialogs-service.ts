@@ -363,26 +363,14 @@ export class DialogService {
 
     markAsRead(ids: string): Observable<number> {
         console.log("mark as read message(s) with id: " + ids);
-        return this.vkservice.getSession().concatMap(session => {
-            let uri: string = VKConsts.api_url + this.mark_as_read
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + "&message_ids=" + ids;
-            return this.http.get(uri).map(response => response.json());
-        });
+        return this.vkservice.performAPIRequest(this.mark_as_read, `message_ids=${ids}`);
     }
 
     sendMessage(id: number, message: string, chat: boolean): Observable<Message> {
         console.log("sending message");
-        return this.vkservice.getSession().concatMap(session => {
-            let uri: string = VKConsts.api_url + this.send_message
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + (chat ? "&chat_id=" : "&user_id=") + id
-                + "&message=" + message
-                + "&notification=1";
-            return this.http.get(uri).map(response => response.json().response);
-        });
+        return this.vkservice.performAPIRequest(
+            this.send_message,
+            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1`);
     }
 
     private toChatDict(json): {} {

@@ -2,6 +2,9 @@ import { Injectable }     from "@angular/core";
 import { Observable }     from "rxjs/Observable";
 import { Http }     from "@angular/http";
 import "rxjs/add/Observable/bindCallback";
+import "rxjs/add/operator/timeout";
+import "rxjs/add/operator/retry";
+import "rxjs/add/operator/catch";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
@@ -89,5 +92,29 @@ export class VKService {
         },
         error => console.error("Error occured while setting online: ", error),
         () => console.log("set online reqest completed")));
+    }
+
+    performAPIRequest(method: string, parameters: string) {
+        return this.getSession().concatMap(session => {
+            if (!session) {
+                Observable.throw("Unable to get session");
+            }
+            let url = `${VKConsts.api_url}${method}?access_token=${session.access_token}&v=${VKConsts.api_version}`;
+            if (parameters) {
+                url += "&" + parameters;
+            }
+            console.log(`perform api request to url ${url}`);
+            return this.http.get(url)
+                .map(response => response.json())
+                .map(json => ErrorHelper.checkErrors(json) ? {} : (json.response ? json.response : json));
+        }).retry(5)
+        .catch(error => {
+            console.error(`An error occured during api request ${method} with parameters ${parameters}:`, error);
+            return Observable.of({});
+        });
+    }
+
+    getCurrentUser(parameters: string) {
+        
     }
 }

@@ -104,6 +104,7 @@ export class CacheService {
     }
 
     pushUsers(users) {
+        console.log("push users: ", users);
         for (let user_id in users) {
             this.users_cache[user_id] = users[user_id];
         }

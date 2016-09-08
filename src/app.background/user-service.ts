@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/observable/of";
@@ -18,7 +17,7 @@ import { Channels } from "./channels";
 export class UserService {
     private update_users_port: chrome.runtime.Port;
 
-    constructor(private vkservice: VKService, private http: Http,  private cache: CacheService, private lpsService: LPSService) {
+    constructor(private vkservice: VKService,  private cache: CacheService, private lpsService: LPSService) {
         lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
         chrome.runtime.onConnect.addListener(port => {
             switch (port.name) {
@@ -41,7 +40,8 @@ export class UserService {
     updateUsers(uids: string) {
         this.getUsers(uids, false).subscribe(users => {
             this.cache.pushUsers(users);
-        });
+        },
+        error => this.errorHandler(error, "updateUsers"));
     }
 
     postUsersUpdate() {
@@ -60,7 +60,7 @@ export class UserService {
             this.cache.pushUsers(users);
             this.postUsersUpdate();
         },
-        error => this.errorHandler(error),
+        error => this.errorHandler(error, `loadUsers ${uids}`),
         () => console.log("loaded users: " + uids));
     }
 
@@ -80,52 +80,39 @@ export class UserService {
             return Observable.of(users);
         }
 
-        return this.vkservice.getSession().concatMap(session => {
-            console.log("getting users, got session: ", session);
-            if (!session) {
-                return Observable.of({});
-            }
-            let uri = VKConsts.api_url
-                + "users.get?user_ids=" + uids
-                + "&fields=photo_50,online"
-                + "&access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version;
-            return this.http.get(uri)
-                .map(res => res.json())
-                .map(json => this.toUser(json));
-        });
+        return this.vkservice
+            .performAPIRequest("users.get", `user_ids=${uids}&fields=photo_50,online`)
+            .map(json => this.toUser(json));
     }
 
     getUser(uid: number = null): Observable<User> {
-        return this.vkservice.getSession().concatMap(session => {
-            if (uid ? uid in this.cache.users_cache : session.user_id in this.cache.users_cache) {
-                return Observable.of(this.cache.users_cache[uid ? uid : session.user_id]);
-            }
-            let uri = VKConsts.api_url
-                + "users.get?user_ids=" + (uid != null ? uid : session.user_id)
-                + "&fields=photo_50,online"
-                + "&access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version;
-            return this.http.get(uri)
-                .map(res => res.json())
-                .map(json => this.toUser(json))
-                .map(dict => dict[Object.keys(dict)[0]] as User);
-        });
+        let obs;
+        if (uid) {
+            obs = this.getUser(uid).map(dict => dict[Object.keys(dict)[0]]);
+        }
+        else {
+            obs = this.vkservice.getSession().concatMap(session => {
+                if (!session) {
+                    return Observable.of({});
+                }
+                return this.vkservice.performAPIRequest("users.get", `user_ids=${session.user_id}&fields=photo_50,online`);
+            }).map(json => json[0]);
+        }
+        return obs;
     }
 
     private toUser(json): {} {
         if (ErrorHelper.checkErrors(json)) return {};
         let users = {};
-        let users_json = json.response;
-        for (let user_json of users_json) {
+        for (let user_json of json) {
             users[user_json.id] = user_json as User;
             this.cache.users_cache[user_json.id] = user_json as User;
         }
         return users;
     }
 
-    errorHandler(error) {
-        console.error("An error occurred", error);
+    errorHandler(error, comment: string) {
+        console.error(`An error occurred ${comment}:`, error);
         // return Promise.reject(error.message || error);
     }
 }
