@@ -1,18 +1,13 @@
 import { Injectable } from "@angular/core";
-import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/http";
 import { Observable }     from "rxjs/Observable";
-import "rxjs/add/operator/concatMap";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
 
-import { VKConsts } from "../app/vk-consts";
 import { Message, Chat } from "../app/message";
 import { Dialog } from "../app/dialog";
 import { User } from "../app/user";
 
 import { VKService } from "./vk-service";
-import { ErrorHelper } from "./error-helper";
-import { LongPollServer } from "./long-poll-server";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
@@ -40,7 +35,6 @@ export class DialogService {
 
     constructor(
         private vkservice: VKService,
-        private http: Http,
         private cache: CacheService,
         private userService: UserService,
         private lpsService: LPSService) {
@@ -289,76 +283,36 @@ export class DialogService {
 
     getDialogs(count: number = 20, from_id: number = null): Observable<Dialog[]> {
         console.log("dialogs are requested");
-        return this.vkservice.getSession().concatMap(session => {
-            console.log("get session: ", session);
-            if (!session) {
-                return Observable.of([]);
-            }
-            let uri: string = VKConsts.api_url + this.get_dialogs
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + "&count=" + count
-                + (from_id ? "&start_message_id=" + from_id : "");
-            return this.http.get(uri).map(response => this.toDialog(response.json()));
-        });
+        return this.vkservice.performAPIRequest(
+            this.get_dialogs,
+            `count=${count}${from_id ? "&start_message_id=" + from_id : ""}`)
+            .map(json => this.toDialog(json));
     }
 
     getHistory(id: number, chat: boolean, count: number = 20, from_id: number = null): Observable<any> {
         console.log("history is requested. id:" + id + ", chat:" + chat + ", cout:" + count + ", from_id:" + from_id);
-        return this.vkservice.getSession().concatMap(session => {
-            let uri: string = VKConsts.api_url + this.get_history
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + (chat ? "&chat_id=" + id : "&user_id=" + id)
-                + (from_id ? "&start_message_id=" + from_id : "")
-                + "&count=" + count
-                + "&rev=0";
-
-            return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
+        return this.vkservice.performAPIRequest(
+            this.get_history,
+            `${chat ? "chat_id=" + id : "user_id=" + id}${from_id ? "&start_message_id=" + from_id : ""}&count=${count}&rev=0`);
             /** response: {count: number, items: Message[]} */
-        });
     }
 
     getChatParticipants(chat_id: number): Observable<{}> {
         console.log("chat participants requested");
-        return this.vkservice.getSession().concatMap(session => {
-            let uri: string = VKConsts.api_url + this.get_chat
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + "&chat_id=" + chat_id
-                + "&fields=photo_50,online";
-
-            return this.http.get(uri).map(response => this.toUserDict(response.json()));
-        });
+        return this.vkservice.performAPIRequest(this.get_chat, `chat_ids=${chat_id}&fields=photo_50,online`)
+            .map(json => this.toUserDict(json));
     }
 
     getChats(chat_ids: string): Observable<{}> {
         console.log("chat participants requested");
-        return this.vkservice.getSession().concatMap(session => {
-            console.log("getting chat, got session: ", session);
-            if (!session) {
-                return Observable.of({});
-            }
-            let uri: string = VKConsts.api_url + this.get_chat
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + "&chat_ids=" + chat_ids
-                + "&fields=photo_50,online";
-
-            return this.http.get(uri).map(response => this.toChatDict(response.json()));
-        });
+        return this.vkservice.performAPIRequest(this.get_chat, `chat_ids=${chat_ids}&fields=photo_50,online`)
+            .map(json => this.toChatDict(json));
     }
 
     /** to remove */
     private getMessage(ids: string): Observable<Message[]> {
         console.log("requested message(s) with id: " + ids);
-        return this.vkservice.getSession().concatMap(session => {
-            let uri: string = VKConsts.api_url + this.get_message
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + "&message_ids=" + ids;
-            return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
-        });
+        return this.vkservice.performAPIRequest(this.get_message, `message_ids=${ids}`);
     }
 
     markAsRead(ids: string): Observable<number> {
@@ -374,18 +328,16 @@ export class DialogService {
     }
 
     private toChatDict(json): {} {
-        if (ErrorHelper.checkErrors(json)) return {};
         let chats = {};
-        for (let chat of json.response) {
+        for (let chat of json) {
             chats[chat.id] = chat;
         }
         return chats;
     }
 
     private toUserDict(json): {} {
-        if (ErrorHelper.checkErrors(json)) return {};
         let users = {};
-        for (let user_json of json.response.users) {
+        for (let user_json of json.users) {
             users[user_json.id] = user_json as User;
         }
 
@@ -393,8 +345,6 @@ export class DialogService {
     }
 
     private toDialog(json): Dialog[] {
-        if (ErrorHelper.checkErrors(json)) return [];
-        json = json.response || json;
         console.log("dialogs cout " + json.count);
         this.max_dialogs_count = json.count;
         this.postDialogsCountUpdate();

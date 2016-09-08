@@ -2,12 +2,11 @@ import { Injectable } from "@angular/core";
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/observable/of";
+import "rxjs/add/observable/concatMap";
 
-import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
 import { User } from "../app/user";
 
-import { ErrorHelper } from "./error-helper";
 import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
 import { LPSService } from "./lps-service";
@@ -102,7 +101,6 @@ export class UserService {
     }
 
     private toUser(json): {} {
-        if (ErrorHelper.checkErrors(json)) return {};
         let users = {};
         for (let user_json of json) {
             users[user_json.id] = user_json as User;
