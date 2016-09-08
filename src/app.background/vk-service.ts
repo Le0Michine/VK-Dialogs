@@ -3,6 +3,7 @@ import { Observable }     from "rxjs/Observable";
 import { Http }     from "@angular/http";
 import "rxjs/add/Observable/bindCallback";
 import "rxjs/add/operator/timeout";
+import "rxjs/add/operator/concatMap";
 import "rxjs/add/operator/retry";
 import "rxjs/add/operator/catch";
 
