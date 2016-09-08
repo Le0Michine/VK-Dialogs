@@ -4,13 +4,32 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
+var fs = require('fs');
 
-rts = {
-  entry: "./src/app/*.ts",
-  output: {
-    filename: "./out/app/"
-  },
-  watch: true
+function JsonReplacerPlugin(options) {
+    this.inputFile = options.inputFile;
+    this.outputFile = options.outputFile || this.inputFile;
+    this.replacer = options.replacer || null;
+    this.spacer = options.spacer || "    ";
+}
+
+JsonReplacerPlugin.prototype.apply = function(compiler) {
+    var file = fs.readFileSync(this.inputFile);
+    fs.writeFileSync(this.outputFile, JSON.stringify(JSON.parse(file), this.replacer, this.spacer));
+};
+
+function versionReplacer(key, value) {
+    if (key === "version") {        
+        var numbers = value.split(".");
+        var major = numbers[0];
+        var minor = numbers[1];
+        var revision = numbers[2];
+        var build = Number(numbers[3]) + 1;
+        var version = major + "." + minor + "." + revision + "." + build;
+        console.log("update version to ", version);
+        return version;
+    }
+    return value;
 }
 
 module.exports = [{
@@ -91,6 +110,7 @@ module.exports = [{
       verbose: true, 
       dry: false
     }),
+    new JsonReplacerPlugin({ inputFile: "src/manifest.json", replacer: versionReplacer }),
     /*new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
