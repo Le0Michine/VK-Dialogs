@@ -2,7 +2,7 @@
   "name": "vk-messenger-webpack",
   "version": "1.0.0",
   "repository": "https://github.com/Le0Michine/Messenger",
-  "description": "webpack project for building vkk mesenger",
+  "description": "webpack project for building vk messenger",
   "dependencies": {
     "jshint": "^2.9.3",
     "jshint-loader": "^0.8.3",
