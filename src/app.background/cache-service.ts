@@ -26,6 +26,7 @@ export class CacheService {
     }
 
     pushDialogs(dialogs: Dialog[]) {
+        console.log("pushing dialogs: ", dialogs);
         if (!dialogs || dialogs.length === 0) return;
         let firstId = dialogs[0].message.id;
         let lastId = dialogs[0].message.id;

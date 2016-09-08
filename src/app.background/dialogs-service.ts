@@ -136,6 +136,7 @@ export class DialogService {
     postDialogsUpdate() {
         if (this.update_dialogs_port) {
             console.log("post dialogs_update message");
+            console.dir(this.cache.dialogs_cache.slice(0, this.dialogs_count));
             this.update_dialogs_port.postMessage({name: "dialogs_update", data: this.cache.dialogs_cache.slice(0, this.dialogs_count)});
         }
         else {
@@ -185,8 +186,8 @@ export class DialogService {
 
     updateMessages() {
         this.getDialogs().subscribe(dialogs => {
-                this.loadDialogUsers(dialogs);
-            });
+            this.loadDialogUsers(dialogs);
+        });
 
         if (this.update_history_port && this.current_dialog_id) {
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {

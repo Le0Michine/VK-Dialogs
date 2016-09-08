@@ -395,7 +395,7 @@ export class DialogComponent {
     toggleEmoji() {
         let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
-            //this.collapseEmoji(emoji_wrapper);
+            // this.collapseEmoji(emoji_wrapper);
         }
         else {
             emoji_wrapper.style.height = "210px";
@@ -432,9 +432,10 @@ export class DialogComponent {
         let div = document.getElementById("message_input");
         let html = div.innerHTML;
         let matches = html.match(/(<div.*?>)?<img.*?>(<\/div>)?/g);
+        let altreg = new RegExp("alt=\"(.*?)\"");
         if (!matches) return div.innerText.trim();
         for (let m of matches) {
-            let emoji = m.match(/alt=".*?"/g)[0].split("\"")[1];
+            let emoji = altreg.exec(m)[1];
             html = html.replace(m, emoji);
         }
         return html.trim();
