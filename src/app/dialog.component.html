@@ -11,6 +11,7 @@
 	<label id="input_label" for="message_input">{{ 'type_text_here' | translate }}</label>
 	<div contenteditable="true" id="message_input" #minput (click)="hideLabelContent()" (blur)="showLabelContent(getInputMessage())" (keydown)="onKeyPress($event,minput.innerText)"></div>
 </div>
+<div id="chat_spacer">
 <div id="chat_body">
 	<div class="message_block" *ngFor="let message of history_to_show">
 		<div class="unread" *ngIf="!message.messages[0].read_state"></div>
@@ -91,4 +92,4 @@
 		<div id="arrow_down"></div>
 		<a id="load_old_link">{{ 'load_previous_messages' | translate }}</a>
 	</div>
-</div></div>
+</div></div></div>

@@ -1,8 +1,16 @@
+#chat_spacer {
+    position: absolute;
+    padding-top: 110px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 #chat_body {
     position: relative;
     width: 100%;
     top: 0;
-    height: 490px;
+    height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
     background: rgb(255, 255, 255) padding-box;

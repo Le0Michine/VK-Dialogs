@@ -285,7 +285,7 @@ export class DialogComponent {
         let getHeight = (element) => Number(element.style.height.match(/[0-9]+/g)[0]);
         let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
         let input = document.getElementById("message_input") as HTMLDivElement;
-        let chat_body = document.getElementById("chat_body") as HTMLDivElement;
+        let chat_spacer = document.getElementById("chat_spacer") as HTMLDivElement;
         let last_height = 55;
 
         let updateValue = () => {
@@ -295,7 +295,7 @@ export class DialogComponent {
             let current_height = Math.max(55, Math.min(input.scrollHeight, 200));
             if (current_height !== last_height) {
                 let diff = current_height - 55;
-                chat_body.style.height = (490 - diff) + "px";
+                chat_spacer.style.paddingTop = (110 + diff) + "px";
                 last_height = current_height;
             }
         };
