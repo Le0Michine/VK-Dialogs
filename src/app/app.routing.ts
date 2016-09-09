@@ -22,6 +22,11 @@ const routes: Routes = [
     path: "",
     redirectTo: "/dialogs",
     pathMatch: "full"
+  },
+  {
+    path: "popup.html",
+    redirectTo: "/dialogs",
+    pathMatch: "full"
   }
 ];
 

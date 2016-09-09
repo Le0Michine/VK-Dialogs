@@ -65,11 +65,6 @@ export class DialogsComponent implements OnInit, OnDestroy {
             this.router.navigate(["/authorize"]);
             return;
         }
-        else {
-            /** set popup size */
-            document.body.style.minHeight = "500px";
-            document.body.style.minWidth = "500px";
-        }
 
         this.vkservice.setOnline();
 
