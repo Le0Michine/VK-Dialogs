@@ -50,6 +50,7 @@ export class LPSService {
                     return;
                 }
                 if (ts) {
+                    console.log("set old timestamp: ", ts);
                     server.ts = ts;
                 }
                 this.nextRequest(server);
