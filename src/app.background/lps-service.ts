@@ -171,7 +171,7 @@ export class LPSService {
             }
         },
         error => {
-            console.log("error ocured during lp request: ", error);
+            console.error("error occured during lp request: ", error);
             console.log("trying to reconnect");
             this.startMonitoring(server.ts);
         });
