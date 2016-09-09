@@ -389,7 +389,7 @@ export class DialogComponent {
     toggleEmoji() {
         let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
         if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
-            // this.collapseEmoji(emoji_wrapper);
+            this.collapseEmoji(emoji_wrapper);
         }
         else {
             emoji_wrapper.style.height = "210px";
