@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, Renderer } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
@@ -20,6 +20,8 @@ import { DateConverter } from "./date-converter";
     ]
 })
 export class DialogComponent {
+    @ViewChild("minput") input: ElementRef;
+
     title = "Dialog";
     participants: {} = {};
     user_id: string;
@@ -41,7 +43,8 @@ export class DialogComponent {
         private vkservice: VKService,
         private user_service: UserService,
         private route: ActivatedRoute,
-        private change_detector: ChangeDetectorRef) { }
+        private change_detector: ChangeDetectorRef,
+        private renderer: Renderer) { }
 
     ngOnInit() {
         console.log("specific dialog component init");
@@ -87,6 +90,10 @@ export class DialogComponent {
             this.messages_service.subscribeOnMessagesCountUpdate(count => this.messages_count = count);
         });
         this.subscriptions.push(sub);
+    }
+
+    ngAfterViewInit() {
+        this.renderer.invokeElementMethod(this.input.nativeElement, "focus");
     }
 
     ngOnDestroy() {
