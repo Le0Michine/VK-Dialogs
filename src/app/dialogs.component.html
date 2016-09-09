@@ -10,13 +10,13 @@
 
 		<div class="dialog_div">
 			<div class="dialog_content_div">
-				<div class="last_message_date">
-					{{dialog.message.date*1000 | date:dialog.date_format}}
-				</div>
 				<div class="dialog_title_div">
 					 <span class="dialog_title_span">
                         <span [class.online]="dialog.online">{{dialog.title}}</span>
                     </span>
+				</div>
+				<div class="last_message_date">
+					{{dialog.message.date*1000 | date:dialog.date_format}}
 				</div>
 				<div class="message_body">
 					<span [innerHtml]="dialog.sender + ': ' + dialog.message.body | emoji | safe"></span>

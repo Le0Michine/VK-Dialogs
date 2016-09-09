@@ -50,7 +50,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     focused: true,
                     state: "docked",
                     width: 550,
-                    height: 500,
+                    height: 600,
                     url: "index.html"
                 }, (window) => {
                     console.dir(window);

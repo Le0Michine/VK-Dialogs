@@ -2,7 +2,7 @@
     bottom: 0px;
     cursor: text;
     height: fit-content;
-    width: 550px;
+    width: 100%;
     left: 0px;
     position: relative;
     overflow-x: hidden;
@@ -39,7 +39,7 @@
     box-sizing: border-box;
     left: 5%;
     top: 5px;
-    width: 522px;
+    width: 90%;
     cursor: text;
     position: relative;
     max-height: 200px;

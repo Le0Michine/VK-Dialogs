@@ -35,7 +35,7 @@
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    width: 550px;
+    width: 100%;
     background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
     border-radius: 2px 2px 2px 2px;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
@@ -49,7 +49,7 @@
     cursor: pointer;
     display: block;
     height: 71px;
-    width: 550px;
+    width: 100%;
     padding: 0px 0px 0px 25px;
 }/*.dialog_li*/
 
@@ -172,7 +172,7 @@
     right: 0px;
     text-align: left;
     top: 0px;
-    width: 446px;
+    width: 100%;
     border-top: 1px solid rgb(231, 232, 236);
     margin: 0px 0px 0px 64px;
     padding: 0px 15px 0px 0px;
@@ -184,20 +184,15 @@
 }/*.dialog_content_div*/
 
 .last_message_date {
-    bottom: 40px;
     color: rgb(147, 147, 147);
     height: 14px;
-    left: 360px;
     opacity: 0.7;
     text-align: right;
-    position: absolute;
-    right: 15px;
-    top: 17px;
+    position: relative;
+    float: right;
+    right: 90px;
     width: 90px;
     z-index: 0;
-    column-rule-color: rgb(147, 147, 147);
-    border: 0px none rgb(147, 147, 147);
-    outline: rgb(147, 147, 147) none 0px;
 }/*.last_message_date*/
 
 .dialog_title_div {
@@ -213,8 +208,8 @@
     right: 0px;
     text-align: left;
     top: 0px;
-    width: 446px;
-    margin: 6px 0px 4px;
+    width: 50%;
+    margin: 0 0 4px;
     column-rule-color: rgb(34, 34, 34);
     border: 0px none rgb(34, 34, 34);
 }/*.dialog_title_div*/
