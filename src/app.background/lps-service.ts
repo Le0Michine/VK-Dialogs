@@ -43,7 +43,8 @@ export class LPSService {
         console.log("session is valid, start monitoring");
         this.getLongPollServer().subscribe(
             server => {
-                if (!server) {
+                console.log("got lps: ", server);
+                if (!server || !server.ts) {
                     console.log("unable to get lps server, restart in 5 seconds");
                     window.setTimeout(() => this.startMonitoring(), 5000);
                     return;
@@ -54,7 +55,7 @@ export class LPSService {
                 this.nextRequest(server);
             },
             error => {
-                console.log("error ocured during lps request: ", error);
+                console.log("error occured during lps request: ", error);
                 console.log("restart monitoring in 5 seconds");
                 window.setTimeout(() => this.startMonitoring(), 5000);
             });
@@ -165,8 +166,8 @@ export class LPSService {
                 console.log(new Date(Date.now()) + " got a long poll response: " + JSON.stringify(response));
                 server.ts = response.ts;
                 this.processLongPollResponse(response);
+                this.nextRequest(server);
             }
-            this.nextRequest(server);
         },
         error => {
             console.log("error ocured during lp request: ", error);
@@ -177,21 +178,12 @@ export class LPSService {
 
     private getLongPollServer(): Observable<LongPollServer> {
         console.log("lps requested");
-        return this.vkservice.getSession().concatMap(session => {
-            console.log("got session: ", session);
-            if (!session) {
-                return Observable.of(null);
-            }
-            let uri: string = VKConsts.api_url + this.get_lps
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version
-                + "&use_ssl=1";
-            return this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json().response);
-        });
+        return this.vkservice.performAPIRequest(this.get_lps, `use_ssl=1`)
+            .timeout(35000, new Error("35s timeout occured"));
     }
 
     private startLongPollRequest(server: LongPollServer) {
-        console.log(new Date(Date.now()) + " perform a long poll request");
+        console.log(new Date(Date.now()) + " perform a long poll request: ", server);
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
         return this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json());
     }
