@@ -60,6 +60,10 @@ export class DialogsComponent implements OnInit, OnDestroy {
         this.dialog_service.loadOldDialogs();
     }
 
+    track(d, i) {
+        return d.message.id;
+    }
+
     ngOnInit() {
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" || this.vkservice.getSession() == null) {
             this.router.navigate(["/authorize"]);
