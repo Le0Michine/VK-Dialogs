@@ -41,7 +41,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             }
         });
         chrome.contextMenus.create({
-            title: "Open in separate window",
+            title: "Open in a separate window",
             contexts: ["browser_action"],
             onclick: () => {
                 console.log("create window");

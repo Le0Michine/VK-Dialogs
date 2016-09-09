@@ -9,7 +9,7 @@
     width: 100%;
     background-color: #eff0f1;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    z-index: 10;
+    z-index: 100;
 }/*#top_panel*/
 
 #go_back {
@@ -26,7 +26,6 @@
     top: 0px;
     vertical-align: middle;
     z-index: 2;
-    column-rule-color: rgb(42, 88, 133);
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -46,7 +45,6 @@
     text-align: left;
     top: 0px;
     z-index: 0;
-    column-rule-color: rgb(42, 88, 133);
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -71,7 +69,6 @@
     top: 0px;
     vertical-align: middle;
     width: 36px;
-    column-rule-color: rgb(42, 88, 133);
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(42, 88, 133) none 0px;
@@ -93,7 +90,6 @@
     top: 8px;
     width: 20px;
     z-index: 0;
-    column-rule-color: rgb(42, 88, 133);
     background: rgba(0, 0, 0, 0) url("../icons/im_actions.png") no-repeat scroll 2px -324px / auto padding-box border-box;
     border: 0px none rgb(42, 88, 133);
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
@@ -116,7 +112,6 @@
     top: 0px;
     vertical-align: middle;
     white-space: nowrap;
-    column-rule-color: rgb(34, 34, 34);
     border: 0px none rgb(34, 34, 34);
     font: normal normal 500 normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 3px 0px 0px;
@@ -134,7 +129,6 @@
     float: right;
     white-space: nowrap;
     z-index: 5;
-    column-rule-color: rgb(255, 255, 255);
     background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     border-radius: 2px 2px 2px 2px;
@@ -153,7 +147,6 @@
     top: 7px;
     white-space: nowrap;
     z-index: 5;
-    column-rule-color: rgb(255, 255, 255);
     background: rgb(94, 129, 168) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     border-radius: 2px 2px 2px 2px;

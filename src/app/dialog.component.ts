@@ -282,22 +282,16 @@ export class DialogComponent {
     }
 
     updateCachedMessage() {
-        let getHeight = (element) => Number(element.style.height.match(/[0-9]+/g)[0]);
         let addListener = (element, event, handler) => element.addEventListener(event, handler, false);
         let input = document.getElementById("message_input") as HTMLDivElement;
+        let input_box = document.getElementById("input_box") as HTMLDivElement;
         let chat_spacer = document.getElementById("chat_spacer") as HTMLDivElement;
-        let last_height = 55;
 
         let updateValue = () => {
             this.current_text = this.getInputMessage();
             if (this.current_text) this.hideLabelContent();
             this.cacheCurrentMessage();
-            let current_height = Math.max(55, Math.min(input.scrollHeight, 200));
-            if (current_height !== last_height) {
-                let diff = current_height - 55;
-                chat_spacer.style.paddingTop = (110 + diff) + "px";
-                last_height = current_height;
-            }
+            chat_spacer.style.paddingTop = (45 + input_box.clientHeight) + "px";
         };
 
         /* small timeout to get the already changed text */

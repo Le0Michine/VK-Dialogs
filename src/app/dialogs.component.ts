@@ -67,7 +67,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         }
         else {
             /** set popup size */
-            document.body.style.minHeight = "600px";
+            document.body.style.minHeight = "500px";
             document.body.style.minWidth = "500px";
         }
 
