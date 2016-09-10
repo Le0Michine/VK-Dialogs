@@ -6,19 +6,22 @@ import "rxjs/add/Observable/bindCallback";
 Injectable()
 export class ChromeAPIService {
     private port_name: string = "message_port";
-    private port: chrome.runtime.Port;
+    private is_background: boolean = false;
+    private port: chrome.runtime.Port = null;
 
     /**
-     * adds chrome.runtime.onConnect listener.
-     * @constructor
+     * starts listen for chrome.runtime.onConnect.
      */
-    constructor() {
+    AcceptConnections() {
+        if (this.is_background) return;
         chrome.runtime.onConnect.addListener(port => {
             if (port.name === this.port_name) {
                 console.log("connect to port: ", port);
                 this.port = port;
+                port.onDisconnect.addListener(() => this.port = null);
             }
         });
+        this.is_background = true;
     }
 
     /**
@@ -78,16 +81,19 @@ export class ChromeAPIService {
         return Observable.fromEventPattern(
             (handler: (Object) => void) => {
                 if (!this.port) {
+                    if (this.is_background) {
+                        chrome.runtime.onConnect.addListener(port => {
+                            if (port.name === this.port_name) {
+                                this.addMessageListener(port, name, handler);
+                            }
+                        });
+                        return;
+                    }
                     console.log("port is closed, open a new one");
                     this.port = chrome.runtime.connect({ name: this.port_name });
                 }
-                this.port.onMessage.addListener((message: any) => {
-                    if (message.name === name) {
-                        console.log("got message on port: ", message);
-                        handler(message);
-                    }
-                }
-            )},
+                this.addMessageListener(this.port, name, handler);
+            },
             (handler: (Object) => void) => this.port.onMessage.removeListener(handler)
         );
     }
@@ -99,7 +105,11 @@ export class ChromeAPIService {
      */
     PostPortMessage(message): void {
         if (this.port) {
+            console.log("post port message: ", message);
             this.port.postMessage(message);
+        }
+        else {
+            console.log("port isn't connected");
         }
     }
 
@@ -127,9 +137,14 @@ export class ChromeAPIService {
      */
     OnDisconnect(): Observable<{}> {
         if (!this.port) {
+            if (!this.is_background) {
+                return Observable.of(null);
+            }
             return Observable.bindCallback(
                 (callback: () => void) => chrome.runtime.onConnect.addListener(port => {
-                    port.onDisconnect.addListener(callback);
+                    if (port.name === this.port_name) {
+                        port.onDisconnect.addListener(callback);
+                    }
                 })
             )();
         }
@@ -148,5 +163,14 @@ export class ChromeAPIService {
             this.port.disconnect();
             this.port = null;
         }
+    }
+
+    private addMessageListener(port, name, handler) {
+        port.onMessage.addListener((message: any) => {
+            if (message.name === name) {
+                console.log("got message on port: ", message);
+                handler(message);
+            }
+        });
     }
 }

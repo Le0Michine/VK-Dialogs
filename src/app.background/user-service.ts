@@ -19,9 +19,11 @@ export class UserService {
         private vkservice: VKService,
         private cache: CacheService,
         private lpsService: LPSService,
-        private chromeapi: ChromeAPIService) {
-        lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
-        chromeapi.PostPortMessageOnConnect({
+        private chromeapi: ChromeAPIService) { }
+
+    init() {
+        this.lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
+        this.chromeapi.PostPortMessageOnConnect({
             name: "users_update",
             data: this.cache.users_cache
         });

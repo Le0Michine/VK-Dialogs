@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Http, Response, RequestOptionsArgs } from "@angular/http";
-import { Observable }     from "rxjs/Observable";
-import { Scheduler }     from "rxjs/Scheduler";
+import { Observable } from "rxjs/Observable";
 
 import { VKService } from "./vk-service";
 import { Message, Chat } from "./message";
@@ -13,7 +12,6 @@ import { ChromeAPIService } from "../app.background/chrome-api-service";
 @Injectable()
 export class DialogService {
     private dialogs_port: chrome.runtime.Port;
-    private history_port: chrome.runtime.Port;
 
     chat_observable: Observable<{}>;
     dialogs_observable: Observable<{}>;
@@ -56,12 +54,9 @@ export class DialogService {
     }
 
     loadOldMessages() {
-        if (this.history_port) {
-            this.history_port.postMessage({name: Channels.load_old_messages_request});
-        }
-        else {
-            console.log("history_monitor port isn\'t initialized");
-        }
+        this.chromeapi.SendMessage({
+            name: Channels.load_old_messages_request
+        });
     }
 
     getChatParticipants(id: number): Observable<{}> {
@@ -82,12 +77,9 @@ export class DialogService {
     }
 
     subscribeOnMessagesCountUpdate(callback: (messagesCount: number) => void) {
-        this.initializeHistoryMonitor();
-        this.history_port.onMessage.addListener((message: any) => {
-            if (message.name === Channels.messages_count_update) {
-                console.log("got messages_count_update message");
-                callback(message.data);
-            }
+        this.chromeapi.OnPortMessage(Channels.messages_count_update).subscribe((message: any) => {
+            console.log("got messages_count_update message");
+            callback(message.data);
         });
     }
 
@@ -117,22 +109,15 @@ export class DialogService {
     }
 
     initHistoryUpdate() {
-        this.initializeHistoryMonitor();
-        this.history_observable = Observable.fromEventPattern(
-            (h: (x: Message[]) => void) => {
-                this.history_port.onMessage.addListener((message: any) => {
-                    if (message.name === "history_update" && message.data) {
-                        console.log("got history_monitor message");
-                        h(message.data as Message[]);
-                    }
-                });
-            },
-            (h: (x: Message[]) => void) => this.history_port.onMessage.removeListener(h)
-        );
+        this.history_observable = this.chromeapi.OnPortMessage("history_update").map(x => x.data);
     }
 
     setCurrentConversation(conversation_id, is_chat) {
-        this.history_port.postMessage({name: "conversation_id", id: conversation_id, is_chat: is_chat});
+        this.chromeapi.SendMessage({
+            name: "conversation_id",
+            id: conversation_id,
+            is_chat: is_chat
+        });
     }
 
     requestDialogs() {
@@ -151,12 +136,6 @@ export class DialogService {
     private initializeDialogsMonitor() {
         if (!this.dialogs_port) {
             this.dialogs_port = chrome.runtime.connect({name: "dialogs_monitor"});
-        }
-    }
-
-    private initializeHistoryMonitor() {
-        if (!this.history_port) {
-            this.history_port = chrome.runtime.connect({name: "history_monitor"});
         }
     }
 }

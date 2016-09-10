@@ -22,10 +22,8 @@ export class DialogService {
     private get_message: string = "messages.getById";
     private send_message: string = "messages.send";
     private mark_as_read: string = "messages.markAsRead";
-    private get_lps: string = "messages.getLongPollServer";
 
     update_dialogs_port: chrome.runtime.Port;
-    update_history_port: chrome.runtime.Port;
     current_dialog_id: number = null;
     is_chat: boolean = null;
 
@@ -39,8 +37,9 @@ export class DialogService {
         private cache: CacheService,
         private userService: UserService,
         private lpsService: LPSService,
-        private chromeapi: ChromeAPIService) {
-
+        private chromeapi: ChromeAPIService) { }
+    
+    init() {
         this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
         this.getDialogs().subscribe(dialogs => {
                 this.loadDialogUsers(dialogs);
@@ -56,6 +55,39 @@ export class DialogService {
                 current_user_id: this.vkservice.getCurrentUserId()
             });
             return false;
+        });
+
+        this.chromeapi.OnMessage("conversation_id").subscribe((message: any) => {
+            this.monitorCurrentMessage();
+            this.messages_count = 20;
+            this.current_dialog_id = message.id;
+            this.is_chat = message.is_chat;
+            this.postHistoryUpdate();
+            this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
+                if (history) {
+                    this.cache.pushHistory(history.items, history.count);
+                    this.loadUsersFromMessages(history.items);
+                    this.postHistoryUpdate();
+                    this.postMessagesCountUpdate();
+                }
+                if (this.is_chat) {
+                    this.getChatParticipants(this.current_dialog_id).subscribe(users => {
+                        this.cache.pushUsers(users);
+                        this.userService.postUsersUpdate();
+                    });
+                }
+            },
+            error => this.handleError(error));
+        });
+
+        this.chromeapi.OnMessage(Channels.load_old_messages_request).subscribe((message: any) => {
+            this.loadOldMessages();
+        });
+
+        this.chromeapi.OnDisconnect().subscribe(() => {
+            this.current_dialog_id = null;
+            this.is_chat = null;
+            this.messages_count = 20;
         });
 
         chrome.runtime.onConnect.addListener(port => {
@@ -82,60 +114,29 @@ export class DialogService {
                         }
                     });
                     break;
-                case "history_monitor":
-                    this.update_history_port = port;
-                    this.update_history_port.onMessage.addListener((message: any) => {
-                        if (message.name === "conversation_id") {
-                            this.messages_count = 20;
-                            this.current_dialog_id = message.id;
-                            this.is_chat = message.is_chat;
-                            this.postHistoryUpdate();
-                            this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
-                                if (history) {
-                                    this.cache.pushHistory(history.items, history.count);
-                                    this.loadUsersFromMessages(history.items);
-                                    this.postHistoryUpdate();
-                                    this.postMessagesCountUpdate();
-                                }
-                                if (this.is_chat) {
-                                    this.getChatParticipants(this.current_dialog_id).subscribe(users => {
-                                        this.cache.pushUsers(users);
-                                        this.userService.postUsersUpdate();
-                                    });
-                                }
-                            },
-                            error => this.handleError(error));
-                        }
-                        else if (message.name === Channels.load_old_messages_request) {
-                            this.loadOldMessages();
-                        }
-                    });
-                    this.update_history_port.onDisconnect.addListener(() => {
-                        this.update_history_port = null;
-                        this.current_dialog_id = null;
-                        this.is_chat = null;
-                        this.messages_count = 20;
-                    });
-                    break;
-                case Channels.messages_cache_port:
-                    let current_message = {};
-                    port.onMessage.addListener((value) => {
-                        current_message = value;
-                    });
-                    let subscription = Observable.interval(10000).subscribe(() => {
-                        let key = Object.keys(current_message)[0];
-                        if (key) {
-                            chrome.storage.sync.set(current_message);
-                        }
-                    });
-                    port.onDisconnect.addListener(() => {
-                        subscription.unsubscribe();
-                        let key = Object.keys(current_message)[0];
-                        if (key) {
-                            chrome.storage.sync.set(current_message);
-                        }
-                    });
-                    break;
+            }
+        });
+    }
+
+    monitorCurrentMessage() {
+        let current_message = {};
+        this.chromeapi.OnPortMessage("current_message").subscribe(message => {
+            current_message = message.data;
+        });
+
+        let subscription = Observable.interval(10000).subscribe(() => {
+            console.log("store current message: ", current_message);
+            let key = Object.keys(current_message)[0];
+            if (key) {
+                chrome.storage.sync.set(current_message);
+            }
+        });
+        this.chromeapi.OnDisconnect().subscribe(() => {
+            console.log("store current message on disonnect: ", current_message);
+            subscription.unsubscribe();
+            let key = Object.keys(current_message)[0];
+            if (key) {
+                chrome.storage.sync.set(current_message);
             }
         });
     }
@@ -155,13 +156,11 @@ export class DialogService {
     }
 
     postHistoryUpdate() {
-        if (this.update_history_port && this.current_dialog_id) {
-            console.log("post history_update message");
-            this.update_history_port.postMessage({name: "history_update", data: this.cache.getHistory(this.current_dialog_id).slice(0, this.messages_count)});
-        }
-        else {
-            console.log("port history_monitor is closed or current_dialog_id isn't specified");
-        }
+        console.log("post history_update message");
+        this.chromeapi.PostPortMessage({
+            name: "history_update",
+            data: this.cache.getHistory(this.current_dialog_id).slice(0, this.messages_count)
+        });
     }
 
     postChatsUpdate() {
@@ -185,12 +184,15 @@ export class DialogService {
     }
 
     postMessagesCountUpdate() {
-        if (this.update_history_port && this.messages_count) {
+        if (this.messages_count) {
             console.log("post messages_count_update message");
-            this.update_history_port.postMessage({name: Channels.messages_count_update, data: this.cache.getMessagesCount(this.current_dialog_id)});
+            this.chromeapi.PostPortMessage({
+                name: Channels.messages_count_update,
+                data: this.cache.getMessagesCount(this.current_dialog_id)
+            });
         }
         else {
-            console.log("port history_monitor is closed or max_messages_count isn't specified");
+            console.log("max_messages_count isn't specified");
         }
     }
 
@@ -199,7 +201,7 @@ export class DialogService {
             this.loadDialogUsers(dialogs);
         });
 
-        if (this.update_history_port && this.current_dialog_id) {
+        if (this.current_dialog_id) {
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                     if (!history) return;
                     this.cache.pushHistory(history.items, history.count)

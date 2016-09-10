@@ -20,7 +20,7 @@ import { DateConverter } from "./date-converter";
         "dialog.component.header.css"
     ]
 })
-export class DialogComponent {
+export class DialogComponent implements OnInit, OnDestroy {
     @ViewChild("minput") input: ElementRef;
 
     title = "Dialog";
@@ -36,8 +36,6 @@ export class DialogComponent {
     history_to_show: MessageToShow[] = [];
 
     message_is_sending: boolean = false;
-
-    current_message_port: chrome.runtime.Port;
 
     constructor (
         private messages_service: DialogService,
@@ -102,8 +100,6 @@ export class DialogComponent {
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
-        this.current_message_port.disconnect();
-        this.current_message_port = null;
         this.chromeapi.Disconnect();
     }
 
@@ -218,6 +214,7 @@ export class DialogComponent {
         });
         this.cacheCurrentMessage();
         window.history.back();
+        this.ngOnDestroy();
     }
 
     getUserName(uid: number) {
@@ -328,22 +325,20 @@ export class DialogComponent {
     }
 
     cacheCurrentMessage() {
-        if (!this.current_message_port) {
-            this.current_message_port = chrome.runtime.connect({ name: Channels.messages_cache_port });
-        }
         let key = "cached_message_" + this.conversation_id + this.is_chat;
         let value = {};
         value[key] = this.current_text;
-        this.current_message_port.postMessage(value);
+        this.chromeapi.PostPortMessage({
+            name: "current_message",
+            data: value
+        });
     }
 
     clearCache() {
         let key = "cached_message_" + this.conversation_id + this.is_chat;
         chrome.storage.sync.remove(key);
         this.current_text = "";
-        let value = {};
-        value[key] = null;
-        this.current_message_port.postMessage(value);
+        this.cacheCurrentMessage();
     }
 
     formatDate(unixtime: number) {

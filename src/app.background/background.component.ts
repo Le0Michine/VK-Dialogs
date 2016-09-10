@@ -26,9 +26,13 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         private dialogsService: DialogService,
         private userService: UserService,
         private vkservice: VKService,
-        private chromeapi: ChromeAPIService) { }
+        private chromeapi: ChromeAPIService) { chromeapi.AcceptConnections(); }
 
     ngOnInit() {
+        this.chromeapi.AcceptConnections();
+        this.userService.init();
+        this.dialogsService.init();
+
         console.log("background init");
         this.preAuthorize();
 
