@@ -19,10 +19,6 @@ export class CacheService {
     private updateDialogs(dialogs: Dialog[]) {
         console.log("update dialogs");
         this.dialogs_cache = dialogs;
-        // this.messages_cache = {};
-        // for (let dialog of dialogs) {
-            // this.messages_cache[dialog.message["chat_id"] || dialog.message.user_id] = dialog.message;
-        // }
     }
 
     pushDialogs(dialogs: Dialog[]) {

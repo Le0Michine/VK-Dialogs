@@ -8,6 +8,7 @@ import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
+import { ChromeAPIService } from "../app.background/chrome-api-service";
 import { DateConverter } from "./date-converter";
 
 @Component({
@@ -44,6 +45,7 @@ export class DialogComponent {
         private user_service: UserService,
         private route: ActivatedRoute,
         private change_detector: ChangeDetectorRef,
+        private chromeapi: ChromeAPIService,
         private renderer: Renderer) { }
 
     ngOnInit() {
@@ -55,7 +57,7 @@ export class DialogComponent {
             let type = params["type"];
             this.is_chat = type === "dialog" ? false : true;
 
-            chrome.runtime.sendMessage({
+            this.chromeapi.SendMessage({
                 name: "last_opened",
                 last_opened: {
                     id: this.conversation_id,
@@ -209,7 +211,7 @@ export class DialogComponent {
     }
 
     goBack() {
-        chrome.runtime.sendMessage({
+        this.chromeapi.SendMessage({
             name: "last_opened",
             last_opened: null,
             go_back: true
@@ -268,7 +270,7 @@ export class DialogComponent {
             return;
         }
         this.messages_service.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
-            message => console.log("result: " + JSON.stringify(message)),
+            message => console.log("result: ", message),
             error => {
                 this.errorHandler(error);
                 this.message_is_sending = false;

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/Observable/fromEventPattern";
 
@@ -7,8 +6,8 @@ import { Channels } from "../app.background/channels";
 
 import { User } from "./user";
 import { VKService } from "./vk-service";
+import { ChromeAPIService } from "../app.background/chrome-api-service";
 import { SessionInfo } from "./session-info";
-import { RequestHelper } from "./request-helper";
 
 @Injectable()
 export class UserService {
@@ -16,24 +15,24 @@ export class UserService {
 
     users_observable: Observable<{}>;
 
-    constructor(private vkservice: VKService, private http: Http) {
+    constructor(private vkservice: VKService, private chromeapi: ChromeAPIService) {
         this.initUsersUpdate();
     }
 
     private getUsers(uids: string): Observable<{}> {
         console.log("users requested");
-        return RequestHelper.sendRequestToBackground({
+        return this.chromeapi.SendRequest({
             name: Channels.get_multiple_users_request,
             user_ids: uids
-        });
+        }).map(x => x.data);
     }
 
     getUser(uid: number = null): Observable<User> {
         console.log("one user requested");
-        return RequestHelper.sendRequestToBackground({
+        return this.chromeapi.SendRequest({
             name: Channels.get_user_request,
             user_id: uid
-        });
+        }).map(x => x.data);
     }
 
     requestUsers() {

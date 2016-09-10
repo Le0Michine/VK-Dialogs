@@ -8,6 +8,7 @@ import { UserService } from "./user-service";
 import { CacheService } from "./cache-service";
 import { DialogService } from "./dialogs-service";
 import { LPSService } from "./lps-service";
+import { ChromeAPIService } from "./chrome-api-service";
 
 @NgModule({
     imports:      [ BrowserModule, HttpModule ],
@@ -18,7 +19,8 @@ import { LPSService } from "./lps-service";
         DialogService,
         UserService,
         CacheService,
-        LPSService
+        LPSService,
+        ChromeAPIService
     ]
 })
 export class AppModule { }

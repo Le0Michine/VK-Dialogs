@@ -8,6 +8,7 @@ import { DialogComponent } from "./dialog.component";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { DialogService } from "./dialogs-service";
+import { ChromeAPIService } from "../app.background/chrome-api-service";
 import { DateConverter } from "./date-converter";
 import { VKConsts } from "./vk-consts";
 
@@ -22,6 +23,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
     users: {};
     chats: {};
     dialogs_count: number;
+    is_destroyed: boolean = false;
 
     dialogs_to_show = [];
 
@@ -36,6 +38,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         private router: Router,
         private vkservice: VKService,
         private dialog_service: DialogService,
+        private chromeapi: ChromeAPIService,
         private change_detector: ChangeDetectorRef) { }
 
     gotoDialog(dialog: Message) {
@@ -72,52 +75,51 @@ export class DialogsComponent implements OnInit, OnDestroy {
 
         this.vkservice.setOnline();
 
-        chrome.runtime.sendMessage({ name: "last_opened" }, response => {
+        this.chromeapi.SendRequest({ name: "last_opened" }).subscribe((response: any) => {
             if (response.last_opened) {
                 let last_opened = response.last_opened;
                 this.router.navigate(["/dialog", last_opened.id, last_opened.type, last_opened.title]);
             }
         });
 
-        this.subscriptions.push(this.user_service.getUser().subscribe(
-            u => {
-                this.user = u;
-                this.dialogs_to_show = this.getDialogs();
-                this.change_detector.detectChanges();
-            },
-            error => this.errorHandler(error),
-            () => console.log("user data obtained")));
+        this.chromeapi.SendRequest({ name: "request_everything" }).subscribe((response: any) => {
+            console.log("got everything: ", response);
+            this.users = response.users;
+            this.dialogs = response.dialogs;
+            this.chats = response.chats;
+            this.user = this.users[response.current_user_id];
+            this.dialogs_to_show = this.getDialogs();
+            this.refreshView();
+        });
 
         this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
+                console.log("DIALOGS", dialogs);
                 this.dialogs = dialogs as Dialog[];
                 this.dialogs_to_show = this.getDialogs();
-                this.change_detector.detectChanges();
+                this.refreshView();
             },
             error => this.errorHandler(error),
             () => console.log("finished dialogs update")
         ));
-        this.dialog_service.requestDialogs();
 
         this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
                     this.users = users;
                     this.dialogs_to_show = this.getDialogs();
-                    this.change_detector.detectChanges();
+                    this.refreshView();
                 },
                 error => this.errorHandler(error),
                 () => console.log("finished users update")
             )
         );
-        this.user_service.requestUsers();
 
         this.subscriptions.push(this.dialog_service.chat_observable.subscribe(chats => {
                 this.chats = chats;
                 this.dialogs_to_show = this.getDialogs();
-                this.change_detector.detectChanges();
+                this.refreshView();
             },
             error => this.errorHandler(error),
             () => console.log("finished chats update"))
         );
-        this.dialog_service.requestChats();
 
         this.dialog_service.subscribeOnDialogsCountUpdate(count => this.dialogs_count = count);
     }
@@ -126,6 +128,13 @@ export class DialogsComponent implements OnInit, OnDestroy {
         console.log("dialogs component destroy");
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
+        }
+        this.is_destroyed = true;
+    }
+
+    refreshView() {
+        if (!this.is_destroyed) {
+            this.change_detector.detectChanges();
         }
     }
 

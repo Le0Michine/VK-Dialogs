@@ -4,10 +4,10 @@ import { Observable }     from "rxjs/Observable";
 import { Router } from "@angular/router";
 
 import { Channels } from "../app.background/channels";
+import { ChromeAPIService } from "../app.background/chrome-api-service";
 
 import { VKConsts } from "./vk-consts";
 import { SessionInfo } from "./session-info";
-import { RequestHelper } from "./request-helper";
 
 @Injectable()
 export class VKService {
@@ -15,21 +15,20 @@ export class VKService {
 
     private handleError(error: any) {
         console.error("An error occurred", error);
-        // return Promise.reject(error.message || error);
     }
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private chromeapi: ChromeAPIService) {
         this.initializeSeesion();
     }
 
     auth(force: boolean = false, manual: boolean = false) {
         console.log("authorization requested");
         this.initializeSeesion();
-        RequestHelper.sendRequestToBackground({
+        this.chromeapi.SendRequest({
             name: Channels.get_session_request,
             force_auth: force,
             requested_by_user: manual
-        }).subscribe(s => this.session_info = s);
+        }).map(x => x.data).subscribe(s => this.session_info = s);
     }
 
     initializeSeesion() {
@@ -56,6 +55,6 @@ export class VKService {
     }
 
     setOnline() {
-        chrome.runtime.sendMessage({name: "set_online"});
+        this.chromeapi.SendMessage({name: "set_online"})
     }
 }

@@ -11,6 +11,7 @@ import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { Channels } from "./channels";
 
 @Injectable()
@@ -37,7 +38,8 @@ export class DialogService {
         private vkservice: VKService,
         private cache: CacheService,
         private userService: UserService,
-        private lpsService: LPSService) {
+        private lpsService: LPSService,
+        private chromeapi: ChromeAPIService) {
 
         this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
         this.getDialogs().subscribe(dialogs => {
@@ -45,6 +47,17 @@ export class DialogService {
             },
             error => this.handleError(error)
         );
+
+        this.chromeapi.OnMessage(Channels.request_everything).subscribe((message: any) => {
+            message.sendResponse({
+                dialogs: this.cache.dialogs_cache,
+                users: this.cache.users_cache,
+                chats: this.cache.chats_cache,
+                current_user_id: this.vkservice.getCurrentUserId()
+            });
+            return false;
+        });
+
         chrome.runtime.onConnect.addListener(port => {
             console.log(port.name + " port opened");
             switch (port.name) {
@@ -131,7 +144,10 @@ export class DialogService {
         if (this.update_dialogs_port) {
             console.log("post dialogs_update message");
             console.dir(this.cache.dialogs_cache.slice(0, this.dialogs_count));
-            this.update_dialogs_port.postMessage({name: "dialogs_update", data: this.cache.dialogs_cache.slice(0, this.dialogs_count)});
+            this.update_dialogs_port.postMessage({
+                name: "dialogs_update",
+                data: this.cache.dialogs_cache.slice(0, this.dialogs_count)
+            });
         }
         else {
             console.log("port dialogs_monitor is closed");

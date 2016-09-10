@@ -133,7 +133,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    max-width: 50%;
+    max-width: 100%;
     text-decoration: none;
     vertical-align: middle;
     font: 14px / 20px "Helvetica Neue", Helvetica, Arial, sans-serif;

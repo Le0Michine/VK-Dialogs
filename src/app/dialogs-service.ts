@@ -8,7 +8,7 @@ import { Message, Chat } from "./message";
 import { Dialog } from "./dialog";
 import { User } from "./user";
 import { Channels } from "../app.background/channels";
-import { RequestHelper } from "./request-helper";
+import { ChromeAPIService } from "../app.background/chrome-api-service";
 
 @Injectable()
 export class DialogService {
@@ -21,7 +21,7 @@ export class DialogService {
 
     private chats;
 
-    constructor(private vkservice: VKService, private http: Http) {
+    constructor(private vkservice: VKService, private http: Http, private chromeapi: ChromeAPIService) {
         this.initializeDialogsMonitor();
         this.initChatsUpdate();
         this.initDialogsUpdate();
@@ -30,20 +30,20 @@ export class DialogService {
 
     markAsRead(ids: string): Observable<number> {
         console.log("requested message(s) with id: " + ids);
-        return RequestHelper.sendRequestToBackground({
+        return this.chromeapi.SendRequest({
             name: Channels.mark_as_read_request,
             message_ids: ids
-        });
+        }).map(x => x.data);
     }
 
     sendMessage(id: number, message: string, chat: boolean): Observable<Message> {
         console.log("sending message");
-        return RequestHelper.sendRequestToBackground({
+        return this.chromeapi.SendRequest({
             name: Channels.send_message_request,
             user_id: id,
             message_body: message,
             is_chat: chat
-        });
+        }).map(x => x.data);
     }
 
     loadOldDialogs() {
@@ -65,7 +65,10 @@ export class DialogService {
     }
 
     getChatParticipants(id: number): Observable<{}> {
-        return RequestHelper.sendRequestToBackground({name: Channels.get_chat_participants_request, chat_id: id});
+        return this.chromeapi.SendRequest({
+            name: Channels.get_chat_participants_request,
+            chat_id: id
+        }).map(x => x.data);
     }
 
     subscribeOnDialogsCountUpdate(callback: (dialogsCount: number) => void) {
