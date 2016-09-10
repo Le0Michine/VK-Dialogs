@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable }     from "rxjs/Observable";
-import "rxjs/add/Observable/fromEventPattern";
+import { Observable } from "rxjs/Observable";
 
 import { Channels } from "../app.background/channels";
 
@@ -11,8 +10,6 @@ import { SessionInfo } from "./session-info";
 
 @Injectable()
 export class UserService {
-    private users_port: chrome.runtime.Port;
-
     users_observable: Observable<{}>;
 
     constructor(private vkservice: VKService, private chromeapi: ChromeAPIService) {
@@ -35,23 +32,7 @@ export class UserService {
         }).map(x => x.data);
     }
 
-    requestUsers() {
-        this.users_port.postMessage({name: Channels.get_users_request});
-    }
-
     initUsersUpdate() {
-        this.users_port = chrome.runtime.connect({name: "users_monitor"});
-        this.users_observable = Observable.fromEventPattern(
-            (h: (x: User[]) => void) => this.users_port.onMessage.addListener((message: any) => {
-                if (message.name === "users_update" && message.data) {
-                    console.log("got users_update message");
-                    h(message.data as User[]);
-                }
-                else {
-                    console.log("unknown message in users_monitor: " + JSON.stringify(message));
-                }
-            }),
-            (h: (x: User[]) => void) => this.users_port.onMessage.removeListener(h)
-        );
+        this.users_observable = this.chromeapi.OnPortMessage("users_update").map(x => x.data);
     }
 }

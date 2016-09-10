@@ -87,7 +87,6 @@ export class DialogComponent {
                 error => this.errorHandler(error),
                 () => console.log("finished users update")
             ));
-            this.user_service.requestUsers();
 
             this.messages_service.subscribeOnMessagesCountUpdate(count => this.messages_count = count);
         });
@@ -105,6 +104,7 @@ export class DialogComponent {
         }
         this.current_message_port.disconnect();
         this.current_message_port = null;
+        this.chromeapi.Disconnect();
     }
 
     restoreCachedMessages(id, isChat) {

@@ -130,6 +130,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
             sub.unsubscribe();
         }
         this.is_destroyed = true;
+        this.chromeapi.Disconnect();
     }
 
     refreshView() {

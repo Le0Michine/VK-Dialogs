@@ -10,29 +10,20 @@ import { User } from "../app/user";
 import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
 import { LPSService } from "./lps-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { Channels } from "./channels";
 
 @Injectable()
 export class UserService {
-    private update_users_port: chrome.runtime.Port;
-
-    constructor(private vkservice: VKService,  private cache: CacheService, private lpsService: LPSService) {
+    constructor(
+        private vkservice: VKService,
+        private cache: CacheService,
+        private lpsService: LPSService,
+        private chromeapi: ChromeAPIService) {
         lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
-        chrome.runtime.onConnect.addListener(port => {
-            switch (port.name) {
-                case "users_monitor":
-                    this.update_users_port = port;
-                    this.postUsersUpdate();
-                    this.update_users_port.onDisconnect.addListener(() => {
-                        this.update_users_port = null;
-                    });
-                    this.update_users_port.onMessage.addListener((message: any) => {
-                        if (message.name === Channels.get_users_request) {
-                            this.postUsersUpdate();
-                        }
-                    });
-                    break;
-            }
+        chromeapi.PostPortMessageOnConnect({
+            name: "users_update",
+            data: this.cache.users_cache
         });
     }
 
@@ -44,13 +35,11 @@ export class UserService {
     }
 
     postUsersUpdate() {
-        if (this.update_users_port) {
-            console.log("post users_update message");
-            this.update_users_port.postMessage({name: "users_update", data: this.cache.users_cache});
-        }
-        else {
-            console.log("port users_update is closed");
-        }
+        console.log("post users update: ", this.cache.users_cache);
+        this.chromeapi.PostPortMessage({
+            name: "users_update",
+            data: this.cache.users_cache
+        });
     }
 
     loadUsers(uids: string): void {
@@ -111,6 +100,5 @@ export class UserService {
 
     errorHandler(error, comment: string) {
         console.error(`An error occurred ${comment}:`, error);
-        // return Promise.reject(error.message || error);
     }
 }

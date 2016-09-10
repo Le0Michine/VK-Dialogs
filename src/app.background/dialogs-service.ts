@@ -364,13 +364,9 @@ export class DialogService {
         console.log("dialogs cout " + json.count);
         this.max_dialogs_count = json.count;
         this.postDialogsCountUpdate();
-        this.setBadgeNumber(json.unread_dialogs ? json.unread_dialogs : "");
+        this.chromeapi.UpdateActionBadge(json.unread_dialogs ? json.unread_dialogs : "");
 
         return json.items as Dialog[];
-    }
-
-    private setBadgeNumber(n: number) {
-        chrome.browserAction.setBadgeText({text: String(n)});
     }
 
     private handleError(error: any) {
