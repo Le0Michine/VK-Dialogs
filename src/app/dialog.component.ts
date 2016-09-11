@@ -109,11 +109,13 @@ export class DialogComponent implements OnInit, OnDestroy {
         let value = {};
         value[key] = "";
 
-        chrome.storage.sync.get(value, (value: any) => {
-            console.log("restored message: ", value);
-            if (value[key]) {
+        this.chromeapi.SendRequest({
+            "name": "get_current_message",
+            "key": key
+        }).subscribe((response) => {
+            if (response[key]) {
                 this.hideLabelContent();
-                this.current_text = value[key] as string;
+                this.current_text = response[key] as string;
             }
             this.updateCachedMessage();
         });
@@ -214,7 +216,7 @@ export class DialogComponent implements OnInit, OnDestroy {
             last_opened: null,
             go_back: true
         });
-        this.cacheCurrentMessage();
+        this.cacheCurrentMessage(true);
         window.history.back();
         this.ngOnDestroy();
     }
@@ -326,19 +328,17 @@ export class DialogComponent implements OnInit, OnDestroy {
         updateValue();
     }
 
-    cacheCurrentMessage() {
+    cacheCurrentMessage(last: boolean = false) {
         let key = "cached_message_" + this.conversation_id + this.is_chat;
-        let value = {};
-        value[key] = this.current_text;
         this.chromeapi.PostPortMessage({
             name: "current_message",
-            data: value
+            key: key,
+            value: this.current_text,
+            is_last: last
         });
     }
 
     clearCache() {
-        let key = "cached_message_" + this.conversation_id + this.is_chat;
-        chrome.storage.sync.remove(key);
         this.current_text = "";
         this.cacheCurrentMessage();
     }

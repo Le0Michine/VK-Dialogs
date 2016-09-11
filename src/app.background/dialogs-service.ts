@@ -56,8 +56,18 @@ export class DialogService {
             return false;
         });
 
+        this.chromeapi.OnMessage("get_current_message").subscribe(message => {
+            let v = {};
+            v[message.key] = "";
+            console.log("getting current message: ", v);
+            chrome.storage.sync.get(v, (value: any) => {
+                console.log("restored message: ", value);
+                message.sendResponse(value);
+                this.monitorCurrentMessage();
+            });
+        });
+
         this.chromeapi.OnMessage("conversation_id").subscribe((message: any) => {
-            this.monitorCurrentMessage();
             this.messages_count = 20;
             this.current_dialog_id = message.id;
             this.is_chat = message.is_chat;
@@ -65,7 +75,6 @@ export class DialogService {
             this.chromeapi.OnDisconnect().subscribe(() => {
                 this.current_dialog_id = null;
                 this.is_chat = null;
-                this.messages_count = 20;
             });
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                 if (history) {
@@ -106,24 +115,32 @@ export class DialogService {
     }
 
     monitorCurrentMessage() {
+        let key = null;
         let current_message = {};
-        this.chromeapi.OnPortMessage("current_message").subscribe(message => {
-            current_message = message.data;
-        });
+
+        let save = () => {
+            if (key) {
+                if (current_message[key]) {
+                    chrome.storage.sync.set(current_message);
+                }
+                else {
+                    console.log("remove message: ", current_message);
+                    chrome.storage.sync.remove(key);
+                }
+            }
+        };
 
         let subscription = Observable.interval(10000).subscribe(() => {
             console.log("store current message: ", current_message);
-            let key = Object.keys(current_message)[0];
-            if (key) {
-                chrome.storage.sync.set(current_message);
-            }
+            save();
         });
-        this.chromeapi.OnDisconnect().subscribe(() => {
-            console.log("store current message on disonnect: ", current_message);
-            subscription.unsubscribe();
-            let key = Object.keys(current_message)[0];
-            if (key) {
-                chrome.storage.sync.set(current_message);
+
+        this.chromeapi.OnPortMessage("current_message").subscribe(message => {
+            key = message.key;
+            current_message[key] = message.value;
+            if (message.is_last) {
+                subscription.unsubscribe();
+                save();
             }
         });
     }
