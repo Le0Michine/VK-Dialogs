@@ -71,7 +71,7 @@ export class ChromeAPIService {
      * @param {string} value - value to set.
      */
     UpdateActionBadge(value): void {
-        chrome.browserAction.setBadgeText({text: value});
+        chrome.browserAction.setBadgeText({text: String(value)});
     }
 
     /**
