@@ -11,7 +11,6 @@ export class Channels {
     public static get_chat_participants_request: string = "get_chat_participants";
     public static update_history_request: string = "update_history";
     public static update_chats: string = "chats_update";
-    public static get_session_request: string = "get_session_request";
     public static get_multiple_users_request: string = "get_multiple_users_request";
     public static load_old_dialogs_request: string = "load_old_dialogs";
     public static load_old_messages_request: string = "load_old_messages";

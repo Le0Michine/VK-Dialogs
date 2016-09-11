@@ -23,9 +23,8 @@ export class UserService {
 
     init() {
         this.lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
-        this.chromeapi.PostPortMessageOnConnect({
-            name: "users_update",
-            data: this.cache.users_cache
+        this.chromeapi.OnPortMessage("get_users").subscribe(() => {
+            this.postUsersUpdate();
         });
     }
 

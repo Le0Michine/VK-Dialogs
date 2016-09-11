@@ -24,11 +24,6 @@ export class VKService {
     auth(force: boolean = false, manual: boolean = false) {
         console.log("authorization requested");
         this.initializeSeesion();
-        this.chromeapi.SendRequest({
-            name: Channels.get_session_request,
-            force_auth: force,
-            requested_by_user: manual
-        }).map(x => x.data).subscribe(s => this.session_info = s);
     }
 
     initializeSeesion() {

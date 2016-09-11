@@ -23,7 +23,6 @@ export class DialogService {
     private send_message: string = "messages.send";
     private mark_as_read: string = "messages.markAsRead";
 
-    update_dialogs_port: chrome.runtime.Port;
     current_dialog_id: number = null;
     is_chat: boolean = null;
 
@@ -38,7 +37,7 @@ export class DialogService {
         private userService: UserService,
         private lpsService: LPSService,
         private chromeapi: ChromeAPIService) { }
-    
+
     init() {
         this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
         this.getDialogs().subscribe(dialogs => {
@@ -63,6 +62,11 @@ export class DialogService {
             this.current_dialog_id = message.id;
             this.is_chat = message.is_chat;
             this.postHistoryUpdate();
+            this.chromeapi.OnDisconnect().subscribe(() => {
+                this.current_dialog_id = null;
+                this.is_chat = null;
+                this.messages_count = 20;
+            });
             this.getHistory(this.current_dialog_id, this.is_chat).subscribe(history => {
                 if (history) {
                     this.cache.pushHistory(history.items, history.count);
@@ -85,36 +89,19 @@ export class DialogService {
         });
 
         this.chromeapi.OnDisconnect().subscribe(() => {
-            this.current_dialog_id = null;
-            this.is_chat = null;
-            this.messages_count = 20;
+            this.dialogs_count = 20;
         });
 
-        chrome.runtime.onConnect.addListener(port => {
-            console.log(port.name + " port opened");
-            switch (port.name) {
-                case "dialogs_monitor":
-                    this.update_dialogs_port = port;
-                    this.update_dialogs_port.onDisconnect.addListener(() => {
-                        this.update_dialogs_port = null;
-                        this.dialogs_count = 20;
-                    });
-                    this.postDialogsUpdate();
-                    this.postDialogsCountUpdate();
-                    this.postChatsUpdate();
-                    this.update_dialogs_port.onMessage.addListener((message: any) => {
-                        if (message.name === Channels.load_old_dialogs_request) {
-                            this.loadOldDialogs();
-                        }
-                        else if (message.name === Channels.get_chats_request) {
-                            this.postChatsUpdate();
-                        }
-                        else if (message.name === Channels.get_dialogs_request) {
-                            this.postDialogsUpdate();
-                        }
-                    });
-                    break;
-            }
+        this.chromeapi.OnPortMessage(Channels.load_old_dialogs_request).subscribe(() => {
+            this.loadOldDialogs();
+        });
+
+        this.chromeapi.OnPortMessage(Channels.get_chats_request).subscribe(() => {
+            this.postChatsUpdate();
+        });
+
+        this.chromeapi.OnPortMessage(Channels.get_dialogs_request).subscribe(() => {
+            this.postDialogsUpdate();
         });
     }
 
@@ -142,17 +129,10 @@ export class DialogService {
     }
 
     postDialogsUpdate() {
-        if (this.update_dialogs_port) {
-            console.log("post dialogs_update message");
-            console.dir(this.cache.dialogs_cache.slice(0, this.dialogs_count));
-            this.update_dialogs_port.postMessage({
-                name: "dialogs_update",
-                data: this.cache.dialogs_cache.slice(0, this.dialogs_count)
-            });
-        }
-        else {
-            console.log("port dialogs_monitor is closed");
-        }
+        this.chromeapi.PostPortMessage({
+            name: "dialogs_update",
+            data: this.cache.dialogs_cache.slice(0, this.dialogs_count)
+        });
     }
 
     postHistoryUpdate() {
@@ -164,19 +144,19 @@ export class DialogService {
     }
 
     postChatsUpdate() {
-        if (this.update_dialogs_port) {
-            console.log("post chats_update message");
-            this.update_dialogs_port.postMessage({name: Channels.update_chats, data: this.cache.chats_cache});
-        }
-        else {
-            console.log("port dialogs_monitor is closed");
-        }
+        this.chromeapi.PostPortMessage({
+            name: Channels.update_chats,
+            data: this.cache.chats_cache
+        });
     }
 
     postDialogsCountUpdate() {
-        if (this.update_dialogs_port && this.dialogs_count) {
+        if (this.dialogs_count) {
             console.log("post dialogs_count_update message");
-            this.update_dialogs_port.postMessage({name: Channels.dialogs_count_update, data: this.max_dialogs_count});
+            this.chromeapi.PostPortMessage({
+                name: Channels.dialogs_count_update,
+                data: this.max_dialogs_count
+            });
         }
         else {
             console.log("port dialogs_monitor is closed or max_dialogs_count isn't specified");

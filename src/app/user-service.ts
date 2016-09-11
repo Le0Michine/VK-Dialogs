@@ -10,19 +10,7 @@ import { SessionInfo } from "./session-info";
 
 @Injectable()
 export class UserService {
-    users_observable: Observable<{}>;
-
-    constructor(private vkservice: VKService, private chromeapi: ChromeAPIService) {
-        this.initUsersUpdate();
-    }
-
-    private getUsers(uids: string): Observable<{}> {
-        console.log("users requested");
-        return this.chromeapi.SendRequest({
-            name: Channels.get_multiple_users_request,
-            user_ids: uids
-        }).map(x => x.data);
-    }
+    constructor(private vkservice: VKService, private chromeapi: ChromeAPIService) { }
 
     getUser(uid: number = null): Observable<User> {
         console.log("one user requested");
@@ -32,7 +20,10 @@ export class UserService {
         }).map(x => x.data);
     }
 
-    initUsersUpdate() {
-        this.users_observable = this.chromeapi.OnPortMessage("users_update").map(x => x.data);
+    getUsers() {
+        this.chromeapi.PostPortMessage({
+            name: "get_users",
+        });
+        return this.chromeapi.OnPortMessage("users_update").map(x => x.data);
     }
 }

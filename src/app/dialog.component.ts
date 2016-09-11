@@ -66,21 +66,19 @@ export class DialogComponent implements OnInit, OnDestroy {
 
             this.restoreCachedMessages(this.conversation_id, this.is_chat);
 
-            this.subscriptions.push(this.messages_service.history_observable.subscribe(history => {
+            this.subscriptions.push(this.messages_service.getHistory(this.conversation_id, this.is_chat).subscribe(history => {
                     this.history = history as Message[];
                     this.history_to_show = this.getHistory(this.history);
-                    console.log("history converted");
                     console.log("force update 1");
-                    this.change_detector.detectChanges();
+                    this.refreshView();
                 })
             );
-            this.messages_service.setCurrentConversation(this.conversation_id, this.is_chat);
 
-            this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
+            this.subscriptions.push(this.user_service.getUsers().subscribe(users => {
                     this.participants = users;
                     this.history_to_show = this.getHistory(this.history);
                     console.log("force update 2");
-                    this.change_detector.detectChanges();
+                    this.refreshView();
                 },
                 error => this.errorHandler(error),
                 () => console.log("finished users update")
@@ -100,7 +98,10 @@ export class DialogComponent implements OnInit, OnDestroy {
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
-        this.chromeapi.Disconnect();
+    }
+
+    refreshView() {
+        this.change_detector.detectChanges();
     }
 
     restoreCachedMessages(id, isChat) {
@@ -121,6 +122,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     getHistory(messages: Message[]) {
         console.log("convert history: ", messages);
         if (!messages.length || !this.participants[messages[0].user_id]) {
+            console.log("not enough data");
             return [];
         }
         let history: MessageToShow[] = [];

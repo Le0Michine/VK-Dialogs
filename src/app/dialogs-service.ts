@@ -11,19 +11,14 @@ import { ChromeAPIService } from "../app.background/chrome-api-service";
 
 @Injectable()
 export class DialogService {
-    private dialogs_port: chrome.runtime.Port;
-
     chat_observable: Observable<{}>;
     dialogs_observable: Observable<{}>;
-    history_observable: Observable<{}>;
 
     private chats;
 
     constructor(private vkservice: VKService, private http: Http, private chromeapi: ChromeAPIService) {
-        this.initializeDialogsMonitor();
         this.initChatsUpdate();
         this.initDialogsUpdate();
-        this.initHistoryUpdate();
     }
 
     markAsRead(ids: string): Observable<number> {
@@ -45,12 +40,9 @@ export class DialogService {
     }
 
     loadOldDialogs() {
-        if (this.dialogs_port) {
-            this.dialogs_port.postMessage({name: Channels.load_old_dialogs_request});
-        }
-        else {
-            console.log("dialogs_monitor port isn\'t initialized");
-        }
+        this.chromeapi.PostPortMessage({
+            name: Channels.load_old_dialogs_request
+        });
     }
 
     loadOldMessages() {
@@ -67,12 +59,9 @@ export class DialogService {
     }
 
     subscribeOnDialogsCountUpdate(callback: (dialogsCount: number) => void) {
-        this.initializeDialogsMonitor();
-        this.dialogs_port.onMessage.addListener((message: any) => {
-            if (message.name === Channels.dialogs_count_update) {
-                console.log("got dialogs_count_update message");
-                callback(message.data);
-            }
+        this.chromeapi.OnPortMessage(Channels.dialogs_count_update).subscribe((message: any) => {
+            console.log("got dialogs_count_update message");
+            callback(message.data);
         });
     }
 
@@ -84,58 +73,19 @@ export class DialogService {
     }
 
     initChatsUpdate(): void {
-        this.initializeDialogsMonitor();
-        this.chat_observable = Observable.fromEventPattern(
-            (h: (Object) => void) => this.dialogs_port.onMessage.addListener((message: any) => {
-                if (message.name === Channels.update_chats && message.data) {
-                    console.log("got chats_update message");
-                    h(message.data);
-            }}),
-            (h: (Object) => void) => this.dialogs_port.onMessage.removeListener(h)
-        );
+        this.chat_observable = this.chromeapi.OnPortMessage(Channels.update_chats).map(x => x.data);
     }
 
     initDialogsUpdate(): void {
-        this.initializeDialogsMonitor();
-        this.dialogs_observable = Observable.fromEventPattern(
-            (h: (x: Dialog[]) => void) => this.dialogs_port.onMessage.addListener((message: any) => {
-                if (message.name === "dialogs_update" && message.data) {
-                    console.log("got dialogs_update message");
-                    h(message.data as Dialog[]);
-                }
-            }),
-            (h: (x: Dialog[]) => void) => this.dialogs_port.onMessage.removeListener(h)
-        );
+        this.dialogs_observable = this.chromeapi.OnPortMessage("dialogs_update").map(x => x.data);
     }
 
-    initHistoryUpdate() {
-        this.history_observable = this.chromeapi.OnPortMessage("history_update").map(x => x.data);
-    }
-
-    setCurrentConversation(conversation_id, is_chat) {
+    getHistory(conversation_id, is_chat) {
         this.chromeapi.SendMessage({
             name: "conversation_id",
             id: conversation_id,
             is_chat: is_chat
         });
-    }
-
-    requestDialogs() {
-        this.dialogs_port.postMessage({name: Channels.get_dialogs_request});
-    }
-
-    requestChats() {
-        this.dialogs_port.postMessage({name: Channels.get_chats_request});
-    }
-
-    disconnectDialogs(): void {
-        this.dialogs_port.disconnect();
-        this.dialogs_port = null;
-    }
-
-    private initializeDialogsMonitor() {
-        if (!this.dialogs_port) {
-            this.dialogs_port = chrome.runtime.connect({name: "dialogs_monitor"});
-        }
+        return this.chromeapi.OnPortMessage("history_update").map(x => x.data);
     }
 }

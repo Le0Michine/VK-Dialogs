@@ -102,7 +102,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
             () => console.log("finished dialogs update")
         ));
 
-        this.subscriptions.push(this.user_service.users_observable.subscribe(users => {
+        this.subscriptions.push(this.user_service.getUsers().subscribe(users => {
                     this.users = users;
                     this.dialogs_to_show = this.getDialogs();
                     this.refreshView();
@@ -130,7 +130,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
             sub.unsubscribe();
         }
         this.is_destroyed = true;
-        this.chromeapi.Disconnect();
+        this.chromeapi.PostPortMessage("store_current_message");
     }
 
     refreshView() {

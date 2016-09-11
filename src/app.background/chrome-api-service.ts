@@ -48,8 +48,9 @@ export class ChromeAPIService {
      */
     SendRequest(message): Observable<any> {
         return Observable.bindCallback(
-            (callback: (Object) => void) => chrome.runtime.sendMessage(message, (x) => {
+            (callback: (Object) => void) => chrome.runtime.sendMessage(message, x => {
                 if (chrome.runtime.lastError) {
+                    console.error("error occured while senf request: ", message);
                     console.error(chrome.runtime.lastError);
                 }
                 callback(x);
@@ -84,7 +85,7 @@ export class ChromeAPIService {
                     if (this.is_background) {
                         chrome.runtime.onConnect.addListener(port => {
                             if (port.name === this.port_name) {
-                                this.addMessageListener(port, name, handler);
+                                this.AddMessageListener(port, name, handler);
                             }
                         });
                         return;
@@ -92,7 +93,7 @@ export class ChromeAPIService {
                     console.log("port is closed, open a new one");
                     this.port = chrome.runtime.connect({ name: this.port_name });
                 }
-                this.addMessageListener(this.port, name, handler);
+                this.AddMessageListener(this.port, name, handler);
             },
             (handler: (Object) => void) => this.port.onMessage.removeListener(handler)
         );
@@ -117,6 +118,7 @@ export class ChromeAPIService {
      * posts a message as soon as port is connected
      * else post a message on existing port.
      * @param {any} message - json message.
+     * @deprecated will be removed
      */
     PostPortMessageOnConnect(message): void {
         if (this.port) {
@@ -156,6 +158,7 @@ export class ChromeAPIService {
     /**
      * closes existing port.
      * do nothing if port doesn't exist.
+     * @deprecated will be removed
      */
     Disconnect(): void {
         if (this.port) {
@@ -165,7 +168,7 @@ export class ChromeAPIService {
         }
     }
 
-    private addMessageListener(port, name, handler) {
+    private AddMessageListener(port, name, handler) {
         port.onMessage.addListener((message: any) => {
             if (message.name === name) {
                 console.log("got message on port: ", message);
