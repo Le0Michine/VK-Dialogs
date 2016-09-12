@@ -279,7 +279,7 @@ export class DialogComponent implements OnInit, OnDestroy {
             () => {
                 console.log("message sent");
                 this.clearCache();
-                this.updateInputMessage();
+                this.updateCachedMessage();
                 this.message_is_sending = false;
             });
     }
