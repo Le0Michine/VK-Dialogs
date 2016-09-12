@@ -105,13 +105,17 @@ export class ChromeAPIService {
      * @param {any} message - json message.
      */
     PostPortMessage(message): void {
-        if (this.port) {
-            console.log("post port message: ", message);
-            this.port.postMessage(message);
+        if (!this.port) {
+            if (!this.is_background) {
+                this.port = chrome.runtime.connect({ name: this.port_name });
+            }
+            else {
+                console.log("port isn't connected");
+                return;
+            }
         }
-        else {
-            console.log("port isn't connected");
-        }
+        console.log("post port message: ", message);
+        this.port.postMessage(message);
     }
 
     /**

@@ -9,7 +9,7 @@ export class ErrorHelper {
                 case 5: // problems with authorization need to get new access_token
                     console.log("authorization issue, trying to reset session");
                     AuthHelper.clearSession();
-                    AuthHelper.authorize(false);
+                    AuthHelper.authorize(true);
                     break;
             }
             return code;

@@ -3,6 +3,9 @@ import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/htt
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
+import "rxjs/add/observable/throw";
+import "rxjs/add/operator/catch";
+import "rxjs/add/observable/of";
 
 import { VKConsts } from "../app/vk-consts";
 import { Message, Chat } from "../app/message";
@@ -26,8 +29,9 @@ export class LPSService {
 
     constructor(
         private http: Http,
-        private vkservice: VKService) {
+        private vkservice: VKService) { }
 
+    init() {
         this.startMonitoring(Number(window.localStorage.getItem("lps_timstamp")));
     }
 
@@ -149,7 +153,12 @@ export class LPSService {
     }
 
     private nextRequest(server: LongPollServer) {
-        this.startLongPollRequest(server).subscribe(response => {
+        this.startLongPollRequest(server)
+        .catch(error => {
+            console.log("error occured while lp request: ", error);
+            return Observable.of({ error: true });
+        })
+        .subscribe(response => {
             if (response.failed === 2) {
                 console.log("lps key expired need to obtain the new one");
                 this.startMonitoring(server.ts);
@@ -163,8 +172,11 @@ export class LPSService {
                 this.on_message_update();
                 // this.on_user_update();
             }
+            else if (response.error) {
+                console.log("error occured, stop moitoring");
+            }
             else {
-                console.log(new Date(Date.now()) + " got a long poll response: " + JSON.stringify(response));
+                console.log(new Date(Date.now()) + " got a long poll response: ", response);
                 server.ts = response.ts;
                 this.processLongPollResponse(response);
                 this.nextRequest(server);
@@ -184,6 +196,13 @@ export class LPSService {
     }
 
     private startLongPollRequest(server: LongPollServer) {
+        if (!this.vkservice.isAuthorized()) {
+            console.log("unauthorized, stop monitoring");
+            return Observable.throw({
+                type: "Unauthorized",
+                message: "User unauthorized"
+            });
+        }
         console.log(new Date(Date.now()) + " perform a long poll request: ", server);
         let uri: string = "http://" + server.server + "?act=a_check&key=" + server.key + "&ts=" + server.ts + "&wait=25&mode=2";
         return this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json());

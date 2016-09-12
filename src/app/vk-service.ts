@@ -21,32 +21,34 @@ export class VKService {
         this.initializeSeesion();
     }
 
-    auth(force: boolean = false, manual: boolean = false) {
-        console.log("authorization requested");
-        this.initializeSeesion();
-    }
-
-    initializeSeesion() {
+    private initializeSeesion() {
         this.session_info = JSON.parse(window.localStorage.getItem(VKConsts.vk_session_info));
     }
 
-    isSessionValid() {
+    private isSessionValid() {
         return Boolean(
             this.session_info
             && this.session_info.access_token
             && this.session_info.timestamp
             && this.session_info.token_exp
             && this.session_info.user_id
-            && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
+            // && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
         );
     }
 
-    getSession(): SessionInfo {
+    auth() {
+        console.log("authorization requested");
+        this.chromeapi.PostPortMessage({ name: "authorize" });
         this.initializeSeesion();
-        if (!this.isSessionValid()) {
-            this.auth(true);
-        }
-        return this.session_info;
+    }
+
+    hasValidSession() {
+        this.initializeSeesion();
+        return this.isSessionValid();
+    }
+
+    getCurrentUserId() {
+        return this.session_info.user_id;
     }
 
     setOnline() {

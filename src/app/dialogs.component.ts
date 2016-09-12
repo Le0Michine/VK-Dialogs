@@ -45,13 +45,13 @@ export class DialogsComponent implements OnInit, OnDestroy {
         let link: string[];
         let chat = dialog as Chat;
         if (chat.chat_id) {
-            link = ["/dialog", chat.chat_id.toString(), "chat", chat.title];
+            link = ["dialog", chat.chat_id.toString(), "chat", chat.title];
         }
         else {
             let user: User = this.users[dialog.user_id];
             let title: string = !dialog.title || dialog.title === " ... " ? user.first_name + " " + user.last_name : dialog.title;
             link = [
-                "/dialog",
+                "dialog",
                 dialog.user_id.toString(),
                 "dialog",
                 title];
@@ -68,8 +68,8 @@ export class DialogsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (window.localStorage.getItem(VKConsts.user_denied) === "true" || this.vkservice.getSession() == null) {
-            this.router.navigate(["/authorize"]);
+        if (window.localStorage.getItem(VKConsts.user_denied) === "true" || !this.vkservice.hasValidSession()) {
+            this.router.navigate(["authorize"]);
             return;
         }
 
@@ -78,7 +78,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         this.chromeapi.SendRequest({ name: "last_opened" }).subscribe((response: any) => {
             if (response.last_opened) {
                 let last_opened = response.last_opened;
-                this.router.navigate(["/dialog", last_opened.id, last_opened.type, last_opened.title]);
+                this.router.navigate(["dialog", last_opened.id, last_opened.type, last_opened.title]);
             }
         });
 

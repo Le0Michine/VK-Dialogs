@@ -48,7 +48,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         console.log("specific dialog component init");
-        this.user_id = this.vkservice.getSession().user_id;
+        this.user_id = this.vkservice.getCurrentUserId();
         let sub = this.route.params.subscribe(params => {
             this.title = params["title"];
             this.conversation_id = +params["id"];
@@ -340,7 +340,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     clearCache() {
         this.current_text = "";
-        this.cacheCurrentMessage();
+        this.cacheCurrentMessage(true);
     }
 
     formatDate(unixtime: number) {

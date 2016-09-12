@@ -17,6 +17,6 @@ export class LoginComponent {
     constructor(private vkservice: VKService) { }
 
     authorize() {
-        this.vkservice.auth(false, true);
+        this.vkservice.auth();
     }
 }

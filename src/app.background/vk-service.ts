@@ -1,9 +1,11 @@
-import { Injectable }     from "@angular/core";
-import { Observable }     from "rxjs/Observable";
-import { Http }     from "@angular/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs/Observable";
+import { Http } from "@angular/http";
+import "rxjs/add/observable/throw";
 import "rxjs/add/operator/concatMap";
 import "rxjs/add/operator/retry";
 import "rxjs/add/operator/catch";
+import "rxjs/add/observable/of";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
@@ -13,7 +15,7 @@ import { AuthHelper } from "./auth-helper";
 @Injectable()
 export class VKService {
     private session_info: SessionInfo;
-
+    private authorized: boolean = false;
     private set_online = "account.setOnline";
 
     private handleError(error: any) {
@@ -26,21 +28,35 @@ export class VKService {
 
     auth(force: boolean = false) {
         console.log("authorization requested");
-        this.initializeSeesion();
         if (!this.isSessionValid()) {
-            let force = this.session_info ? false : true;
             let obs = AuthHelper.authorize(force);
-            obs.subscribe(session => {
+            obs.catch(error => {
+                console.error("failed to authorize: ", error);
+                return Observable.of(null);
+            }).subscribe(session => {
                 if (session) {
                     this.session_info = session;
+                    this.authorized = true;
+                    }
+                },
+                error => {
+                    console.error("authorization failed: ", error)
                 }
-            });
+            );
             return obs;
+        }
+        else {
+            this.authorized = true;
+            return Observable.of(this.session_info);
         }
     }
 
     initializeSeesion() {
         this.session_info = JSON.parse(window.localStorage.getItem(VKConsts.vk_session_info));
+    }
+
+    isAuthorized() {
+        return this.authorized;
     }
 
     isSessionValid() {
@@ -57,8 +73,7 @@ export class VKService {
 
     getSession(): Observable<SessionInfo> {
         if (!this.isSessionValid()) {
-            let background: boolean = this.session_info ? this.session_info.isExpired() : false;
-            return this.auth(background);
+            return this.auth();
         }
         return Observable.of(this.session_info);
     }
@@ -95,7 +110,11 @@ export class VKService {
     performAPIRequest(method: string, parameters: string) {
         return this.getSession().concatMap(session => {
             if (!session) {
-                Observable.throw("Unable to get session");
+                this.authorized = false;
+                return Observable.throw({
+                    type: "Unauthorized",
+                    message: "Unable to get session"
+                });
             }
             let url = `${VKConsts.api_url}${method}?access_token=${session.access_token}&v=${VKConsts.api_version}`;
             if (parameters) {

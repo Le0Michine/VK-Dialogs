@@ -1,4 +1,5 @@
 import { Observable } from "rxjs/Observable";
+import "rxjs/add/Observable/fromEventPattern";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
@@ -14,20 +15,20 @@ export class AuthHelper {
     static authorization_in_progress_count: number = 0;
     static current_authorisation: Observable<any>;
 
-    static authorize(background: boolean = true, requested_by_user: boolean = false): Observable<SessionInfo> {
+    static authorize(forced: boolean = false): Observable<SessionInfo> {
         console.log("start authorization");
         if (AuthHelper.authorization_in_progress_count > 0) {
             console.log("another authorisation in progress, cancel request");
-            if (requested_by_user) chrome.tabs.update(AuthHelper.tab_id, {active: true});
+            if (forced) chrome.tabs.update(AuthHelper.tab_id, {active: true});
             return AuthHelper.current_authorisation;
         }
-        if (window.localStorage.getItem(VKConsts.user_denied) === "true" && !requested_by_user) {
+        if (window.localStorage.getItem(VKConsts.user_denied) === "true" && !forced) {
+            console.log("authorisation rejected by user");
             return Observable.bindCallback((callback: (SessionInfo) => void) => callback(null))();
         }
         else {
             window.localStorage.removeItem(VKConsts.user_denied);
         }
-        AuthHelper.authorization_in_progress_count ++;
         let authUrl: string = AuthHelper.auth_url
             + "client_id=" + AuthHelper.client_id
             + "&scope=" + AuthHelper.scope
@@ -35,9 +36,18 @@ export class AuthHelper {
             + "&display=" + AuthHelper.display
             + "&response_type=" + AuthHelper.response_type
             + "&v=" + VKConsts.api_version;
+        AuthHelper.authorization_in_progress_count ++;
+
+        /*let observable = Observable.fromEventPattern(
+            handler => {
+                AuthHelper.addTabListener(handler);
+                chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
+            },
+            handler => {}
+        );*/
         let observable = Observable.bindCallback((callback: (SessionInfo) => void) => {
             AuthHelper.addTabListener(callback);
-            chrome.tabs.create({url: authUrl, selected: !background}, tab => AuthHelper.tab_id = tab.id);
+            chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
         });
         AuthHelper.current_authorisation = observable();
         return AuthHelper.current_authorisation;
@@ -64,15 +74,12 @@ export class AuthHelper {
                     switch (key) {
                         case "access_token":
                             session.access_token = value;
-                            window.localStorage.setItem(VKConsts.vk_access_token_id, value);
                             break;
                         case "user_id":
                             session.user_id = value;
-                            window.localStorage.setItem(VKConsts.vk_user_id, value);
                             break;
                         case "expires_in":
                             session.token_exp = 86400;
-                            window.localStorage.setItem(VKConsts.vk_token_expires_in_id, "86400");
                             break;
                         case "error":
                             error = {};
@@ -94,7 +101,6 @@ export class AuthHelper {
                     session.timestamp = Math.floor(Date.now() / 1000);
                     console.log("store session");
                     window.localStorage.setItem(VKConsts.vk_session_info, JSON.stringify(session));
-                    window.localStorage.setItem(VKConsts.vk_auth_timestamp_id, String(Math.floor(Date.now() / 1000)));
                     callback(session);
                 }
                 chrome.tabs.remove(tabId);
@@ -104,14 +110,14 @@ export class AuthHelper {
     }
 
     static processError(error) {
-        console.log("error ocured during authorization: " + JSON.stringify(error));
+        console.log("error ocured during authorization: ", error);
         switch (error.error_reason) {
             case "user_denied":
                 console.log("user cancelled authorization request, only manual authorization is possible");
                 window.localStorage.setItem(VKConsts.user_denied, "true");
                 break;
             default:
-                console.log("unknown error");
+                console.error("unknown error");
                 break;
         }
     }
