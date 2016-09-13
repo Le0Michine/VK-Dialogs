@@ -34,9 +34,10 @@ export class VKService {
                 console.error("failed to authorize: ", error);
                 return Observable.of(null);
             }).subscribe(session => {
-                if (session) {
-                    this.session_info = session;
-                    this.authorized = true;
+                    if (session) {
+                        console.log("authorization successful");
+                        this.session_info = session;
+                        this.authorized = true;
                     }
                 },
                 error => {
@@ -67,7 +68,7 @@ export class VKService {
             && this.session_info.timestamp
             && this.session_info.token_exp
             && this.session_info.user_id
-            && !this.session_info.isExpired
+            && (Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp)
         );
     }
 
@@ -110,6 +111,7 @@ export class VKService {
     performAPIRequest(method: string, parameters: string) {
         return this.getSession().concatMap(session => {
             if (!session) {
+                console.log("session is null, not authorized");
                 this.authorized = false;
                 return Observable.throw({
                     type: "Unauthorized",

@@ -38,7 +38,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         console.log("background init");
         this.vkservice.auth().subscribe(
             (session) => {
-                if (!session) return;
+                if (!session) {
+                    this.chromeapi.UpdateActionBadge("off");
+                    return;
+                }
                 this.lps.init();
                 this.userService.init();
                 this.dialogsService.init();
@@ -52,6 +55,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             onclick: () => {
                 console.log("LOG OFF");
                 window.localStorage.setItem(VKConsts.user_denied, "true");
+                this.chromeapi.UpdateActionBadge("off");
                 this.vkservice.logoff();
             }
         });

@@ -18,12 +18,12 @@ export class AuthHelper {
     static authorize(forced: boolean = false): Observable<SessionInfo> {
         console.log("start authorization");
         if (AuthHelper.authorization_in_progress_count > 0) {
-            console.log("another authorisation in progress, cancel request");
+            console.log("another authorization in progress, cancel request");
             if (forced) chrome.tabs.update(AuthHelper.tab_id, {active: true});
             return AuthHelper.current_authorisation;
         }
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" && !forced) {
-            console.log("authorisation rejected by user");
+            console.log("authorization rejected by user");
             return Observable.bindCallback((callback: (SessionInfo) => void) => callback(null))();
         }
         else {
@@ -49,6 +49,13 @@ export class AuthHelper {
             AuthHelper.addTabListener(callback);
             chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
         });
+        /*let observable = Observable.create((observer) => {
+            AuthHelper.addTabListener((session) => {
+                observer.onNext(session);
+                observer.onCompleted();
+            });
+            chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
+        });*/
         AuthHelper.current_authorisation = observable();
         return AuthHelper.current_authorisation;
     }
@@ -59,8 +66,24 @@ export class AuthHelper {
                 AuthHelper.authorization_in_progress_count --;
             }
         });
-        chrome.tabs.onUpdated.addListener(function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {
-            if (tabId === AuthHelper.tab_id && tab.url.split("#")[0] === AuthHelper.redirect_uri && tab.status === "complete") {
+        let o = Observable.fromEventPattern(
+            (handler: (x: number, y: chrome.tabs.TabChangeInfo, z: chrome.tabs.Tab) => void) =>
+                chrome.tabs.onUpdated.addListener(handler),
+            (handler: (x: number, y: chrome.tabs.TabChangeInfo, z: chrome.tabs.Tab) => void) =>
+                chrome.tabs.onUpdated.removeListener(handler),
+            (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
+                let a: any = {};
+                a.tabId = tabId;
+                a.changeInfo = changeInfo;
+                a.tab = tab;
+                return a;
+            }
+        );
+        let s = o.subscribe((v) => {
+            let tabId: number = v.tabId;
+            let changeInfo: chrome.tabs.TabChangeInfo = v.changeInfo;
+            let tab: chrome.tabs.Tab = v.tab;
+            if (tabId === AuthHelper.tab_id && tab.url.split("#")[0] === AuthHelper.redirect_uri && tab.status === "complete" && changeInfo.status === "complete") {
                 console.log("found auth tab");
                 AuthHelper.authorization_in_progress_count --;
                 AuthHelper.current_authorisation = null;
@@ -103,8 +126,14 @@ export class AuthHelper {
                     window.localStorage.setItem(VKConsts.vk_session_info, JSON.stringify(session));
                     callback(session);
                 }
-                chrome.tabs.remove(tabId);
+                try {
+                    chrome.tabs.remove(tabId);
+                }
+                catch (e) {
+                    console.log("tab already closed");
+                }
                 AuthHelper.tab_id = null;
+                s.unsubscribe();
             }
         });
     }
