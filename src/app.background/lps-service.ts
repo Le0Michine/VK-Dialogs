@@ -156,7 +156,7 @@ export class LPSService {
         this.startLongPollRequest(server)
         .catch(error => {
             console.log("error occured while lp request: ", error);
-            return Observable.of({ error: true });
+            return Observable.of({ "error": error });
         })
         .subscribe(response => {
             if (response.failed === 2) {
@@ -173,7 +173,13 @@ export class LPSService {
                 // this.on_user_update();
             }
             else if (response.error) {
-                console.log("error occured, stop moitoring");
+                if (response.error.type === "Unauthorized") {
+                    console.log("unauthorized error occured, stop moitoring");
+                }
+                else {
+                    console.log("error occured during request, restart request: ", response.error);
+                    this.nextRequest(server);
+                }
             }
             else {
                 console.log(new Date(Date.now()) + " got a long poll response: ", response);
