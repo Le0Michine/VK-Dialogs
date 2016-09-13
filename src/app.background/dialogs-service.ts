@@ -121,6 +121,7 @@ export class DialogService {
         let save = () => {
             if (key) {
                 if (current_message[key]) {
+                    console.log("update message: ", current_message);
                     chrome.storage.sync.set(current_message);
                 }
                 else {
@@ -135,13 +136,22 @@ export class DialogService {
             save();
         });
 
-        this.chromeapi.OnPortMessage("current_message").subscribe(message => {
+        let sub = this.chromeapi.OnPortMessage("current_message").subscribe(message => {
             key = message.key;
             current_message[key] = message.value;
             if (message.is_last) {
+                console.log("last message, unsubscribe");
                 subscription.unsubscribe();
                 save();
+                sub.unsubscribe();
             }
+        });
+
+        let onDisconnect = this.chromeapi.OnDisconnect().subscribe(() => {
+            console.log("port disconnected, unsubscribe current_message");
+            onDisconnect.unsubscribe();
+            sub.unsubscribe();
+            save();
         });
     }
 
