@@ -1,4 +1,4 @@
-import { Injectable, Inject } from "@angular/core";
+import { Injectable, Inject, EventEmitter } from "@angular/core";
 import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/http";
 import { Observable }     from "rxjs/Observable";
 import "rxjs/add/operator/timeout";
@@ -24,8 +24,8 @@ export class LPSService {
 
     private server: LongPollServer = null;
 
-    private on_message_update: any = () => {};
-    private on_user_update: any = (user_ids: string) => {};
+    messageUpdate: EventEmitter<{}> = new EventEmitter();
+    userUpdate: EventEmitter<string> = new EventEmitter();
 
     constructor(
         private http: Http,
@@ -33,14 +33,6 @@ export class LPSService {
 
     init() {
         this.startMonitoring(Number(window.localStorage.getItem("lps_timstamp")));
-    }
-
-    subscribeOnMessagesUpdate(callback) {
-        this.on_message_update = callback;
-    }
-
-    subscribeOnUserUpdate(callback) {
-        this.on_user_update = callback;
     }
 
     private startMonitoring(ts: number = null) {
@@ -144,11 +136,11 @@ export class LPSService {
             }
         }
         if (messagesUpdate > 0) {
-            this.on_message_update();
+            this.messageUpdate.emit();
         }
         if (user_ids.length > 0) {
             console.log("need to update the following users: ", user_ids);
-            this.on_user_update(user_ids.join());
+            this.userUpdate.emit(user_ids.join());
         }
     }
 
@@ -169,7 +161,7 @@ export class LPSService {
             }
             else if (response.failed === 1) {
                 console.log("history became obsolete need to refresh it first");
-                this.on_message_update();
+                this.messageUpdate.emit();
                 // this.on_user_update();
             }
             else if (response.error) {

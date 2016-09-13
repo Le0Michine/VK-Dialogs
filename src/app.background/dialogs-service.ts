@@ -39,7 +39,7 @@ export class DialogService {
         private chromeapi: ChromeAPIService) { }
 
     init() {
-        this.lpsService.subscribeOnMessagesUpdate(() => this.updateMessages());
+        this.lpsService.messageUpdate.subscribe(() => this.updateMessages());
         this.getDialogs().subscribe(dialogs => {
                 this.loadDialogUsers(dialogs);
             },
@@ -204,6 +204,7 @@ export class DialogService {
     }
 
     updateMessages() {
+        console.log("update messages");
         this.getDialogs().subscribe(dialogs => {
             this.loadDialogUsers(dialogs);
         });

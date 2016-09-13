@@ -22,7 +22,7 @@ export class UserService {
         private chromeapi: ChromeAPIService) { }
 
     init() {
-        this.lpsService.subscribeOnUserUpdate(uids => this.updateUsers(uids));
+        this.lpsService.userUpdate.subscribe(uids => this.updateUsers(uids));
         this.chromeapi.OnPortMessage("get_users").subscribe(() => {
             this.postUsersUpdate();
         });
