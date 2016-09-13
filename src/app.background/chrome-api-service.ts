@@ -95,7 +95,11 @@ export class ChromeAPIService {
                 }
                 this.AddMessageListener(this.port, name, handler);
             },
-            (handler: (Object) => void) => this.port.onMessage.removeListener(handler)
+            (handler: (Object) => void) => {
+                if (this.port) {
+                    this.port.onMessage.removeListener(handler);
+                }
+            }
         );
     }
 

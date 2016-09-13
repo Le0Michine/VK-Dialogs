@@ -23,6 +23,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private i: number = 0;
     private last_opened_conversation: any = null;
     private subscriptions: Subscription[] = [];
+    private onUnreadCountUpdate: Subscription;
 
     constructor(
         private http: Http,
@@ -40,11 +41,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             (session) => {
                 if (!session) {
                     this.chromeapi.UpdateActionBadge("off");
-                    return;
                 }
-                this.lps.init();
-                this.userService.init();
-                this.dialogsService.init();
+                else {
+                    this.initServices();
+                }
             }
         );
 
@@ -57,6 +57,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 window.localStorage.setItem(VKConsts.user_denied, "true");
                 this.chromeapi.UpdateActionBadge("off");
                 this.vkservice.logoff();
+                if (this.onUnreadCountUpdate) {
+                    this.onUnreadCountUpdate.unsubscribe();
+                    this.onUnreadCountUpdate = null;
+                }
             }
         });
         chrome.contextMenus.create({
@@ -82,9 +86,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             this.chromeapi.OnPortMessage("authorize").subscribe((message: any) => {
                 this.vkservice.auth(true).subscribe((session) => {
                     console.log("authorized: ", session);
-                    this.lps.init();
-                    this.userService.init();
-                    this.dialogsService.init();
+                    this.initServices();
                 });
             })
         );
@@ -190,6 +192,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
+    }
+
+    private initServices() {
+        this.lps.init();
+        this.userService.init();
+        this.dialogsService.init();
+        this.onUnreadCountUpdate = 
+            this.dialogsService.unreadCountUpdate.subscribe(text => this.chromeapi.UpdateActionBadge(text));
     }
 
     private setOnline() {

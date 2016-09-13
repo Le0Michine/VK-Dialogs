@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
@@ -30,6 +30,8 @@ export class DialogService {
     dialogs_count: number = 20;
 
     max_dialogs_count: number;
+
+    unreadCountUpdate: EventEmitter<string> = new EventEmitter();
 
     constructor(
         private vkservice: VKService,
@@ -374,7 +376,7 @@ export class DialogService {
         console.log("dialogs cout " + json.count);
         this.max_dialogs_count = json.count;
         this.postDialogsCountUpdate();
-        this.chromeapi.UpdateActionBadge(json.unread_dialogs ? json.unread_dialogs : "");
+        this.unreadCountUpdate.emit(json.unread_dialogs ? json.unread_dialogs : "")
 
         return json.items as Dialog[];
     }
