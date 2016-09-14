@@ -153,6 +153,7 @@ export class DialogService {
             console.log("port disconnected, unsubscribe current_message");
             onDisconnect.unsubscribe();
             sub.unsubscribe();
+            subscription.unsubscribe();
             save();
         });
     }
