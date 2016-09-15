@@ -367,7 +367,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     loadOldMessages() {
-        this.messages_service.loadOldMessages();
+        this.messages_service.loadOldMessages(this.conversation_id);
     }
 
     changePhotoSize(img: HTMLImageElement, photo: any) {

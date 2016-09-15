@@ -10,7 +10,11 @@ export class ChromeAPIService {
     private is_background: boolean = false;
     private port: chrome.runtime.Port = null;
 
+    private subscriptions_counter = {};
     private bindings = [];
+
+    onUnsubscribe = new Subject();
+
     /**
      * starts listen for chrome.runtime.onConnect.
      */
@@ -38,12 +42,19 @@ export class ChromeAPIService {
                     if (message.name === "subscribe") {
                         console.log("subscribe on " + message.eventName);
                         binding.events.push(message.eventName);
+                        if (message.eventName in this.subscriptions_counter) {
+                            this.subscriptions_counter[message.eventName] += 1;
+                        }
+                        else {
+                            this.subscriptions_counter[message.eventName] = 0;
+                        }
                     }
                     else if (message.name === "unsubscribe") {
                         console.log("unsubscribe from: " + message.eventName);
                         let i = binding.events.indexOf(message.eventName);
                         if (i > -1) {
                             binding.events.splice(i, 1);
+                            this.removeSubscriptions([message.eventName]);
                         }
                         else {
                             console.error("sunscription doesn't exist");
@@ -54,6 +65,7 @@ export class ChromeAPIService {
                     console.log("on disconnect for: ", binding);
                     let i = this.bindings.indexOf(binding);
                     if (i > -1) {
+                        this.removeSubscriptions(binding.events);
                         this.bindings.splice(i, 1);
                         binding = null;
                     }
@@ -239,5 +251,14 @@ export class ChromeAPIService {
                 handler(message);
             }
         });
+    }
+
+    private removeSubscriptions(subscriptions: string[]) {
+        for (let s of subscriptions) {
+            this.subscriptions_counter[s] --;
+            if (this.subscriptions_counter[s] === 0) {
+                this.onUnsubscribe.next({ name: s });
+            }
+        }
     }
 }

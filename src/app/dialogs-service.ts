@@ -50,9 +50,10 @@ export class DialogService {
         });
     }
 
-    loadOldMessages() {
+    loadOldMessages(conversation_id) {
         this.chromeapi.SendMessage({
-            name: Channels.load_old_messages_request
+            name: Channels.load_old_messages_request,
+            id: conversation_id
         });
     }
 
@@ -86,11 +87,12 @@ export class DialogService {
     }
 
     getHistory(conversation_id, is_chat) {
+        let o = this.chromeapi.subscribeOnMessage("history_update" + conversation_id).map(x => x.data);
         this.chromeapi.SendMessage({
             name: "conversation_id",
             id: conversation_id,
             is_chat: is_chat
         });
-        return this.chromeapi.subscribeOnMessage("history_update" + conversation_id).map(x => x.data);
+        return o;
     }
 }
