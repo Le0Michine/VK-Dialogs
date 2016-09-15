@@ -90,9 +90,6 @@ export class VKService {
     setOnline() {
         this.getSession().concatMap(session => {
             console.log("set online, got session: ", session);
-            if (!session) {
-
-            }
             let uri: string = VKConsts.api_url + this.set_online
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version;

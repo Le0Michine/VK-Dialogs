@@ -57,13 +57,6 @@ export class DialogService {
         });
     }
 
-    getChatParticipants(id: number): Observable<{}> {
-        return this.chromeapi.SendRequest({
-            name: Channels.get_chat_participants_request,
-            chat_id: id
-        }).map(x => x.data);
-    }
-
     subscribeOnDialogsCountUpdate(callback: (dialogsCount: number) => void) {
         this.chromeapi.OnPortMessage(Channels.dialogs_count_update).subscribe((message: any) => {
             console.log("got dialogs_count_update message");

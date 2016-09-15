@@ -3,6 +3,8 @@ import { Http } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/Observable/interval";
+import "rxjs/add/Observable/timer";
+import "rxjs/add/operator/debounce";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
@@ -78,20 +80,12 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.chromeapi.OnMessage("set_online").subscribe((message: any) => {
-                this.setOnline();
-                return false;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_chat_participants_request).subscribe((message: any) => {
-                this.dialogsService.getChatParticipants(message.chat_id).subscribe(participants => {
-                    message.sendResponse({ data: participants });
-                    console.log("chat participants sent");
-                });
-                return true;
-            })
+            this.chromeapi.OnMessage("set_online")
+                .debounce((x) => Observable.timer(1000 * 60 * 10))
+                .subscribe((message: any) => {
+                    this.setOnline();
+                    return false;
+                })
         );
 
         this.subscriptions.push(
@@ -109,16 +103,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat).subscribe(message_id => {
                     message.sendResponse({ data: message_id });
                     console.log("message id sent: ", message_id);
-                });
-                return true;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_user_request).subscribe((message: any) => {
-                this.userService.getUser(message.user_id).subscribe(user => {
-                    message.sendResponse({data: user});
-                    console.log("single user sent: ", user);
                 });
                 return true;
             })
