@@ -258,7 +258,7 @@ export class DialogService {
         this.userService.loadUsers(ids.join());
     }
 
-    loadChats(chat_ids: string) {
+    private loadChats(chat_ids: string) {
         this.getChats(chat_ids).subscribe(chats => {
                 this.cache.updateChats(chats);
                 this.postChatsUpdate();
@@ -268,7 +268,7 @@ export class DialogService {
         );
     }
 
-    loadOldDialogs() {
+    private loadOldDialogs() {
         if (this.dialogs_count >= this.max_dialogs_count) {
             console.log("all dialogs are loaded");
             return;
@@ -367,10 +367,11 @@ export class DialogService {
 
     private toUserDict(json): {} {
         let users = {};
-        for (let user_json of json.users) {
-            users[user_json.id] = user_json as User;
+        if (json.users) {
+            for (let user_json of json.users) {
+                users[user_json.id] = user_json as User;
+            }
         }
-
         return users;
     }
 

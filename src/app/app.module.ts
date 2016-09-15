@@ -1,6 +1,6 @@
-import { NgModule, ChangeDetectorRef }      from "@angular/core";
-import { FormsModule }      from "@angular/forms";
-import { BrowserModule, DomSanitizer } from "@angular/platform-browser";
+import { NgModule, ChangeDetectorRef } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
 
@@ -45,6 +45,7 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         AppComponent
     ],
     providers: [
+        Title,
         UserService,
         VKService,
         DialogService,

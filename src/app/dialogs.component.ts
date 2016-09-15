@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { Message, Chat } from "./message";
@@ -18,7 +19,6 @@ import { VKConsts } from "./vk-consts";
   styleUrls: ["dialogs.component.css"]
 })
 export class DialogsComponent implements OnInit, OnDestroy {
-    title = "Dialogs";
     user: User = new User();
     users: {};
     chats: {};
@@ -36,6 +36,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
     constructor(
         private user_service: UserService,
         private router: Router,
+        private title: Title,
         private vkservice: VKService,
         private dialog_service: DialogService,
         private chromeapi: ChromeAPIService,
@@ -50,6 +51,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         else {
             let user: User = this.users[dialog.user_id];
             let title: string = !dialog.title || dialog.title === " ... " ? user.first_name + " " + user.last_name : dialog.title;
+            this.title.setTitle(title);
             link = [
                 "dialog",
                 dialog.user_id.toString(),
@@ -71,6 +73,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
         this.chromeapi.init();
         this.dialog_service.init();
         this.vkservice.init();
+        this.title.setTitle("Dialogs");
 
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" || !this.vkservice.hasValidSession()) {
             this.router.navigate(["authorize"]);
