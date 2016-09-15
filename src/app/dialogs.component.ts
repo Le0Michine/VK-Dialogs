@@ -8,7 +8,7 @@ import { DialogComponent } from "./dialog.component";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { DialogService } from "./dialogs-service";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { DateConverter } from "./date-converter";
 import { VKConsts } from "./vk-consts";
 
@@ -68,6 +68,10 @@ export class DialogsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.chromeapi.init();
+        this.dialog_service.init();
+        this.vkservice.init();
+
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" || !this.vkservice.hasValidSession()) {
             this.router.navigate(["authorize"]);
             return;

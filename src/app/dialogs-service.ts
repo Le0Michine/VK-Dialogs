@@ -7,7 +7,7 @@ import { Message, Chat } from "./message";
 import { Dialog } from "./dialog";
 import { User } from "./user";
 import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 
 @Injectable()
 export class DialogService {
@@ -16,7 +16,12 @@ export class DialogService {
 
     private chats;
 
-    constructor(private vkservice: VKService, private http: Http, private chromeapi: ChromeAPIService) {
+    constructor(
+        private http: Http,
+        private vkservice: VKService,
+        private chromeapi: ChromeAPIService) { }
+
+    init() {
         this.initChatsUpdate();
         this.initDialogsUpdate();
     }
@@ -73,11 +78,11 @@ export class DialogService {
     }
 
     initChatsUpdate(): void {
-        this.chat_observable = this.chromeapi.OnPortMessage(Channels.update_chats).map(x => x.data);
+        this.chat_observable = this.chromeapi.subscribeOnMessage(Channels.update_chats).map(x => x.data);
     }
 
     initDialogsUpdate(): void {
-        this.dialogs_observable = this.chromeapi.OnPortMessage("dialogs_update").map(x => x.data);
+        this.dialogs_observable = this.chromeapi.subscribeOnMessage("dialogs_update").map(x => x.data);
     }
 
     getHistory(conversation_id, is_chat) {
@@ -86,6 +91,6 @@ export class DialogService {
             id: conversation_id,
             is_chat: is_chat
         });
-        return this.chromeapi.OnPortMessage("history_update").map(x => x.data);
+        return this.chromeapi.subscribeOnMessage("history_update" + conversation_id).map(x => x.data);
     }
 }

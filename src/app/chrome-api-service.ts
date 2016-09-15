@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
-import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/fromEventPattern";
 import "rxjs/add/Observable/bindCallback";
 
@@ -10,7 +9,6 @@ export class ChromeAPIService {
     private is_background: boolean = false;
     private port: chrome.runtime.Port = null;
 
-    private bindings = [];
     /**
      * starts listen for chrome.runtime.onConnect.
      */
@@ -27,55 +25,26 @@ export class ChromeAPIService {
     }
 
     init() {
-        chrome.runtime.onConnect.addListener(port => {
-            if (port.name === this.port_name) {
-                let binding = {
-                    "port": port,
-                    "events": []
-                };
-                this.bindings.push(binding);
-                port.onMessage.addListener((message: any) => {
-                    if (message.name === "subscribe") {
-                        console.log("subscribe on " + message.eventName);
-                        binding.events.push(message.eventName);
-                    }
-                    else if (message.name === "unsubscribe") {
-                        console.log("unsubscribe from: " + message.eventName);
-                        let i = binding.events.indexOf(message.eventName);
-                        if (i > -1) {
-                            binding.events.splice(i, 1);
-                        }
-                        else {
-                            console.error("sunscription doesn't exist");
-                        }
-                    }
-                });
-                port.onDisconnect.addListener(() => {
-                    console.log("on disconnect for: ", binding);
-                    let i = this.bindings.indexOf(binding);
-                    if (i > -1) {
-                        this.bindings.splice(i, 1);
-                        binding = null;
-                    }
-                    else {
-                        console.error("unable to find binding");
-                    }
-                });
-            }
-        });
+        this.port = chrome.runtime.connect({ name: this.port_name });
     }
 
-    registerObservable(o: Observable<{}>): void {
-        o.subscribe(
-            (next: any) => {
-                console.log("next event: ", next, this.bindings);
-                this.bindings.filter(x => x.events.includes(next.name)).forEach(b => b.port.postMessage(next));
+    subscribeOnMessage(on: string): Observable<any> {
+        //if (!this.port) this.init();
+        this.port.postMessage({
+            name: "subscribe",
+            eventName: on
+        });
+        return Observable.fromEventPattern(
+            (handler: (Object) => void) => {
+                this.AddMessageListener(this.port, on, handler);
             },
-            (error) => {
-                console.error("error occured in observer: ", error);
-            },
-            () => {
-                console.log("close observable");
+            (handler: (Object) => void) => {
+                console.log("unsubscribe from: ", on);
+                this.port.postMessage({
+                    name: "unsubscribe",
+                    eventName: on
+                });
+                this.port.onMessage.removeListener(handler);
             }
         );
     }
@@ -120,14 +89,6 @@ export class ChromeAPIService {
      */
     SendMessage(message): void {
         chrome.runtime.sendMessage(message);
-    }
-
-    /**
-     * chrome.browserAction.setBadgeText
-     * @param {string} value - value to set.
-     */
-    UpdateActionBadge(value): void {
-        chrome.browserAction.setBadgeText({text: String(value)});
     }
 
     /**
@@ -217,19 +178,6 @@ export class ChromeAPIService {
         return Observable.bindCallback((callback: () => void) => {
             this.port.onDisconnect.addListener(callback);
         })();
-    }
-
-    /**
-     * closes existing port.
-     * do nothing if port doesn't exist.
-     * @deprecated will be removed
-     */
-    Disconnect(): void {
-        if (this.port) {
-            console.log("close port: ", this.port);
-            this.port.disconnect();
-            this.port = null;
-        }
     }
 
     private AddMessageListener(port, name, handler) {

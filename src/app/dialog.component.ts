@@ -8,7 +8,7 @@ import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { DateConverter } from "./date-converter";
 
 @Component({
@@ -124,7 +124,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     getHistory(messages: Message[]) {
         console.log("convert history: ", messages);
         if (!messages.length || !this.participants[messages[0].user_id]) {
-            console.log("not enough data");
+            console.log("not enough data: ", this.participants);
             return [];
         }
         let history: MessageToShow[] = [];

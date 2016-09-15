@@ -5,7 +5,7 @@ import { Channels } from "../app.background/channels";
 
 import { User } from "./user";
 import { VKService } from "./vk-service";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { SessionInfo } from "./session-info";
 
 @Injectable()
@@ -21,9 +21,10 @@ export class UserService {
     }
 
     getUsers() {
+        let o = this.chromeapi.subscribeOnMessage("users_update").map(x => x.data);
         this.chromeapi.PostPortMessage({
             name: "get_users",
         });
-        return this.chromeapi.OnPortMessage("users_update").map(x => x.data);
+        return o
     }
 }

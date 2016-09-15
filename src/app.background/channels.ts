@@ -1,8 +1,6 @@
 export class Channels {
     public static request_everything: string = "request_everything";
     public static messages_cache_port: string = "messages_cache";
-    public static get_dialogs_request: string = "get_dialogs";
-    public static get_chats_request: string = "get_chats";
     public static get_history_request: string = "get_history";
     public static get_user_request: string = "get_user";
     public static get_users_request: string = "get_users";

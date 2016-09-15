@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import { Subject } from "rxjs/Subject";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
 
@@ -32,6 +33,7 @@ export class DialogService {
     max_dialogs_count: number;
 
     unreadCountUpdate: EventEmitter<string> = new EventEmitter();
+    onUpdate: Subject<{}> = new Subject();
 
     constructor(
         private vkservice: VKService,
@@ -41,6 +43,8 @@ export class DialogService {
         private chromeapi: ChromeAPIService) { }
 
     init() {
+        this.chromeapi.registerObservable(this.onUpdate);
+
         this.lpsService.messageUpdate.subscribe(() => this.updateMessages());
         this.getDialogs().subscribe(dialogs => {
                 this.loadDialogUsers(dialogs);
@@ -106,14 +110,6 @@ export class DialogService {
         this.chromeapi.OnPortMessage(Channels.load_old_dialogs_request).subscribe(() => {
             this.loadOldDialogs();
         });
-
-        this.chromeapi.OnPortMessage(Channels.get_chats_request).subscribe(() => {
-            this.postChatsUpdate();
-        });
-
-        this.chromeapi.OnPortMessage(Channels.get_dialogs_request).subscribe(() => {
-            this.postDialogsUpdate();
-        });
     }
 
     monitorCurrentMessage() {
@@ -159,7 +155,7 @@ export class DialogService {
     }
 
     postDialogsUpdate() {
-        this.chromeapi.PostPortMessage({
+        this.onUpdate.next({
             name: "dialogs_update",
             data: this.cache.dialogs_cache.slice(0, this.dialogs_count)
         });
@@ -167,14 +163,14 @@ export class DialogService {
 
     postHistoryUpdate() {
         console.log("post history_update message");
-        this.chromeapi.PostPortMessage({
-            name: "history_update",
+        this.onUpdate.next({
+            name: "history_update" + this.current_dialog_id,
             data: this.cache.getHistory(this.current_dialog_id).slice(0, this.messages_count)
         });
     }
 
     postChatsUpdate() {
-        this.chromeapi.PostPortMessage({
+        this.onUpdate.next({
             name: Channels.update_chats,
             data: this.cache.chats_cache
         });

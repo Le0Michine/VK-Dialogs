@@ -35,6 +35,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.chromeapi.AcceptConnections();
+        this.chromeapi.init();
 
         console.log("background init");
         this.vkservice.auth().subscribe(
@@ -113,16 +114,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             this.chromeapi.OnMessage("set_online").subscribe((message: any) => {
                 this.setOnline();
                 return false;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_dialogs_request).subscribe((message: any) => {
-                this.dialogsService.getDialogs().subscribe(dialogs => {
-                    message.sendResponse({ data: dialogs });
-                    console.log("dialogs sent");
-                });
-                return true;
             })
         );
 
