@@ -150,7 +150,7 @@ export class LPSService {
             console.log("error occured while lp request: ", error);
             return Observable.of({ "error": error });
         })
-        .subscribe(response => {
+        .subscribe((response: any) => {
             if (response.failed === 2) {
                 console.log("lps key expired need to obtain the new one");
                 this.startMonitoring(server.ts);
