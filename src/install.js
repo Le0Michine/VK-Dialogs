@@ -1,0 +1,1 @@
+System.import('app.installguide').catch(function(err){ console.error(err); });

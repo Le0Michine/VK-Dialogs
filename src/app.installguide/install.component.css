@@ -1,0 +1,14 @@
+h1 {
+    color: white;
+    text-align: center;
+}
+
+.content {
+    top: 80px;
+    position: relative;
+    width: 600px;
+}
+
+.app-name {
+    font-size: 40px;
+}

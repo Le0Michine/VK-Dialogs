@@ -37,7 +37,8 @@ module.exports = [{
   context: path.join(__dirname),
   entry: {
         "app": './src/app/main.ts',
-        "app.background": "./src/app.background/main.ts"
+        "app.background": "./src/app.background/main.ts",
+        "app.installguide": "./src/app.installguide/main.ts"
   },
   output: {
     path: "./out/",
@@ -86,6 +87,7 @@ module.exports = [{
         { from: 'src/icons', to: "./icons", toType: "dir" },
 //        { from: 'src/fonts', to: "./fonts", toType: "dir" },
         { from: 'src/app.options', to: "./app.options", toType: "dir" },
+        { from: 'src/app.installguide', to: "./app.pagecontent", toType: "dir" },
 //        { from: 'src/app.pagecontent', to: "./app.pagecontent", toType: "dir" },
         { from: 'src/i18n', to: "./i18n", toType: "dir" },
         { from: 'src/_locales', to: "./_locales", toType: "dir" },
@@ -96,7 +98,8 @@ module.exports = [{
         { from: 'src/node_modules/core-js/client/shim.min.js', to: "./node_modules/core-js/client", toType: "dir", flatten: true },
         { from: 'src/node_modules/zone.js/dist/zone.js', to: "./node_modules/zone.js/dist", toType: "dir", flatten: true },
         { from: 'src/node_modules/reflect-metadata/Reflect.js', to: "./node_modules/reflect-metadata", toType: "dir", flatten: true },
-        { from: 'src/node_modules/systemjs/dist/system.src.js', to: "./node_modules/systemjs/dist", toType: "dir", flatten: true }
+        { from: 'src/node_modules/systemjs/dist/system.src.js', to: "./node_modules/systemjs/dist", toType: "dir", flatten: true },
+        { from: 'src/node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./node_modules/bootstrap/dist/css", toType: "dir", flatten: true }
       ], 
       {
         ignore: [ "typings.json", "gulpfile.js", "package.json", "tsconfig.json", "tslint.json" ],

@@ -7,6 +7,7 @@
   var map = {
     'app':                        'app', // 'dist',
     'app.background':             'app.background', // 'dist',
+    'app.installguide':             'app.installguide', // 'dist',
     '@angular':                   'node_modules/@angular',
     //'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
     'ng2-translate':              'node_modules/ng2-translate',
@@ -16,6 +17,7 @@
   var packages = {
     'app':                        { main: 'main.js',  defaultExtension: 'js' },
     'app.background':             { main: 'main.js',  defaultExtension: 'js' },
+    'app.installguide':           { main: 'main.js',  defaultExtension: 'js' },
     'ng2-translate':              { defaultExtension: 'js'},
     'rxjs':                       { defaultExtension: 'js' },
     //'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
