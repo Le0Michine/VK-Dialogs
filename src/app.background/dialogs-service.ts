@@ -5,6 +5,7 @@ import { Subject } from "rxjs/Subject";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/distinct";
+import "rxjs/add/operator/filter";
 
 import { Message, Chat } from "../app/message";
 import { Dialog } from "../app/dialog";
@@ -44,14 +45,14 @@ export class DialogService {
 
     init() {
         this.chromeapi.registerObservable(this.onUpdate);
-        this.chromeapi.onUnsubscribe.subscribe((sub: any) => {
-            if (sub.name.includes("history_update")) {
+        this.chromeapi.onUnsubscribe
+            .filter((sub: any) => sub.name.includes("history_update"))
+            .subscribe((sub: any) => {
                 console.log("unsubscribe from history_update: ", sub);
                 let i = this.opened_conversations.findIndex(x => "history_update" + x.conversation_id === sub.name);
                 if (i > -1) {
                     this.opened_conversations.splice(i, 1);
                 }
-            }
         });
 
         this.lpsService.messageUpdate.subscribe(() => this.updateMessages());
@@ -180,7 +181,10 @@ export class DialogService {
         for (let h of this.opened_conversations) {
             this.onUpdate.next({
                 name: "history_update" + h.conversation_id,
-                data: this.cache.getHistory(h.conversation_id).slice(0, h.messages_count)
+                data: {
+                    history: this.cache.getHistory(h.conversation_id).slice(0, h.messages_count),
+                    count: this.cache.getMessagesCount(h.conversation_id)
+                }
             });
         }
     }
@@ -188,7 +192,10 @@ export class DialogService {
     postSingleConversationHistoryUpdate(conversation) {
         this.onUpdate.next({
             name: "history_update" + conversation.conversation_id,
-            data: this.cache.getHistory(conversation.conversation_id).slice(0, conversation.messages_count)
+            data: {
+                history: this.cache.getHistory(conversation.conversation_id).slice(0, conversation.messages_count),
+                count: this.cache.getMessagesCount(conversation.conversation_id)
+            }
         });
     }
 
@@ -295,7 +302,7 @@ export class DialogService {
     }
 
     private loadOldMessages(conversation) {
-        if (conversation.messages_count >= this.cache.getMessagesCount(conversation.conversation_id)) {
+        if (this.cache.getHistory(conversation.conversation_id).length >= this.cache.getMessagesCount(conversation.conversation_id)) {
             console.log("all messages are loaded");
             return;
         }
@@ -391,6 +398,5 @@ export class DialogService {
 
     private handleError(error: any) {
         console.error("An error occurred in background-dialog-service: ", error);
-        // return Promise.reject(error.message || error);
     }
 }

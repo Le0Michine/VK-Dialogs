@@ -67,7 +67,8 @@ export class DialogComponent implements OnInit, OnDestroy {
             this.restoreCachedMessages(this.conversation_id, this.is_chat);
 
             this.subscriptions.push(this.messages_service.getHistory(this.conversation_id, this.is_chat).subscribe(history => {
-                    this.history = history as Message[];
+                    this.history = history.history as Message[];
+                    this.messages_count = history.count;
                     this.history_to_show = this.getHistory(this.history);
                     console.log("force update 1");
                     this.refreshView();

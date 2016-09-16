@@ -40,10 +40,10 @@ export class ChromeAPIService {
                         console.log("subscribe on " + message.eventName);
                         binding.events.push(message.eventName);
                         if (message.eventName in this.subscriptions_counter) {
-                            this.subscriptions_counter[message.eventName] += 1;
+                            this.subscriptions_counter[message.eventName] ++;
                         }
                         else {
-                            this.subscriptions_counter[message.eventName] = 0;
+                            this.subscriptions_counter[message.eventName] = 1;
                         }
                     }
                     else if (message.name === "unsubscribe") {
@@ -226,6 +226,7 @@ export class ChromeAPIService {
     }
 
     private removeSubscriptions(subscriptions: string[]) {
+        console.log("removing subscriptions: ", subscriptions, this.subscriptions_counter);
         for (let s of subscriptions) {
             this.subscriptions_counter[s] --;
             if (this.subscriptions_counter[s] === 0) {
