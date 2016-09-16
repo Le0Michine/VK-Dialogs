@@ -4,7 +4,7 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/Observable/interval";
 import "rxjs/add/Observable/timer";
-import "rxjs/add/operator/debounce";
+import "rxjs/add/operator/throttleTime";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
@@ -81,7 +81,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.chromeapi.OnMessage("set_online")
-                .debounce((x) => Observable.timer(1000 * 60 * 10))
+                .throttleTime(1000 * 60 * 10)
                 .subscribe((message: any) => {
                     this.setOnline();
                     return false;

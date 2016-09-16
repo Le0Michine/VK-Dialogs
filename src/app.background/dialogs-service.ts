@@ -1,8 +1,10 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import { Observer } from "rxjs/Observer";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
+import "rxjs/add/operator/distinct";
 
 import { Message, Chat } from "../app/message";
 import { Dialog } from "../app/dialog";
@@ -138,9 +140,12 @@ export class DialogService {
             }
         };
 
-        let subscription = Observable.interval(10000).subscribe(() => {
-            console.log("store current message: ", current_message);
-            save();
+        let subscription = Observable.interval(10000)
+            .map(x => current_message)
+            .distinct((x, y) => x[key] === y[key])
+            .subscribe(() => {
+                console.log("store current message: ", current_message);
+                save();
         });
 
         let sub = this.chromeapi.OnPortMessage("current_message").subscribe(message => {
