@@ -4,6 +4,9 @@ import { Http } from "@angular/http";
 import "rxjs/add/observable/throw";
 import "rxjs/add/operator/concatMap";
 import "rxjs/add/operator/retry";
+import "rxjs/add/operator/take";
+import "rxjs/add/operator/delay";
+import "rxjs/add/operator/retryWhen";
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/of";
 
@@ -87,9 +90,6 @@ export class VKService {
     setOnline() {
         this.getSession().concatMap(session => {
             console.log("set online, got session: ", session);
-            if (!session) {
-
-            }
             let uri: string = VKConsts.api_url + this.set_online
                 + "?access_token=" + session.access_token
                 + "&v=" + VKConsts.api_version;
@@ -125,8 +125,18 @@ export class VKService {
             console.log(`perform api request to url ${url}`);
             return this.http.get(url)
                 .map(response => response.json())
-                .map(json => ErrorHelper.checkErrors(json) ? {} : (json.response ? json.response : json));
-        }).retry(5)
+                .map(json => ErrorHelper.checkErrors(json) ? {} : (json.response ? json.response : Observable.throw(json)))
+                .retryWhen(error => {
+                    console.warn("failed http request: ", error)
+                    return error.delay(500);
+                })
+                .take(10);
+        })
+        .retryWhen(error => {
+            console.warn("failed api request: ", error)
+            return error.delay(500);
+        })
+        .take(10)
         .catch(error => {
             console.error(`An error occured during api request ${method} with parameters ${parameters}:`, error);
             return Observable.of({});

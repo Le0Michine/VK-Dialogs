@@ -8,7 +8,7 @@ import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { DateConverter } from "./date-converter";
 
 @Component({
@@ -67,7 +67,8 @@ export class DialogComponent implements OnInit, OnDestroy {
             this.restoreCachedMessages(this.conversation_id, this.is_chat);
 
             this.subscriptions.push(this.messages_service.getHistory(this.conversation_id, this.is_chat).subscribe(history => {
-                    this.history = history as Message[];
+                    this.history = history.history as Message[];
+                    this.messages_count = history.count;
                     this.history_to_show = this.getHistory(this.history);
                     console.log("force update 1");
                     this.refreshView();
@@ -124,7 +125,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     getHistory(messages: Message[]) {
         console.log("convert history: ", messages);
         if (!messages.length || !this.participants[messages[0].user_id]) {
-            console.log("not enough data");
+            console.log("not enough data: ", this.participants);
             return [];
         }
         let history: MessageToShow[] = [];
@@ -367,7 +368,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     loadOldMessages() {
-        this.messages_service.loadOldMessages();
+        this.messages_service.loadOldMessages(this.conversation_id);
     }
 
     changePhotoSize(img: HTMLImageElement, photo: any) {

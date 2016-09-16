@@ -1,19 +1,23 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/fromEventPattern";
 import "rxjs/add/Observable/bindCallback";
 
 Injectable()
 export class ChromeAPIService {
     private port_name: string = "message_port";
-    private is_background: boolean = false;
     private port: chrome.runtime.Port = null;
+
+    private subscriptions_counter = {};
+    private bindings = [];
+
+    onUnsubscribe = new Subject();
 
     /**
      * starts listen for chrome.runtime.onConnect.
      */
     AcceptConnections() {
-        if (this.is_background) return;
         chrome.runtime.onConnect.addListener(port => {
             if (port.name === this.port_name) {
                 console.log("connect to port: ", port);
@@ -21,7 +25,68 @@ export class ChromeAPIService {
                 port.onDisconnect.addListener(() => this.port = null);
             }
         });
-        this.is_background = true;
+    }
+
+    init() {
+        chrome.runtime.onConnect.addListener(port => {
+            if (port.name === this.port_name) {
+                let binding = {
+                    "port": port,
+                    "events": []
+                };
+                this.bindings.push(binding);
+                port.onMessage.addListener((message: any) => {
+                    if (message.name === "subscribe") {
+                        console.log("subscribe on " + message.eventName);
+                        binding.events.push(message.eventName);
+                        if (message.eventName in this.subscriptions_counter) {
+                            this.subscriptions_counter[message.eventName] ++;
+                        }
+                        else {
+                            this.subscriptions_counter[message.eventName] = 1;
+                        }
+                    }
+                    else if (message.name === "unsubscribe") {
+                        console.log("unsubscribe from: " + message.eventName);
+                        let i = binding.events.indexOf(message.eventName);
+                        if (i > -1) {
+                            binding.events.splice(i, 1);
+                            this.removeSubscriptions([message.eventName]);
+                        }
+                        else {
+                            console.error("sunscription doesn't exist");
+                        }
+                    }
+                });
+                port.onDisconnect.addListener(() => {
+                    console.log("on disconnect for: ", binding);
+                    let i = this.bindings.indexOf(binding);
+                    if (i > -1) {
+                        this.removeSubscriptions(binding.events);
+                        this.bindings.splice(i, 1);
+                        binding = null;
+                    }
+                    else {
+                        console.error("unable to find binding");
+                    }
+                });
+            }
+        });
+    }
+
+    registerObservable(o: Observable<{}>): void {
+        o.subscribe(
+            (next: any) => {
+                console.log("next event: ", next, this.bindings);
+                this.bindings.filter(x => x.events.includes(next.name)).forEach(b => b.port.postMessage(next));
+            },
+            (error) => {
+                console.error("error occured in observer: ", error);
+            },
+            () => {
+                console.log("close observable");
+            }
+        );
     }
 
     /**
@@ -82,16 +147,12 @@ export class ChromeAPIService {
         return Observable.fromEventPattern(
             (handler: (Object) => void) => {
                 if (!this.port) {
-                    if (this.is_background) {
-                        chrome.runtime.onConnect.addListener(port => {
-                            if (port.name === this.port_name) {
-                                this.AddMessageListener(port, name, handler);
-                            }
-                        });
-                        return;
-                    }
-                    console.log("port is closed, open a new one");
-                    this.port = chrome.runtime.connect({ name: this.port_name });
+                    chrome.runtime.onConnect.addListener(port => {
+                        if (port.name === this.port_name) {
+                            this.AddMessageListener(port, name, handler);
+                        }
+                    });
+                    return;
                 }
                 this.AddMessageListener(this.port, name, handler);
             },
@@ -110,13 +171,8 @@ export class ChromeAPIService {
      */
     PostPortMessage(message): void {
         if (!this.port) {
-            if (!this.is_background) {
-                this.port = chrome.runtime.connect({ name: this.port_name });
-            }
-            else {
-                console.log("port isn't connected");
-                return;
-            }
+            console.log("port isn't connected");
+            return;
         }
         console.log("post port message: ", message);
         this.port.postMessage(message);
@@ -147,9 +203,6 @@ export class ChromeAPIService {
      */
     OnDisconnect(): Observable<{}> {
         if (!this.port) {
-            if (!this.is_background) {
-                return Observable.of(null);
-            }
             return Observable.bindCallback(
                 (callback: () => void) => chrome.runtime.onConnect.addListener(port => {
                     if (port.name === this.port_name) {
@@ -163,19 +216,6 @@ export class ChromeAPIService {
         })();
     }
 
-    /**
-     * closes existing port.
-     * do nothing if port doesn't exist.
-     * @deprecated will be removed
-     */
-    Disconnect(): void {
-        if (this.port) {
-            console.log("close port: ", this.port);
-            this.port.disconnect();
-            this.port = null;
-        }
-    }
-
     private AddMessageListener(port, name, handler) {
         port.onMessage.addListener((message: any) => {
             if (message.name === name) {
@@ -183,5 +223,15 @@ export class ChromeAPIService {
                 handler(message);
             }
         });
+    }
+
+    private removeSubscriptions(subscriptions: string[]) {
+        console.log("removing subscriptions: ", subscriptions, this.subscriptions_counter);
+        for (let s of subscriptions) {
+            this.subscriptions_counter[s] --;
+            if (this.subscriptions_counter[s] === 0) {
+                this.onUnsubscribe.next({ name: s });
+            }
+        }
     }
 }

@@ -3,6 +3,8 @@ import { Http } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/Observable/interval";
+import "rxjs/add/Observable/timer";
+import "rxjs/add/operator/throttleTime";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "../app/session-info";
@@ -20,7 +22,6 @@ import { Channels } from "./channels";
     template: "<span>Background component</span>",
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
-    private i: number = 0;
     private last_opened_conversation: any = null;
     private subscriptions: Subscription[] = [];
     private onUnreadCountUpdate: Subscription;
@@ -35,6 +36,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.chromeapi.AcceptConnections();
+        this.chromeapi.init();
 
         console.log("background init");
         this.vkservice.auth().subscribe(
@@ -48,39 +50,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             }
         );
 
-        chrome.contextMenus.removeAll();
-        chrome.contextMenus.create({
-            title: "Log Off",
-            contexts: ["browser_action"],
-            onclick: () => {
-                console.log("LOG OFF");
-                window.localStorage.setItem(VKConsts.user_denied, "true");
-                this.chromeapi.UpdateActionBadge("off");
-                this.vkservice.logoff();
-                if (this.onUnreadCountUpdate) {
-                    this.onUnreadCountUpdate.unsubscribe();
-                    this.onUnreadCountUpdate = null;
-                }
-            }
-        });
-        chrome.contextMenus.create({
-            title: "Open in a separate window",
-            contexts: ["browser_action"],
-            onclick: () => {
-                console.log("create window");
-                chrome.windows.create({
-                    type: "panel",
-                    focused: true,
-                    state: "docked",
-                    width: 550,
-                    height: 600,
-                    url: "index.html"
-                }, (window) => {
-                    console.dir(window);
-                    window.alwaysOnTop = true;
-                });
-            }
-        });
+        this.createContextMenuItems();
 
         this.subscriptions.push(
             this.chromeapi.OnPortMessage("authorize").subscribe((message: any) => {
@@ -110,40 +80,12 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.chromeapi.OnMessage("set_online").subscribe((message: any) => {
-                this.setOnline();
-                return false;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_dialogs_request).subscribe((message: any) => {
-                this.dialogsService.getDialogs().subscribe(dialogs => {
-                    message.sendResponse({ data: dialogs });
-                    console.log("dialogs sent");
-                });
-                return true;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_history_request).subscribe((message: any) => {
-                this.dialogsService.getHistory(message.conversation_id, message.is_chat).subscribe(history => {
-                    message.sendResponse({ data: history });
-                    console.log("history sent");
-                });
-                return true;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_chat_participants_request).subscribe((message: any) => {
-                this.dialogsService.getChatParticipants(message.chat_id).subscribe(participants => {
-                    message.sendResponse({ data: participants });
-                    console.log("chat participants sent");
-                });
-                return true;
-            })
+            this.chromeapi.OnMessage("set_online")
+                .throttleTime(1000 * 60 * 10)
+                .subscribe((message: any) => {
+                    this.setOnline();
+                    return false;
+                })
         );
 
         this.subscriptions.push(
@@ -161,26 +103,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat).subscribe(message_id => {
                     message.sendResponse({ data: message_id });
                     console.log("message id sent: ", message_id);
-                });
-                return true;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_multiple_users_request).subscribe((message: any) => {
-                this.userService.getUsers(message.user_ids).subscribe(users => {
-                    message.sendResponse({data: users});
-                    console.log("users sent");
-                });
-                return true;
-            })
-        );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.get_user_request).subscribe((message: any) => {
-                this.userService.getUser(message.user_id).subscribe(user => {
-                    message.sendResponse({data: user});
-                    console.log("single user sent: ", user);
                 });
                 return true;
             })
@@ -213,6 +135,42 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             }
             else {
                 console.log("shadow mode, don't set user online");
+            }
+        });
+    }
+
+    private createContextMenuItems() {
+        chrome.contextMenus.removeAll();
+        chrome.contextMenus.create({
+            title: "Log Off",
+            contexts: ["browser_action"],
+            onclick: () => {
+                console.log("LOG OFF");
+                window.localStorage.setItem(VKConsts.user_denied, "true");
+                this.chromeapi.UpdateActionBadge("off");
+                this.vkservice.logoff();
+                if (this.onUnreadCountUpdate) {
+                    this.onUnreadCountUpdate.unsubscribe();
+                    this.onUnreadCountUpdate = null;
+                }
+            }
+        });
+        chrome.contextMenus.create({
+            title: "Open in a separate window",
+            contexts: ["browser_action"],
+            onclick: () => {
+                console.log("create window");
+                chrome.windows.create({
+                    type: "panel",
+                    focused: true,
+                    state: "docked",
+                    width: 550,
+                    height: 600,
+                    url: "index.html"
+                }, (window) => {
+                    console.dir(window);
+                    window.alwaysOnTop = true;
+                });
             }
         });
     }

@@ -4,7 +4,7 @@ import { Observable }     from "rxjs/Observable";
 import { Router } from "@angular/router";
 
 import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 
 import { VKConsts } from "./vk-consts";
 import { SessionInfo } from "./session-info";
@@ -17,7 +17,9 @@ export class VKService {
         console.error("An error occurred", error);
     }
 
-    constructor(private router: Router, private chromeapi: ChromeAPIService) {
+    constructor(private router: Router, private chromeapi: ChromeAPIService) { }
+
+    init() {
         this.initializeSeesion();
     }
 

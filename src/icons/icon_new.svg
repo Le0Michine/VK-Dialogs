@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64"
+   height="64"
+   id="svg3368"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   viewBox="0 0 64 64"
+   sodipodi:docname="icon copy.svg"
+   inkscape:export-filename="/Users/leo/Dev/Messenger/out/icons/icon_19.png"
+   inkscape:export-xdpi="26.719398"
+   inkscape:export-ydpi="26.719398">
+  <defs
+     id="defs3370">
+    <linearGradient
+       id="linearGradient5661"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop5663" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="6.5664558"
+     inkscape:cx="18.398456"
+     inkscape:cy="26.688191"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1440"
+     inkscape:window-height="781"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="false"
+     showguides="false" />
+  <metadata
+     id="metadata3373">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <path
+       style="fill:#0363b8;fill-opacity:1;stroke:#ffffff;stroke-width:7.617;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 57.95329,48.393013 -0.290114,0.450386 -0.29793,0.445253 -0.305657,0.439986 -0.313287,0.434586 -0.320826,0.42905 -0.328264,0.423387 -0.335604,0.417595 -0.342839,0.411672 -0.349972,0.405625 -0.356999,0.399457 -0.363917,0.393166 -0.370721,0.386755 -0.377416,0.380224 -0.383993,0.37358 -0.390455,0.366823 -0.396799,0.359951 -0.403018,0.352972 -0.409119,0.345885 -0.415091,0.33869 -0.420939,0.331397 -0.426661,0.323999 -0.432248,0.316505 -0.437706,0.308911 -0.443031,0.301226 -0.448221,0.293447 -0.453275,0.28558 -0.458189,0.277627 -0.462965,0.269587 -0.467599,0.261465 -0.472093,0.253267 -0.476438,0.244987 -0.480641,0.236636 -0.484701,0.228211 -0.488608,0.219718 -0.492368,0.211156 -0.495979,0.202532 -0.499437,0.193845 -0.502744,0.185099 -0.505899,0.176296 -0.508899,0.167439 -0.511743,0.158535 -0.51443,0.149578 -0.516965,0.140576 -0.519339,0.131534 -0.521554,0.122449 -0.523612,0.113329 -0.525511,0.104175 -0.527249,0.09499 -0.528827,0.08577 -0.530242,0.07654 -0.531498,0.06725 -0.53259,0.05797 -0.533519,0.04867 -0.534291,0.03934 -0.534894,0.03003 -0.535339,0.02069 -0.535617,0.01135 -0.53573,0.0019 -30.5413976,9e-6 0,-30.849371 0.00737,-0.535686 0.016712,-0.535476 0.026051,-0.535103 0.03539,-0.534567 0.044715,-0.533867 0.054022,-0.533005 0.063317,-0.531983 0.072592,-0.530794 0.081846,-0.529449 0.091074,-0.527938 0.1002719,-0.52627 L 2.0110834,25.463773 2.129661,24.941324 2.2573354,24.420986 2.3940741,23.902994 2.5398325,23.387466 2.694565,22.874561 2.8582258,22.364436 3.0307642,21.857241 3.2121289,21.353138 3.402263,20.852276 3.6011096,20.35481 3.808608,19.860889 4.024695,19.370664 4.2493047,18.884286 4.4823629,18.4019 4.7238098,17.923658 4.9735669,17.4497 5.2315571,16.980174 5.497703,16.515223 5.7719226,16.054988 6.0541327,15.599607 6.3442481,15.14927 6.6421789,14.704017 6.9478344,14.26403 l 0.3132882,-0.434585 0.3208252,-0.42905 0.3282639,-0.423387 0.3356039,-0.417594 0.3428397,-0.411671 0.3499728,-0.405627 0.356999,-0.399456 0.3639156,-0.393167 0.3707213,-0.386754 0.377415,-0.380273 0.383993,-0.3735815 0.390455,-0.3668226 0.396798,-0.3599514 0.403018,-0.3529724 0.409119,-0.3458846 0.415091,-0.3386914 0.42094,-0.3313959 0.426659,-0.3239988 0.432249,-0.3165034 0.437708,-0.3089118 0.44303,-0.3012258 0.448221,-0.2934475 0.453275,-0.2855795 0.458189,-0.2776263 0.462965,-0.2695877 0.467598,-0.2614658 0.472093,-0.2532662 0.476438,-0.2449876 0.480642,-0.236636 0.484701,-0.2282112 0.488608,-0.2197178 0.492368,-0.2111569 0.495978,-0.2025314 0.499439,-0.1938441 0.502743,-0.1850988 0.505898,-0.1762965 0.508899,-0.1674404 0.511743,-0.158533 0.514431,-0.149578 0.516965,-0.1405772 0.519338,-0.1315341 0.521555,-0.1224497 0.523613,-0.1133282 0.525509,-0.1041735 0.527249,-0.094985 0.528828,-0.08577 0.530242,-0.07653 0.531497,-0.067261 0.532591,-0.057974 0.533519,-0.048675 0.53429,-0.039351 0.534896,-0.030019 0.535336,-0.020679 0.535617,-0.011339 c 22.591645,1.1588597 31.018076,14.865196 31.069643,31.383198 l -0.01671,0.535475 -0.02605,0.535102 -0.03539,0.534568 -0.0447,0.533867 -0.05403,0.533006 -0.06331,0.531982 -0.0726,0.530794 -0.08184,0.529448 -0.09108,0.527939 -0.100276,0.52627 -0.109442,0.524438 -0.118576,0.52245 -0.127678,0.520299 -0.136738,0.517994 -0.145757,0.515527 -0.154735,0.512904 -0.16366,0.510126 -0.172538,0.507191 -0.181365,0.504105 -0.190134,0.500861 -0.198846,0.497469 -0.2075,0.493921 -0.216085,0.490223 -0.224611,0.486379 -0.233064,0.482386 -0.241447,0.478243 -0.249757,0.473956 -0.25799,0.469525 -0.266147,0.464954 -0.274218,0.460234 z"
+       id="path4208"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+       inkscape:export-filename="/Users/leo/Dev/Messanger/out/icons/newvkicon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <circle
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:5.17847395;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4142"
+       cx="31.46699"
+       cy="32.380722"
+       r="15.269983"
+       inkscape:export-filename="/Users/leo/Dev/Messenger/out/icons/path4142.png"
+       inkscape:export-xdpi="26.719398"
+       inkscape:export-ydpi="26.719398" />
+  </g>
+</svg>

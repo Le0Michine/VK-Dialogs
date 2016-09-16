@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable }     from "rxjs/Observable";
+import { Observable } from "rxjs/Observable";
+import { Subject } from "rxjs/Subject";
 import "rxjs/add/observable/of";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/concatMap";
@@ -15,6 +16,8 @@ import { Channels } from "./channels";
 
 @Injectable()
 export class UserService {
+    private onUsersUpdate: Subject<{}> = new Subject();
+
     constructor(
         private vkservice: VKService,
         private cache: CacheService,
@@ -23,6 +26,7 @@ export class UserService {
 
     init() {
         this.lpsService.userUpdate.subscribe(uids => this.updateUsers(uids));
+        this.chromeapi.registerObservable(this.onUsersUpdate);
         this.chromeapi.OnPortMessage("get_users").subscribe(() => {
             this.postUsersUpdate();
         });
@@ -37,7 +41,7 @@ export class UserService {
 
     postUsersUpdate() {
         console.log("post users update: ", this.cache.users_cache);
-        this.chromeapi.PostPortMessage({
+        this.onUsersUpdate.next({
             name: "users_update",
             data: this.cache.users_cache
         });

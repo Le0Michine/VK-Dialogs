@@ -1,6 +1,6 @@
-import { NgModule, ChangeDetectorRef }      from "@angular/core";
-import { FormsModule }      from "@angular/forms";
-import { BrowserModule, DomSanitizer } from "@angular/platform-browser";
+import { NgModule, ChangeDetectorRef } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
 
@@ -15,7 +15,7 @@ import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { EmojiService } from "./emoji-service";
-import { ChromeAPIService } from "../app.background/chrome-api-service";
+import { ChromeAPIService } from "./chrome-api-service";
 import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe, ChatActionPipe, SafePipe, CutLinksPipe, EmojiPipe } from "./attachment.pipe";
 
 @NgModule({
@@ -45,6 +45,7 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         AppComponent
     ],
     providers: [
+        Title,
         UserService,
         VKService,
         DialogService,
