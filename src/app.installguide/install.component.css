@@ -1,14 +1,26 @@
 h1 {
     color: white;
-    text-align: center;
 }
 
 .content {
-    top: 80px;
-    position: relative;
+    top: 30%;
     width: 600px;
+    position: relative;
 }
 
 .app-name {
     font-size: 40px;
+}
+
+.bottom-space {
+    margin-bottom: 20px;
+}
+
+#progress {
+    border-radius: 5px;
+}
+
+p {
+    font-size: 20px;
+    color: white;
 }

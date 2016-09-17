@@ -5,6 +5,7 @@ import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
 
 import { InstallComponent }  from "./install.component";
+import { ChromeAPIService } from "../app/chrome-api-service";
 
 @NgModule({
     imports: [
@@ -20,7 +21,7 @@ import { InstallComponent }  from "./install.component";
         InstallComponent
     ],
     providers: [
-
+        ChromeAPIService
     ]
 })
 export class AppInstallModule { }
