@@ -3,7 +3,7 @@
         "message": "Чат для ВК"
     },
     "appDesc": {
-        "message": "Messenger for VK in extension popup."
+        "message": "Чат для VK во всплывающем окне."
     },
     "chromeExtOptions": {
         "message": "Настройки расширения"
