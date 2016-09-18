@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { Http } from "@angular/http";
 import "rxjs/add/observable/throw";
@@ -17,6 +17,7 @@ import { AuthHelper } from "./auth-helper";
 
 @Injectable()
 export class VKService {
+    onLogOff: EventEmitter<{}> = new EventEmitter();
     private session_info: SessionInfo;
     private authorized: boolean = false;
     private set_online = "account.setOnline";
@@ -84,7 +85,8 @@ export class VKService {
 
     logoff() {
         this.session_info = null;
-        window.localStorage.removeItem(VKConsts.vk_session_info)
+        window.localStorage.removeItem(VKConsts.vk_session_info);
+        this.onLogOff.emit();
     }
 
     setOnline() {

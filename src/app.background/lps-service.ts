@@ -6,6 +6,8 @@ import "rxjs/add/operator/map";
 import "rxjs/add/observable/throw";
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/of";
+import "rxjs/add/operator/first";
+import "rxjs/add/observable/merge";
 
 import { VKConsts } from "../app/vk-consts";
 import { Message, Chat } from "../app/message";
@@ -205,7 +207,14 @@ export class LPSService {
         }
         console.log(new Date(Date.now()) + " perform a long poll request: ", server);
         let uri: string = `http://${server.server}?act=a_check&key=${server.key}&ts=${server.ts}&wait=25&mode=2`;
-        return this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json());
+        return Observable.merge(
+            this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json()),
+            this.vkservice.onLogOff.concatMap(() => Observable.throw({
+                type: "Unauthorized",
+                message: "User logged off"
+            }))
+        )
+        .first((x) => true)
     }
 
     /* [0: 4, 1: $message_id, 2: $flags, 3: $from_id, 4: $timestamp, 5: $subject, 6: $text, 7: $attachments] -- add a new message */
