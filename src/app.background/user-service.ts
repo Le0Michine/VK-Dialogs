@@ -17,6 +17,7 @@ import { Channels } from "./channels";
 @Injectable()
 export class UserService {
     private onUsersUpdate: Subject<{}> = new Subject();
+    private initialized = false;
 
     constructor(
         private vkservice: VKService,
@@ -25,14 +26,25 @@ export class UserService {
         private chromeapi: ChromeAPIService) { }
 
     init() {
+        if (this.initialized) {
+            console.warn("user service already initialized");
+            return;
+        }
         this.lpsService.userUpdate.subscribe(uids => this.updateUsers(uids));
+        this.lpsService.resetHistory.subscribe(() => {
+            console.log("update all users");
+            let uids = Object.keys(this.cache.users_cache);
+            this.updateUsers(uids.join());
+        });
         this.chromeapi.registerObservable(this.onUsersUpdate);
         this.chromeapi.OnPortMessage("get_users").subscribe(() => {
             this.postUsersUpdate();
         });
+        this.initialized = true;
     }
 
     updateUsers(uids: string) {
+        console.log("update users: ", uids);
         this.getUsers(uids, false).subscribe(users => {
             this.cache.pushUsers(users);
         },
@@ -48,6 +60,7 @@ export class UserService {
     }
 
     loadUsers(uids: string): void {
+        console.log("load users: ", uids)
         if (!uids || uids.length === 0) return;
         this.getUsers(uids).subscribe(users => {
             this.cache.pushUsers(users);

@@ -26,6 +26,7 @@ export class LPSService {
 
     messageUpdate: EventEmitter<{}> = new EventEmitter();
     userUpdate: EventEmitter<string> = new EventEmitter();
+    resetHistory: EventEmitter<{}> = new EventEmitter();
 
     constructor(
         private http: Http,
@@ -161,7 +162,8 @@ export class LPSService {
             }
             else if (response.failed === 1) {
                 console.log("history became obsolete need to refresh it first");
-                this.messageUpdate.emit();
+                this.resetHistory.emit();
+                this.startMonitoring();
                 // this.on_user_update();
             }
             else if (response.error) {

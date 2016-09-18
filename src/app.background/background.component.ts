@@ -37,12 +37,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.chromeapi.AcceptConnections();
         this.chromeapi.init();
+        // Observable.interval(30 * 1000).subscribe((i) => console.warn("I'M ALIVE!!! ", i, new Date(Date.now())));
 
         console.log("background init");
         this.vkservice.auth().subscribe(
             (session) => {
                 if (!session) {
                     this.chromeapi.UpdateActionBadge("off");
+                    this.waitForAuthorizeRequest();
                 }
                 else {
                     this.initServices();
@@ -51,15 +53,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.createContextMenuItems();
-
-        this.subscriptions.push(
-            this.chromeapi.OnPortMessage("authorize").subscribe((message: any) => {
-                this.vkservice.auth(true).subscribe((session) => {
-                    console.log("authorized: ", session);
-                    this.initServices();
-                });
-            })
-        );
 
         this.subscriptions.push(
             this.chromeapi.OnMessage("last_opened").subscribe((message: any) => {
@@ -116,6 +109,16 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         }
     }
 
+    private waitForAuthorizeRequest() {
+        let sub = this.chromeapi.OnPortMessage("authorize").subscribe((message: any) => {
+            this.vkservice.auth(true).subscribe((session) => {
+                console.log("authorized: ", session);
+                this.initServices();
+                sub.unsubscribe();
+            });
+        })
+    }
+
     private initServices() {
         this.lps.init();
         this.userService.init();
@@ -149,6 +152,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 window.localStorage.setItem(VKConsts.user_denied, "true");
                 this.chromeapi.UpdateActionBadge("off");
                 this.vkservice.logoff();
+                this.waitForAuthorizeRequest();
                 if (this.onUnreadCountUpdate) {
                     this.onUnreadCountUpdate.unsubscribe();
                     this.onUnreadCountUpdate = null;

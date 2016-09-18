@@ -28,6 +28,7 @@ export class DialogService {
     private mark_as_read: string = "messages.markAsRead";
 
     private opened_conversations = [];
+    private initialized = false;
 
     dialogs_count: number = 20;
 
@@ -44,6 +45,11 @@ export class DialogService {
         private chromeapi: ChromeAPIService) { }
 
     init() {
+        if (this.initialized) {
+            console.warn("dialog service already initialized");
+            return;
+        }
+        this.initialized = true;
         this.chromeapi.registerObservable(this.onUpdate);
         this.chromeapi.onUnsubscribe
             .filter((sub: any) => sub.name.includes("history_update"))
@@ -56,6 +62,11 @@ export class DialogService {
         });
 
         this.lpsService.messageUpdate.subscribe(() => this.updateMessages());
+        this.lpsService.resetHistory.subscribe(() => {
+            console.log("reset history");
+            this.updateMessages();
+        });
+
         this.getDialogs().subscribe(dialogs => {
                 this.loadDialogUsers(dialogs);
             },
