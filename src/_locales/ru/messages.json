@@ -28,5 +28,11 @@
     },
     "setOnlineOption": {
         "message": "Виден \"в сети\""
+    },
+    "openInSeparateWindow": {
+        "message": "Открыть в отдельном окне"
+    },
+    "logOff": {
+        "message": "Выйти из VK"
     }
 }

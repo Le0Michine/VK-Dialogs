@@ -28,5 +28,11 @@
     },
     "setOnlineOption": {
         "message": "Shown as \"online\""
+    },
+    "openInSeparateWindow": {
+        "message": "Open in a separate window"
+    },
+    "logOff": {
+        "message": "Log off"
     }
 }

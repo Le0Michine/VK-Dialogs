@@ -45,14 +45,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 if (!session) {
                     this.chromeapi.UpdateActionBadge("off");
                     this.waitForAuthorizeRequest();
+                    chrome.contextMenus.removeAll();
                 }
                 else {
                     this.initServices();
+                    this.createContextMenuItems();
                 }
             }
         );
-
-        this.createContextMenuItems();
 
         this.subscriptions.push(
             this.chromeapi.OnMessage("last_opened").subscribe((message: any) => {
@@ -113,8 +113,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         let sub = this.chromeapi.OnPortMessage("authorize").subscribe((message: any) => {
             this.vkservice.auth(true).subscribe((session) => {
                 console.log("authorized: ", session);
+                this.chromeapi.UpdateActionBadge("");
                 this.initServices();
                 sub.unsubscribe();
+                this.createContextMenuItems();
             });
         })
     }
@@ -123,8 +125,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         this.lps.init();
         this.userService.init();
         this.dialogsService.init();
-        this.onUnreadCountUpdate = 
-            this.dialogsService.unreadCountUpdate.subscribe(text => this.chromeapi.UpdateActionBadge(text));
+        if (!this.onUnreadCountUpdate) {
+            this.onUnreadCountUpdate =
+                this.dialogsService.unreadCountUpdate.subscribe(text => this.chromeapi.UpdateActionBadge(text));
+        }
     }
 
     private setOnline() {
@@ -144,8 +148,13 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     private createContextMenuItems() {
         chrome.contextMenus.removeAll();
-        chrome.contextMenus.create({
-            title: "Log Off",
+        chrome.contextMenus.create(this.getLogOffItem());
+        chrome.contextMenus.create(this.getOpenInWindowItem());
+    }
+
+    private getLogOffItem() {
+        return {
+            title: chrome.i18n.getMessage("logOff"),
             contexts: ["browser_action"],
             onclick: () => {
                 console.log("LOG OFF");
@@ -157,10 +166,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     this.onUnreadCountUpdate.unsubscribe();
                     this.onUnreadCountUpdate = null;
                 }
+                chrome.contextMenus.removeAll();
             }
-        });
-        chrome.contextMenus.create({
-            title: "Open in a separate window",
+        }
+    }
+
+    private getOpenInWindowItem() {
+        return {
+            title: chrome.i18n.getMessage("openInSeparateWindow"),
             contexts: ["browser_action"],
             onclick: () => {
                 console.log("create window");
@@ -176,6 +189,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     window.alwaysOnTop = true;
                 });
             }
-        });
+        }
     }
 }
