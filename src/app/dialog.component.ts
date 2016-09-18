@@ -432,7 +432,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     getInputMessage() {
         let div = document.getElementById("message_input");
         let html = div.innerHTML;
-        let matches = html.match(/(<div.*?>)?<img.*?>(<\/div>)?/g);
+        let matches = html.match(/(<div.*?>)?<img class="emoji".*?>(<\/div>)?/g);
         let altreg = new RegExp("alt=\"(.*?)\"");
         if (!matches) return div.innerText.trim();
         for (let m of matches) {

@@ -22,9 +22,9 @@
     "permissions": [
         "tabs",
         "storage",
+        "fileSystem",
         "management",
         "notifications",
-        "storage",
         "contextMenus",
         "http://vk.com/*",
         "http://*.vk.me/*",
