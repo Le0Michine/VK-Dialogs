@@ -110,13 +110,16 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     }
 
     private waitForAuthorizeRequest() {
-        let sub = this.chromeapi.OnPortMessage("authorize").subscribe((message: any) => {
+        let sub = this.chromeapi.OnMessage("authorize").subscribe((message: any) => {
             this.vkservice.auth(true).subscribe((session) => {
                 console.log("authorized: ", session);
                 this.chromeapi.UpdateActionBadge("");
                 this.initServices();
                 sub.unsubscribe();
                 this.createContextMenuItems();
+                if (message.sendResponse) {
+                    message.sendResponse();
+                }
             });
         })
     }

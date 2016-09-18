@@ -40,8 +40,7 @@ export class VKService {
 
     auth() {
         console.log("authorization requested");
-        this.chromeapi.PostPortMessage({ name: "authorize" });
-        this.initializeSeesion();
+        this.chromeapi.SendRequest({ name: "authorize" }).subscribe(() => this.initializeSeesion());
     }
 
     hasValidSession() {
