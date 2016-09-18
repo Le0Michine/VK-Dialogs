@@ -1,15 +1,29 @@
 ///<reference path="../typings/globals/chrome/index.d.ts"/>
-import { Component } from "@angular/core";
+import { Component, trigger, state, transition, style, animate } from "@angular/core";
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "../app/chrome-api-service";
 
 @Component({
     selector: "install",
     templateUrl: "install.component.html",
-    styleUrls: ["install.component.css"]
+    styleUrls: ["install.component.css"],
+    animations: [
+        trigger('flyInOut', [
+            state('in', style({transform: 'translateX(0)'})),
+            state('out', style({transform: 'translateX(-300%)'})),
+            transition('out => in', [
+                style({transform: 'translateX(-300%)'}),
+                animate(500)
+            ]),
+            transition('in => out', [
+                animate(500, style({transform: 'translateX(300%)'}))
+            ])
+        ])
+    ]
 })
 export class InstallComponent {
     progress: number = 20;
+    step = "out";
 
     constructor(translate: TranslateService, private chromeapi: ChromeAPIService) {
         setTimeout(() => this.progress = 80, 1000);
@@ -34,6 +48,7 @@ export class InstallComponent {
     }
 
     authorize() {
+        this.step = this.step === "in" ? "out" : "in";
         this.chromeapi.PostPortMessage({ name: "authorize" });
     }
 }

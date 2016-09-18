@@ -5,6 +5,9 @@
     "not_authorized": "You are not authorized.\r\nPlease click \"Authorize\" to access your VK data.",
     "authorize_btn": "Authorize",
     "type_text_here": "Type your text here…",
+    "setup": {
+        "step_1": "First you need to authorize on VK.com. In case if you are doing that first time you will need to grant access to your account."
+    },
     "actions": {
         "chat_kick_user": "{{user}} left the conversation",
         "chat_kick_user2": "{{user}} kicked {{user2}}",

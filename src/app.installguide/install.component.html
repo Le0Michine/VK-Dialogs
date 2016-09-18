@@ -6,9 +6,9 @@
         <div class="row bottom-space" style="height: 10px;">
             <div id="progress" [style.width]="progress + '%'" class="progress-bar progress-bar-info"></div>
         </div>
-        <div class="row bottom-space">
+        <div class="row bottom-space" [@flyInOut]="step">
             <p>
-                Для начала необходимо авторизироваться на сайте VK.com. Если это происходит впервые — потребуется разрешить приложению доступ к Вашим данным.
+                {{'setup.step_1' | translate}}
             </p>
         </div>
         <div class="row">
