@@ -2,6 +2,10 @@ h1 {
     color: white;
 }
 
+.white-text {
+    color: white;
+}
+
 .content {
     top: 30%;
     width: 600px;
@@ -16,6 +20,10 @@ h1 {
     margin-bottom: 20px;
 }
 
+.right-space {
+    margin-right: 10px;
+}
+
 #progress {
     border-radius: 5px;
 }
@@ -23,4 +31,10 @@ h1 {
 p {
     font-size: 20px;
     color: white;
+}
+
+.absolute-position {
+    position: absolute;
+    top: 120px;
+    width: 100%;
 }

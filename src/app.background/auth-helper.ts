@@ -15,11 +15,18 @@ export class AuthHelper {
     static authorization_in_progress_count: number = 0;
     static current_authorisation: Observable<any>;
 
+    static selectTab() {
+        if (AuthHelper.tab_id) {
+            console.log("set vk auth tab active");
+            chrome.tabs.update(AuthHelper.tab_id, {active: true});
+        }
+    }
+
     static authorize(forced: boolean = false): Observable<SessionInfo> {
         console.log("start authorization");
         if (AuthHelper.authorization_in_progress_count > 0) {
             console.log("another authorization in progress, cancel request");
-            if (forced) chrome.tabs.update(AuthHelper.tab_id, {active: true});
+            AuthHelper.selectTab();
             return AuthHelper.current_authorisation;
         }
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" && !forced) {

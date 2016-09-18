@@ -3,3 +3,7 @@ body {
     justify-content: center;
     display: flex;
 }
+
+html, body {
+    overflow: hidden;
+}

@@ -6,13 +6,52 @@
         <div class="row bottom-space" style="height: 10px;">
             <div id="progress" [style.width]="progress + '%'" class="progress-bar progress-bar-info"></div>
         </div>
-        <div class="row bottom-space" [@flyInOut]="step">
-            <p>
-                {{'setup.step_1' | translate}}
-            </p>
+        <div [@flyInOut]="getStepState('step_auth')" class="absolute-position">
+            <div class="row bottom-space">
+                <p>{{'setup.step_auth' | translate}}</p>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-warning btn-lg pull-left" (click)="authorize()">{{'authorize_btn' | translate}}</button>
+                <button type="submit" class="btn btn-default btn-lg pull-right" (click)="next('step_auth')">{{'skip_btn' | translate}}</button>
+            </div>
         </div>
-        <div class="row">
-            <button type="submit" class="btn btn-warning btn-lg pull-right" (click)="authorize()">{{'authorize_btn' | translate}}</button>
+        <div [@flyInOut]="getStepState('step_privacy')" class="absolute-position">
+            <div class="row bottom-space">
+                <p>{{'setup.step_privacy' | translate}}</p>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-default btn-lg pull-left" (click)="back('step_privacy')">{{'back_btn' | translate}}</button>
+                <button type="submit" class="btn btn-success btn-lg pull-right" (click)="next('step_privacy')">{{'next_btn' | translate}}</button>
+            </div>
+        </div>
+        <div [@flyInOut]="getStepState('step_spy')" class="absolute-position">
+            <div class="row bottom-space">
+                <p>{{'setup.step_spy' | translate}}</p>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-default btn-lg pull-left" (click)="back('step_spy')">{{'back_btn' | translate}}</button>
+                <button type="submit" class="btn btn-success btn-lg pull-right" (click)="next('step_spy')">{{'next_btn' | translate}}</button>
+                <button type="submit" class="btn btn-link btn-lg pull-right space-right white-text" (click)="openOptions()">{{'options_btn' | translate}}</button>
+            </div>
+        </div>
+        <div [@flyInOut]="getStepState('step_panels')" class="absolute-position">
+            <div class="row bottom-space">
+                <p>{{'setup.step_panels' | translate}}</p>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-default btn-lg pull-left" (click)="back('step_panels')">{{'back_btn' | translate}}</button>
+                <button type="submit" class="btn btn-success btn-lg pull-right" (click)="next('step_panels')">{{'next_btn' | translate}}</button>
+                <button type="submit" class="btn btn-link btn-lg pull-right space-right white-text" (click)="openFlags()">{{'flags_btn' | translate}}</button>
+            </div>
+        </div>
+        <div [@flyInOut]="getStepState('step_last')" class="absolute-position">
+            <div class="row bottom-space">
+                <p>{{'setup.step_last' | translate}}</p>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-default btn-lg pull-left" (click)="back('step_last')">{{'back_btn' | translate}}</button>
+                <button type="submit" class="btn btn-warning btn-lg pull-right" (click)="close()">{{'close_btn' | translate}}</button>
+            </div>
         </div>
     </div>
 </div>

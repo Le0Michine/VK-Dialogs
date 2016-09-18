@@ -44,7 +44,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             (session) => {
                 if (!session) {
                     this.chromeapi.UpdateActionBadge("off");
-                    this.waitForAuthorizeRequest();
                     chrome.contextMenus.removeAll();
                 }
                 else {
@@ -54,6 +53,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             }
         );
 
+        this.waitForAuthorizeRequest();
         this.subscriptions.push(
             this.chromeapi.OnMessage("last_opened").subscribe((message: any) => {
                 if (message.last_opened) {
@@ -111,6 +111,13 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     private waitForAuthorizeRequest() {
         let sub = this.chromeapi.OnMessage("authorize").subscribe((message: any) => {
+            if (this.vkservice.isAuthorized()) {
+                console.log("already authorized");
+                if (message.sendResponse) {
+                    message.sendResponse();
+                }
+                return;
+            }
             this.vkservice.auth(true).subscribe((session) => {
                 console.log("authorized: ", session);
                 this.chromeapi.UpdateActionBadge("");
@@ -164,7 +171,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 window.localStorage.setItem(VKConsts.user_denied, "true");
                 this.chromeapi.UpdateActionBadge("off");
                 this.vkservice.logoff();
-                this.waitForAuthorizeRequest();
+                //this.waitForAuthorizeRequest();
                 if (this.onUnreadCountUpdate) {
                     this.onUnreadCountUpdate.unsubscribe();
                     this.onUnreadCountUpdate = null;
