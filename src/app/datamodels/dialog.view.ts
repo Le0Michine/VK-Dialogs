@@ -1,14 +1,7 @@
-import { Message } from "./message";
+import {SingleMessageInfo} from "./datamodels";
 
-export class Dialog {
-    message: Message;
-    in_read: number;
-    out_read: number;
-    unread: number;
-}
-
-export class DialogToShow {
-    message: Message;
+export class DialogView {
+    message: SingleMessageInfo;
     unread: number;
     photos: string[] = ["http://vk.com/images/camera_c.gif"];
     title: string = "loading...";

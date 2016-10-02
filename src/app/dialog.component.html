@@ -1,96 +1,35 @@
-<div id="messages"><div id="top_panel">
-	<a (click)="goBack()" id="go_back"> 
-		<div id="left_arrow"></div>
-		<h1 id="dialog_title">{{ title }}</h1>
-	</a>
-	<button id="send_btn" (click)="sendMessage()">{{ 'send' | translate }}</button>
-	<button id="mark_as_read_btn" (click)="markAsRead()" [hidden]="!history || !history[0] || history[0].out || history[0].read_state">{{ 'mark_as_read' | translate }}</button>
-	<div class="emoji_smile_icon" (click)="toggleEmoji()"></div>
+<div #conversationsWrapper id="conversationWrapper"
+	[style.height]="topPanel | safeStyle"
+	(scroll)="onScroll(conversationsWrapper.scrollTop, conversationsWrapper.scrollHeight)"
+	>
+	<messages-list
+		[conversation_id]="conversation_id"
+		[is_chat]="is_chat"
+		[markAsRead]="markAsRead"
+		[historyUpdate]="historyUpdate"
+	></messages-list>
 </div>
 <emoji (onSelect)="onEmojiSelect($event)"></emoji>
-<div id="input_box">
-	<label id="input_label" for="message_input">{{ 'type_text_here' | translate }}</label>
-	<div contenteditable="true" id="message_input" #minput (click)="hideLabelContent()" (blur)="showLabelContent(getInputMessage())" (keydown)="onKeyPress($event,minput.innerText)"></div>
+<div #inputWrapper id="inputWrapper"
+	[style.top]="bottomPanel | safeStyle"
+	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"
+	>
+	<div id="inputControls" class="row">
+		<div 
+			class="dragBar material-icons"
+			(mousedown)="startResize([conversationsWrapper, inputWrapper], $event)"
+			(mouseup)="stopResize([conversationsWrapper, inputWrapper], $event)"
+		>drag_handle</div>
+		<button class="btn btn-success btn-round pull-right material-icons send-padding" [class.disabled]="onMessageSent | async" (click)="onSendMessageClick.emit()">send</button>
+		<button [@flyInOut]="unreadMessages" class="btn btn-warning btn-round pull-right material-icons" (click)="onMarkAsRead()	">done_all</button>
+		<div class="emoji_smile_icon pull-right" (click)="toggleEmoji()"></div>
+		<button [@flyInOut]="scrollToBottomAvailable" class="btn btn-info btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
+	</div>
+	<message-input
+		[conversation_id]="conversation_id"
+		[is_chat]="is_chat"
+		[selectEmoji]="selectEmoji"
+		[onSendMessageClick]="onSendMessageClick"
+		(onMessageSent)="messageSent($event)"
+	></message-input>
 </div>
-<div id="chat_spacer">
-<div id="chat_body">
-	<div class="message_block" *ngFor="let message of history_to_show">
-		<div class="unread" *ngIf="!message.messages[0].read_state"></div>
-		<div class="user_avatar" [class.online]="message.user.online">
-			<a [href]="'https://vk.com/id'+message.user.id" target="_blank">
-				<img alt="" [src]="getUserPhoto(message.user.id)" class="user_avatar_img" />
-			</a>
-		</div>
-		<div class="message">
-			<div class="user_name_and_date">
-				<a [href]="'https://vk.com/id'+message.user.id" target="_blank" class="user_name">{{getUserName(message.user.id)}}</a>
-                <span class="message_timestamp">{{message.date*1000 | date:formatDate(message.date) }}</span>
-			</div>
-			<ul class="messages_list">
-				<li class="message_item" *ngFor="let item of message.messages" id="{{item.id}}">
-					<div class="message_body clearfix">
-						<pre class="message_body_internal" [hidden]="!item.body" [innerHTML]="item.body | cut_links | emoji | safe"></pre>
-						<div *ngIf="item.action" class="chat_action">{{ item | chat_action | translate:{"user": getUserName(item.user_id), "user2": getUserName(item.action_mid)} }}</div>
-						<div class="message_attachment" *ngFor="let attachment of item.attachments">
-							<div *ngIf="attachment.photo" class="att_photo">
-								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
-							</div>
-							<div *ngIf="attachment.sticker">
-								<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
-							</div>
-							<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
-								<a class="att_doc_icon {{attachment | attachment_icon}}" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
-								<a class="att_doc" [href]="attachment | attachment_url:item.user_id" target="_blank">{{attachment | attachment_title}}</a>
-								<div class="att_doc_size">{{attachment | attachment_size}}</div>
-							</div>
-
-							<!-- fwd messages -->
-							<div *ngIf="attachment.fwd" class="fwd_messages">
-								<div *ngFor="let mts of attachment.fwd">
-									<div class="fwd_msg_block" *ngIf="mts.user">
-										<div class="fwd_user_avatar" [class.online]="mts.user.online">
-											<a [href]="'https://vk.com/id'+mts.user.id" target="_blank">
-												<img alt="" [src]="getUserPhoto(mts.user.id)" class="user_avatar_img" />
-											</a>
-										</div>
-										<div class="fwd_message">
-											<div class="fwd_user_name_and_date">
-												<a [href]="'https://vk.com/id'+message.user.id" target="_blank" class="fwd_user_name">{{getUserName(mts.user.id)}}</a>
-                								<br><span class="fwd_message_timestamp">{{mts.date*1000 | date:formatDate(mts.date)}}</span>
-											</div>
-											<ul class="fwd_messages_list">
-												<li class="fwd_message_body" *ngFor="let msg of mts.messages">
-													<pre class="fwd_message_body_internal">{{msg.body}}</pre>
-													<div class="fwd_message_attachment" *ngFor="let fwd_att of msg.attachments">
-														<div *ngIf="fwd_att.photo" class="att_photo">
-															<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />
-														</div>
-														<div *ngIf="attachment.sticker">
-															<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
-														</div>
-														<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio" class="clearfix">
-															<a class="att_doc_icon {{fwd_att | attachment_icon}}" [href]="fwd_att | attachment_url:item.user_id" target="_blank"></a>
-															<a class="att_doc" [href]="fwd_att | attachment_url:item.user_id" target="_blank">{{fwd_att | attachment_title}}</a>
-															<div class="att_doc_size">{{fwd_att | attachment_size}}</div>
-														</div>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div *ngIf="!attachment.type">
-								{{attachment}}
-							</div>
-						</div>
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<div id="load_old" (click)="loadOldMessages()" *ngIf="!messages_count || messages_count > history.length">
-		<div id="arrow_down"></div>
-		<a id="load_old_link">{{ 'load_previous_messages' | translate }}</a>
-	</div>
-</div></div></div>

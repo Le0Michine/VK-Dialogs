@@ -1,0 +1,85 @@
+	<div id="load_old" (click)="loadOldMessages()" *ngIf="!messages_count || messages_count > history.length">
+		<i class="material-icons">history</i>
+	</div>
+	<div class="message-block" *ngFor="let message of history_to_show | reverse">
+		<div class="user-avatar pull-left" [class.online]="message.from.isOnline">
+			<a [href]="'https://vk.com/id'+message.from.id" target="_blank">
+				<img alt="" [src]="getUserPhoto(message.from.id)" class="user-avatar-img" />
+			</a>
+		</div>
+		<div class="message pull-left">
+			<div class="user-name-and-date">
+				<a [href]="'https://vk.com/id'+message.from.id" target="_blank" class="user_name">{{getUserName(message.from.id)}}</a>
+                <span class="message_timestamp">{{message.date*1000 | date:formatDate(message.date) }}</span>
+			</div>
+			<ul class="messages-list">
+				<li class="message-item" *ngFor="let isFirst=first; let isLast=last; let item of message.messages | reverse" id="{{item.id}}">
+					<div class="message-body clearfix"
+						[class.unread]="!item.isRead"
+						[class.round-corners-bottom]="isFirst"
+						[class.round-corners-top]="isLast">
+						<pre class="message-body-internal"
+							*ngIf="item.body"
+							[innerHTML]="item.body | cutLinks | emoji | safe" 
+							></pre>
+						<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": getUserName(item.userId), "user2": getUserName(item.actionMid)} }}</div>
+						<div class="message-attachment pull-left" *ngFor="let attachment of item.attachments">
+							<div *ngIf="attachment.photo" class="att_photo">
+								<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
+							</div>
+							<div *ngIf="attachment.sticker">
+								<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
+							</div>
+							<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
+								<a class="att-doc-icon {{attachment | attachment_icon}} pull-left" [class.white-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
+								<div class="attachment-description">
+									<a class="att-doc" [href]="attachment | attachment_url:item.user_id" [class.white-text]="!item.isRead" target="_blank">{{attachment | attachment_title}}</a>
+									<div class="att-doc-size" [class.white-text]="!item.isRead">{{attachment | attachment_size}}</div>
+								</div>
+							</div>
+
+							<!-- fwd messages -->
+							<div *ngIf="attachment.fwd" class="fwd_messages">
+								<div *ngFor="let mts of attachment.fwd">
+									<div class="fwd_msg_block" *ngIf="mts.user">
+										<div class="fwd_user_avatar" [class.online]="mts.user.online">
+											<a [href]="'https://vk.com/id'+mts.user.id" target="_blank">
+												<img alt="" [src]="getUserPhoto(mts.user.id)" class="user_avatar_img" />
+											</a>
+										</div>
+										<div class="fwd_message">
+											<div class="fwd_user_name_and_date">
+												<a [href]="'https://vk.com/id'+message.user.id" target="_blank" class="fwd_user_name">{{getUserName(mts.user.id)}}</a>
+                								<br><span class="fwd_message_timestamp">{{mts.date*1000 | date:formatDate(mts.date)}}</span>
+											</div>
+											<ul class="fwd_messages_list">
+												<li class="fwd_message_body" *ngFor="let msg of mts.messages">
+													<pre class="fwd_message_body_internal">{{msg.body}}</pre>
+													<div class="fwd_message_attachment" *ngFor="let fwd_att of msg.attachments">
+														<div *ngIf="fwd_att.photo" class="att_photo">
+															<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />
+														</div>
+														<div *ngIf="attachment.sticker">
+															<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
+														</div>
+														<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio" class="clearfix">
+															<a class="att_doc_icon {{fwd_att | attachment_icon}}" [href]="fwd_att | attachment_url:item.user_id" target="_blank"></a>
+															<a class="att_doc" [href]="fwd_att | attachment_url:item.user_id" target="_blank">{{fwd_att | attachment_title}}</a>
+															<div class="att_doc_size">{{fwd_att | attachment_size}}</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div *ngIf="!attachment.type">
+								{{attachment}}
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>

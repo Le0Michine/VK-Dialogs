@@ -1,4 +1,4 @@
-export class LongPollServer {
+export class LongPollServerInfo {
     key: string;
     server: string;
     ts: number;

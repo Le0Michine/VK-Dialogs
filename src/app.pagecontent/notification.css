@@ -191,7 +191,6 @@ a.boxclose{
     position: absolute;
     width: 20px;
     z-index: 10;
-    background: rgba(0, 0, 0, 0) url("../icons/im_actions.png") no-repeat scroll 2px -270px / auto padding-box border-box;
     margin: 0 0 0 -15px;
     outline: rgb(42, 88, 133) none 0px;
 }

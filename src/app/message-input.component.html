@@ -1,0 +1,12 @@
+<div id="inputBox" class="row">
+	<label *ngIf="inputLabelVisible" class="input-label" for="message_input">{{ 'type_text_here' | translate }}</label>
+	<div #minput class="pull-left"
+		contenteditable="true"
+		id="message_input"
+		(blur)="showLabelContent(getText(minput.childNodes))"
+		(keydown)="onKeyPress($event, minput)"
+		(input)="onInput($event)"
+		(paste)="removeStyle(minput.childNodes)"
+	></div>
+</div>
+<!--<div class="attach_photo_icon"></div>-->

@@ -2,9 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
-import { Message, Chat } from "./message";
-import { Dialog, DialogToShow } from "./dialog";
-import { User } from "./user";
+import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "./datamodels/datamodels";
 import { DialogComponent } from "./dialog.component";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
@@ -19,17 +17,17 @@ import { VKConsts } from "./vk-consts";
   styleUrls: ["dialogs.component.css"]
 })
 export class DialogsComponent implements OnInit, OnDestroy {
-    user: User = new User();
-    users: {};
-    chats: {};
+    user: UserInfo = new UserInfo();
+    users: { [userId: number] : UserInfo };
+    chats: { [chatId: number] : ChatInfo };
     dialogs_count: number;
     is_destroyed: boolean = false;
 
-    dialogs_to_show = [];
+    dialogs_to_show: DialogView[] = [];
 
     i: number = 0;
 
-    dialogs: Dialog[] = [];
+    dialogs: DialogInfo[] = [];
 
     subscriptions: Subscription[] = [];
 
@@ -42,19 +40,18 @@ export class DialogsComponent implements OnInit, OnDestroy {
         private chromeapi: ChromeAPIService,
         private change_detector: ChangeDetectorRef) { }
 
-    gotoDialog(dialog: Message) {
+    gotoDialog(dialog: SingleMessageInfo) {
         let link: string[];
-        let chat = dialog as Chat;
-        if (chat.chat_id) {
-            link = ["dialog", chat.chat_id.toString(), "chat", chat.title];
+        if (dialog.chatId) {
+            link = ["dialog", dialog.chatId.toString(), "chat", dialog.title];
         }
         else {
-            let user: User = this.users[dialog.user_id];
-            let title: string = !dialog.title || dialog.title === " ... " ? user.first_name + " " + user.last_name : dialog.title;
+            let user: UserInfo = this.users[dialog.userId];
+            let title: string = !dialog.title || dialog.title === " ... " ? user.firstName + " " + user.lastName : dialog.title;
             this.title.setTitle(title);
             link = [
                 "dialog",
-                dialog.user_id.toString(),
+                dialog.userId.toString(),
                 "dialog",
                 title];
         }
@@ -89,19 +86,10 @@ export class DialogsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.chromeapi.SendRequest({ name: "request_everything" }).subscribe((response: any) => {
-            console.log("got everything: ", response);
-            this.users = response.users;
-            this.dialogs = response.dialogs;
-            this.chats = response.chats;
-            this.user = this.users[response.current_user_id];
-            this.dialogs_to_show = this.getDialogs();
-            this.refreshView();
-        });
-
         this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
                 console.log("DIALOGS", dialogs);
-                this.dialogs = dialogs as Dialog[];
+                this.dialogs = dialogs.dialogs;
+                this.dialogs_count = dialogs.count;
                 this.dialogs_to_show = this.getDialogs();
                 this.refreshView();
             },
@@ -127,8 +115,6 @@ export class DialogsComponent implements OnInit, OnDestroy {
             error => this.errorHandler(error),
             () => console.log("finished chats update"))
         );
-
-        this.dialog_service.subscribeOnDialogsCountUpdate(count => this.dialogs_count = count);
     }
 
     ngOnDestroy() {
@@ -148,69 +134,69 @@ export class DialogsComponent implements OnInit, OnDestroy {
 
     getUserName(uid: number) {
         if (this.users && this.users[uid]) {
-            return this.users[uid].first_name + " " + this.users[uid].last_name;
+            return this.users[uid].firstName + " " + this.users[uid].lastName;
         }
         return "loading...";
     }
 
     getUserFirstName(uid: number) {
         if (this.users && this.users[uid]) {
-            return this.users[uid].first_name;
+            return this.users[uid].firstName;
         }
+        console.warn("unable to get user name", uid, this.users);
         return "loading...";
     }
 
     getUserPhoto(uid: number) {
-        if (this.users && this.users[uid] && this.users[uid].photo_50) {
-            return this.users[uid].photo_50;
+        if (this.users && this.users[uid] && this.users[uid].photo50) {
+            return this.users[uid].photo50;
         }
         return "http://vk.com/images/camera_c.gif";
     }
 
-    getDialogs() {
+    getDialogs(): DialogView[] {
         if (!this.users) return [];
-        let dialogs: DialogToShow[] = [];
+        let dialogs: DialogView[] = [];
         for (let dialog of this.dialogs) {
-            let uid = dialog.message.user_id;
-            let dts = new DialogToShow();
-            dts.message = dialog.message;
-            dts.unread = dialog.unread;
-            dts.title = !dialog.message.title || dialog.message.title === " ... " ? this.getUserName(uid) : dialog.message.title;
-            dts.date_format = DateConverter.formatDate(Number(dialog.message.date));
-            dts.sender = dialog.message.out ? this.user.first_name : this.getUserFirstName(uid);
+            let uid = dialog.message.userId;
+            let message = dialog.message;
+            let dts = new DialogView();
+            dts.message = message;
+            dts.unread = dialog.unreadCount;
+            dts.title = !message.title || message.title === " ... " ? this.getUserName(uid) : message.title;
+            dts.date_format = DateConverter.formatDate(Number(message.date));
+            dts.sender = this.getUserFirstName(message.fromId);
 
-            if (dialog.message.fwd_messages) {
+            if (message.fwdMessages) {
                 dts.attachment_type = "fwd_messages";
             }
-            else if (dialog.message.attachments && dialog.message.attachments[0]) {
-                dts.attachment_type = dialog.message.attachments[0].type;
+            else if (message.attachments && message.attachments[0]) {
+                dts.attachment_type = message.attachments[0].type;
             }
             dts.attachment_only = dts.attachment_type !== "" && dts.message.body === "";
 
-            let chat = dialog.message as Chat;
-            if (chat.chat_id) {
+            if (message.chatId) {
                 dts.online = false;
-                if (chat.photo_50) {
-                    dts.photos = [chat.photo_50];
+                if (message.photo50) {
+                    dts.photos = [message.photo50];
                 }
-                else if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length > 0) {
-                    dts.photos = (this.chats[chat.chat_id].users as User[]).filter(user => user.id !== this.user.id).map(user => user.photo_50).slice(0, 4);
+                else if (this.chats && this.chats[message.chatId] && this.chats[message.chatId].users.length > 0) {
+                    dts.photos = (this.chats[message.chatId].users).filter(user => user.id !== this.user.id).map(user => user.photo50).slice(0, 4);
                 }
-                if (this.chats && this.chats[chat.chat_id] && this.chats[chat.chat_id].users.length === 0 && chat.action) {
-                    chat.read_state = true;
+                if (this.chats && this.chats[message.chatId] && this.chats[message.chatId].users.length === 0 && message.action) {
+                    message.isRead = true;
                 }
             }
-            else if (this.users && this.users[uid] && this.users[uid].photo_50) {
-                dts.photos = [this.users[uid].photo_50];
-                dts.online = this.users[uid].online;
+            else if (this.users && this.users[uid] && this.users[uid].photo50) {
+                dts.photos = [this.users[uid].photo50];
+                dts.online = this.users[uid].isOnline;
             }
             dialogs.push(dts);
         }
         return dialogs;
     }
 
-    errorHandler(error) {
+    errorHandler(error): void {
         console.error("An error occurred", error);
-        // return Promise.reject(error.message || error);
     }
 }

@@ -7,7 +7,7 @@ import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
 
 import { VKConsts } from "./vk-consts";
-import { SessionInfo } from "./session-info";
+import { SessionInfo } from "./datamodels/datamodels";
 
 @Injectable()
 export class VKService {
@@ -32,7 +32,7 @@ export class VKService {
             this.session_info
             && this.session_info.access_token
             && this.session_info.timestamp
-            && this.session_info.token_exp
+            // && this.session_info.token_exp
             && this.session_info.user_id
             // && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
         );
@@ -40,6 +40,7 @@ export class VKService {
 
     auth() {
         console.log("authorization requested");
+        console.trace("auth", this.session_info);
         this.chromeapi.SendRequest({ name: "authorize" }).subscribe(() => this.initializeSeesion());
     }
 

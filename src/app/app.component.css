@@ -1,0 +1,57 @@
+#topPanel {
+    position: fixed;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    top: 0;
+    height: 45px;
+    text-align: left;
+    vertical-align: top;
+    width: 100%;
+    background-color: #2196F3;
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    padding: 10px;
+}
+
+.btn-back {
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.ontop {
+    z-index: 999;
+    display: inline-block;
+}
+
+.space-left {
+    margin-left: 10px;
+}
+
+#go_back:hover {
+    background-color: rgba(42, 88, 133, 0.1) !important;
+    border-radius: 0 20px 20px 0;
+    /*background-image: linear-gradient(to right, rgba(42, 88, 133, 0.1), #eff0f1);*/
+}
+
+#dialog_title {
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    max-width: 235px;
+    position: relative;
+    text-align: left;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+    font: normal normal 500 normal 14px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0px 3px 0px 0px;
+    overflow: hidden;
+    padding-top: 3px;
+}

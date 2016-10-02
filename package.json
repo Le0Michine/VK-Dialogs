@@ -6,6 +6,7 @@
   "dependencies": {
     "jshint": "^2.9.3",
     "jshint-loader": "^0.8.3",
+    "ng2-uploader": "^1.2.0",
     "node-libs-browser": "^1.0.0",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",

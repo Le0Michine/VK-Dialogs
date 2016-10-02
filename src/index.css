@@ -5,23 +5,8 @@ h1 {
 }
 html, body {
   margin: 0;
-  background-color: rgba(0, 0, 0, 0.2);
   min-height: 500px;
-  min-width: 500px;
   overflow: hidden;
-}
-
-dialogs {
-    height: 500px;
-    width: 150px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-#messages {
-    min-height: 500px;
-    height: 100%;
-    width: 100%;
 }
 
 @keyframes rotating {
@@ -70,4 +55,14 @@ dialogs {
 
 body::-webkit-scrollbar, html::-webkit-scrollbar {
     width: 0;
+}
+
+.styleless {
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
+    color: black;
+    cursor: text;
+}
+
+img.styleless {
+    display: none !important;
 }

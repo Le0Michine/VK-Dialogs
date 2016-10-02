@@ -1,12 +1,10 @@
 import { VKConsts } from "../app/vk-consts";
-import { Message, Chat } from "../app/message";
-import { Dialog } from "../app/dialog";
-import { User } from "../app/user";
+import { SingleMessageInfo } from "./datamodels/datamodels";
 
 export class LPSHelper {
 
     /* [4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments] -- add a new message */
-    public static processMessage(update: any) {
+    public static processMessage(update: any): SingleMessageInfo {
         let message_id = update[1];
         let flags = update[2];
         let from_id = update[3];
@@ -19,29 +17,17 @@ export class LPSHelper {
         let read_state = (flags & message_flags.UNREAD) !== message_flags.UNREAD;
         let out = (flags & message_flags.OUTBOX) === message_flags.OUTBOX;
 
-        if (is_chat) {
-            let m = new Chat();
-            m.chat_id = from_id;
-            m.read_state = read_state;
-            m.out = out;
-            m.title = subject;
-            m.body = text;
-            m.user_id = attachments["from"];
-            m.id = message_id;
-            m.date = timestamp;
-            return m;
-        }
-        else {
-            let m = new Message();
-            m.user_id = from_id;
-            m.read_state = read_state;
-            m.out = out;
-            m.title = subject;
-            m.body = text;
-            m.id = message_id;
-            m.date = timestamp;
-            return m;
-        }
+        let message = new SingleMessageInfo();
+
+        message.conversationId = from_id;
+        message.isRead = read_state;
+        message.out = out;
+        message.title = subject;
+        message.body = text;
+        message.userId = attachments.from || from_id;
+        message.id = message_id;
+        message.date = timestamp;
+        return message;
     }
 }
 

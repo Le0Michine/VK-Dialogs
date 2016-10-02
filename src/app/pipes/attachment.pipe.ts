@@ -1,4 +1,3 @@
-///<reference path="../twemoji.d.ts"/>
 import { Pipe } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "ng2-translate/ng2-translate";
@@ -80,61 +79,5 @@ export class MessageAttachmentIconPipe {
         if (atttachment.doc || atttachment.wall) return "att_doc_img";
         if (atttachment.audio) return "att_aud_img";
         return "att_doc_img";
-    }
-}
-
-@Pipe({
-    name: "chat_action",
-    pure: false
-})
-export class ChatActionPipe {
-    transform(message) {
-        switch (message.action) {
-            case "chat_kick_user":
-                if (message.action_mid !== message.user_id) {
-                    return "actions.chat_kick_user2";
-                }
-                else {
-                    return "actions.chat_kick_user";
-                }
-            case "chat_photo_remove":
-                return "actions.chat_photo_remove";
-            case "chat_photo_update":
-                return "actions.chat_photo_update";
-            case "chat_create":
-                return "actions.chat_create";
-            case "chat_invite_user":
-                return "actions.chat_invite_user";
-        }
-    }
-}
-
-@Pipe({ name: "safe" })
-export class SafePipe {
-    constructor(private sanitizer: DomSanitizer) { }
-
-    transform(html) {
-        return this.sanitizer.bypassSecurityTrustHtml(html);
-    }
-}
-
-@Pipe({ name: "cut_links" })
-export class CutLinksPipe {
-    transform(text) {
-        let len = 55;
-        let urls = text.match(/(?:(?:https?|ftp|file|chrome):\/\/|www\.|ftp\.)(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-ZА-Яа-я\w0-9+&@#\/%=~_|$?!:,.]*\)|[A-ZА-Яа-я\w0-9+&@#\/%=~_|$])/igm);
-        if (!urls) return text;
-        for (let url of urls) {
-            text = text.replace(url,
-                "<a target=\"_blank\" href=\"" + url + "\" title=\"" + url + "\" style=\"cursor:pointer;\">" + (url.length > len ? (url.slice(0, len) + "..") : url) + "</a>");
-        }
-        return text;
-    }
-}
-
-@Pipe({ name: "emoji" })
-export class EmojiPipe {
-    transform(text) {
-        return twemoji.parse(text);
     }
 }

@@ -1,4 +1,5 @@
 {
+    "dialogs": "Dialogs",
     "mark_as_read": "Mark as read",
     "send": "Send",
     "load_previous_messages": "Load previous messages",

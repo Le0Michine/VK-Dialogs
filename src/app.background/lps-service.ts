@@ -1,6 +1,6 @@
 import { Injectable, Inject, EventEmitter } from "@angular/core";
 import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/http";
-import { Observable }     from "rxjs/Observable";
+import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
 import "rxjs/add/observable/throw";
@@ -10,13 +10,10 @@ import "rxjs/add/operator/first";
 import "rxjs/add/observable/merge";
 
 import { VKConsts } from "../app/vk-consts";
-import { Message, Chat } from "../app/message";
-import { Dialog } from "../app/dialog";
-import { User } from "../app/user";
 
 import { VKService } from "./vk-service";
 import { ErrorHelper } from "./error-helper";
-import { LongPollServer } from "./long-poll-server";
+import { LongPollServerInfo } from "./datamodels/long-poll-server.info";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 
@@ -24,7 +21,7 @@ import { UserService } from "./user-service";
 export class LPSService {
     private get_lps: string = "messages.getLongPollServer";
 
-    private server: LongPollServer = null;
+    private server: LongPollServerInfo = null;
 
     messageUpdate: EventEmitter<{}> = new EventEmitter();
     userUpdate: EventEmitter<string> = new EventEmitter();
@@ -147,7 +144,7 @@ export class LPSService {
         }
     }
 
-    private nextRequest(server: LongPollServer) {
+    private nextRequest(server: LongPollServerInfo) {
         this.startLongPollRequest(server)
         .catch(error => {
             console.log("error occured while lp request: ", error);
@@ -191,13 +188,13 @@ export class LPSService {
         });
     }
 
-    private getLongPollServer(): Observable<LongPollServer> {
+    private getLongPollServer(): Observable<LongPollServerInfo> {
         console.log("lps requested");
         return this.vkservice.performAPIRequest(this.get_lps, `use_ssl=1`)
             .timeout(35000, new Error("35s timeout occured"));
     }
 
-    private startLongPollRequest(server: LongPollServer) {
+    private startLongPollRequest(server: LongPollServerInfo) {
         if (!this.vkservice.isAuthorized()) {
             console.log("unauthorized, stop monitoring");
             return Observable.throw({

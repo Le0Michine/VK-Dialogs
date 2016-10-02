@@ -2,13 +2,13 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/Observable/fromEventPattern";
 
 import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "../app/session-info";
+import { SessionInfo } from "./datamodels/datamodels";
 
 export class AuthHelper {
     static client_id: number = 5573653;
     static auth_url: string = "https://oauth.vk.com/authorize?";
     static redirect_uri: string = "https://oauth.vk.com/blank.html";
-    static scope: string = "messages,users,friends,status,offline";
+    static scope: string = "messages,users,friends,status,offline,photos";
     static display: string = "page";
     static response_type: string = "token";
     static tab_id: number;
@@ -45,24 +45,10 @@ export class AuthHelper {
             + "&v=" + VKConsts.api_version;
         AuthHelper.authorization_in_progress_count ++;
 
-        /*let observable = Observable.fromEventPattern(
-            handler => {
-                AuthHelper.addTabListener(handler);
-                chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
-            },
-            handler => {}
-        );*/
         let observable = Observable.bindCallback((callback: (SessionInfo) => void) => {
             AuthHelper.addTabListener(callback);
             chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
         });
-        /*let observable = Observable.create((observer) => {
-            AuthHelper.addTabListener((session) => {
-                observer.onNext(session);
-                observer.onCompleted();
-            });
-            chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
-        });*/
         AuthHelper.current_authorisation = observable();
         return AuthHelper.current_authorisation;
     }
@@ -91,7 +77,7 @@ export class AuthHelper {
             let changeInfo: chrome.tabs.TabChangeInfo = v.changeInfo;
             let tab: chrome.tabs.Tab = v.tab;
             if (tabId === AuthHelper.tab_id && tab.url.split("#")[0] === AuthHelper.redirect_uri && tab.status === "complete" && changeInfo.status === "complete") {
-                console.log("found auth tab");
+                console.log("found auth tab: ", tab.url);
                 AuthHelper.authorization_in_progress_count --;
                 AuthHelper.current_authorisation = null;
                 let session: SessionInfo = new SessionInfo();
@@ -106,10 +92,10 @@ export class AuthHelper {
                             session.access_token = value;
                             break;
                         case "user_id":
-                            session.user_id = value;
+                            session.user_id = Number(value);
                             break;
                         case "expires_in":
-                            session.token_exp = 86400;
+                            session.token_exp = Number(value);
                             break;
                         case "error":
                             error = {};

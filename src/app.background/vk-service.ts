@@ -11,7 +11,7 @@ import "rxjs/add/operator/catch";
 import "rxjs/add/observable/of";
 
 import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "../app/session-info";
+import { SessionInfo } from "./datamodels/datamodels";
 import { ErrorHelper } from "./error-helper";
 import { AuthHelper } from "./auth-helper";
 
@@ -30,7 +30,7 @@ export class VKService {
         this.initializeSeesion();
     }
 
-    auth(force: boolean = false) {
+    auth(force: boolean = false): Observable<SessionInfo> {
         console.log("authorization requested");
         if (!this.isSessionValid()) {
             let obs = AuthHelper.authorize(force);
@@ -56,23 +56,22 @@ export class VKService {
         }
     }
 
-    initializeSeesion() {
+    initializeSeesion(): void {
         this.session_info = JSON.parse(window.localStorage.getItem(VKConsts.vk_session_info));
     }
 
-    isAuthorized() {
+    isAuthorized(): boolean {
         return this.authorized;
     }
 
-    isSessionValid() {
+    isSessionValid(): boolean {
         this.initializeSeesion();
         return Boolean(
             this.session_info
             && this.session_info.access_token
             && this.session_info.timestamp
-            && this.session_info.token_exp
             && this.session_info.user_id
-            && (Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp)
+            && (this.session_info.token_exp === 0 || Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp)
         );
     }
 
@@ -83,13 +82,13 @@ export class VKService {
         return Observable.of(this.session_info);
     }
 
-    logoff() {
+    logoff(): void {
         this.session_info = null;
         window.localStorage.removeItem(VKConsts.vk_session_info);
         this.onLogOff.emit();
     }
 
-    setOnline() {
+    setOnline(): void {
         this.getSession().concatMap(session => {
             console.log("set online, got session: ", session);
             let uri: string = VKConsts.api_url + this.set_online
@@ -110,7 +109,7 @@ export class VKService {
         () => console.log("set online reqest completed")));
     }
 
-    performAPIRequest(method: string, parameters: string) {
+    performAPIRequest(method: string, parameters: string): Observable<any> {
         return this.getSession().concatMap(session => {
             if (!session) {
                 console.log("session is null, not authorized");
@@ -145,7 +144,7 @@ export class VKService {
         });
     }
 
-    getCurrentUserId() {
+    getCurrentUserId(): number {
         return this.session_info.user_id;
     }
 }

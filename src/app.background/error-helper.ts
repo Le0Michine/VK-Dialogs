@@ -1,7 +1,7 @@
 import { AuthHelper } from "./auth-helper";
 
 export class ErrorHelper {
-    static checkErrors(json): number {
+    static checkErrors(json: any): number {
         if (json.error) {
             console.error("error occured during response: ", JSON.stringify(json));
             let code: number = json.error.error_code;

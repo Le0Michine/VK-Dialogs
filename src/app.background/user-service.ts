@@ -5,8 +5,7 @@ import "rxjs/add/observable/of";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/concatMap";
 
-import { SessionInfo } from "../app/session-info";
-import { User } from "../app/user";
+import { UserInfo } from "./datamodels/datamodels";
 
 import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
@@ -16,8 +15,8 @@ import { Channels } from "./channels";
 
 @Injectable()
 export class UserService {
-    private onUsersUpdate: Subject<{}> = new Subject();
-    private initialized = false;
+    private onUsersUpdate: Subject<{ [id: number] : UserInfo }> = new Subject();
+    private initialized: boolean = false;
 
     constructor(
         private vkservice: VKService,
@@ -25,7 +24,7 @@ export class UserService {
         private lpsService: LPSService,
         private chromeapi: ChromeAPIService) { }
 
-    init() {
+    init(): void {
         if (this.initialized) {
             console.warn("user service already initialized");
             return;
@@ -43,7 +42,7 @@ export class UserService {
         this.initialized = true;
     }
 
-    updateUsers(uids: string) {
+    updateUsers(uids: string): void {
         console.log("update users: ", uids);
         this.getUsers(uids, false).subscribe(users => {
             this.cache.pushUsers(users);
@@ -51,8 +50,12 @@ export class UserService {
         error => this.errorHandler(error, "updateUsers"));
     }
 
-    postUsersUpdate() {
+    postUsersUpdate(): void {
         console.log("post users update: ", this.cache.users_cache);
+        if (Object.keys(this.cache.users_cache).length === 0) {
+            console.log("there is no users, nothing to post");
+            return;
+        }
         this.onUsersUpdate.next({
             name: "users_update",
             data: this.cache.users_cache
@@ -70,7 +73,7 @@ export class UserService {
         () => console.log("loaded users: " + uids));
     }
 
-    getUsers(uids: string, cache: boolean = true): Observable<{}> {
+    getUsers(uids: string, cache: boolean = true): Observable<{ [id: number] : UserInfo }> {
         let already_cached = true;
         let users = {};
         for (let uid of uids.split(",").map(id => Number(id))) {
@@ -88,35 +91,29 @@ export class UserService {
 
         return this.vkservice
             .performAPIRequest("users.get", `user_ids=${uids}&fields=photo_50,online`)
-            .map(json => this.toUser(json));
+            .map(json => this.toUsersDictionary(json));
     }
 
-    getUser(uid: number = null): Observable<User> {
-        let obs;
-        if (uid) {
-            obs = this.getUser(uid).map(dict => dict[Object.keys(dict)[0]]);
-        }
-        else {
-            obs = this.vkservice.getSession().concatMap(session => {
-                if (!session) {
-                    return Observable.of({});
-                }
-                return this.vkservice.performAPIRequest("users.get", `user_ids=${session.user_id}&fields=photo_50,online`);
-            }).map(json => json[0]);
-        }
-        return obs;
-    }
-
-    private toUser(json): {} {
-        let users = {};
+    toUsersDictionary(json): {[id: number] : UserInfo } {
+        let users: {[id: number] : UserInfo } = {};
         for (let user_json of json) {
-            users[user_json.id] = user_json as User;
-            this.cache.users_cache[user_json.id] = user_json as User;
+            users[user_json.id] = this.toUserViewModel(user_json);
+            this.cache.users_cache[user_json.id] = this.toUserViewModel(user_json);
         }
         return users;
     }
 
-    errorHandler(error, comment: string) {
+    toUserViewModel(json): UserInfo {
+        var user = new UserInfo();
+        user.firstName = json.first_name;
+        user.lastName = json.last_name;
+        user.id = json.id;
+        user.photo50 = json.photo_50;
+        user.isOnline = json.online;
+        return user;
+    }
+
+    errorHandler(error, comment: string): void {
         console.error(`An error occurred ${comment}:`, error);
     }
 }

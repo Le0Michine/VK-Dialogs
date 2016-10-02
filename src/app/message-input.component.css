@@ -1,0 +1,70 @@
+.input-label {
+    box-sizing: border-box;
+    bottom: 31px;
+    color: rgb(130, 130, 130);
+    cursor: text;
+    left: 50px;
+    text-align: left;
+    top: 0;
+    width: calc(100% - 100px);
+    height: 90%;
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    padding: 10px;
+    display: inline-block;
+    position: absolute;
+    z-index: 5;
+}
+
+#inputBox {
+    height: calc(100% - 35px);
+    position: relative;
+}
+
+.btn-title {
+    font-size: 16px;
+    margin: 0 5px 0 5px;
+}
+
+#message_input, .styleless {
+    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
+    color: black;
+    cursor: text;
+}
+
+#message_input {
+    box-sizing: border-box;
+    width: calc(100% - 100px);
+    cursor: text;
+    left: 50px;
+    position: relative;
+    height: 90%;
+    overflow-wrap: break-word;
+    text-align: left;
+    outline: none;
+    word-wrap: break-word;
+    border: none;
+    border-bottom: 1px solid rgb(228, 230, 233);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+    z-index: 55;
+    resize: none;
+}
+
+#attach_file {
+    height: 100%;
+    width: 100%;
+}
+
+.send-padding {
+    padding-left: 3px;
+}
+
+.attach_photo_icon {
+    margin: 10px 10px 10px 0;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background: url(http://abs.twimg.com/emoji/v2/72x72/1f4f7.png) no-repeat;
+    background-size: 100%;
+}

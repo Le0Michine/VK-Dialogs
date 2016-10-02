@@ -83,9 +83,3 @@ export class Chat extends Message {
 
     action: string;
 }
-
-export class MessageToShow {
-    user: User;
-    messages: Message[] = [];
-    date: number;
-}

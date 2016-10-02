@@ -7,7 +7,7 @@ import "rxjs/add/Observable/timer";
 import "rxjs/add/operator/throttleTime";
 
 import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "../app/session-info";
+import { SessionInfo } from "./datamodels/datamodels";
 
 import { AuthHelper } from "./auth-helper";
 import { VKService } from "./vk-service";
@@ -147,7 +147,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             if (value.setOnline) {
                 this.vkservice.setOnline();
                 this.vkservice.getSession().subscribe(session => {
-                    this.userService.updateUsers(session.user_id);
+                    this.userService.updateUsers(session.user_id.toString());
                 });
             }
             else {
