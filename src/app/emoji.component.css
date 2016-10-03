@@ -3,24 +3,27 @@
     border-radius: 5px;
     background: #FFFFFF;
     position: fixed;
-    top: 40px;
     right: 70px;
     width: 290px;
     height: 0;
     padding: 5px 3px 10px 3px;
-    transition: height .4s;
-    visibility: hidden;
     z-index: 9999;
 }
 
 #emoji_wrapper {
+    position: relative; 
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: 85%;
+    height: calc(100% - 30px);
     padding: 5px 0 5px 0;
     background-color: #EEEEEE;
-    transition: height .2s;
     border-radius: 0 0 5px 5px;
+}
+
+#emoji_wrapper > div {
+    display: inline-block;
+    position: absolute;
+    top: 0;
 }
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,300');
@@ -31,7 +34,6 @@
   word-wrap: break-word;
   -webkit-user-drag: none;
   -webkit-tap-highlight-color: transparent;
-  transition: all 300ms cubic-bezier(.4, 0, .2, 1);
 }
 
 button {
@@ -41,13 +43,11 @@ button {
   font-size: 17px;
   border: 0;
   padding: 0 2px 0 2px;
-  transition: height .2s;
 }
 
 .emoji-header {
   background-color: #FFFFFF;
   max-height: 17%;
-  transition: height .2s;
 }
 
 button:active {
@@ -79,8 +79,6 @@ button:active {
   text-align: center;
 }
 
-.hidden {
-    display: none;
-    visibility: hidden;
-    transition: visibility .3s;
+.menu-item::active {
+    background-color: yellow;
 }

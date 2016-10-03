@@ -9,7 +9,10 @@
 		[historyUpdate]="historyUpdate"
 	></messages-list>
 </div>
-<emoji (onSelect)="onEmojiSelect($event)"></emoji>
+<emoji
+	[toggle]="onEmojiToggle"
+	[emojiPanelPosition]="emojiPanel"
+	(onSelect)="onEmojiSelect($event)"></emoji>
 <div #inputWrapper id="inputWrapper"
 	[style.top]="bottomPanel | safeStyle"
 	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"

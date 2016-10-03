@@ -44,6 +44,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     conversation_id: number;
 
     selectEmoji: EventEmitter<string> = new EventEmitter();
+    onEmojiToggle: EventEmitter<boolean> = new EventEmitter();
     markAsRead: EventEmitter<boolean> = new EventEmitter();
     historyUpdate: EventEmitter<HistoryInfo> = new EventEmitter();
     onSendMessageClick: EventEmitter<{}> = new EventEmitter();
@@ -54,6 +55,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     topPanel: string = "calc(100% - 200px)";
     bottomPanel: string = "calc(100% - 150px)";
+    emojiPanel: string = "150px";
 
     scrollPosition: number = 10000;
     scrollHeight: number = 10000;
@@ -73,7 +75,6 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         console.log("specific dialog component init");
-        //setTimeout(() => document.getElementById("conversationWrapper").scrollTop = 1000, 10000);
         this.route.params.subscribe(params => {
             this.title = params["title"];
             this.conversation_id = +params["id"];
@@ -146,6 +147,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         e.preventDefault();
         this.topPanel = `${e.pageY - 70}px`;
         this.bottomPanel = `${e.pageY - 20}px`;
+        this.emojiPanel = `calc(100% - ${e.pageY - 20}px)`;
     }
 
     ngOnDestroy() {
@@ -183,31 +185,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     toggleEmoji() {
-        let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
-        if (emoji_wrapper.clientHeight && emoji_wrapper.clientHeight > 20) {
-            this.collapseEmoji(emoji_wrapper);
-        }
-        else {
-            emoji_wrapper.style.height = "210px";
-            emoji_wrapper.style.visibility = "visible";
-            emoji_wrapper.style.display = "block";
-            emoji_wrapper.onmouseenter = () => this.onEmojiMouseEnter();
-        }
-    }
-
-    onEmojiMouseEnter() {
-        console.log("onmouseenter");
-        let emoji_wrapper = document.getElementById("emoji_control") as HTMLDivElement;
-        emoji_wrapper.onmouseenter = null;
-        setTimeout(() => emoji_wrapper.onmouseleave = () => this.collapseEmoji(emoji_wrapper), 300);
-    }
-
-    collapseEmoji(emoji_wrapper: HTMLDivElement) {
-        emoji_wrapper.style.height = "0";
-        emoji_wrapper.onmouseleave = null;
-        setTimeout(() => {
-            emoji_wrapper.style.visibility = "hidden";
-            emoji_wrapper.style.display = "none";
-        }, 300);
+        this.onEmojiToggle.emit(true);
     }
 }
