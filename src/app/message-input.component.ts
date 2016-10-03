@@ -6,7 +6,6 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
-import { DateConverter } from "./date-converter";
 
 @Component({
     selector: "message-input",

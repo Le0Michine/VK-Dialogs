@@ -8,7 +8,6 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
-import { DateConverter } from "./date-converter";
 
 @Component({
     selector: "messages-list",
@@ -146,27 +145,27 @@ export class MessagesListComponent implements OnInit, OnDestroy {
         console.log("convert forwarded messages");
         let result: any[] = [];
         if (!messages || messages.length === 0) return [];
-        let mts: any = {};
-        mts.date = messages[0].date;
-        mts.user = this.participants[messages[0].user_id] || new UserInfo();
-        mts.user_id = messages[0].user_id;
+        let messageModel: MessageViewModel = new MessageViewModel();
+        messageModel.date = messages[0].date;
+        messageModel.from = this.participants[messages[0].userId] || new UserInfo();
+        messageModel.fromId = messages[0].userId;
         messages[0].attachments = this.getMessageAttachments(messages[0]);
-        mts.messages = [messages[0]];
+        messageModel.messages = [messages[0]];
         for (let i = 1; i < messages.length; i++) {
             messages[i].attachments = this.getMessageAttachments(messages[i]);
-            if (mts.user_id === messages[i].userId) {
-                mts.messages.push(messages[i]);
+            if (messageModel.fromId === messages[i].userId) {
+                messageModel.messages.push(messages[i]);
             }
             else {
-                result.push(mts);
-                mts = {};
-                mts.date = messages[i].date;
-                mts.user = this.participants[messages[i].userId] || new UserInfo();
-                mts.user_id = messages[0].userId;
-                mts.messages = [messages[i]];
+                result.push(messageModel);
+                messageModel = new MessageViewModel();
+                messageModel.date = messages[i].date;
+                messageModel.from = this.participants[messages[i].userId] || new UserInfo();
+                messageModel.fromId = messages[0].userId;
+                messageModel.messages = [messages[i]];
             }
         }
-        result.push(mts);
+        result.push(messageModel);
         return result;
     }
 
@@ -182,10 +181,6 @@ export class MessagesListComponent implements OnInit, OnDestroy {
             return this.participants[uid].photo50;
         }
         return "http://vk.com/images/camera_c.gif";
-    }
-
-    formatDate(unixtime: number): string {
-        return DateConverter.formatDate(unixtime);
     }
 
     onMarkAsRead(value: boolean): void {

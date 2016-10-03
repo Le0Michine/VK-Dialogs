@@ -415,7 +415,7 @@ export class DialogService {
         message.chatId = json.chat_id;
         message.date = json.date;
         message.fromId = json.from_id || (json.out ? this.vkservice.getCurrentUserId() : json.user_id);
-        message.fwdMessages = json.fwd_messages;
+        message.fwdMessages = json.fwd_messages ? json.fwd_messages.map(x => this.toSingleMessageViewModel(x)) : null;
         message.id = json.id;
         message.isRead = json.read_state;
         message.out = json.out;

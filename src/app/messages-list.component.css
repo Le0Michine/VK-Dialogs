@@ -240,7 +240,7 @@ pre {
     font: normal normal normal normal 12.5px / 14.425px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.user_name {
+.user-name {
     color: rgb(66, 100, 139);
     cursor: pointer;
     display: inline-block;
@@ -255,13 +255,12 @@ pre {
     font: normal normal bold normal 12.5px / 15.375px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(66, 100, 139) none 0px;
     overflow: hidden;
-}/*.user_name*/
+}
 
 .message_timestamp {
     color: rgba(148, 148, 148, 0.6);
     border: 0px none rgba(148, 148, 148, 0.6);
     font: normal normal normal normal 12px / 16.8px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    margin: 0px 0px 0px 4px;
     outline: rgba(148, 148, 148, 0.6) none 0px;
     overflow: hidden;
     white-space: nowrap;
@@ -341,4 +340,16 @@ pre {
 
 .white-text {
     color: white;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.block {
+    display: block;
+}
+
+.space-left {
+    margin-left: 4px;
 }

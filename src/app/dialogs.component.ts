@@ -8,7 +8,6 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { DialogService } from "./dialogs-service";
 import { ChromeAPIService } from "./chrome-api-service";
-import { DateConverter } from "./date-converter";
 import { VKConsts } from "./vk-consts";
 
 @Component({
@@ -164,7 +163,6 @@ export class DialogsComponent implements OnInit, OnDestroy {
             dts.message = message;
             dts.unread = dialog.unreadCount;
             dts.title = !message.title || message.title === " ... " ? this.getUserName(uid) : message.title;
-            dts.date_format = DateConverter.formatDate(Number(message.date));
             dts.sender = this.getUserFirstName(message.fromId);
 
             if (message.fwdMessages) {

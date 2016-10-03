@@ -1,5 +1,10 @@
-export class DateConverter {
-    static formatDate(unixtime: number) {
+import { Pipe } from "@angular/core";
+
+@Pipe({
+    name: "formatDate"
+})
+export class FormatDatePipe {
+    transform(unixtime: number) {
         let date = new Date(unixtime * 1000);
         let now = new Date();
 
