@@ -3,21 +3,21 @@
 </div>
 <div class="message-block" *ngFor="let message of history_to_show | reverse">
 	<div class="user-avatar pull-left" [class.online]="message.from.isOnline">
-		<a [href]="'https://vk.com/id'+message.from.id" target="_blank">
+		<a [href]="message.from.id | linkToUser" target="_blank">
 			<img alt="" [src]="getUserPhoto(message.from.id)" class="user-avatar-img" />
 		</a>
 	</div>
 	<div class="message pull-left">
 		<div class="user-name-and-date">
-			<a [href]="'https://vk.com/id'+message.from.id" target="_blank" class="user-name">{{getUserName(message.from.id)}}</a>
-			<span class="message_timestamp space-left">{{message.date*1000 | date:(message.date | formatDate) }}</span>
+			<a [href]="message.from.id | linkToUser" target="_blank" class="user-name">{{getUserName(message.from.id)}}</a>
+			<span class="message-timestamp space-left">{{message.date*1000 | date:(message.date | formatDate) }}</span>
 		</div>
 		<ul class="messages-list">
 			<li class="message-item" *ngFor="let isFirst=first; let isLast=last; let item of message.messages | reverse" id="{{item.id}}">
 				<div class="message-body clearfix"
 					[class.unread]="!item.isRead"
-					[class.round-corners-bottom]="isFirst"
-					[class.round-corners-top]="isLast">
+					[class.round-corners-top]="isFirst"
+					[class.round-corners-bottom]="isLast">
 					<pre class="message-body-internal"
 						*ngIf="item.body"
 						[innerHTML]="item.body | cutLinks | emoji | safe" 
@@ -43,18 +43,22 @@
 							<div *ngFor="let mts of attachment.fwd">
 								<div class="fwd_msg_block" *ngIf="mts.from">
 									<div class="user-avatar inline" [class.online]="mts.from.isOnline">
-										<a [href]="'https://vk.com/id'+mts.fromId" target="_blank">
+										<a [href]="mts.fromId | linkToUser" target="_blank">
 											<img alt="" [src]="getUserPhoto(mts.fromId)" class="user-avatar-img" />
 										</a>
 									</div>
-									<div class="fwd_user_name_and_date inline space-left">
-										<a [href]="'https://vk.com/id'+message.fromId" target="_blank" class="user-name">{{getUserName(mts.fromId)}}</a>
-             							<span class="message_timestamp block">{{mts.date*1000 | date:(mts.date | formatDate)}}</span>
+									<div class="user-name-and-date inline space-left">
+										<a [href]="message.fromId | linkToUser" target="_blank" class="user-name block">{{getUserName(mts.fromId)}} {{isFwdFirst}} {{isFwdLast}}</a>
+             							<span class="message-timestamp block">{{mts.date*1000 | date:(mts.date | formatDate)}}</span>
 									</div>
-									<div class="fwd_message">
-										<ul class="fwd_messages_list">
-											<li class="fwd_message_body" *ngFor="let msg of mts.messages">
-												<pre class="fwd_message_body_internal">{{msg.body}}</pre>
+									<div class="message">
+										<ul class="messages-list">
+											<li class="message-item message-body space-top border"
+												[class.round-corners-top]="isFwdFirst"
+												[class.round-corners-bottom]="isFwdLast"
+												*ngFor="let isFwdFirst=first; let isFwdLast=last; let msg of mts.messages"
+											>
+												<pre class="message-body-internal">{{msg.body}}</pre>
 												<div class="fwd_message_attachment" *ngFor="let fwd_att of msg.attachments">
 													<div *ngIf="fwd_att.photo" class="att_photo">
 														<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />

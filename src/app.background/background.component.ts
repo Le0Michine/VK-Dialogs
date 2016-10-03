@@ -73,6 +73,16 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
+            this.chromeapi.OnMessage("logoff")
+                .subscribe(() => this.logOff())
+        );
+
+        this.subscriptions.push(
+            this.chromeapi.OnMessage("open_separate_window")
+                .subscribe(() => this.openSeparateWindow())
+        );
+
+        this.subscriptions.push(
             this.chromeapi.OnMessage("set_online")
                 .throttleTime(1000 * 60 * 10)
                 .subscribe((message: any) => {
@@ -166,39 +176,43 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         return {
             title: chrome.i18n.getMessage("logOff"),
             contexts: ["browser_action"],
-            onclick: () => {
-                console.log("LOG OFF");
-                window.localStorage.setItem(VKConsts.user_denied, "true");
-                this.chromeapi.UpdateActionBadge("off");
-                this.vkservice.logoff();
-                //this.waitForAuthorizeRequest();
-                if (this.onUnreadCountUpdate) {
-                    this.onUnreadCountUpdate.unsubscribe();
-                    this.onUnreadCountUpdate = null;
-                }
-                chrome.contextMenus.removeAll();
-            }
+            onclick: () => this.logOff()
         }
+    }
+
+    private logOff() {
+        console.log("LOG OFF");
+        window.localStorage.setItem(VKConsts.user_denied, "true");
+        this.chromeapi.UpdateActionBadge("off");
+        this.vkservice.logoff();
+        //this.waitForAuthorizeRequest();
+        if (this.onUnreadCountUpdate) {
+            this.onUnreadCountUpdate.unsubscribe();
+            this.onUnreadCountUpdate = null;
+        }
+        chrome.contextMenus.removeAll();
+    }
+
+    private openSeparateWindow() {
+        console.log("create window");
+        chrome.windows.create({
+            type: "panel",
+            focused: true,
+            state: "docked",
+            width: 550,
+            height: 600,
+            url: "index.html"
+        }, (window) => {
+            console.dir(window);
+            window.alwaysOnTop = true;
+        });
     }
 
     private getOpenInWindowItem() {
         return {
             title: chrome.i18n.getMessage("openInSeparateWindow"),
             contexts: ["browser_action"],
-            onclick: () => {
-                console.log("create window");
-                chrome.windows.create({
-                    type: "panel",
-                    focused: true,
-                    state: "docked",
-                    width: 550,
-                    height: 600,
-                    url: "index.html"
-                }, (window) => {
-                    console.dir(window);
-                    window.alwaysOnTop = true;
-                });
-            }
+            onclick: () => this.openSeparateWindow()
         }
     }
 }

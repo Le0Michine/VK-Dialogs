@@ -51,6 +51,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     scrollPosition: number = 10000;
     scrollHeight: number = 10000;
+    autoScrollToBottom: boolean = true;
 
     subscriptions: Subscription[] = []
 
@@ -90,7 +91,9 @@ export class DialogComponent implements OnInit, OnDestroy {
                 this.historyUpdate.emit(historyInfo);
                 this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
                 this.change_detector.detectChanges();
-                this.scrollToBottom();
+                if (this.autoScrollToBottom) {
+                    this.scrollToBottom();
+                }
             }));
         });
     }
@@ -101,6 +104,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     scrollToBottom() {
+        this.autoScrollToBottom = true;
         if (this.messagesList && this.messagesList.nativeElement) {
             this.renderer.setElementProperty(this.messagesList.nativeElement, "scrollTop", this.scrollHeight);
             setTimeout(() => this.scrollToBottomAvailable = "out", 100);
@@ -156,6 +160,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     onScroll(current: number, max: number) {
+        this.autoScrollToBottom = false;
         this.scrollPosition = current;
         this.scrollHeight = max;
         this.scrollToBottomAvailable = "in";

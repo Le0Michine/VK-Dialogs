@@ -5,6 +5,7 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/Observable/interval";
 import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
+import { ChromeAPIService } from "./chrome-api-service";
 
 const slideAnimationLength = 400;
 const rotateAnimationLength = 400;
@@ -43,6 +44,8 @@ const rotateAnimationLength = 400;
 export class AppComponent {
     mainTitle: string = "";
     title: string = "";
+    conversationId: number;
+    isChat: boolean;
     backIsAvailable: boolean = false;
 
     showActions: string = "out_r";
@@ -50,7 +53,7 @@ export class AppComponent {
 
     stopWatch = Observable.interval(1000);
 
-    constructor(private translate: TranslateService, private location: Location, private router: Router, private ref: ChangeDetectorRef) {
+    constructor(private translate: TranslateService, private location: Location, private router: Router, private ref: ChangeDetectorRef, private chromeapi: ChromeAPIService) {
         translate.setDefaultLang("en");
         translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
         chrome.storage.sync.get({ "currentLang": "ru" }, (items) => {
@@ -96,6 +99,8 @@ export class AppComponent {
             this.backIsAvailable = false;
         }
         else {
+            this.conversationId = Number(path[2]);
+            this.isChat = path[3] === "chat"
             try {
                 let urlTree = this.router.parseUrl(path[path.length - 1]);
                 this.title = urlTree.root.children["primary"].segments[0].path;
@@ -106,5 +111,21 @@ export class AppComponent {
             }
         }
         this.ref.detectChanges();
+    }
+
+    private logOff() {
+        this.chromeapi.SendMessage({name: "logoff"});
+        this.router.navigate(["authorize"]);
+    }
+
+    private goToConversation() {
+        chrome.tabs.create({
+            url: `https://vk.com/im?sel=${this.isChat ? "c" : ""}${this.conversationId}`,
+            selected: true
+        });
+    }
+
+    private openSeparateWindow() {
+        this.chromeapi.SendMessage({name: "open_separate_window"});
     }
 }

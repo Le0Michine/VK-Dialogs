@@ -22,6 +22,7 @@ import { ReversePipe, EscapePipe } from "./pipes/message.pipe";
 import { ChatActionPipe } from "./pipes/chat-action.pipe";
 import { CutLinksPipe } from "./pipes/cut-links.pipe";
 import { EmojiPipe } from "./pipes/emoji.pipe";
+import { LinkToUserPipe } from "./pipes/link-to-user.pipe";
 import { FormatDatePipe } from "./pipes/format-date.pipe";
 import { SafeHtmlPipe, SafeStylePipe } from "./pipes/safe.pipe";
 import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttachmentTitlePipe, MessageAttachmentUrlPipe } from "./pipes/attachment.pipe";
@@ -53,7 +54,8 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         EmojiPipe,
         ReversePipe,
         EscapePipe,
-        FormatDatePipe
+        FormatDatePipe,
+        LinkToUserPipe
     ],
     bootstrap: [
         AppComponent
