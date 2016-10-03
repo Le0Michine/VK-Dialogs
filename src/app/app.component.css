@@ -25,11 +25,6 @@
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.ontop {
-    z-index: 999;
-    display: inline-block;
-}
-
 .space-left {
     margin-left: 10px;
 }
@@ -54,4 +49,10 @@
     margin: 0px 3px 0px 0px;
     overflow: hidden;
     padding-top: 3px;
+}
+
+.ontop {
+    z-index: 999;
+    display: inline-block;
+    position: relative;
 }

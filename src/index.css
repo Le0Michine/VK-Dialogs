@@ -66,3 +66,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 img.styleless {
     display: none !important;
 }
+
+.white-text {
+    color: white;
+}

@@ -1,5 +1,5 @@
 ///<reference path="../typings/globals/chrome/index.d.ts"/>
-import { Component, ChangeDetectorRef, trigger, state, transition, style, animate } from "@angular/core";
+import { Component, ChangeDetectorRef, trigger, state, transition, style, animate, keyframes } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/Observable/interval";
@@ -7,8 +7,8 @@ import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "./chrome-api-service";
 
-const slideAnimationLength = 400;
-const rotateAnimationLength = 400;
+const slideAnimationLength = 200;
+const rotateAnimationLength = 200;
 
 @Component({
     selector: "my-app",
@@ -18,19 +18,22 @@ const rotateAnimationLength = 400;
     ],
     animations: [
         trigger('flyInOut', [
-            state('in', style({transform: 'translateX(0)'})),
-            state('out_r', style({transform: 'translateX(500%)', display: "none"})),
+            state('in', style({transform: 'translateX(0)', opacity: 1})),
+            state('out_r', style({transform: 'translateX(100%)', opacity: 0})),
             transition('out_r => in', [
-                style({transform: 'translateX(500%)'}),
-                animate(slideAnimationLength)
+                animate(slideAnimationLength, keyframes([
+                    style({opacity: 0, transform: 'translateX(100%)', offset: 0}),
+                    style({opacity: 1, transform: 'translateX(-15px)',  offset: 0.3}),
+                    style({opacity: 1, transform: 'translateX(0)',     offset: 1.0})
+                ]))
             ]),
             transition('in => out_r', [
-                animate(slideAnimationLength, style({transform: 'translateX(500%)'}))
+                animate(slideAnimationLength, style({transform: 'translateX(100%)', opacity: 0}))
             ])
         ]),
         trigger('rotateLeftRight', [
             state('right', style({transform: 'rotate(0deg)'})),
-            state('left', style({transform: 'rotate(180deg)'})),
+            state('left', style({transform: 'rotate(90deg)'})),
             transition('right => left', [
                 style({transform: 'rotate(0deg)'}),
                 animate(rotateAnimationLength)
@@ -121,6 +124,14 @@ export class AppComponent {
     private goToConversation() {
         chrome.tabs.create({
             url: `https://vk.com/im?sel=${this.isChat ? "c" : ""}${this.conversationId}`,
+            selected: true
+        });
+    }
+
+    private openSettings() {
+        chrome.extension.getURL("/app.options/options.html")
+        chrome.tabs.create({
+            url: chrome.extension.getURL("/app.options/options.html"),
             selected: true
         });
     }

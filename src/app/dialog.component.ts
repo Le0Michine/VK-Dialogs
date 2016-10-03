@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, Renderer, EventEmitter } from "@angular/core";
-import { trigger, state, transition, style, animate } from "@angular/core";
+import { trigger, state, transition, style, animate, keyframes } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
@@ -18,14 +18,20 @@ import { SingleMessageInfo, HistoryInfo } from "./datamodels/datamodels";
     ],
     animations: [
         trigger('flyInOut', [
-            state('in', style({transform: 'translateX(0)'})),
-            state('out', style({transform: 'translateX(500%)', display: "none"})),
+            state('in', style({transform: 'translateX(0) scale(1)'})),
+            state('out', style({transform: 'translateX(0) scale(0)', opacity: 0, display: 'none'})),
             transition('out => in', [
-                style({transform: 'translateX(500%)'}),
-                animate(100)
+                animate(200, keyframes([
+                    style({opacity: 0, transform: 'translateX(0) scale(0)', offset: 0}),
+                    style({opacity: 1, transform: 'translateX(0) scale(1.1)', offset: 0.3}),
+                    style({opacity: 1, transform: 'translateX(0) scale(1)', offset: 1.0})
+                ]))
             ]),
             transition('in => out', [
-                animate(100, style({transform: 'translateX(500%)'}))
+                animate(100, style({transform: 'translateX(0) scale(0)'}))
+            ]),
+            transition('void => *', [
+                animate(0, style({transform: 'translateX(0) scale(0)', opacity: 0, display: 'none'}))
             ])
         ])
     ]
@@ -44,7 +50,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     unreadMessages: string = "out";
     scrollToBottomAvailable: string = "out";
-    onMessageSent: EventEmitter<{}> = new EventEmitter();
+    sendEnabled: boolean = true;
 
     topPanel: string = "calc(100% - 200px)";
     bottomPanel: string = "calc(100% - 150px)";
@@ -94,6 +100,9 @@ export class DialogComponent implements OnInit, OnDestroy {
                 if (this.autoScrollToBottom) {
                     this.scrollToBottom();
                 }
+                else {
+                    this.scrollHeight += 10000;
+                }
             }));
         });
     }
@@ -103,20 +112,18 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.scrollToBottom();
     }
 
-    scrollToBottom() {
+    scrollToBottom(): void {
         this.autoScrollToBottom = true;
-        if (this.messagesList && this.messagesList.nativeElement) {
-            this.renderer.setElementProperty(this.messagesList.nativeElement, "scrollTop", this.scrollHeight);
-            setTimeout(() => this.scrollToBottomAvailable = "out", 100);
-        }
-        else {
-            console.warn("messagesList isn't initialized", this.messagesList);
-        }
+        this.scroll(this.scrollHeight);
+        setTimeout(() => this.scrollToBottomAvailable = "out", 100);
+    }
+
+    scroll(height: number): void {
+        this.renderer.setElementProperty(this.messagesList.nativeElement, "scrollTop", height);
     }
 
     messageSent(value: boolean): void {
-        this.onMessageSent.emit(value);
-        this.change_detector.detectChanges();
+        this.sendEnabled = value;
     }
 
     startResize(divs: HTMLDivElement[], event: MouseEvent): void {
@@ -160,10 +167,10 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     onScroll(current: number, max: number) {
-        this.autoScrollToBottom = false;
         this.scrollPosition = current;
         this.scrollHeight = max;
-        this.scrollToBottomAvailable = "in";
+        this.autoScrollToBottom = max - current < 400;
+        this.scrollToBottomAvailable = max - current < 400 ? "out" : "in";
     }
 
     onEmojiSelect(event): void {

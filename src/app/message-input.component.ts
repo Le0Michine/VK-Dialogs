@@ -172,15 +172,16 @@ export class MessageInputComponent {
             console.warn("message is sending");
             return;
         }
+        if (!text || text === "") {
+            console.log("message text is empty, nothing to send");
+            return;
+        }
+
         this.onMessageSent.emit(false);
         this.message_is_sending = true;
 
         text = this.escape(text);
 
-        if (!text || text === "") {
-            console.log("message text is empty, nothing to send");
-            return;
-        }
         this.messages_service.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
             message => {
                 this.message_is_sending = false;

@@ -94,18 +94,6 @@ pre {
     width: 300px;
 }
 
-.fwd_messages_list {
-    list-style: none outside none;
-    padding: 3px 0 0 0;
-}
-
-.fwd_message_body_internal {
-    white-space: pre-line;
-    margin: 5px 0 0 5px;
-    color: black;
-    font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
 .fwd_message_attachment {
     padding-top: 3px; 
 }
@@ -131,6 +119,10 @@ pre {
     width: 200px;
 }
 
+.narrow {
+    width: 100px;
+}
+
 .att-doc-size {
     color: #939393;
     pointer-events: none;
@@ -142,13 +134,13 @@ pre {
 
 .att-doc-icon {
     display: inline-block;
+    position: relative;
     width: 30px;
     height: 30px;
     margin-right: 8px;
     border-radius: 2px;
     text-align: center;
     overflow: hidden;
-    text-overflow: ellipsis;
     box-sizing: border-box;
 }
 

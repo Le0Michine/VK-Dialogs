@@ -6,10 +6,10 @@
 	<a href="https://vk.com/im" class="btn-back space-left" *ngIf="!backIsAvailable"> 
 		<h1 id="dialog_title" class="pull-left">{{ mainTitle }}</h1>
 	</a>
-    <button [@rotateLeftRight]="rotateSettings" class="btn btn-info btn-round pull-right material-icons ontop" (mouseover)="showButtons()">settings</button>
-    <button [@flyInOut]="showActions" class="btn btn-danger btn-round pull-right material-icons" (click)="logOff()">power_settings_new</button>
-    <button [@flyInOut]="showActions" class="btn btn-success btn-round pull-right material-icons" (click)="openSeparateWindow()">open_in_new</button>
-    <button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="goToConversation()">open_in_browser</button>
+    <button [@rotateLeftRight]="rotateSettings" class="btn btn-info btn-round pull-right material-icons ontop" (mouseover)="showButtons()" (click)="openSettings()" title="Settings">settings</button>
+    <button [@flyInOut]="showActions" class="btn btn-success btn-round pull-right material-icons" (click)="openSeparateWindow()" title="In window">open_in_new</button>
+    <button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="goToConversation()" title="In VK">open_in_browser</button>
+    <button [@flyInOut]="showActions" class="btn btn-danger btn-round pull-right material-icons" (click)="logOff()" title="Log off">power_settings_new</button>
     <!--<a class="pull-right" style="color:white">{{stopWatch | async}}</a>-->
 </div>
 <router-outlet></router-outlet>
