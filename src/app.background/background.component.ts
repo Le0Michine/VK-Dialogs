@@ -121,8 +121,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     private waitForAuthorizeRequest() {
         let sub = this.chromeapi.OnMessage("authorize").subscribe((message: any) => {
+            console.log("got authorization request");
             if (this.vkservice.isAuthorized()) {
                 console.log("already authorized");
+                window.localStorage.setItem(VKConsts.user_denied, "false");
                 if (message.sendResponse) {
                     message.sendResponse();
                 }

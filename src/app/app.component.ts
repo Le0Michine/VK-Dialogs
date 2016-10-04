@@ -79,6 +79,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
+        console.log("app component init");
     }
 
     showButtons() {

@@ -61,7 +61,7 @@ export class VKService {
     }
 
     isAuthorized(): boolean {
-        return this.authorized;
+        return this.authorized && this.isSessionValid();
     }
 
     isSessionValid(): boolean {

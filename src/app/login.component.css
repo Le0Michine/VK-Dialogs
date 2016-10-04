@@ -1,3 +1,8 @@
+:host {
+    position: absolute;
+    top: 45px;
+}
+
 #auth {
     box-sizing: border-box;
     color: rgb(51, 51, 51);

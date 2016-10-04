@@ -41,10 +41,13 @@ export class VKService {
     auth() {
         console.log("authorization requested");
         console.trace("auth", this.session_info);
-        this.chromeapi.SendRequest({ name: "authorize" }).subscribe(() => this.initializeSeesion());
+        let request = this.chromeapi.SendRequest({ name: "authorize" });
+        request.subscribe(() => this.initializeSeesion());
+        return request;
     }
 
     hasValidSession() {
+        console.log("check if session is valid", this.isSessionValid());
         this.initializeSeesion();
         return this.isSessionValid();
     }

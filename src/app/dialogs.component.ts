@@ -66,14 +66,19 @@ export class DialogsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log("init dialogs component");
+        console.trace("init dialogs component");
         this.chromeapi.init();
-        this.dialog_service.init();
         this.vkservice.init();
+
+        console.log("authorized, continue initialization");
+
+        this.dialog_service.init();
         this.title.setTitle("Dialogs");
 
         if (window.localStorage.getItem(VKConsts.user_denied) === "true" || !this.vkservice.hasValidSession()) {
-            this.router.navigate(["authorize"]);
+            console.log("navigate to login page");
+            setTimeout(() => this.router.navigate(["authorize"]), 0);
+            //this.router.navigate(["authorize"]);
             return;
         }
 

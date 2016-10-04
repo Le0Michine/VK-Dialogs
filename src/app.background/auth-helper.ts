@@ -117,7 +117,6 @@ export class AuthHelper {
                     session.timestamp = Math.floor(Date.now() / 1000);
                     console.log("store session");
                     window.localStorage.setItem(VKConsts.vk_session_info, JSON.stringify(session));
-                    callback(session);
                 }
                 try {
                     chrome.tabs.remove(tabId);
@@ -127,6 +126,7 @@ export class AuthHelper {
                 }
                 AuthHelper.tab_id = null;
                 s.unsubscribe();
+                callback(session);
             }
         });
     }
