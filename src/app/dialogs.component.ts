@@ -66,6 +66,7 @@ export class DialogsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log("init dialogs component");
         this.chromeapi.init();
         this.dialog_service.init();
         this.vkservice.init();

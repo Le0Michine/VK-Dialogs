@@ -132,7 +132,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 console.log("authorized: ", session);
                 this.chromeapi.UpdateActionBadge("");
                 this.initServices();
-                sub.unsubscribe();
+                //sub.unsubscribe();
                 this.createContextMenuItems();
                 if (message.sendResponse) {
                     message.sendResponse();

@@ -20,6 +20,7 @@ export class DialogService {
         private chromeapi: ChromeAPIService) { }
 
     init() {
+        console.log("init dialog service");
         this.initChatsUpdate();
         this.initDialogsUpdate();
     }
