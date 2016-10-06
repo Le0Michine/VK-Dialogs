@@ -102,7 +102,16 @@ module.exports = [{
         { from: 'src/node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./node_modules/bootstrap/dist/css", toType: "dir", flatten: true }
       ], 
       {
-        ignore: [ "typings.json", "gulpfile.js", "package.json", "tsconfig.json", "tslint.json" ],
+        ignore: [
+          "typings.json",
+          "gulpfile.js",
+          "package.json",
+          "tsconfig.json",
+          "tslint.json",
+          "*.svg",
+          "VK_icon.png",
+          // "snapchat.png"
+        ],
         // By default, we only copy modified files during 
         // a watch or webpack-dev-server build. Setting this 
         // to `true` copies all files. 

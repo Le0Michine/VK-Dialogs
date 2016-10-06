@@ -5,7 +5,10 @@ import { VKService } from "./vk-service";
 @Component({
   selector: "login",
   templateUrl: "login.component.html",
-  styleUrls: [ "login.component.css" ]
+  styleUrls: [
+      "login.component.css",
+      "css/color-scheme.css"
+     ]
 })
 export class LoginComponent {
     constructor(private router: Router, private vkservice: VKService) { }
