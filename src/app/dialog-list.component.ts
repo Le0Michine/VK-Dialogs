@@ -12,10 +12,10 @@ import { VKConsts } from "./vk-consts";
 
 @Component({
   selector: "dialogs",
-  templateUrl: "dialogs.component.html",
-  styleUrls: ["dialogs.component.css"]
+  templateUrl: "dialog-list.component.html",
+  styleUrls: ["dialog-list.component.css"]
 })
-export class DialogsComponent implements OnInit, OnDestroy {
+export class DialogListComponent implements OnInit, OnDestroy {
     user: UserInfo = new UserInfo();
     users: { [userId: number] : UserInfo };
     chats: { [chatId: number] : ChatInfo };

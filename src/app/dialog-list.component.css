@@ -203,7 +203,7 @@ li:hover {
     bottom: 8px;
     height: 8px;
     width: 8px;
-    background: rgba(147, 173, 200, 0.9);
+    background: #5281b9;
     border-radius: 50%;
     position: relative
 }
@@ -216,7 +216,7 @@ li:hover {
     width: fit-content;
     right: -8px;
     text-align: center;
-    background: rgb(114, 147, 182);
+    background: #5281b9;
     border-radius: 50%;
     font: normal normal 500 normal 11px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     padding: 0px 6px;
@@ -239,7 +239,7 @@ li:hover {
 }
 
 #load_old:hover {
-    background-image: linear-gradient(to right, rgb(255, 255, 255), rgba(66, 100, 139, 0.1), rgb(255, 255, 255)) !important;
+    background-image: linear-gradient(to right, #ebf0f4, rgba(66, 100, 139, 0.1), #ebf0f4) !important;
 }
 
 .chat_action {
