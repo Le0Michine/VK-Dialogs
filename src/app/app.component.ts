@@ -6,6 +6,7 @@ import "rxjs/add/Observable/interval";
 import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "./chrome-api-service";
+import { OptionsService } from "./options.service";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;
@@ -19,7 +20,7 @@ const rotateAnimationLength = 200;
     animations: [
         trigger('flyInOut', [
             state('in', style({transform: 'translateX(0)', opacity: 1})),
-            state('out_r', style({transform: 'translateX(100%)', opacity: 0})),
+            state('out_r', style({transform: 'translateX(100%)', opacity: 0, display: 'none'})),
             transition('out_r => in', [
                 animate(slideAnimationLength, keyframes([
                     style({opacity: 0, transform: 'translateX(100%)', offset: 0}),
@@ -50,20 +51,41 @@ export class AppComponent {
     conversationId: number;
     isChat: boolean;
     backIsAvailable: boolean = false;
+    isPopupMenuOpened: boolean = false;
+    showRoundButtons: boolean = false;
+
+    popupMenuItems: string[] = [
+        "settings",
+        "openInVk",
+        "openInWindow",
+        "logOff"
+    ];
 
     showActions: string = "out_r";
     rotateSettings: string = "right";
 
     stopWatch = Observable.interval(1000);
 
-    constructor(private translate: TranslateService, private location: Location, private router: Router, private ref: ChangeDetectorRef, private chromeapi: ChromeAPIService) {
+    constructor(
+            private translate: TranslateService,
+            private location: Location,
+            private router: Router,
+            private ref: ChangeDetectorRef,
+            private chromeapi: ChromeAPIService,
+            private settings: OptionsService) {
         translate.setDefaultLang("en");
         translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
-        chrome.storage.sync.get({ "currentLang": "ru" }, (items) => {
-            console.log("got settings: ", items);
-            translate.use(items["currentLang"]);
-            this.mainTitle = this.translate.instant("dialogs");
-            this.routeChanged();
+
+        settings.language.subscribe(lang => {
+            translate.use(lang);
+            this.translate.get("dialogs").subscribe(value => {
+                this.mainTitle = value; 
+                this.routeChanged();
+                ref.detectChanges();
+            });
+        });
+        settings.showRoundButtons.subscribe(show => {
+            this.showRoundButtons = show;
             ref.detectChanges();
         });
         chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -90,6 +112,11 @@ export class AppComponent {
     hideButtons() {
         this.showActions = "out_r";
         this.rotateSettings = "right";
+    }
+
+    private openMenu(event: MouseEvent) {
+        event.stopPropagation();
+        this.isPopupMenuOpened = !this.isPopupMenuOpened;
     }
 
     private goBack() {
@@ -139,5 +166,32 @@ export class AppComponent {
 
     private openSeparateWindow() {
         this.chromeapi.SendMessage({name: "open_separate_window"});
+    }
+
+    private onMenuItemSelect(item: string): void {
+        console.log("menu item selected", item);
+        this.isPopupMenuOpened = false;
+        switch (item) {
+            case "settings":
+                this.openSettings();
+                break;
+            case "openInVk":
+                this.goToConversation();
+                break;
+            case "openInWindow":
+                this.openSeparateWindow();
+                break;
+            case "logOff":
+                this.logOff();
+                break;
+            default:
+                console.error("wrong menu item");
+        }
+    }
+
+    private closePopupMenu() {
+        if (this.isPopupMenuOpened) {
+            this.isPopupMenuOpened = false;
+        }
     }
 }

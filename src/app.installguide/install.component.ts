@@ -44,9 +44,9 @@ export class InstallComponent {
 
         translate.setDefaultLang("en");
         translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
-        chrome.storage.sync.get({ "currentLang": "ru" }, (items) => {
+        chrome.storage.sync.get({ "settings": { "currentLang": "ru" } }, (items: any) => {
             console.log("got settings: ", items);
-            translate.use(items["currentLang"]);
+            translate.use(items.settings.currentLang);
         });
         chrome.storage.onChanged.addListener(function(changes, namespace) {
             if ("currentLang" in changes) {

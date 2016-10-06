@@ -16,7 +16,7 @@
 }
 
 #inputBox {
-    height: calc(100% - 35px);
+    height: calc(100% - 40px);
     position: relative;
 }
 
@@ -54,10 +54,6 @@
 #attach_file {
     height: 100%;
     width: 100%;
-}
-
-.send-padding {
-    padding-left: 3px;
 }
 
 .attach_photo_icon {

@@ -7,11 +7,29 @@
     text-align: left;
     vertical-align: top;
     width: 100%;
-    background-color: #2196F3;
+    background-color: #5281b9;
     font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     z-index: 100;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.26);
     padding: 10px;
+}
+
+.btn-menu {
+    outline: none;
+    border: none;
+    background: none;
+    color: white;
+    /*font-size: 25px;*/
+}
+
+.outline-none {
+    outline: none;
+}
+
+#menuWrapper {
+    position: absolute;
+    right: 30px;
+    top: 40px;
 }
 
 .btn-back {

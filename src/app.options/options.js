@@ -3,8 +3,11 @@ function save_options() {
     var lang = document.getElementById("targetLangSel").value;
     var set_online = document.getElementById("set-online-checkbox").checked;
     chrome.storage.sync.set({
-        currentLang: lang,
-        setOnline: set_online
+        settings: {
+            currentLang: lang,
+            setOnline: set_online,
+            showRoundButtons: document.getElementById("showRoundButtons").value === "buttons"
+        }
     }, function() {
         // Update status to let user know options were saved.
         var status = document.getElementById('saveStatus');
@@ -22,10 +25,11 @@ function save_options() {
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 function restore_options() {
-    chrome.storage.sync.get({ "currentLang": "ru", "setOnline": true }, function(items) {
+    chrome.storage.sync.get({ settings: { "currentLang": "ru", "setOnline": true, "showRoundButtons": false } }, function(items) {
         console.log("got settings: ", items);
-        document.getElementById("targetLangSel").value = items.currentLang;
-        document.getElementById("set-online-checkbox").checked = items.setOnline;
+        document.getElementById("targetLangSel").value = items.settings.currentLang;
+        document.getElementById("set-online-checkbox").checked = items.settings.setOnline;
+        document.getElementById("showRoundButtons").value = items.settings.showRoundButtons === "true" ? "buttons" : "menu";
     });
 }
 

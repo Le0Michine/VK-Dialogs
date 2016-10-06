@@ -5,12 +5,13 @@ import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
 
 import { AppComponent }  from "./app.component";
-import { DialogsComponent }  from "./dialogs.component";
+import { DialogListComponent }  from "./dialog-list.component";
 import { DialogComponent }  from "./dialog.component";
 import { LoginComponent }  from "./login.component";
 import { MessageInputComponent }  from "./message-input.component";
 import { MessagesListComponent }  from "./messages-list.component";
 import { EmojiComponent }  from "./emoji.component";
+import { PopupMenuComponent }  from "./popup-menu.component";
 import { routing } from "./app.routing";
 
 import { DialogService } from "./dialogs-service";
@@ -18,6 +19,7 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { EmojiService } from "./emoji-service";
 import { ChromeAPIService } from "./chrome-api-service";
+import { OptionsService } from "./options.service";
 import { ReversePipe, EscapePipe } from "./pipes/message.pipe";
 import { ChatActionPipe } from "./pipes/chat-action.pipe";
 import { CutLinksPipe } from "./pipes/cut-links.pipe";
@@ -38,11 +40,12 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
     declarations: [
         AppComponent,
         DialogComponent,
-        DialogsComponent,
+        DialogListComponent,
         MessageInputComponent,
         MessagesListComponent,
         LoginComponent,
         EmojiComponent,
+        PopupMenuComponent,
         MessageAttachmentIconPipe,
         MessageAttachmentSubTitlePipe,
         MessageAttachmentTitlePipe,
@@ -66,7 +69,8 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         VKService,
         DialogService,
         EmojiService,
-        ChromeAPIService
+        ChromeAPIService,
+        OptionsService
     ]
 })
 export class AppModule { }

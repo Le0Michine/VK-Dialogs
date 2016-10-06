@@ -31,10 +31,10 @@
 							<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
 						</div>
 						<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
-							<a class="att-doc-icon {{attachment | attachment_icon}} pull-left" [class.white-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
+							<a class="att-doc-icon {{attachment | attachment_icon}} pull-left" [class.unread-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
 							<div class="attachment-description">
-								<a class="att-doc" [href]="attachment | attachment_url:item.user_id" [class.white-text]="!item.isRead" target="_blank" title="{{attachment | attachment_title}}">{{attachment | attachment_title}}</a>
-								<div class="att-doc-size" [class.white-text]="!item.isRead">{{attachment | attachment_size}}</div>
+								<a class="att-doc" [href]="attachment | attachment_url:item.user_id" [class.unread-text]="!item.isRead" target="_blank" title="{{attachment | attachment_title}}">{{attachment | attachment_title}}</a>
+								<div class="att-doc-size" [class.unread-text]="!item.isRead">{{attachment | attachment_size}}</div>
 							</div>
 						</div>
 

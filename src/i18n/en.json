@@ -12,6 +12,12 @@
     "flags_btn": "Open chrome settings",
     "options_btn": "Open extension options",
     "type_text_here": "Type your text here…",
+    "menuItems": {
+        "settings": "Options",
+        "openInVk": "Open in VK",
+        "openInWindow": "Open in window",
+        "logOff": "Log off"
+    },
     "setup": {
         "step_auth": "First you need to authorize on VK.com. In case if you are doing that first time you will need to grant access to your account.",
         "step_privacy": "Please pay attention that after authorization you will have an access to all your messages via the extension even if you logged off from your account on VK.com. In order to prevent it you will need to click 'Log off' in the extension's context menu as well.",

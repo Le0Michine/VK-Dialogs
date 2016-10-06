@@ -154,9 +154,9 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     }
 
     private setOnline() {
-        chrome.storage.sync.get({"setOnline": true}, (value: any) => {
+        chrome.storage.sync.get({ "settings": {"setOnline": true} }, (value: any) => {
             console.log("got online options: ", value);
-            if (value.setOnline) {
+            if (value.settings.setOnline) {
                 this.vkservice.setOnline();
                 this.vkservice.getSession().subscribe(session => {
                     this.userService.updateUsers(session.user_id.toString());

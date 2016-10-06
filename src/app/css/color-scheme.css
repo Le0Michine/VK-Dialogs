@@ -1,0 +1,18 @@
+.primary-color {
+    color: white;
+    background-color: #5281b9;
+}
+
+.secondary-color {
+    color: black;
+    background-color: #c1def9;
+}
+
+.unread {
+    background-color: #c1def9;
+    color: black;
+}
+
+.unread-text {
+    color: black;
+}

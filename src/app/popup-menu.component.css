@@ -1,0 +1,34 @@
+.menu {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.26);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+li:hover {
+    color: black;
+    background-color: #DDD;
+}
+
+ul {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 2px 2px 2px 2px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 30px;
+    width: 100%;
+    padding: 5px 20px 5px 10px;
+}

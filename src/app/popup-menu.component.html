@@ -1,0 +1,5 @@
+<div class="menu" [@openClose]="state">
+<ul>
+    <li *ngFor="let item of menuItems" (click)="select(item)">{{'menuItems.' + item | translate}}</li>
+</ul>
+</div>

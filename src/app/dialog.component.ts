@@ -14,7 +14,10 @@ import { SingleMessageInfo, HistoryInfo } from "./datamodels/datamodels";
     selector: "messages",
     templateUrl: "dialog.component.html",
     styleUrls: [
-        "dialog.component.css", "app.component.css", "css/round-buttons.css"
+        "dialog.component.css",
+        "app.component.css",
+        "css/round-buttons.css",
+        "css/color-scheme.css"
     ],
     animations: [
         trigger('flyInOut', [
@@ -53,9 +56,9 @@ export class DialogComponent implements OnInit, OnDestroy {
     scrollToBottomAvailable: string = "out";
     sendEnabled: boolean = true;
 
-    topPanel: string = "calc(100% - 200px)";
-    bottomPanel: string = "calc(100% - 150px)";
-    emojiPanel: string = "150px";
+    topPanel: string = "calc(100% - 130px - 45px)";
+    bottomPanel: string = "calc(100% - 130px)";
+    emojiPanel: string = "130px";
 
     scrollPosition: number = 10000;
     scrollHeight: number = 10000;
@@ -145,9 +148,10 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     resize(e: MouseEvent) {
         e.preventDefault();
-        this.topPanel = `${e.pageY - 70}px`;
-        this.bottomPanel = `${e.pageY - 20}px`;
-        this.emojiPanel = `calc(100% - ${e.pageY - 20}px)`;
+        let y = Math.max(150, e.pageY);
+        this.topPanel = `${y - 65}px`;
+        this.bottomPanel = `${y - 20}px`;
+        this.emojiPanel = `calc(100% - ${y - 20}px)`;
     }
 
     ngOnDestroy() {

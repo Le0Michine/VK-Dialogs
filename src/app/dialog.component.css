@@ -7,6 +7,7 @@
     padding: 0;
     box-sizing: border-box;
     display: block;
+    background-color: #ebf0f4;
 }
 
 #inputWrapper {
@@ -18,7 +19,7 @@
     z-index: 100;
     padding: 0;
     box-sizing: border-box;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.26);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.26);
 }
 
 .clearfix::after {
@@ -45,11 +46,16 @@
     /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);*/
 }
 
-.emoji_smile_icon {
-    margin: 3px 0 3px 5px;
-    width: 25px;
-    height: 25px;
+.send-padding {
+    padding-left: 3px;
+}
+
+.emoji-smile-icon {
     cursor: pointer;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    margin-left: 5px;
     background: url(http://abs.twimg.com/emoji/v2/72x72/1f642.png) no-repeat;
     background-size: 100%;
 }

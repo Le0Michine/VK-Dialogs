@@ -23,10 +23,10 @@
 			(mousedown)="startResize([conversationsWrapper, inputWrapper], $event)"
 			(mouseup)="stopResize([conversationsWrapper, inputWrapper], $event)"
 		>drag_handle</div>
-		<button class="btn btn-success btn-round pull-right material-icons send-padding" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()">send</button>
-		<button [@flyInOut]="unreadMessages" class="btn btn-warning btn-round pull-right material-icons" (click)="onMarkAsRead()">done_all</button>
-		<div class="emoji_smile_icon pull-right" (click)="toggleEmoji()"></div>
-		<button [@flyInOut]="scrollToBottomAvailable" class="btn btn-info btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
+		<button class="btn btn-round primary-color pull-right material-icons send-padding" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ send | translate }}">send</button>
+		<button [@flyInOut]="unreadMessages" class="btn btn-round primary-color pull-right material-icons" (click)="onMarkAsRead()" title="{{ mark_as_read | translate }}">done_all</button>
+		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
+		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
 	</div>
 	<message-input
 		[conversation_id]="conversation_id"
