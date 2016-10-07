@@ -54,6 +54,9 @@ export class AppComponent {
     isPopupMenuOpened: boolean = false;
     showRoundButtons: boolean = false;
 
+    windowWidth: string = "300px";
+    windowHeight: string = "400px";
+
     popupMenuItems: string[] = [
         "settings",
         "openInVk",
@@ -77,6 +80,7 @@ export class AppComponent {
         translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
 
         settings.language.subscribe(lang => {
+            console.log("current lang", lang);
             translate.use(lang);
             this.translate.get("dialogs").subscribe(value => {
                 this.mainTitle = value; 
@@ -88,6 +92,11 @@ export class AppComponent {
             this.showRoundButtons = show;
             ref.detectChanges();
         });
+        settings.windowSize.subscribe(size => {
+            this.windowWidth = size[0];
+            this.windowHeight = size[1];
+        });
+
         chrome.storage.onChanged.addListener(function(changes, namespace) {
             if ("currentLang" in changes) {
                 let change = changes["currentLang"];

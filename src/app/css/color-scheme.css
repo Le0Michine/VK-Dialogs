@@ -3,14 +3,17 @@
     background-color: #5281b9;
 }
 
-.secondary-color {
+.primary-color-text {
+    color: #5281b9;
+}
+
+.secondary-color, .unread {
     color: black;
     background-color: #c1def9;
 }
 
 .unread {
-    background-color: #c1def9;
-    color: black;
+
 }
 
 .unread-text {

@@ -1,4 +1,4 @@
-<div style="display:inline" (click)="closePopupMenu()">
+<div [style.width]="windowWidth" [style.height]="windowHeight" (click)="closePopupMenu()">
 <div id="topPanel" (mouseleave)="hideButtons()">
 	<a (click)="goBack()" class="btn-back" *ngIf="backIsAvailable"> 
 		<div class="material-icons pull-left">keyboard_arrow_left</div>
@@ -16,7 +16,6 @@
 		<button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="goToConversation()" title="In VK">open_in_browser</button>
 		<button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="logOff()" title="Log off">power_settings_new</button>
 	</div>
-    <!--<a class="pull-right" style="color:white">{{stopWatch | async}}</a>-->
 </div>
 <div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">
 	<popup-menu [state]="isPopupMenuOpened" [menuItems]="popupMenuItems" (onSelect)="onMenuItemSelect($event)"></popup-menu>

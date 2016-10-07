@@ -29,7 +29,7 @@
 }
 
 .dragBar {
-    width: 140px;
+    width: calc(100% - 100px - 4 * 35px);
     height: 30px;
     position: relative;
     display: inline-block;
