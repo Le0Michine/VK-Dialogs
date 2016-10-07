@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs/Subject";
+import { BehaviorSubject  } from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class OptionsService {
-    language: Subject<string> = new Subject();
-    setOnline: Subject<boolean> = new Subject();
-    showRoundButtons: Subject<boolean> = new Subject();
-    windowSize: Subject<string[]> = new Subject();
+    language: BehaviorSubject <string>;
+    setOnline: BehaviorSubject <boolean>;
+    showRoundButtons: BehaviorSubject <boolean>;
+    windowSize: BehaviorSubject<string[]>;
 
     private defaultSettings: Settings = new Settings();
 
@@ -22,7 +22,7 @@ export class OptionsService {
     constructor() {
         let settings = JSON.parse(window.localStorage.getItem("settings")) as Settings;
         this.currentSettings = settings || this.defaultSettings;
-        this.updateSettings(this.currentSettings);
+        this.initSubjects(this.currentSettings);
 
         chrome.storage.sync.get({ "settings": this.defaultSettings }, (item: any) => {
             let settings = item.settings as Settings;
@@ -34,10 +34,10 @@ export class OptionsService {
 
     private initSubjects(settings: Settings) {
         console.log("init settings", settings);
-       /* this.language = new BehaviorSubject(settings.currentLang);
+        this.language = new BehaviorSubject(settings.currentLang);
         this.setOnline = new BehaviorSubject(settings.setOnline);
         this.showRoundButtons = new BehaviorSubject(settings.showRoundButtons);
-        this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);*/
+        this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);
     }
 
     private updateSettings(settings: Settings): void {
