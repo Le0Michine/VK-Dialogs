@@ -14,10 +14,10 @@ import { SingleMessageInfo, HistoryInfo } from "./datamodels/datamodels";
     selector: "messages",
     templateUrl: "dialog.component.html",
     styleUrls: [
-        "dialog.component.css",
-        "app.component.css",
         "css/round-buttons.css",
-        "css/color-scheme.css"
+        "css/color-scheme.css",
+        "app.component.css",
+        "dialog.component.css",
     ],
     animations: [
         trigger('flyInOut', [
