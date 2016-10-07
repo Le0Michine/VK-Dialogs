@@ -59,7 +59,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 }
 
 .styleless {
-    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
+    font: normal normal normal normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
     color: black;
     cursor: text;
 }

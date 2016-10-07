@@ -1,4 +1,4 @@
-.primary-color {
+.primary-color, .unread-marker, .unread-count {
     color: white;
     background-color: #5281b9;
 }
@@ -10,10 +10,6 @@
 .secondary-color, .unread {
     color: black;
     background-color: #c1def9;
-}
-
-.unread {
-
 }
 
 .unread-text {

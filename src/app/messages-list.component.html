@@ -18,9 +18,9 @@
 					[class.unread]="!item.isRead"
 					[class.round-corners-top]="isFirst"
 					[class.round-corners-bottom]="isLast">
-					<pre class="message-body-internal"
+					<pre class="message-body-internal text-normal"
 						*ngIf="item.body"
-						[innerHTML]="item.body | cutLinks:!item.isRead | emoji | safe" 
+						[innerHTML]="item.body | cutLinks | emoji | safe" 
 						></pre>
 					<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": getUserName(item.userId), "user2": getUserName(item.actionMid)} }}</div>
 					<div class="message-attachment pull-left" *ngFor="let attachment of item.attachments">
@@ -58,7 +58,7 @@
 												[class.round-corners-bottom]="isFwdLast"
 												*ngFor="let isFwdFirst=first; let isFwdLast=last; let msg of mts.messages"
 											>
-												<pre class="message-body-internal" [innerHTML]="msg.body | cutLinks | emoji | safe" *ngIf="msg.body"></pre>
+												<pre class="message-body-internal text-normal" [innerHTML]="msg.body | cutLinks | emoji | safe" *ngIf="msg.body"></pre>
 												<div class="fwd_message_attachment space-left" *ngFor="let fwd_att of msg.attachments">
 													<div *ngIf="fwd_att.photo" class="att_photo">
 														<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />

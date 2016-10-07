@@ -203,7 +203,6 @@ li:hover {
     bottom: 8px;
     height: 8px;
     width: 8px;
-    background: #5281b9;
     border-radius: 50%;
     position: relative
 }
@@ -214,11 +213,9 @@ li:hover {
     height: 18px;
     min-width: 6px;
     width: fit-content;
-    right: -8px;
     text-align: center;
-    background: #5281b9;
-    border-radius: 50%;
-    font: normal normal 500 normal 11px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    border-radius: 9px / 50%;
+    font: normal normal bold normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     padding: 0px 6px;
     box-sizing: border-box;
     position: relative;

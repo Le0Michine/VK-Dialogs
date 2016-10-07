@@ -14,7 +14,8 @@ import { ChromeAPIService } from "./chrome-api-service";
     templateUrl: "messages-list.component.html",
     styleUrls: [
         "messages-list.component.css",
-        "css/color-scheme.css"
+        "css/color-scheme.css",
+        "css/font-style.css"
     ]
 })
 export class MessagesListComponent implements OnInit, OnDestroy {

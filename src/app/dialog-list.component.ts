@@ -13,7 +13,7 @@ import { VKConsts } from "./vk-consts";
 @Component({
   selector: "dialogs",
   templateUrl: "dialog-list.component.html",
-  styleUrls: ["dialog-list.component.css"]
+  styleUrls: ["dialog-list.component.css", "css/color-scheme.css"]
 })
 export class DialogListComponent implements OnInit, OnDestroy {
     user: UserInfo = new UserInfo();

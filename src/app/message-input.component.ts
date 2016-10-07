@@ -11,7 +11,9 @@ import { ChromeAPIService } from "./chrome-api-service";
     selector: "message-input",
     templateUrl: "message-input.component.html",
     styleUrls: [
-        "message-input.component.css", "css/round-buttons.css"
+        "message-input.component.css",
+        "css/round-buttons.css",
+        "css/font-style.css"
     ]
 })
 export class MessageInputComponent {

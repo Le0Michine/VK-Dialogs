@@ -15,7 +15,10 @@ const rotateAnimationLength = 200;
     selector: "my-app",
     templateUrl: "app.component.html",
     styleUrls: [
-        "app.component.css", "css/round-buttons.css"
+        "app.component.css",
+        "css/round-buttons.css",
+        "css/color-scheme.css",
+        "css/font-style.css"
     ],
     animations: [
         trigger('flyInOut', [

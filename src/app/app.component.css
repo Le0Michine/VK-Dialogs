@@ -7,8 +7,6 @@
     text-align: left;
     vertical-align: top;
     width: 100%;
-    background-color: #5281b9;
-    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     z-index: 100;
     box-shadow: 0 0px 5px rgba(0, 0, 0, 0.26);
     padding: 10px;
@@ -40,7 +38,6 @@
     position: relative;
     text-align: left;
     text-decoration: none;
-    font: normal normal normal normal 13px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .space-left {
@@ -63,7 +60,7 @@
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
-    font: normal normal 500 normal 14px / 15.002px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    font: normal normal bold normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 3px 0px 0px;
     overflow: hidden;
     padding-top: 3px;

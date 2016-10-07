@@ -8,7 +8,6 @@
     top: 0;
     width: calc(100% - 100px);
     height: 90%;
-    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     padding: 10px;
     display: inline-block;
     position: absolute;
@@ -25,8 +24,7 @@
     margin: 0 5px 0 5px;
 }
 
-#message_input, .styleless {
-    font: normal normal normal normal 13px / 16px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
+#message_input {
     color: black;
     cursor: text;
 }

@@ -1,6 +1,6 @@
 <div [style.width]="windowWidth" [style.height]="windowHeight" (click)="closePopupMenu()">
-<div id="topPanel" (mouseleave)="hideButtons()">
-	<a (click)="goBack()" class="btn-back" *ngIf="backIsAvailable"> 
+<div id="topPanel" (mouseleave)="hideButtons()" class="primary-color text-normal">
+	<a (click)="goBack()" class="btn-back text-normal" *ngIf="backIsAvailable"> 
 		<div class="material-icons pull-left">keyboard_arrow_left</div>
 		<h1 id="dialog_title" class="pull-left">{{ title }}</h1>
 	</a>

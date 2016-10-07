@@ -7,7 +7,8 @@ import { VKService } from "./vk-service";
   templateUrl: "login.component.html",
   styleUrls: [
       "login.component.css",
-      "css/color-scheme.css"
+      "css/color-scheme.css",
+      "css/font-style.css"
      ]
 })
 export class LoginComponent {

@@ -106,7 +106,7 @@ pre {
     overflow: hidden;
     width: 100%;
     text-decoration: none;
-    font: 14px / 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
     color: #42648b;
     -webkit-font-smoothing: subpixel-antialiased;
@@ -201,7 +201,6 @@ pre {
 .user-name-and-date {
     color: rgb(147, 147, 147);
     height: 16px;
-    font: normal normal normal normal 12.5px / 14.425px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .user-name {
@@ -216,7 +215,7 @@ pre {
     vertical-align: top;
     white-space: nowrap;
     border: 0px none rgb(66, 100, 139);
-    font: normal normal bold normal 12.5px / 15.375px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    font: normal normal bold normal 12px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgb(66, 100, 139) none 0px;
     overflow: hidden;
 }
@@ -224,7 +223,7 @@ pre {
 .message-timestamp {
     color: rgba(148, 148, 148, 0.6);
     border: 0px none rgba(148, 148, 148, 0.6);
-    font: normal normal normal normal 12px / 16.8px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    font: normal normal normal normal 12px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     outline: rgba(148, 148, 148, 0.6) none 0px;
     overflow: hidden;
     white-space: nowrap;
@@ -256,7 +255,6 @@ pre {
 
 .message-body-internal {
     white-space: pre-line;
-    font: normal normal normal normal 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -269,8 +267,7 @@ pre {
 }
 
 .chat_action {
-    font: italic 13px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    font-weight: 600;
+    font: normal italic bold normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     text-align: center;
     color: #777;
     min-height: 35px;
@@ -293,7 +290,7 @@ pre {
 #load_old_link {
     width: 50%;
     text-align: center;
-    font: normal normal 500 normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    font: normal normal bold normal 12px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0px 0px 0px;
     text-decoration: underline;
 }

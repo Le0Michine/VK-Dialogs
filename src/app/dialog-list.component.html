@@ -16,7 +16,7 @@
                     <span class="dialog_attachments" *ngIf="dialog.attachment_only">[{{ 'attachment.' + dialog.attachment_type | translate }}]</span>
 					<span class="chat_action dialog_attachments" *ngIf="!dialog.message.body && dialog.message.action">[{{ dialog.message | chatAction | translate:{"user": getUserName(dialog.message.userId), "user2": getUserName(dialog.message.actionMid)} }}]</span>
 				</div>
-				<div class="unread-marker pull-right" *ngIf="!dialog.message.isRead"></div>
+				<div class="unread-marker pull-right" *ngIf="!dialog.message.isRead && !dialog.unread"></div>
 				<div class="unread-count pull-right" *ngIf="dialog.unread">{{dialog.unread}}</div>
 			</div>
 		</div>
