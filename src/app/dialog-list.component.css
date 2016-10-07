@@ -160,9 +160,17 @@ li:hover {
     }
 }
 
-@media screen and (max-width: 100px) {
-    .dialog-content-div {
+@media screen and (max-width: 110px) {
+    .dialog-content-text {
         display: none;
+    }
+
+    .unread-marker {
+        float: left;
+    }
+
+    .unread-count {
+        float: left;
     }
 }
 
