@@ -34,7 +34,6 @@
     position: relative;
     display: inline-block;
     margin: 0 5px 0;
-    color: gray;
     font-size: 30px;
     cursor: row-resize;
 }

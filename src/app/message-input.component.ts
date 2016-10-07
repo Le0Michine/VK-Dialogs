@@ -13,7 +13,8 @@ import { ChromeAPIService } from "./chrome-api-service";
     styleUrls: [
         "message-input.component.css",
         "css/round-buttons.css",
-        "css/font-style.css"
+        "css/font-style.css",
+        "css/color-scheme.css"
     ]
 })
 export class MessageInputComponent {

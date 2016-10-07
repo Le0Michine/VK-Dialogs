@@ -1,6 +1,6 @@
 <div id="inputBox" class="row">
 	<label *ngIf="inputLabelVisible" class="input-label text-normal" for="message_input">{{ 'type_text_here' | translate }}</label>
-	<div #minput class="pull-left text-normal"
+	<div #minput class="message-input pull-left text-normal border-primary"
 		contenteditable="true"
 		id="message_input"
 		(blur)="showLabelContent(getText(minput.childNodes))"

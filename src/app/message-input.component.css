@@ -24,12 +24,12 @@
     margin: 0 5px 0 5px;
 }
 
-#message_input {
+.message-input {
     color: black;
     cursor: text;
 }
 
-#message_input {
+.message-input {
     box-sizing: border-box;
     width: calc(100% - 100px);
     cursor: text;
@@ -41,7 +41,7 @@
     outline: none;
     word-wrap: break-word;
     border: none;
-    border-bottom: 1px solid rgb(228, 230, 233);
+    border-bottom: 1px solid;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px;
