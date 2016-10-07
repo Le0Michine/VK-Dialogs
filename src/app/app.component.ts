@@ -125,6 +125,10 @@ export class AppComponent {
         let path: string[] = this.location.path().split("/");
         if (path.length < 2 || path[1] !== "dialog") {
             this.backIsAvailable = false;
+            if (path[1] === "authorize") {
+                this.translate.get("authorize_btn").subscribe(value => this.mainTitle = value);
+                this.windowHeight = "150px";
+            }
         }
         else {
             this.conversationId = Number(path[2]);

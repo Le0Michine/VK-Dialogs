@@ -14,7 +14,7 @@
     "type_text_here": "Type your text here…",
     "menuItems": {
         "settings": "Options",
-        "openInVk": "Open in VK",
+        "openInVk": "Go to VK",
         "openInWindow": "Open in window",
         "logOff": "Log off"
     },
