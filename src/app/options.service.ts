@@ -29,7 +29,16 @@ export class OptionsService {
             this.updateSettings(settings);
             window.localStorage.setItem("settings", JSON.stringify(settings));
             this.currentSettings = settings;
-        })
+        });
+
+        chrome.storage.onChanged.addListener(function(changes, namespace) {
+            if ("settings" in changes) {
+                let change = changes["settings"];
+                console.log(`detect settings changing from ${change.oldValue} to ${change.newValue}`);
+                this.updateSettings(change.newValue);
+                this.currentSettings = change.newValue;
+            }
+        });
     }
 
     private initSubjects(settings: Settings) {

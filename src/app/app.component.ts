@@ -67,8 +67,6 @@ export class AppComponent {
     showActions: string = "out_r";
     rotateSettings: string = "right";
 
-    stopWatch = Observable.interval(1000);
-
     constructor(
             private translate: TranslateService,
             private location: Location,
@@ -77,40 +75,30 @@ export class AppComponent {
             private chromeapi: ChromeAPIService,
             private settings: OptionsService) {
         translate.setDefaultLang("en");
-        translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
-
-        settings.language.subscribe(lang => {
-            console.log("current lang", lang);
-            translate.use(lang);
-            this.translate.get("dialogs").subscribe(value => {
-                this.mainTitle = value; 
-                this.routeChanged();
-                ref.detectChanges();
-            });
-        });
-        settings.showRoundButtons.subscribe(show => {
-            this.showRoundButtons = show;
-            ref.detectChanges();
-        });
-        settings.windowSize.subscribe(size => {
-            this.windowWidth = size[0];
-            this.windowHeight = size[1];
-        });
-
-        chrome.storage.onChanged.addListener(function(changes, namespace) {
-            if ("currentLang" in changes) {
-                let change = changes["currentLang"];
-                console.log(`detect language changing from ${change.oldValue} to ${change.newValue}`);
-                translate.use(change.newValue);
-            }
-        });
-        router.events.subscribe((event) => {
-            this.routeChanged();
-        });
     }
 
     ngOnInit() {
         console.log("app component init");
+        this.translate.use("ru");
+        this.settings.language.subscribe(lang => {
+            console.log("current lang", lang);
+            this.translate.use(lang);
+            this.translate.get("dialogs").subscribe(value => {
+                this.mainTitle = value; 
+                this.routeChanged();
+            });
+        });
+        this.settings.showRoundButtons.subscribe(show => {
+            this.showRoundButtons = show;
+            this.ref.detectChanges();
+        });
+        this.settings.windowSize.subscribe(size => {
+            this.windowWidth = size[0];
+            this.windowHeight = size[1];
+        });
+        this.router.events.subscribe((event) => {
+            this.routeChanged();
+        });
     }
 
     showButtons() {
