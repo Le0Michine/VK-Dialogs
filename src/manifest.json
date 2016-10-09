@@ -30,6 +30,7 @@
         "https://api.vk.com/method/*",
         "http://imv4.vk.com/*",
         "http://*.vk.com/*",
-        "https://pu.vk.com/*"
+        "https://pu.vk.com/*",
+        "https://*.vk.com/*"
     ]
 }
