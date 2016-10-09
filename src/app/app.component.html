@@ -7,15 +7,7 @@
 	<a href="https://vk.com/im" target="_blank" class="btn-back space-left outline-none" *ngIf="!backIsAvailable"> 
 		<h1 id="dialog_title" class="pull-left">{{ mainTitle }}</h1>
 	</a>
-	<div style="display:inline" *ngIf="!showRoundButtons">
-		<button class="btn-menu material-icons ontop pull-right" (click)="openMenu($event)" title="Settings">more_vert</button>
-	</div>
-	<div style="display:inline" *ngIf="showRoundButtons">
-		<button [@rotateLeftRight]="rotateSettings" class="btn btn-info btn-round pull-right material-icons ontop" (mouseover)="showButtons()" (click)="openSettings()" title="Settings">settings</button>
-		<button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="openSeparateWindow()" title="In window">open_in_new</button>
-		<button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="goToConversation()" title="In VK">open_in_browser</button>
-		<button [@flyInOut]="showActions" class="btn btn-info btn-round pull-right material-icons" (click)="logOff()" title="Log off">power_settings_new</button>
-	</div>
+	<button class="btn-menu material-icons ontop pull-right" (click)="openMenu($event)" title="Settings">more_vert</button>
 </div>
 <div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">
 	<popup-menu

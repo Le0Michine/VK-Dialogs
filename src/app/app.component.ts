@@ -1,5 +1,5 @@
 ///<reference path="../typings/globals/chrome/index.d.ts"/>
-import { Component, ChangeDetectorRef, trigger, state, transition, style, animate, keyframes } from "@angular/core";
+import { Component, ChangeDetectorRef } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/Observable/interval";
@@ -20,33 +20,6 @@ const rotateAnimationLength = 200;
         "css/round-buttons.css",
         "css/color-scheme.css",
         "css/font-style.css"
-    ],
-    animations: [
-        trigger('flyInOut', [
-            state('in', style({transform: 'translateX(0)', opacity: 1})),
-            state('out_r', style({transform: 'translateX(100%)', opacity: 0, display: 'none'})),
-            transition('out_r => in', [
-                animate(slideAnimationLength, keyframes([
-                    style({opacity: 0, transform: 'translateX(100%)', offset: 0}),
-                    style({opacity: 1, transform: 'translateX(-15px)',  offset: 0.3}),
-                    style({opacity: 1, transform: 'translateX(0)',     offset: 1.0})
-                ]))
-            ]),
-            transition('in => out_r', [
-                animate(slideAnimationLength, style({transform: 'translateX(100%)', opacity: 0}))
-            ])
-        ]),
-        trigger('rotateLeftRight', [
-            state('right', style({transform: 'rotate(0deg)'})),
-            state('left', style({transform: 'rotate(90deg)'})),
-            transition('right => left', [
-                style({transform: 'rotate(0deg)'}),
-                animate(rotateAnimationLength)
-            ]),
-            transition('left => right', [
-                animate(rotateAnimationLength, style({transform: 'rotate(0deg)'}))
-            ])
-        ])
     ]
 })
 export class AppComponent {
@@ -56,7 +29,6 @@ export class AppComponent {
     isChat: boolean;
     backIsAvailable: boolean = false;
     isPopupMenuOpened: boolean = false;
-    showRoundButtons: boolean = false;
 
     windowWidth: string = "300px";
     windowHeight: string = "400px";
@@ -91,10 +63,6 @@ export class AppComponent {
                 this.mainTitle = value; 
                 this.routeChanged();
             });
-        });
-        this.settings.showRoundButtons.subscribe(show => {
-            this.showRoundButtons = show;
-            this.ref.detectChanges();
         });
         this.settings.windowSize.subscribe(size => {
             this.windowWidth = size.w + "px";

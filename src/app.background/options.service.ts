@@ -5,7 +5,6 @@ import { BehaviorSubject  } from "rxjs/BehaviorSubject";
 export class OptionsService {
     language: BehaviorSubject <string>;
     setOnline: BehaviorSubject <boolean>;
-    showRoundButtons: BehaviorSubject <boolean>;
     windowSize: BehaviorSubject<WindowSize>;
     activatePreviewFeatures: BehaviorSubject<boolean>;
 
@@ -46,7 +45,6 @@ export class OptionsService {
         console.log("init settings", settings);
         this.language = new BehaviorSubject(settings.currentLang);
         this.setOnline = new BehaviorSubject(settings.setOnline);
-        this.showRoundButtons = new BehaviorSubject(settings.showRoundButtons);
         this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);
         this.activatePreviewFeatures = new BehaviorSubject(settings.activatePreviewFeatures);
     }
@@ -59,9 +57,6 @@ export class OptionsService {
         if (settings.setOnline !== this.currentSettings.setOnline) {
             this.setOnline.next(settings.setOnline);
         }
-        if (settings.showRoundButtons !== this.currentSettings.showRoundButtons) {
-            this.showRoundButtons.next(settings.showRoundButtons);
-        }
         if (settings.activatePreviewFeatures !== this.currentSettings.activatePreviewFeatures) {
             this.activatePreviewFeatures.next(settings.activatePreviewFeatures);
         }
@@ -72,7 +67,6 @@ export class OptionsService {
 class Settings {
     currentLang: string = "ru";
     setOnline: boolean = false;
-    showRoundButtons: boolean = false;
     windowSize: string = "medium";
     activatePreviewFeatures: boolean = false;
 }
