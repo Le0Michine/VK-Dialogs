@@ -6,6 +6,7 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
+import { MenuItem } from "./menu-item";
 
 @Component({
     selector: "message-input",
@@ -25,10 +26,11 @@ export class MessageInputComponent {
     @Input() selectEmoji: Observable<string>;
     @Input() onSendMessageClick: Observable<string>;
     @Input() attachmentUploaded: Observable<boolean>;
-    @Input() newAttachment: Observable<string>;
+    @Input() newAttachment: Observable<MenuItem>;
+    @Input() removeAttachment: Observable<string>;
 
     @Output() onMessageSent: EventEmitter<boolean> = new EventEmitter();
-    @Output() onAttachmentCountChange: EventEmitter<number> = new EventEmitter();
+    @Output() onAttachmentsUpdate: EventEmitter<MenuItem[]> = new EventEmitter();
 
     sendingBlocked: boolean = false;
     inputLabelVisible: boolean = true;
@@ -36,27 +38,28 @@ export class MessageInputComponent {
     subscriptions: Subscription[] = [];
 
     private _inputText: string = "";
-    private _attachments: string[] = [];
+    private _attachments: MenuItem[] = [];
 
-    get attachments(): string[] {
+    get attachments(): MenuItem[] {
         return this._attachments;
     }
 
-    set attachments(value: string[]) {
+    set attachments(value: MenuItem[]) {
         this._attachments = value;
-        this.onAttachmentCountChange.emit(this._attachments.length);
+        this.onAttachmentsUpdate.emit(this._attachments);
         this.cacheCurrentMessage();
     }
 
-    get attachment(): string {
-        return this.attachments.join();
+    getAttachment(): string {
+        return this.attachments.map(x => x.id).join();
     }
 
-    set attachment(value: string) {
+    addAttachment(value: MenuItem) {
         if (value) {
             console.log("new attachment", value);
             this.attachments.push(value);
-            this.onAttachmentCountChange.emit(this.attachments.length);
+            this.onAttachmentsUpdate.emit(this.attachments);
+            this.cacheCurrentMessage();
         }
     }
 
@@ -92,7 +95,16 @@ export class MessageInputComponent {
         this.subscriptions.push(this.onSendMessageClick.subscribe(() => this.sendMessage(this.inputText)));
         this.subscriptions.push(this.attachmentUploaded.subscribe(value => this.sendingBlocked = !value));
         this.restoreCachedMessages(this.conversation_id, this.is_chat);
-        this.newAttachment.subscribe(value => this.attachment = value);
+        this.newAttachment.subscribe(value => this.addAttachment(value));
+        this.removeAttachment.subscribe(value => {
+            console.log("remove attachment", value);
+            let i = this.attachments.findIndex(x => x.id === value);
+            if (i > -1) {
+                this.attachments.splice(i, 1);
+                this.onAttachmentsUpdate.emit(this.attachments);
+                this.cacheCurrentMessage();
+            }
+        });
     }
 
     ngOnChanges() {
@@ -208,7 +220,7 @@ export class MessageInputComponent {
             console.warn("message is sending");
             return;
         }
-        if (!text && !this.attachment) {
+        if (!text && !this.getAttachment()) {
             console.log("message text is empty, nothing to send");
             return;
         }
@@ -218,7 +230,7 @@ export class MessageInputComponent {
 
         text = this.escape(text);
 
-        this.messages_service.sendMessage(this.conversation_id, { body: text, attachments: this.attachment}, this.is_chat).subscribe(
+        this.messages_service.sendMessage(this.conversation_id, { body: text, attachments: this.getAttachment()}, this.is_chat).subscribe(
             message => {
                 this.sendingBlocked = false;
                 this.onMessageSent.emit(true);

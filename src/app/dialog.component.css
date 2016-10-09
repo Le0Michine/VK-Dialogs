@@ -28,6 +28,10 @@
     margin: 0;
 }
 
+#attachedFiles {
+    position: absolute;
+}
+
 .attachments-count {
     position: absolute;
     bottom: -5px;

@@ -18,7 +18,13 @@
 	</div>
 </div>
 <div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">
-	<popup-menu [state]="isPopupMenuOpened" [menuItems]="popupMenuItems" (onSelect)="onMenuItemSelect($event)"></popup-menu>
+	<popup-menu
+		[selectable]="true"
+		[deletable]="false"
+		[state]="isPopupMenuOpened"
+		[menuItems]="popupMenuItems"
+		(onSelect)="onMenuItemSelect($event)">
+	</popup-menu>
 </div>
 <div id="content">
 	<router-outlet></router-outlet>

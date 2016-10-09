@@ -8,9 +8,13 @@
     overflow: hidden;
 }
 
-li:hover {
-    color: black;
-    background-color: #DDD;
+.menu-item-text {
+    height: 100%;
+    padding: 3px;
+}
+
+.menu-item-remove {
+    cursor: pointer;
 }
 
 ul {
@@ -26,9 +30,17 @@ ul {
 
 li {
     box-sizing: border-box;
-    cursor: pointer;
     display: block;
     height: 30px;
     width: 100%;
     padding: 5px 20px 5px 10px;
+}
+
+li.selectable {
+    cursor: pointer;
+}
+
+li.selectable:hover, .menu-item-remove:hover {
+    color: black;
+    background-color: #DDD;
 }

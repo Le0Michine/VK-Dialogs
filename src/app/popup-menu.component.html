@@ -1,5 +1,8 @@
 <div class="menu" [@openClose]="state">
 <ul>
-    <li *ngFor="let item of menuItems" (click)="select(item)">{{'menuItems.' + item | translate}}</li>
+    <li [class.selectable]="selectable" *ngFor="let item of menuItems" (click)="select(item.id)">
+        <div class="menu-item-text pull-left">{{item.termId || item.name | translate}}</div>
+        <div *ngIf="deletable" class="menu-item-remove pull-right material-icons" (click)="remove(item.id)">clear</div>
+    </li>
 </ul>
 </div>

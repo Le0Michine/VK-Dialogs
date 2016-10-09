@@ -13,6 +13,15 @@
 	[toggle]="onEmojiToggle"
 	[emojiPanelPosition]="emojiPanel"
 	(onSelect)="onEmojiSelect($event)"></emoji>
+<div [style.bottom]="emojiPanel | safeStyle" id="attachedFiles" class="ontop" *ngIf="isAttachedFilesOpened" (mouseleave)="hideAttachments()">
+	<popup-menu
+		[selectable]="false"
+		[deletable]="true"
+		[state]="isAttachedFilesOpened"
+		[menuItems]="attachments"
+		(onRemove)="onAttachedFileRemove($event)">
+	</popup-menu>
+</div>
 <div #inputWrapper id="inputWrapper"
 	[style.top]="bottomPanel | safeStyle"
 	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"
@@ -27,9 +36,9 @@
 		<button [@flyInOut]="unreadMessages" class="btn btn-round primary-color pull-right material-icons" (click)="onMarkAsRead()" title="{{ mark_as_read | translate }}">done_all</button>
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
 		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
-		<label for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachments_uploading_count">attach_file
+		<label for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachments_uploading_count" (mouseenter)="showAttachments()">attach_file
 			<div class="spinner btn-round"></div>
-			<div class="attachments-count" *ngIf="attachments_count">{{attachments_count}}</div>
+			<div class="attachments-count" *ngIf="attachments.length">{{attachments.length}}</div>
 		</label>
 		<input id="fileUpload" type="file" (change)="uploadFile($event)">
 	</div>
@@ -39,8 +48,9 @@
 		[selectEmoji]="selectEmoji"
 		[onSendMessageClick]="onSendMessageClick"
 		[newAttachment]="newAttachment"
+		[removeAttachment]="removeAttachment"
 		[attachmentUploaded]="attachmentUploaded"
 		(onMessageSent)="messageSent($event)"
-		(onAttachmentCountChange)="onAttachmentCountChange($event)"
+		(onAttachmentsUpdate)="onAttachmentsUpdate($event)"
 	></message-input>
 </div>

@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "./chrome-api-service";
 import { OptionsService } from "./services";
+import { MenuItem } from "./menu-item";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;
@@ -60,11 +61,11 @@ export class AppComponent {
     windowWidth: string = "300px";
     windowHeight: string = "400px";
 
-    popupMenuItems: string[] = [
-        "settings",
-        "openInVk",
-        "openInWindow",
-        "logOff"
+    popupMenuItems: MenuItem[] = [
+        {name: "settings", id: 1, termId: "menuItems.settings"},
+        {name: "openInVk", id: 2, termId: "menuItems.openInVk"},
+        {name: "openInWindow", id: 3, termId: "menuItems.openInWindow"},
+        {name: "logOff", id: 4, termId: "menuItems.logOff"}
     ];
 
     showActions: string = "out_r";
@@ -174,20 +175,20 @@ export class AppComponent {
         });
     }
 
-    private onMenuItemSelect(item: string): void {
+    private onMenuItemSelect(item: number): void {
         console.log("menu item selected", item);
         this.isPopupMenuOpened = false;
         switch (item) {
-            case "settings":
+            case 1: // "settings"
                 this.openSettings();
                 break;
-            case "openInVk":
+            case 2: // "openInVk"
                 this.goToConversation();
                 break;
-            case "openInWindow":
+            case 3: // "openInWindow"
                 this.openSeparateWindow();
                 break;
-            case "logOff":
+            case 4: // "logOff"
                 this.logOff();
                 break;
             default:
