@@ -47,6 +47,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     is_chat: boolean;
     conversation_id: number;
     attachments_uploading_count: number = 0;
+    attachments_count: number = 0;
 
     attachmentUploaded: EventEmitter<boolean> = new EventEmitter();
     selectEmoji: EventEmitter<string> = new EventEmitter();
@@ -54,12 +55,12 @@ export class DialogComponent implements OnInit, OnDestroy {
     markAsRead: EventEmitter<boolean> = new EventEmitter();
     historyUpdate: EventEmitter<HistoryInfo> = new EventEmitter();
     onSendMessageClick: EventEmitter<{}> = new EventEmitter();
+    newAttachment: EventEmitter<{}> = new EventEmitter();
 
     unreadMessages: string = "out";
     scrollToBottomAvailable: string = "out";
     sendEnabled: boolean = true;
 
-    attachment: string;
 
     topPanel: string = "calc(100% - 130px - 45px)";
     bottomPanel: string = "calc(100% - 130px)";
@@ -202,15 +203,21 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.attachmentUploaded.emit(false);
         this.attachments_uploading_count++;
         this.change_detector.detectChanges();
-        let file = event.target.files.item(0);
-        this.fileUpload.uploadFile(file).subscribe(att => {
-            console.log("attachment is ready to send", att);
-            this.attachment = att;
-            this.attachments_uploading_count--;
-            if (!this.attachments_uploading_count) {
-                this.attachmentUploaded.emit(true);
-                this.change_detector.detectChanges();
-            }
-        });
+        for (let i = 0; i < event.target.files.length; i++) {
+            let file = event.target.files.item(i);
+            this.fileUpload.uploadFile(file).subscribe(att => {
+                console.log("attachment is ready to send", att);
+                this.attachments_uploading_count--;
+                if (!this.attachments_uploading_count) {
+                    this.attachmentUploaded.emit(true);
+                }
+                this.newAttachment.emit(att);
+            });
+        }
+    }
+
+    onAttachmentCountChange(count: number): void {
+        this.attachments_count = count;
+        this.change_detector.detectChanges();
     }
 }

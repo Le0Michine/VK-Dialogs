@@ -28,7 +28,9 @@
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
 		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
 		<label for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachments_uploading_count">attach_file
-			<div class="spinner btn-round"></div></label>
+			<div class="spinner btn-round"></div>
+			<div class="attachments-count" *ngIf="attachments_count">{{attachments_count}}</div>
+		</label>
 		<input id="fileUpload" type="file" (change)="uploadFile($event)">
 	</div>
 	<message-input
@@ -36,8 +38,9 @@
 		[is_chat]="is_chat"
 		[selectEmoji]="selectEmoji"
 		[onSendMessageClick]="onSendMessageClick"
-		[attachment]="attachment"
+		[newAttachment]="newAttachment"
 		[attachmentUploaded]="attachmentUploaded"
 		(onMessageSent)="messageSent($event)"
+		(onAttachmentCountChange)="onAttachmentCountChange($event)"
 	></message-input>
 </div>

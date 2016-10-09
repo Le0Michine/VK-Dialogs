@@ -28,6 +28,21 @@
     margin: 0;
 }
 
+.attachments-count {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    border-radius: 8px / 50%;
+    display: block;
+    height: 16px;
+    min-width: 16px;
+    background-color: red;
+    color: white;
+    text-align: center;
+    font: normal normal bold normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    box-sizing: border-box;
+}
+
 #inputWrapper {
     position: absolute;
     bottom: 0;

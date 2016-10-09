@@ -25,8 +25,10 @@ export class MessageInputComponent {
     @Input() selectEmoji: Observable<string>;
     @Input() onSendMessageClick: Observable<string>;
     @Input() attachmentUploaded: Observable<boolean>;
+    @Input() newAttachment: Observable<string>;
 
     @Output() onMessageSent: EventEmitter<boolean> = new EventEmitter();
+    @Output() onAttachmentCountChange: EventEmitter<number> = new EventEmitter();
 
     sendingBlocked: boolean = false;
     inputLabelVisible: boolean = true;
@@ -36,15 +38,25 @@ export class MessageInputComponent {
     private _inputText: string = "";
     private _attachments: string[] = [];
 
-    get attachments(): string {
-        return this._attachments.join();
+    get attachments(): string[] {
+        return this._attachments;
     }
 
-    @Input("attachment")
-    set attachments(value: string) {
+    set attachments(value: string[]) {
+        this._attachments = value;
+        this.onAttachmentCountChange.emit(this._attachments.length);
+        this.cacheCurrentMessage();
+    }
+
+    get attachment(): string {
+        return this.attachments.join();
+    }
+
+    set attachment(value: string) {
         if (value) {
             console.log("new attachment", value);
-            this._attachments.push(value);
+            this.attachments.push(value);
+            this.onAttachmentCountChange.emit(this.attachments.length);
         }
     }
 
@@ -80,6 +92,7 @@ export class MessageInputComponent {
         this.subscriptions.push(this.onSendMessageClick.subscribe(() => this.sendMessage(this.inputText)));
         this.subscriptions.push(this.attachmentUploaded.subscribe(value => this.sendingBlocked = !value));
         this.restoreCachedMessages(this.conversation_id, this.is_chat);
+        this.newAttachment.subscribe(value => this.attachment = value);
     }
 
     ngOnChanges() {
@@ -166,7 +179,7 @@ export class MessageInputComponent {
             if (message) {
                 console.log("restored message", message, message.text, message.attachments);
                 this.inputText = message.text as string;
-                this._attachments = message.attachments || [];
+                this.attachments = message.attachments || [];
                 this.updateInputMessage();
             }
         });
@@ -178,14 +191,14 @@ export class MessageInputComponent {
             name: "current_message",
             key: key,
             text: this.inputText,
-            attachments: this._attachments,
+            attachments: this.attachments,
             is_last: last
         });
     }
 
     clearCache() {
         this.inputText = "";
-        this._attachments = [];
+        this.attachments = [];
         this.cacheCurrentMessage(true);
         this.updateInputMessage();
     }
@@ -195,7 +208,7 @@ export class MessageInputComponent {
             console.warn("message is sending");
             return;
         }
-        if (!text && !this.attachments) {
+        if (!text && !this.attachment) {
             console.log("message text is empty, nothing to send");
             return;
         }
@@ -205,7 +218,7 @@ export class MessageInputComponent {
 
         text = this.escape(text);
 
-        this.messages_service.sendMessage(this.conversation_id, { body: text, attachments: this.attachments}, this.is_chat).subscribe(
+        this.messages_service.sendMessage(this.conversation_id, { body: text, attachments: this.attachment}, this.is_chat).subscribe(
             message => {
                 this.sendingBlocked = false;
                 this.onMessageSent.emit(true);
