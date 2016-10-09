@@ -21,6 +21,11 @@ export class FileUploadService {
             this.performAjaxRequest(uploadUrl, data)
                 .subscribe(photo => {
                     console.log("file uploaded", photo);
+                    let data = JSON.parse(photo.photo);
+                    if (!data || !data.length) {
+                        console.log("unable to upload file");
+                        result.next("");
+                    }
                     this.chromeapi.SendRequest({ name: "get_message_photo", data: photo })
                         .subscribe(response => {
                             console.log("got photo", response);

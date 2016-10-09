@@ -30,6 +30,7 @@
 <div #inputWrapper id="inputWrapper"
 	[style.top]="bottomPanel | safeStyle"
 	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"
+	(paste)="uploadFilesFromClipboard($event)"
 	>
 	<div id="inputControls" class="row">
 		<div
@@ -44,7 +45,7 @@
 			<div class="spinner btn-round"></div>
 			<div class="attachments-count" *ngIf="attachments.length">{{attachments.length}}</div>
 		</label>
-		<input *ngIf="isBeta" multiple accept=".jpg,.png,.gif" id="fileUpload" type="file" (change)="uploadFile($event)">
+		<input *ngIf="isBeta" multiple accept=".jpg,.png,.gif" id="fileUpload" type="file" (change)="uploadFiles($event)">
 		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
 	</div>
 	<message-input

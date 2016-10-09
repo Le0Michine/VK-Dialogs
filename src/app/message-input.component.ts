@@ -55,7 +55,7 @@ export class MessageInputComponent {
     }
 
     addAttachment(value: MenuItem) {
-        if (value) {
+        if (value.id) {
             console.log("new attachment", value);
             this.attachments.push(value);
             this.onAttachmentsUpdate.emit(this.attachments);

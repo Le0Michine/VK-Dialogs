@@ -211,7 +211,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.onEmojiToggle.emit(true);
     }
 
-    uploadFile(event): void {
+    uploadFiles(event): void {
         if (!event.target.files.length) {
             console.log("nothing to upload");
             return;
@@ -219,19 +219,22 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.attachmentUploaded.emit(false);
         this.change_detector.detectChanges();
         for (let i = 0; i < event.target.files.length; i++) {
-            this.attachments_uploading_count++;
-            let file = event.target.files.item(i);
-            let fileName = file.name;
-            this.fileUpload.uploadFile(file).subscribe(att => {
-                console.log("attachment is ready to send", att);
-                this.attachments_uploading_count--;
-                if (!this.attachments_uploading_count) {
-                    this.attachmentUploaded.emit(true);
-                }
-                this.newAttachment.emit({ name: fileName, id: att, termId: "" });
-                this.change_detector.detectChanges();
-            });
+            this.uploadFile(event.target.files.item(i));
         }
+    }
+
+    uploadFile(file: File) {
+        this.attachments_uploading_count++;
+        let fileName = file.name;
+        this.fileUpload.uploadFile(file).subscribe(att => {
+            console.log("attachment is ready to send", att);
+            this.attachments_uploading_count--;
+            if (!this.attachments_uploading_count) {
+                this.attachmentUploaded.emit(true);
+            }
+            this.newAttachment.emit({ name: fileName, id: att, termId: "" });
+            this.change_detector.detectChanges();
+        });
     }
 
     onAttachmentsUpdate(attachments: MenuItem[]): void {
@@ -251,5 +254,23 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     hideAttachments(): void {
         this.isAttachedFilesOpened = false
+    }
+
+    uploadFilesFromClipboard(event: ClipboardEvent) {
+        let files: File[] = [];
+        if (event.clipboardData.files.length) {
+            for (let i = 0; i < event.clipboardData.files.length; i++) {
+                this.uploadFile(event.clipboardData.files.item(i));
+            }
+        }
+        else {
+            for(let i = 0; i < event.clipboardData.items.length; i++) {
+                let item = event.clipboardData.items[i];
+                console.log("clipboard item", item.kind, item.type);
+                if (item.kind === "file" && item.type.startsWith("image")) {
+                    this.uploadFile(item.getAsFile());
+                }
+            }
+        }
     }
 }
