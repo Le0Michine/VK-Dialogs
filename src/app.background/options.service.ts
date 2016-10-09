@@ -7,6 +7,7 @@ export class OptionsService {
     setOnline: BehaviorSubject <boolean>;
     showRoundButtons: BehaviorSubject <boolean>;
     windowSize: BehaviorSubject<WindowSize>;
+    activatePreviewFeatures: BehaviorSubject<boolean>;
 
     private defaultSettings: Settings = new Settings();
 
@@ -47,6 +48,7 @@ export class OptionsService {
         this.setOnline = new BehaviorSubject(settings.setOnline);
         this.showRoundButtons = new BehaviorSubject(settings.showRoundButtons);
         this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);
+        this.activatePreviewFeatures = new BehaviorSubject(settings.activatePreviewFeatures);
     }
 
     private updateSettings(settings: Settings): void {
@@ -60,6 +62,9 @@ export class OptionsService {
         if (settings.showRoundButtons !== this.currentSettings.showRoundButtons) {
             this.showRoundButtons.next(settings.showRoundButtons);
         }
+        if (settings.activatePreviewFeatures !== this.currentSettings.activatePreviewFeatures) {
+            this.activatePreviewFeatures.next(settings.activatePreviewFeatures);
+        }
         this.windowSize.next(this.windowSizes[settings.windowSize]);
     }
 }
@@ -69,6 +74,7 @@ class Settings {
     setOnline: boolean = false;
     showRoundButtons: boolean = false;
     windowSize: string = "medium";
+    activatePreviewFeatures: boolean = false;
 }
 
 export class WindowSize {

@@ -9,6 +9,7 @@ import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
 import { FileUploadService } from "./file-upload.service";
+import { OptionsService } from "./services";
 import { SingleMessageInfo, HistoryInfo } from "./datamodels/datamodels";
 import { MenuItem } from "./menu-item";
 
@@ -43,6 +44,7 @@ import { MenuItem } from "./menu-item";
 })
 export class DialogComponent implements OnInit, OnDestroy {
     @ViewChild("conversationsWrapper") messagesList: ElementRef;
+    isBeta: boolean = false;
 
     title = "Dialog";
     is_chat: boolean;
@@ -84,7 +86,8 @@ export class DialogComponent implements OnInit, OnDestroy {
         private change_detector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private fileUpload: FileUploadService,
-        private renderer: Renderer) { }
+        private renderer: Renderer,
+        private settings: OptionsService) { }
 
     ngOnInit() {
         console.log("specific dialog component init");
@@ -119,6 +122,12 @@ export class DialogComponent implements OnInit, OnDestroy {
                 }
             }));
         });
+
+        this.subscriptions.push(
+            this.settings.activatePreviewFeatures.subscribe(value => {
+                this.isBeta = value;
+            })
+        );
     }
 
     ngAfterViewInit() {
