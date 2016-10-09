@@ -7,6 +7,7 @@ function save_options() {
             currentLang: lang,
             setOnline: set_online,
             windowSize: document.getElementById("windowSize").value,
+            stickerSize: document.getElementById("stickerSize").value,
             activatePreviewFeatures: document.getElementById("activatePreviewFeatures").checked
         }
     }, function() {
@@ -30,12 +31,14 @@ function restore_options() {
         "currentLang": "ru",
         "setOnline": true,
         "windowSize": "medium",
+        "stickerSize": "medium",
         "activatePreviewFeatures": false
     } }, function(items) {
         console.log("got settings: ", items);
         document.getElementById("targetLangSel").value = items.settings.currentLang;
         document.getElementById("set-online-checkbox").checked = items.settings.setOnline;
         document.getElementById("windowSize").value = items.settings.windowSize;
+        document.getElementById("stickerSize").value = items.settings.stickerSize;
         document.getElementById("activatePreviewFeatures").checked = items.settings.activatePreviewFeatures;
     });
 }

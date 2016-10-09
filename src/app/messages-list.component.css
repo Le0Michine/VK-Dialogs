@@ -17,6 +17,10 @@
     transition: height .5s;
 }
 
+.message-wrapper {
+    width: fit-content;
+}
+
 .message-block {
     position: relative;
     width: 100%;
@@ -264,6 +268,7 @@ pre {
     border: none;
     word-break: keep-all;
     color: inherit;
+    overflow: hidden;
 }
 
 .chat_action {

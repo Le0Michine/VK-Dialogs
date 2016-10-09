@@ -7,6 +7,7 @@ export class OptionsService {
     setOnline: BehaviorSubject <boolean>;
     windowSize: BehaviorSubject<WindowSize>;
     activatePreviewFeatures: BehaviorSubject<boolean>;
+    stickerSize: BehaviorSubject<number>;
 
     private defaultSettings: Settings = new Settings();
 
@@ -17,6 +18,13 @@ export class OptionsService {
         "medium": { w: 400, h: 500 },
         "large": { w: 600, h: 600 },
         "extraLarge": { w: 800, h: 600 }
+    };
+
+    private stickerSizes = {
+        "small": 64,
+        "medium": 128,
+        "large": 256,
+        "extraLarge": 512
     };
 
     constructor() {
@@ -47,6 +55,7 @@ export class OptionsService {
         this.setOnline = new BehaviorSubject(settings.setOnline);
         this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);
         this.activatePreviewFeatures = new BehaviorSubject(settings.activatePreviewFeatures);
+        this.stickerSize = new BehaviorSubject(this.stickerSizes[settings.stickerSize]);
     }
 
     private updateSettings(settings: Settings): void {
@@ -61,6 +70,7 @@ export class OptionsService {
             this.activatePreviewFeatures.next(settings.activatePreviewFeatures);
         }
         this.windowSize.next(this.windowSizes[settings.windowSize]);
+        this.stickerSize.next(this.stickerSizes[settings.stickerSize]);
     }
 }
 
@@ -69,6 +79,7 @@ class Settings {
     setOnline: boolean = false;
     windowSize: string = "medium";
     activatePreviewFeatures: boolean = false;
+    stickerSize: string = "medium";
 }
 
 export class WindowSize {

@@ -3,8 +3,8 @@
     width: fit-content;
     height: fit-content;
     background-color: white;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.26);
-    border-radius: 5px;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.8);
+    border-radius: 2px;
     overflow: hidden;
 }
 

@@ -12,6 +12,7 @@
 			<a [href]="message.from.id | linkToUser" target="_blank" class="user-name">{{getUserName(message.from.id)}}</a>
 			<span class="message-timestamp space-left">{{message.date*1000 | date:(message.date | formatDate) }}</span>
 		</div>
+		<!--<div class="message-wrapper">-->
 		<ul class="messages-list">
 			<li class="message-item" *ngFor="let isFirst=first; let isLast=last; let item of message.messages | reverse" id="{{item.id}}">
 				<div class="message-body clearfix"
@@ -28,7 +29,7 @@
 							<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
 						</div>
 						<div *ngIf="attachment.sticker">
-							<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
+							<img class="att_photo_img" [src]="attachment.sticker | stickerLink | async" />
 						</div>
 						<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
 							<a class="att-doc-icon {{attachment | attachment_icon}} pull-left" [class.unread-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
@@ -64,7 +65,7 @@
 														<img class="att_photo_img zoom_in" #att_photo alt="" [src]="fwd_att.photo.photo_130" (click)="changePhotoSize(att_photo,fwd_att.photo)" />
 													</div>
 													<div *ngIf="attachment.sticker">
-														<img class="att_photo_img" [src]="attachment.sticker.photo_256" />
+														<img class="att_photo_img" [src]="attachment.sticker | stickerLink | async" />
 													</div>
 													<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio" class="clearfix">
 														<a class="att-doc-icon {{fwd_att | attachment_icon}}" [href]="fwd_att | attachment_url:item.user_id" target="_blank"></a>
@@ -87,5 +88,6 @@
 				</div>
 			</li>
 		</ul>
+		<!--</div>-->
 	</div>
 </div>
