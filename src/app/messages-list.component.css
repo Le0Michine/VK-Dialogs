@@ -21,6 +21,10 @@
     width: fit-content;
 }
 
+.max-width-90 {
+        max-width: 90%;
+}
+
 .message-block {
     position: relative;
     width: 100%;
