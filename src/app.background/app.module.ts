@@ -10,6 +10,7 @@ import { DialogService } from "./dialogs-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
 import { FileUploadService } from "./file-upload.service";
+import { OptionsService } from "./options.service";
 
 @NgModule({
     imports:      [ BrowserModule, HttpModule ],
@@ -22,7 +23,8 @@ import { FileUploadService } from "./file-upload.service";
         CacheService,
         LPSService,
         ChromeAPIService,
-        FileUploadService
+        FileUploadService,
+        OptionsService
     ]
 })
 export class AppModule { }

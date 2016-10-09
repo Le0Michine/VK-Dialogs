@@ -6,17 +6,17 @@ export class OptionsService {
     language: BehaviorSubject <string>;
     setOnline: BehaviorSubject <boolean>;
     showRoundButtons: BehaviorSubject <boolean>;
-    windowSize: BehaviorSubject<string[]>;
+    windowSize: BehaviorSubject<WindowSize>;
 
     private defaultSettings: Settings = new Settings();
 
     private currentSettings: Settings;
 
-    private windowSizes: { [size: string] : string[] } = {
-        "small": [ "300px", "400px" ],
-        "medium": [ "400px", "500px" ],
-        "large": [ "600px", "600px" ],
-        "extraLarge": [ "800px", "600px" ]
+    private windowSizes: { [size: string] : WindowSize } = {
+        "small": { w: 300, h: 400 },
+        "medium": { w: 400, h: 500 },
+        "large": { w: 600, h: 600 },
+        "extraLarge": { w: 800, h: 600 }
     };
 
     constructor() {
@@ -31,10 +31,10 @@ export class OptionsService {
             this.currentSettings = settings;
         });
 
-        chrome.storage.onChanged.addListener(function(changes, namespace) {
+        chrome.storage.onChanged.addListener((changes, namespace) => {
             if ("settings" in changes) {
                 let change = changes["settings"];
-                console.log(`detect settings changing from ${change.oldValue} to ${change.newValue}`);
+                console.log("detect settings changing", change.oldValue, change.newValue);
                 this.updateSettings(change.newValue);
                 this.currentSettings = change.newValue;
             }
@@ -69,4 +69,9 @@ class Settings {
     setOnline: boolean = false;
     showRoundButtons: boolean = false;
     windowSize: string = "medium";
+}
+
+export class WindowSize {
+    w: number;
+    h: number;
 }

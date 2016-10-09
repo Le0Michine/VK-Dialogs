@@ -19,7 +19,7 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { EmojiService } from "./emoji-service";
 import { ChromeAPIService } from "./chrome-api-service";
-import { OptionsService } from "./options.service";
+import { OptionsService } from "./services";
 import { FileUploadService } from "./file-upload.service";
 import { ReversePipe, EscapePipe } from "./pipes/message.pipe";
 import { ChatActionPipe } from "./pipes/chat-action.pipe";

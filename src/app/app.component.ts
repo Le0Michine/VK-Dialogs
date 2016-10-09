@@ -6,7 +6,7 @@ import "rxjs/add/Observable/interval";
 import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "./chrome-api-service";
-import { OptionsService } from "./options.service";
+import { OptionsService } from "./services";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;
@@ -96,8 +96,8 @@ export class AppComponent {
             this.ref.detectChanges();
         });
         this.settings.windowSize.subscribe(size => {
-            this.windowWidth = size[0];
-            this.windowHeight = size[1];
+            this.windowWidth = size.w + "px";
+            this.windowHeight = size.h + "px";
         });
         this.router.events.subscribe((event) => {
             this.routeChanged();
@@ -169,7 +169,9 @@ export class AppComponent {
     }
 
     private openSeparateWindow() {
-        this.chromeapi.SendMessage({name: "open_separate_window"});
+        this.settings.windowSize.subscribe(size => {
+            this.chromeapi.SendMessage({name: "open_separate_window", w: size.w, h: size.h});
+        });
     }
 
     private onMenuItemSelect(item: string): void {

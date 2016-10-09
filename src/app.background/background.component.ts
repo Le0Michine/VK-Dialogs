@@ -16,6 +16,7 @@ import { DialogService } from "./dialogs-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
 import { FileUploadService } from "./file-upload.service";
+import { OptionsService } from "./options.service";
 import { Channels } from "./channels";
 
 @Component({
@@ -34,7 +35,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         private vkservice: VKService,
         private lps: LPSService,
         private chromeapi: ChromeAPIService,
-        private fileUpload: FileUploadService) { }
+        private fileUpload: FileUploadService,
+        private settings: OptionsService) { }
 
     ngOnInit() {
         this.chromeapi.AcceptConnections();
@@ -100,7 +102,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.chromeapi.OnMessage("open_separate_window")
-                .subscribe(() => this.openSeparateWindow())
+                .subscribe((size) => this.openSeparateWindow(size.w, size.h))
         );
 
         this.subscriptions.push(
@@ -175,9 +177,9 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     }
 
     private setOnline() {
-        chrome.storage.sync.get({ "settings": {"setOnline": true} }, (value: any) => {
+        this.settings.setOnline.subscribe(value => {
             console.log("got online options: ", value);
-            if (value.settings.setOnline) {
+            if (value) {
                 this.vkservice.setOnline();
                 this.vkservice.getSession().subscribe(session => {
                     this.userService.updateUsers(session.user_id.toString());
@@ -216,14 +218,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         chrome.contextMenus.removeAll();
     }
 
-    private openSeparateWindow() {
+    private openSeparateWindow(w, h) {
         console.log("create window");
         chrome.windows.create({
             type: "panel",
             focused: true,
             state: "docked",
-            width: 550,
-            height: 600,
+            width: w,
+            height: h,
             url: "index.html"
         }, (window) => {
             console.dir(window);
@@ -235,7 +237,12 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         return {
             title: chrome.i18n.getMessage("openInSeparateWindow"),
             contexts: ["browser_action"],
-            onclick: () => this.openSeparateWindow()
+            onclick: () => {
+                let s = this.settings.windowSize.subscribe(size => {
+                    this.openSeparateWindow(size.w, size.h);
+                    s.unsubscribe();
+                });
+            } 
         }
     }
 }
