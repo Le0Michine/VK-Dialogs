@@ -79,7 +79,7 @@ class Settings {
     setOnline: boolean = false;
     windowSize: string = "medium";
     activatePreviewFeatures: boolean = false;
-    stickerSize: string = "medium";
+    stickerSize: string = "large";
 }
 
 export class WindowSize {

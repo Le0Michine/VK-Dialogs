@@ -31,7 +31,7 @@ function restore_options() {
         "currentLang": "ru",
         "setOnline": true,
         "windowSize": "medium",
-        "stickerSize": "medium",
+        "stickerSize": "large",
         "activatePreviewFeatures": false
     } }, function(items) {
         console.log("got settings: ", items);
