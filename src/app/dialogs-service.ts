@@ -33,12 +33,13 @@ export class DialogService {
         }).map(x => x.data);
     }
 
-    sendMessage(id: number, message: string, chat: boolean): Observable<number> {
-        console.log("sending message");
+    sendMessage(id: number, message: any, chat: boolean): Observable<number> {
+        console.log("sending message", message);
         return this.chromeapi.SendRequest({
             name: Channels.send_message_request,
             user_id: id,
-            message_body: message,
+            message_body: message.body,
+            attachments: message.attachments,
             is_chat: chat
         }).map(x => x.data);
     }

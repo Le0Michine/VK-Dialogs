@@ -20,6 +20,7 @@ import { VKService } from "./vk-service";
 import { EmojiService } from "./emoji-service";
 import { ChromeAPIService } from "./chrome-api-service";
 import { OptionsService } from "./options.service";
+import { FileUploadService } from "./file-upload.service";
 import { ReversePipe, EscapePipe } from "./pipes/message.pipe";
 import { ChatActionPipe } from "./pipes/chat-action.pipe";
 import { CutLinksPipe } from "./pipes/cut-links.pipe";
@@ -70,7 +71,8 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         DialogService,
         EmojiService,
         ChromeAPIService,
-        OptionsService
+        OptionsService,
+        FileUploadService
     ]
 })
 export class AppModule { }

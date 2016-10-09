@@ -8,6 +8,7 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
+import { FileUploadService } from "./file-upload.service";
 import { SingleMessageInfo, HistoryInfo } from "./datamodels/datamodels";
 
 @Component({
@@ -45,7 +46,9 @@ export class DialogComponent implements OnInit, OnDestroy {
     title = "Dialog";
     is_chat: boolean;
     conversation_id: number;
+    attachments_uploading_count: number = 0;
 
+    attachmentUploaded: EventEmitter<boolean> = new EventEmitter();
     selectEmoji: EventEmitter<string> = new EventEmitter();
     onEmojiToggle: EventEmitter<boolean> = new EventEmitter();
     markAsRead: EventEmitter<boolean> = new EventEmitter();
@@ -56,12 +59,14 @@ export class DialogComponent implements OnInit, OnDestroy {
     scrollToBottomAvailable: string = "out";
     sendEnabled: boolean = true;
 
+    attachment: string;
+
     topPanel: string = "calc(100% - 130px - 45px)";
     bottomPanel: string = "calc(100% - 130px)";
     emojiPanel: string = "130px";
 
-    scrollPosition: number = 10000;
-    scrollHeight: number = 10000;
+    scrollPosition: number = 1000000;
+    scrollHeight: number = 1000000;
     autoScrollToBottom: boolean = true;
 
     subscriptions: Subscription[] = []
@@ -74,6 +79,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private change_detector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
+        private fileUpload: FileUploadService,
         private renderer: Renderer) { }
 
     ngOnInit() {
@@ -190,5 +196,21 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     toggleEmoji() {
         this.onEmojiToggle.emit(true);
+    }
+
+    uploadFile(event) {
+        this.attachmentUploaded.emit(false);
+        this.attachments_uploading_count++;
+        this.change_detector.detectChanges();
+        let file = event.target.files.item(0);
+        this.fileUpload.uploadFile(file).subscribe(att => {
+            console.log("attachment is ready to send", att);
+            this.attachment = att;
+            this.attachments_uploading_count--;
+            if (!this.attachments_uploading_count) {
+                this.attachmentUploaded.emit(true);
+                this.change_detector.detectChanges();
+            }
+        });
     }
 }

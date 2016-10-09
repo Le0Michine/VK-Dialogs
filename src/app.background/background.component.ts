@@ -15,6 +15,7 @@ import { UserService } from "./user-service";
 import { DialogService } from "./dialogs-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
+import { FileUploadService } from "./file-upload.service";
 import { Channels } from "./channels";
 
 @Component({
@@ -32,12 +33,12 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         private userService: UserService,
         private vkservice: VKService,
         private lps: LPSService,
-        private chromeapi: ChromeAPIService) { }
+        private chromeapi: ChromeAPIService,
+        private fileUpload: FileUploadService) { }
 
     ngOnInit() {
         this.chromeapi.AcceptConnections();
         this.chromeapi.init();
-        // Observable.interval(30 * 1000).subscribe((i) => console.warn("I'M ALIVE!!! ", i, new Date(Date.now())));
 
         console.log("background init");
         this.vkservice.auth().subscribe(
@@ -78,6 +79,26 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
+            this.chromeapi.OnMessage("get_file_server")
+                .subscribe(message => {
+                    console.log("get file server to upload");
+                    this.fileUpload.getServerUrl()
+                        .subscribe(server => message.sendResponse({ data: server }));
+                    return true;
+                })
+        );
+
+        this.subscriptions.push(
+            this.chromeapi.OnMessage("get_message_photo")
+                .subscribe(message => {
+                    console.log("get photo for message");
+                    this.fileUpload.getPhoto(message.data)
+                        .subscribe(photo => message.sendResponse({ data: photo }));
+                    return true;
+                })
+        );
+
+        this.subscriptions.push(
             this.chromeapi.OnMessage("open_separate_window")
                 .subscribe(() => this.openSeparateWindow())
         );
@@ -103,7 +124,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.chromeapi.OnMessage(Channels.send_message_request).subscribe((message: any) => {
-                this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat).subscribe(message_id => {
+                this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat, message.attachments).subscribe(message_id => {
                     message.sendResponse({ data: message_id });
                     console.log("message id sent: ", message_id);
                 });

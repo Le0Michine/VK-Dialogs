@@ -149,7 +149,7 @@ export class DialogService {
 
         let save = () => {
             if (key) {
-                if (current_message[key]) {
+                if (current_message[key].text || current_message[key].attachments) {
                     console.log("update message: ", current_message);
                     chrome.storage.sync.set(current_message);
                 }
@@ -170,7 +170,9 @@ export class DialogService {
 
         let sub = this.chromeapi.OnPortMessage("current_message").subscribe(message => {
             key = message.key;
-            current_message[key] = message.value;
+            current_message[key] = {};
+            current_message[key].text = message.text;
+            current_message[key].attachments = message.attachments;
             if (message.is_last) {
                 console.log("last message, unsubscribe");
                 subscription.unsubscribe();
@@ -373,11 +375,11 @@ export class DialogService {
         return this.vkservice.performAPIRequest(this.mark_as_read, `message_ids=${ids}`);
     }
 
-    sendMessage(id: number, message: string, chat: boolean): Observable<number> {
+    sendMessage(id: number, message: string, chat: boolean, attachments: string): Observable<number> {
         console.log("sending message");
         return this.vkservice.performAPIRequest(
             this.send_message,
-            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1`);
+            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1&attachment=${attachments}`);
     }
 
     private toChatDict(json): { [id: number] : ChatInfo } {

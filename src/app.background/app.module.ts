@@ -9,6 +9,7 @@ import { CacheService } from "./cache-service";
 import { DialogService } from "./dialogs-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
+import { FileUploadService } from "./file-upload.service";
 
 @NgModule({
     imports:      [ BrowserModule, HttpModule ],
@@ -20,7 +21,8 @@ import { ChromeAPIService } from "./chrome-api-service";
         UserService,
         CacheService,
         LPSService,
-        ChromeAPIService
+        ChromeAPIService,
+        FileUploadService
     ]
 })
 export class AppModule { }

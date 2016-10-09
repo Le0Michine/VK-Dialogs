@@ -24,15 +24,29 @@ export class MessageInputComponent {
     @Input() is_chat: boolean;
     @Input() selectEmoji: Observable<string>;
     @Input() onSendMessageClick: Observable<string>;
+    @Input() attachmentUploaded: Observable<boolean>;
 
     @Output() onMessageSent: EventEmitter<boolean> = new EventEmitter();
 
-    message_is_sending: boolean = false;
+    sendingBlocked: boolean = false;
     inputLabelVisible: boolean = true;
 
     subscriptions: Subscription[] = [];
 
     private _inputText: string = "";
+    private _attachments: string[] = [];
+
+    get attachments(): string {
+        return this._attachments.join();
+    }
+
+    @Input("attachment")
+    set attachments(value: string) {
+        if (value) {
+            console.log("new attachment", value);
+            this._attachments.push(value);
+        }
+    }
 
     get inputText(): string {
         return this._inputText;
@@ -63,7 +77,8 @@ export class MessageInputComponent {
     ngAfterViewInit() {
         this.renderer.invokeElementMethod(this.input.nativeElement, "focus");
         this.subscriptions.push(this.selectEmoji.subscribe(emoji => this.onEmojiSelect(emoji)));
-        this.subscriptions.push(this.onSendMessageClick.subscribe(emoji => this.sendMessage(this.inputText)));
+        this.subscriptions.push(this.onSendMessageClick.subscribe(() => this.sendMessage(this.inputText)));
+        this.subscriptions.push(this.attachmentUploaded.subscribe(value => this.sendingBlocked = !value));
         this.restoreCachedMessages(this.conversation_id, this.is_chat);
     }
 
@@ -147,8 +162,11 @@ export class MessageInputComponent {
             "name": "get_current_message",
             "key": key
         }).subscribe((response) => {
-            if (response[key]) {
-                this.inputText = response[key] as string;
+            let message = response[key];
+            if (message) {
+                console.log("restored message", message, message.text, message.attachments);
+                this.inputText = message.text as string;
+                this._attachments = message.attachments || [];
                 this.updateInputMessage();
             }
         });
@@ -159,47 +177,49 @@ export class MessageInputComponent {
         this.chromeapi.PostPortMessage({
             name: "current_message",
             key: key,
-            value: this.inputText,
+            text: this.inputText,
+            attachments: this._attachments,
             is_last: last
         });
     }
 
     clearCache() {
         this.inputText = "";
+        this._attachments = [];
         this.cacheCurrentMessage(true);
         this.updateInputMessage();
     }
 
     sendMessage(text: string) {
-        if (this.message_is_sending) {
+        if (this.sendingBlocked) {
             console.warn("message is sending");
             return;
         }
-        if (!text || text === "") {
+        if (!text && !this.attachments) {
             console.log("message text is empty, nothing to send");
             return;
         }
 
         this.onMessageSent.emit(false);
-        this.message_is_sending = true;
+        this.sendingBlocked = true;
 
         text = this.escape(text);
 
-        this.messages_service.sendMessage(this.conversation_id, text, this.is_chat).subscribe(
+        this.messages_service.sendMessage(this.conversation_id, { body: text, attachments: this.attachments}, this.is_chat).subscribe(
             message => {
-                this.message_is_sending = false;
+                this.sendingBlocked = false;
                 this.onMessageSent.emit(true);
                 this.clearCache();
                 console.log("result: ", message);},
             error => {
                 this.errorHandler(error);
-                this.message_is_sending = false;
+                this.sendingBlocked = false;
                 this.onMessageSent.emit(true);
             },
             () => {
                 console.log("message sent");
                 this.clearCache();
-                this.message_is_sending = false;
+                this.sendingBlocked = false;
                 this.onMessageSent.emit(true);
             });
     }

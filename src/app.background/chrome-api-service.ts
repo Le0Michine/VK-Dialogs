@@ -115,7 +115,7 @@ export class ChromeAPIService {
         return Observable.bindCallback(
             (callback: (Object) => void) => chrome.runtime.sendMessage(message, x => {
                 if (chrome.runtime.lastError) {
-                    console.error("error occured while senf request: ", message);
+                    console.error("error occured while send request: ", message);
                     console.error(chrome.runtime.lastError);
                 }
                 callback(x);

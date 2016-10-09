@@ -10,6 +10,24 @@
     background-color: #ebf0f4;
 }
 
+#fileUpload {
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+    left: -100px;
+}
+
+.file-upload {
+    padding: 3px;
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
+
 #inputWrapper {
     position: absolute;
     bottom: 0;

@@ -27,12 +27,17 @@
 		<button [@flyInOut]="unreadMessages" class="btn btn-round primary-color pull-right material-icons" (click)="onMarkAsRead()" title="{{ mark_as_read | translate }}">done_all</button>
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
 		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
+		<label for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachments_uploading_count">attach_file
+			<div class="spinner btn-round"></div></label>
+		<input id="fileUpload" type="file" (change)="uploadFile($event)">
 	</div>
 	<message-input
 		[conversation_id]="conversation_id"
 		[is_chat]="is_chat"
 		[selectEmoji]="selectEmoji"
 		[onSendMessageClick]="onSendMessageClick"
+		[attachment]="attachment"
+		[attachmentUploaded]="attachmentUploaded"
 		(onMessageSent)="messageSent($event)"
 	></message-input>
 </div>
