@@ -208,9 +208,9 @@ export class DialogComponent implements OnInit, OnDestroy {
             return;
         }
         this.attachmentUploaded.emit(false);
-        this.attachments_uploading_count++;
         this.change_detector.detectChanges();
         for (let i = 0; i < event.target.files.length; i++) {
+            this.attachments_uploading_count++;
             let file = event.target.files.item(i);
             let fileName = file.name;
             this.fileUpload.uploadFile(file).subscribe(att => {
