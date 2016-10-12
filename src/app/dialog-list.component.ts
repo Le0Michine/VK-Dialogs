@@ -67,7 +67,6 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         console.trace("init dialogs component");
-        this.chromeapi.init();
         this.vkservice.init();
 
         console.log("authorized, continue initialization");

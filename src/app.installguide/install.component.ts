@@ -58,7 +58,6 @@ export class InstallComponent {
     }
 
     ngOnInit() {
-        this.chromeapi.init();
     }
 
     authorize() {

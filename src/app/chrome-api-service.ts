@@ -8,7 +8,11 @@ export class ChromeAPIService {
     private port_name: string = "message_port";
     private port: chrome.runtime.Port = null;
 
-    init() {
+    constructor() {
+        this.init();
+    }
+
+    private init() {
         this.port = chrome.runtime.connect({ name: this.port_name });
     }
 
