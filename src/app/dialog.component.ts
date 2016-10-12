@@ -257,7 +257,9 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     uploadFilesFromClipboard(event: ClipboardEvent) {
-        let files: File[] = [];
+        // TODO: improve or remove
+        return;
+        /* let files: File[] = [];
         if (event.clipboardData.files.length) {
             for (let i = 0; i < event.clipboardData.files.length; i++) {
                 this.uploadFile(event.clipboardData.files.item(i));
@@ -271,6 +273,6 @@ export class DialogComponent implements OnInit, OnDestroy {
                     this.uploadFile(item.getAsFile());
                 }
             }
-        }
+        }*/
     }
 }
