@@ -3,7 +3,7 @@ import { AuthHelper } from "./auth-helper";
 export class ErrorHelper {
     static checkErrors(json: any): number {
         if (json.error) {
-            console.error("error occured during response: ", JSON.stringify(json));
+            console.warn("error occured during response: ", JSON.stringify(json));
             let code: number = json.error.error_code;
             switch (code) {
                 case 5: // problems with authorization need to get new access_token
@@ -12,6 +12,7 @@ export class ErrorHelper {
                     AuthHelper.authorize(true);
                     break;
             }
+            console.log("error code", code);
             return code;
         }
         return 0;
