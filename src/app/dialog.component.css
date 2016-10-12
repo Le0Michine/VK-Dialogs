@@ -30,6 +30,7 @@
 
 #attachedFiles {
     position: absolute;
+    right: 5px;
 }
 
 .attachments-count {
