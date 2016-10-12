@@ -183,6 +183,9 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.topPanel = `${y - 65}px`;
         this.bottomPanel = `${y - 20}px`;
         this.emojiPanel = `calc(100% - ${y - 20}px)`;
+        if (this.autoScrollToBottom) {
+            this.scrollToBottom();
+        }
     }
 
     ngOnDestroy() {
