@@ -62,6 +62,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     removeAttachment: EventEmitter<string> = new EventEmitter();
 
     unreadMessages: string = "out";
+    autoReadMessages: boolean = true;
     scrollToBottomAvailable: string = "out";
     sendEnabled: boolean = true;
     isAttachedFilesOpened: boolean = false;
@@ -112,13 +113,18 @@ export class DialogComponent implements OnInit, OnDestroy {
                 historyInfo.messages = data.history;
                 historyInfo.count = data.count;
                 this.historyUpdate.emit(historyInfo);
-                this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
-                this.change_detector.detectChanges();
+                if (!this.autoReadMessages) {
+                    this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
+                    this.change_detector.detectChanges();
+                }
+                else {
+                    this.onMarkAsRead();
+                }
                 if (this.autoScrollToBottom) {
                     this.scrollToBottom();
                 }
                 else {
-                    this.scrollHeight += 10000;
+                    this.scrollHeight += 1000000;
                 }
             }));
         });
@@ -126,6 +132,12 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.settings.activatePreviewFeatures.subscribe(value => {
                 this.isBeta = value;
+            })
+        );
+
+        this.subscriptions.push(
+            this.settings.autoReadMessages.subscribe(value => {
+                this.autoReadMessages = value;
             })
         );
     }

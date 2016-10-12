@@ -8,6 +8,7 @@ export class OptionsService {
     windowSize: BehaviorSubject<WindowSize>;
     activatePreviewFeatures: BehaviorSubject<boolean>;
     stickerSize: BehaviorSubject<number>;
+    autoReadMessages: BehaviorSubject<boolean>;
 
     private defaultSettings: Settings = new Settings();
 
@@ -56,6 +57,7 @@ export class OptionsService {
         this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);
         this.activatePreviewFeatures = new BehaviorSubject(settings.activatePreviewFeatures);
         this.stickerSize = new BehaviorSubject(this.stickerSizes[settings.stickerSize]);
+        this.autoReadMessages = new BehaviorSubject(settings.autoReadMessages);
     }
 
     private updateSettings(settings: Settings): void {
@@ -71,6 +73,7 @@ export class OptionsService {
         }
         this.windowSize.next(this.windowSizes[settings.windowSize]);
         this.stickerSize.next(this.stickerSizes[settings.stickerSize]);
+        this.autoReadMessages.next(settings.autoReadMessages);
     }
 }
 
@@ -80,6 +83,7 @@ class Settings {
     windowSize: string = "medium";
     activatePreviewFeatures: boolean = false;
     stickerSize: string = "large";
+    autoReadMessages: boolean = true;
 }
 
 export class WindowSize {

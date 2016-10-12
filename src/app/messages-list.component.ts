@@ -8,6 +8,7 @@ import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
+import { OptionsService } from "./services";
 
 @Component({
     selector: "messages-list",
@@ -38,12 +39,13 @@ export class MessagesListComponent implements OnInit, OnDestroy {
         private router: Router,
         private change_detector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
+        private settings: OptionsService,
         private renderer: Renderer) { }
 
     ngOnInit() {
         console.log("messages list component init");
         this.user_id = this.vkservice.getCurrentUserId();
-        
+
         this.subscriptions.push(this.historyUpdate
             .subscribe(history => {
                 this.history = history.messages;
@@ -196,13 +198,15 @@ export class MessagesListComponent implements OnInit, OnDestroy {
         }
         if (ids.length === 0) {
             console.log("unread messages was not found");
+            return;
         }
         this.messages_service.markAsRead(ids.join()).subscribe(result => {
             if (result) {
-                console.log("marked as read");
+                console.log("marked as read", ids);
+                this.change_detector.detectChanges();
             }
             else {
-                console.log("failed to mark messages as read");
+                console.log("failed to mark messages as read", ids);
             }
         });
     }

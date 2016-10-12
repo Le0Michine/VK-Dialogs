@@ -8,7 +8,8 @@ function save_options() {
             setOnline: set_online,
             windowSize: document.getElementById("windowSize").value,
             stickerSize: document.getElementById("stickerSize").value,
-            activatePreviewFeatures: document.getElementById("activatePreviewFeatures").checked
+            activatePreviewFeatures: document.getElementById("activatePreviewFeatures").checked,
+            autoReadMessages: document.getElementById("autoReadMessages").checked
         }
     }, function() {
         // Update status to let user know options were saved.
@@ -32,7 +33,8 @@ function restore_options() {
         "setOnline": true,
         "windowSize": "medium",
         "stickerSize": "large",
-        "activatePreviewFeatures": false
+        "activatePreviewFeatures": false,
+        "autoReadMessages": true
     } }, function(items) {
         console.log("got settings: ", items);
         document.getElementById("targetLangSel").value = items.settings.currentLang;
@@ -40,6 +42,7 @@ function restore_options() {
         document.getElementById("windowSize").value = items.settings.windowSize;
         document.getElementById("stickerSize").value = items.settings.stickerSize;
         document.getElementById("activatePreviewFeatures").checked = items.settings.activatePreviewFeatures;
+        document.getElementById("autoReadMessages").checked = items.settings.autoReadMessages;
     });
 }
 
