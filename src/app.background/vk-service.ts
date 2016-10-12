@@ -110,7 +110,7 @@ export class VKService {
     }
 
     performAPIRequest(method: string, parameters: string): Observable<any> {
-        return this.getSession().concatMap(session => {
+        let result = this.getSession().concatMap(session => {
             if (!session) {
                 console.log("session is null, not authorized");
                 this.authorized = false;
@@ -126,22 +126,19 @@ export class VKService {
             console.log(`perform api request to url ${url}`);
             return this.http.get(url)
                 .map(response => response.json())
-                .map(json => ErrorHelper.checkErrors(json) ? {} : (json.response ? json.response : Observable.throw(json)))
-                .retryWhen(error => {
-                    console.warn("failed http request: ", error)
-                    return error.delay(500);
-                })
-                .take(10);
+                .concatMap(json => ErrorHelper.checkErrors(json) || !json.response ? Observable.throw(json) : Observable.of(json.response));
         })
         .retryWhen(error => {
             console.warn("failed api request: ", error)
             return error.delay(500);
         })
-        .take(10)
+        .take(100)
         .catch(error => {
             console.error(`An error occured during api request ${method} with parameters ${parameters}:`, error);
             return Observable.of({});
         });
+
+        return result;
     }
 
     getCurrentUserId(): number {
