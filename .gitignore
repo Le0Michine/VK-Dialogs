@@ -8,3 +8,4 @@ src/app/*.map
 src/npm-debug.log
 src/dist/
 out/
+.vscode
