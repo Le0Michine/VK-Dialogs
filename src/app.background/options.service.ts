@@ -15,10 +15,10 @@ export class OptionsService {
     private currentSettings: Settings;
 
     private windowSizes: { [size: string] : WindowSize } = {
-        "small": { w: 300, h: 400 },
-        "medium": { w: 400, h: 500 },
-        "large": { w: 600, h: 600 },
-        "extraLarge": { w: 800, h: 600 }
+        "small": { w: 300, h: 400, size: "s" },
+        "medium": { w: 400, h: 500, size: "m" },
+        "large": { w: 600, h: 600, size: "l" },
+        "extraLarge": { w: 800, h: 600, size: "xl" }
     };
 
     private stickerSizes = {
@@ -87,6 +87,7 @@ class Settings {
 }
 
 export class WindowSize {
+    size: string;
     w: number;
     h: number;
 }

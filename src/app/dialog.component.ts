@@ -140,6 +140,16 @@ export class DialogComponent implements OnInit, OnDestroy {
                 this.autoReadMessages = value;
             })
         );
+
+        this.subscriptions.push(
+            this.settings.windowSize.subscribe(value => {
+                if (value.size === "s") {
+                    this.topPanel = "calc(100% - 95px - 45px)";
+                    this.bottomPanel = "calc(100% - 95px)";
+                    this.emojiPanel = "95px";
+                }
+            })
+        );
     }
 
     ngAfterViewInit() {
