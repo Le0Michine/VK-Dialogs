@@ -17,12 +17,8 @@
     transition: height .5s;
 }
 
-.message-wrapper {
-    width: fit-content;
-}
-
-.max-width-90 {
-        max-width: 90%;
+.max-width-80 {
+    max-width: 80%;
 }
 
 .message-block {
@@ -238,7 +234,7 @@ pre {
 }
 
 .messages-list {
-    width: 100%;
+    width: fit-content;
     list-style: none outside none;
     padding-left: 0px;
     position: relative;
@@ -255,7 +251,6 @@ pre {
 .message-body {
     margin: 0;
     padding: 0;
-    max-width: 90%;
     /*width: fit-content;*/
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);

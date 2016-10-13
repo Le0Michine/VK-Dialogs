@@ -160,6 +160,9 @@ export class MessageInputComponent {
             if (node.nodeType === node.TEXT_NODE) {
                 text += (node as Text).data;
             }
+            else if (node.nodeName === "BR") {
+                text += "\n";
+            }
             else if (node.nodeName === "IMG" && node.attributes && node.attributes.getNamedItem("class").value === "emoji") {
                 text += node.attributes.getNamedItem("alt").value;
             }
