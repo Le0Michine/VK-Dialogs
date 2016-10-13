@@ -59,6 +59,12 @@ function updateLocale() {
     document.getElementById("lang-option").innerText = chrome.i18n.getMessage("langOptions");
     document.getElementById("privacy-option").innerText = chrome.i18n.getMessage("privacyOptions");
     document.getElementById("set-online-checkbox-label").innerText = chrome.i18n.getMessage("setOnlineOption");
+    document.getElementById("window-size-option").innerText = chrome.i18n.getMessage("windowSizeOption");
+    document.getElementById("sticker-size-option").innerText = chrome.i18n.getMessage("stickerSizeOption");
+    document.getElementById("autoread-option").innerText = chrome.i18n.getMessage("autoreadOption");
+    document.getElementById("autoReadMessagesLabel").innerText = chrome.i18n.getMessage("autoReadMessagesLabel");
+    document.getElementById("preview-option").innerText = chrome.i18n.getMessage("previewOption");
+    document.getElementById("activatePreviewFeaturesLabel").innerText = chrome.i18n.getMessage("activatePreviewFeaturesLabel");
     document.getElementById("saveStatus").innerText = chrome.i18n.getMessage("optionsSaved");
     document.getElementById("saveBtn").innerText = chrome.i18n.getMessage("saveBtn");
     document.getElementById("resetBtn").innerText = chrome.i18n.getMessage("resetBtn");

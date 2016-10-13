@@ -14,6 +14,24 @@
     "privacyOptions": {
         "message": "Privacy settings:"
     },
+    "windowSizeOption": {
+        "message": "Window size:"
+    },
+    "stickerSizeOption": {
+        "message": "Sticker size:"
+    },
+    "autoreadOption": {
+        "message": "Auto read:"
+    },
+    "autoReadMessagesLabel": {
+        "message": "auto read inbox messages"
+    },
+    "previewOption": {
+        "message": "Preview features:"
+    },
+    "activatePreviewFeaturesLabel": {
+        "message": "activate preview functionality"
+    },
     "optionsSaved": {
         "message": "Options saved."
     },
