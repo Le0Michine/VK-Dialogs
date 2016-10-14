@@ -47,7 +47,7 @@ export class EmojiComponent {
     private emoji_code_points = [];
     private current_tab: HTMLButtonElement = null;
     private emojiPanelState: string = "out";
-    private canToggle: boolean = true;
+    private canToggle: boolean = false;
 
     private states = [
         {page: "smiles",   state: "in"},
@@ -85,6 +85,8 @@ export class EmojiComponent {
         this.toggle.subscribe(value => {
             this.toggleEmojiPanel();
         });
+
+        setTimeout(() => this.canToggle = true, 500);
     }
 
     toggleEmojiPanel() {
