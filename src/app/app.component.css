@@ -20,6 +20,14 @@
     /*font-size: 25px;*/
 }
 
+.unread-count {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    font-weight: bold;
+    background-color: red;
+}
+
 .outline-none {
     outline: none;
 }

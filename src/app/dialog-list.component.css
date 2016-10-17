@@ -181,7 +181,7 @@ li:hover {
     cursor: pointer;
     height: 19px;
     text-align: left;
-    width: 50%;
+    max-width: 100%;
     margin: 0;
     display: inline-block;
 }
@@ -205,28 +205,6 @@ li:hover {
 
 .dialog_attachments {
     color: #4a6f97;
-}
-
-.unread-marker {
-    bottom: 8px;
-    height: 8px;
-    width: 8px;
-    border-radius: 50%;
-    position: relative
-}
-
-.unread-count {
-    bottom: 13px;
-    color: white;
-    height: 18px;
-    min-width: 6px;
-    width: fit-content;
-    text-align: center;
-    border-radius: 9px / 50%;
-    font: normal normal bold normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    padding: 0px 6px;
-    box-sizing: border-box;
-    position: relative;
 }
 
 .borderless {

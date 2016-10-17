@@ -172,7 +172,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         this.dialogsService.init();
         if (!this.onUnreadCountUpdate) {
             this.onUnreadCountUpdate =
-                this.dialogsService.unreadCountUpdate.subscribe(text => this.chromeapi.UpdateActionBadge(text));
+                this.dialogsService.unreadCountUpdate.subscribe(text => {
+                    this.chromeapi.UpdateActionBadge(text);
+                    this.chromeapi.PostPortMessage({name: "unread_count", data: text});
+                });
         }
     }
 

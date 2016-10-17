@@ -12,6 +12,7 @@ import { MessageInputComponent }  from "./message-input.component";
 import { MessagesListComponent }  from "./messages-list.component";
 import { EmojiComponent }  from "./emoji.component";
 import { PopupMenuComponent }  from "./popup-menu.component";
+import { SearchComponent }  from "./search.component";
 import { routing } from "./app.routing";
 
 import { DialogService } from "./dialogs-service";
@@ -48,6 +49,7 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         LoginComponent,
         EmojiComponent,
         PopupMenuComponent,
+        SearchComponent,
         MessageAttachmentIconPipe,
         MessageAttachmentSubTitlePipe,
         MessageAttachmentTitlePipe,
