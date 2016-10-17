@@ -11,7 +11,7 @@
 	<a href="https://vk.com/im" target="_blank" class="btn-back space-left outline-none pull-left" *ngIf="!backIsAvailable"> 
 		<h1 id="dialog_title" class="pull-left">{{ mainTitle }}</h1>
 	</a>
-	<div class="pull-left" *ngIf="!backIsAvailable"><search-autocomplete [items]="foundDialogs" (onInput)="search($event)" (onSelect)="onDialogSelect($event)" [focus]="searchFocus"></search-autocomplete></div>
+	<div class="pull-left" *ngIf="!backIsAvailable"><search-autocomplete *ngIf="showSearchBar" [items]="foundDialogs" (onInput)="search($event)" (onSelect)="onDialogSelect($event)" [focus]="searchFocus"></search-autocomplete></div>
 	<button class="btn-menu material-icons ontop pull-right" (click)="openMenu($event)" title="Settings">more_vert</button>
 </div>
 <div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">

@@ -1,4 +1,4 @@
-<div class="search-widget" (keydown)="onKeyPress($event)">
+<div class="search-widget" (keydown)="onKeyPress($event)" [hidden]="!show">
     <!--<button class="btn-search">search</button>-->
     <!--<button class="search-close-button">close</button>-->
     <input #searchInput [(ngModel)]="input" name="searchInput" placeholder="Search" type="text" id="searchInput" autocomplete="off" class="primary-color">

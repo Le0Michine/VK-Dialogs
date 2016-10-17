@@ -36,6 +36,7 @@ export class SearchComponent implements AfterViewInit {
     @Output() onInput = new EventEmitter();
     @Output() onSelect = new EventEmitter();
 
+    show: boolean = false;
     private _input: string;
     private _selectedItem: number = -1;
 
@@ -44,7 +45,8 @@ export class SearchComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.focus.subscribe(v => {
             if (v && this.searchField) {
-                this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus");
+                this.show = true;
+                setTimeout(() => this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus"),0);
             }
         });
     }
