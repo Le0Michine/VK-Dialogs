@@ -1,5 +1,5 @@
 ///<reference path="../typings/globals/chrome/index.d.ts"/>
-import { Component, ChangeDetectorRef} from "@angular/core";
+import { Component, ChangeDetectorRef, Renderer, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
@@ -25,7 +25,8 @@ const rotateAnimationLength = 200;
         "app.component.css"
     ]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit, OnInit {
+    @ViewChild("main") mainDiv: ElementRef;
     searchFocus: Subject<boolean> = new Subject();
     mainTitle: string = "";
     title: string = "";
@@ -54,8 +55,13 @@ export class AppComponent {
             private ref: ChangeDetectorRef,
             private chromeapi: ChromeAPIService,
             private dialogs: DialogService,
-            private settings: OptionsService) {
+            private settings: OptionsService,
+            private renderer: Renderer) {
         translate.setDefaultLang("en");
+    }
+
+    ngAfterViewInit() {
+        this.renderer.invokeElementMethod(this.mainDiv.nativeElement, "focus");
     }
 
     ngOnInit() {
@@ -185,12 +191,10 @@ export class AppComponent {
     }
 
     private keyDown(event: KeyboardEvent) {
-            console.warn("hehe");
         if (event.ctrlKey && event.keyCode === 70) {// ctrl + f
             event.preventDefault();
             event.stopPropagation();
             this.searchFocus.next(true);
-            console.warn("hehe1");
         }
     }
 }

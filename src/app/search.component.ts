@@ -43,7 +43,6 @@ export class SearchComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.focus.subscribe(v => {
-            console.info("onfocus", v, this.searchField);
             if (v && this.searchField) {
                 this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus");
             }
@@ -71,15 +70,19 @@ export class SearchComponent implements AfterViewInit {
         }
         else if (event.keyCode === UP_ARROW) {
             this._selectedItem = this._selectedItem === 0 ? this.items.length - 1 : this._selectedItem - 1;
+            event.stopPropagation();
+            event.preventDefault();
         }
         else if (event.keyCode === DOWN_ARROW) {
             this._selectedItem = this._selectedItem === this.items.length - 1 ? 0 : this._selectedItem + 1;
+            event.stopPropagation();
+            event.preventDefault();
         }
         else if (event.keyCode === ENTER && this._selectedItem > -1) {
             this.select(this.items[this._selectedItem]);
+            event.stopPropagation();
+            event.preventDefault();
         }
-        event.stopPropagation();
-        event.preventDefault();
     }
 
     onHover(i: number) {

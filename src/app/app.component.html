@@ -1,5 +1,5 @@
-<div [style.width]="windowWidth" [style.height]="windowHeight" (click)="closePopupMenu()">
-<div id="topPanel" class="primary-color text-normal" (keydown)="keyDown($event)">
+<div #main [style.width]="windowWidth" [style.height]="windowHeight" (click)="closePopupMenu()" (keydown)="keyDown($event)" tabindex="1">
+<div id="topPanel" class="primary-color text-normal">
 	<a (click)="goBack()" class="btn-back text-normal" *ngIf="backIsAvailable">
 		<div class="material-icons pull-left">keyboard_arrow_left</div>
 		<h1 id="dialog_title" class="pull-left">{{ title }}</h1>
