@@ -1,7 +1,8 @@
 ///<reference path="../typings/globals/chrome/index.d.ts"/>
-import { Component, ChangeDetectorRef } from "@angular/core";
+import { Component, ChangeDetectorRef} from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
 import { Observable } from "rxjs/Observable";
+import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/interval";
 import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
@@ -25,6 +26,7 @@ const rotateAnimationLength = 200;
     ]
 })
 export class AppComponent {
+    searchFocus: Subject<boolean> = new Subject();
     mainTitle: string = "";
     title: string = "";
     unreadCount: number = 6;
@@ -77,6 +79,10 @@ export class AppComponent {
         this.chromeapi.OnPortMessage("unread_count").map(x => x.data as number).subscribe(n => {
             this.unreadCount = n;
         });
+    }
+
+    onDialogSelect(dialog: DialogShortInfo) {
+        this.router.navigate(["dialog", dialog.id, dialog.type === "profile" ? "dialog" : "chat", dialog.title]);
     }
 
     private search(searchTerm: string) {
@@ -175,6 +181,16 @@ export class AppComponent {
     private closePopupMenu() {
         if (this.isPopupMenuOpened) {
             this.isPopupMenuOpened = false;
+        }
+    }
+
+    private keyDown(event: KeyboardEvent) {
+            console.warn("hehe");
+        if (event.ctrlKey && event.keyCode === 70) {// ctrl + f
+            event.preventDefault();
+            event.stopPropagation();
+            this.searchFocus.next(true);
+            console.warn("hehe1");
         }
     }
 }

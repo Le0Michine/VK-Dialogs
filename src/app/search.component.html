@@ -1,10 +1,8 @@
-<form id="search-form" action="/search.html" method="GET">
-    <div class="search-widget">
-        <!--<button class="btn-search">search</button>-->
-        <!--<button class="search-close-button">close</button>-->
-        <input [(ngModel)]="input" name="searchInput" placeholder="Search" type="text" id="searchInput" autocomplete="off" class="primary-color">
-        <ul>
-            <li *ngFor="let item of items">{{item.title}}</li>
-        </ul>
-    </div>
-</form>
+<div class="search-widget" (keydown)="onKeyPress($event)">
+    <!--<button class="btn-search">search</button>-->
+    <!--<button class="search-close-button">close</button>-->
+    <input #searchInput [(ngModel)]="input" name="searchInput" placeholder="Search" type="text" id="searchInput" autocomplete="off" class="primary-color">
+    <ul>
+        <li *ngFor="let item of items; let i = index;" (click)="select(item)" class="text-normal" [class.selected]="i === _selectedItem" (mouseover)="onHover(i)">{{item.title}}</li>
+    </ul>
+</div>

@@ -12,10 +12,21 @@ input:focus {
 ul {
     width: 100%;
     background-color: white;
+    padding: 0;
     color: black;
     box-shadow: 0 0px 5px rgba(0, 0, 0, 0.26);
 }
 
 .search-widget {
     position: fixed;
+}
+
+li {
+    cursor: pointer;
+    list-style: none outside none;
+    padding: 5px;
+}
+
+li.selected {
+    background-color: #DDD;
 }
