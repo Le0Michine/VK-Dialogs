@@ -125,7 +125,7 @@ export class DialogComponent implements OnInit, OnDestroy {
                     });
                 }
                 if (this.autoScrollToBottom) {
-                    this.scrollToBottom();
+                    setTimeout(() => this.scrollToBottom(), 0);
                 }
                 else {
                     this.scrollHeight += 1000000;
