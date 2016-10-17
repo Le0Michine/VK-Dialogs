@@ -8,7 +8,7 @@ import "rxjs/add/operator/distinct";
 import "rxjs/add/operator/filter";
 
 import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogsInfo } from "./datamodels/datamodels";
-
+import { DialogShortInfo } from "./datamodels";
 import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
@@ -24,6 +24,7 @@ export class DialogService {
     private get_message: string = "messages.getById";
     private send_message: string = "messages.send";
     private mark_as_read: string = "messages.markAsRead";
+    private search_dialogs: string = "messages.searchDialogs";
 
     private opened_conversations: any[] = [];
     private initialized = false;
@@ -140,6 +141,14 @@ export class DialogService {
 
         this.chromeapi.OnPortMessage(Channels.load_old_dialogs_request).subscribe(() => {
             this.loadOldDialogs();
+        });
+
+        this.chromeapi.OnMessage("search_dialog").subscribe((message) => {
+            this.searchDialogs(message.data).subscribe(result => {
+                console.log("got search result", result);
+                message.sendResponse({ data: result });
+            });
+            return true;
         });
     }
 
@@ -380,6 +389,26 @@ export class DialogService {
         return this.vkservice.performAPIRequest(
             this.send_message,
             `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1&attachment=${attachments}`);
+    }
+
+    searchDialogs(searchTerm: string): Observable<DialogShortInfo[]> {
+        console.log("search dialogs", searchTerm);
+        return this.vkservice.performAPIRequest(
+            this.search_dialogs,
+            `&q=${searchTerm}&limit=10`
+        ).map(r => this.toDialogsShort(r));
+    }
+
+    private toDialogsShort(json): DialogShortInfo[] {
+        let dialogs: DialogShortInfo[] = [];
+        for (let x of json) {
+            let dialog = new DialogShortInfo();
+            dialog.id = x.id;
+            dialog.title = x.title || x.first_name + " " + x.last_name;
+            dialog.type = x.type;
+            dialogs.push(dialog);
+        }
+        return dialogs;
     }
 
     private toChatDict(json): { [id: number] : ChatInfo } {

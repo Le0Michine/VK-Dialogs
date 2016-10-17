@@ -1,5 +1,5 @@
 export class VKConsts {
-    public static api_version: number = 5.53;
+    public static api_version: number = 5.58;
     public static api_url: string = "https://api.vk.com/method/";
 
     public static vk_access_token_id: string = "vk_access_token";

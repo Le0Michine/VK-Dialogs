@@ -7,7 +7,9 @@ import { Location } from '@angular/common';
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "./chrome-api-service";
 import { OptionsService } from "./services";
+import { DialogService } from "./dialogs-service";
 import { MenuItem } from "./menu-item";
+import { DialogShortInfo } from "./datamodels/datamodels";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;
@@ -16,15 +18,16 @@ const rotateAnimationLength = 200;
     selector: "my-app",
     templateUrl: "app.component.html",
     styleUrls: [
-        "app.component.css",
+        "css/font-style.css",
         "css/round-buttons.css",
         "css/color-scheme.css",
-        "css/font-style.css"
+        "app.component.css"
     ]
 })
 export class AppComponent {
     mainTitle: string = "";
     title: string = "";
+    unreadCount: number = 6;
     conversationId: number;
     isChat: boolean;
     backIsAvailable: boolean = false;
@@ -40,8 +43,7 @@ export class AppComponent {
         {name: "logOff", id: 4, termId: "menuItems.logOff"}
     ];
 
-    showActions: string = "out_r";
-    rotateSettings: string = "right";
+    foundDialogs: DialogShortInfo[] = [];
 
     constructor(
             private translate: TranslateService,
@@ -49,6 +51,7 @@ export class AppComponent {
             private router: Router,
             private ref: ChangeDetectorRef,
             private chromeapi: ChromeAPIService,
+            private dialogs: DialogService,
             private settings: OptionsService) {
         translate.setDefaultLang("en");
     }
@@ -71,16 +74,21 @@ export class AppComponent {
         this.router.events.subscribe((event) => {
             this.routeChanged();
         });
+        this.chromeapi.OnPortMessage("unread_count").map(x => x.data as number).subscribe(n => {
+            this.unreadCount = n;
+        });
     }
 
-    showButtons() {
-        this.showActions = "in";
-        this.rotateSettings = "left";
-    }
-
-    hideButtons() {
-        this.showActions = "out_r";
-        this.rotateSettings = "right";
+    private search(searchTerm: string) {
+        if (!searchTerm) {
+            this.foundDialogs = [];
+            return;
+        }
+        this.dialogs.searchDialog(searchTerm).subscribe(result => {
+            console.log("got search result", result);
+            this.foundDialogs = result;
+            this.ref.detectChanges();
+        })
     }
 
     private openMenu(event: MouseEvent) {

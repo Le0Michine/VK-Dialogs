@@ -3,7 +3,7 @@ import { Http, Response, RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 
 import { VKService } from "./vk-service";
-import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo } from "./datamodels/datamodels";
+import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo, DialogShortInfo } from "./datamodels/datamodels";
 import { Channels } from "../app.background/channels";
 import { ChromeAPIService } from "./chrome-api-service";
 
@@ -42,6 +42,10 @@ export class DialogService {
             attachments: message.attachments,
             is_chat: chat
         }).map(x => x.data);
+    }
+
+    searchDialog(searchTerm: string): Observable<DialogShortInfo[]> {
+        return this.chromeapi.SendRequest({ name: "search_dialog", data: searchTerm}).map(x => x.data);
     }
 
     loadOldDialogs(): void {

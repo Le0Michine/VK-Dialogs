@@ -59,8 +59,10 @@ export class ChromeAPIService {
      * @param {any} message - json message.
      */
     SendRequest(message): Observable<any> {
+        console.log("send request to background", message, chrome.runtime.lastError);
         return Observable.bindCallback(
             (callback: (Object) => void) => chrome.runtime.sendMessage(message, x => {
+                console.log("got request response", message);
                 if (chrome.runtime.lastError) {
                     console.error("error occured while send request to background: ", message);
                     console.error(chrome.runtime.lastError);
