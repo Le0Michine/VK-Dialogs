@@ -32,11 +32,12 @@
 	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"
 	(paste)="uploadFilesFromClipboard($event)"
 	>
-	<div id="inputControls" class="row">
+	<div id="inputControls" class="row"
+		(mouseup)="stopResize([conversationsWrapper, inputWrapper], $event)"
+	>
 		<div
 			class="dragBar material-icons primary-color-text"
 			(mousedown)="startResize([conversationsWrapper, inputWrapper], $event)"
-			(mouseup)="stopResize([conversationsWrapper, inputWrapper], $event)"
 		>drag_handle</div>
 		<button class="btn btn-round primary-color pull-right material-icons send-padding" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ send | translate }}">send</button>
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>

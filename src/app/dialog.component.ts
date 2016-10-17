@@ -118,7 +118,11 @@ export class DialogComponent implements OnInit, OnDestroy {
                     this.change_detector.detectChanges();
                 }
                 else {
-                    this.onMarkAsRead();
+                    this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
+                        if (!minimized) {
+                            this.onMarkAsRead();
+                        }
+                    });
                 }
                 if (this.autoScrollToBottom) {
                     this.scrollToBottom();

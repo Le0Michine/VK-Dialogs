@@ -107,6 +107,16 @@ export class ChromeAPIService {
         this.port.postMessage(message);
     }
 
+    isCurrentWindowMinimized(): Observable<boolean> {
+        return Observable.create(observer => {
+            chrome.windows.getCurrent((chromeWindow) => {
+                console.log("current window state", chromeWindow.state);
+                observer.next(chromeWindow.state === "minimized");
+                observer.complete();
+            });
+        });
+    }
+
     private AddMessageListener(port, name, handler) {
         port.onMessage.addListener((message: any) => {
             if (message.name === name) {
