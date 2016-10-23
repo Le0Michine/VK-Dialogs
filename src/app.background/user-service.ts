@@ -11,7 +11,6 @@ import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
-import { Channels } from "./channels";
 
 @Injectable()
 export class UserService {

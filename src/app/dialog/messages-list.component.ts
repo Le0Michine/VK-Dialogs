@@ -2,21 +2,16 @@ import { Component, Input, Output, OnInit, OnDestroy, ChangeDetectorRef, ViewChi
 import { Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "./datamodels/datamodels";
-import { DialogService } from "./dialogs-service";
-import { UserService } from "./user-service";
-import { VKService } from "./vk-service";
-import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "./chrome-api-service";
-import { OptionsService } from "./services";
+import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../datamodels";
+import { DialogService, UserService, VKService, ChromeAPIService, OptionsService } from "../services";
 
 @Component({
     selector: "messages-list",
     templateUrl: "messages-list.component.html",
     styleUrls: [
         "messages-list.component.css",
-        "css/color-scheme.css",
-        "css/font-style.css"
+        "../css/color-scheme.css",
+        "../css/font-style.css"
     ]
 })
 export class MessagesListComponent implements OnInit, OnDestroy {

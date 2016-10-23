@@ -1,14 +1,14 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { VKService } from "./vk-service";
+import { VKService } from "../services";
 
 @Component({
     selector: "login",
     templateUrl: "login.component.html",
     styleUrls: [
         "login.component.css",
-        "css/color-scheme.css",
-        "css/font-style.css"
+        "../css/color-scheme.css",
+        "../css/font-style.css"
        ]
 })
 export class LoginComponent {

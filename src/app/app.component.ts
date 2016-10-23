@@ -5,11 +5,11 @@ import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/interval";
 import { Location } from "@angular/common";
 import { TranslateService } from "ng2-translate/ng2-translate";
-import { ChromeAPIService } from "./chrome-api-service";
+import { ChromeAPIService } from "./services";
 import { OptionsService } from "./services";
-import { DialogService } from "./dialogs-service";
-import { MenuItem } from "./menu-item";
-import { DialogShortInfo } from "./datamodels/datamodels";
+import { DialogService } from "./services";
+import { MenuItem } from "./datamodels";
+import { DialogShortInfo } from "./datamodels";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;

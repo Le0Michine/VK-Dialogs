@@ -3,18 +3,14 @@ import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/Operator/combineLatest";
-import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "./datamodels/datamodels";
-import { DialogComponent } from "./dialog.component";
-import { UserService } from "./user-service";
-import { VKService } from "./vk-service";
-import { DialogService } from "./dialogs-service";
-import { ChromeAPIService } from "./chrome-api-service";
-import { VKConsts } from "./vk-consts";
+import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "../datamodels";
+import { UserService, VKService, DialogService, ChromeAPIService } from "../services";
+import { VKConsts } from "../vk-consts";
 
 @Component({
   selector: "dialogs",
   templateUrl: "dialog-list.component.html",
-  styleUrls: ["dialog-list.component.css", "css/color-scheme.css"]
+  styleUrls: ["dialog-list.component.css", "../css/color-scheme.css"]
 })
 export class DialogListComponent implements OnInit, OnDestroy {
     user: UserInfo = new UserInfo();

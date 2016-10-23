@@ -6,13 +6,14 @@
   "author": "Lev Mishin",
   "license": "ISC",
   "scripts": {
+    "build": "npm run build:dev",
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile --env.clean false",
     "build:clean": "webpack --config config/webpack.dev.js --progress --profile --env.clean true",
     "build:prod": "webpack --config config/webpack.prod.js --progress --profile",
     "test": "karma start --full-coverage",
     "test:nocov": "karma start",
     "test:dev": "karma start --debug",
-    "tslint": "tslint -c tslint.json \"src/**/*.ts\" -e src/app/attachment-data-types.ts --force"
+    "tslint": "tslint -c tslint.json \"src/**/*.ts\" -e src/app/datamodels/attachment-data-types.ts --force"
   },
   "dependencies": {
     "@angular/common": "^2.1.1",

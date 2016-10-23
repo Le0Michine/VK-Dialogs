@@ -3,23 +3,17 @@ import { trigger, state, transition, style, animate, keyframes } from "@angular/
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { DialogService } from "./dialogs-service";
-import { UserService } from "./user-service";
-import { VKService } from "./vk-service";
-import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "./chrome-api-service";
-import { FileUploadService } from "./file-upload.service";
-import { OptionsService } from "./services";
-import { SingleMessageInfo, HistoryInfo } from "./datamodels/datamodels";
-import { MenuItem } from "./menu-item";
+import { DialogService, UserService, VKService, ChromeAPIService, FileUploadService, OptionsService } from "../services";
+import { SingleMessageInfo, HistoryInfo } from "../datamodels";
+import { MenuItem } from "../datamodels";
 
 @Component({
     selector: "messages",
     templateUrl: "dialog.component.html",
     styleUrls: [
-        "css/round-buttons.css",
-        "css/color-scheme.css",
-        "app.component.css",
+        "../css/round-buttons.css",
+        "../css/color-scheme.css",
+        "../app.component.css",
         "dialog.component.css",
     ],
     animations: [

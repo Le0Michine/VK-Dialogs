@@ -5,22 +5,20 @@ import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
 
 import { AppComponent }  from "./app.component";
-import { DialogListComponent }  from "./dialog-list.component";
-import { DialogComponent }  from "./dialog.component";
-import { LoginComponent }  from "./login.component";
-import { MessageInputComponent }  from "./message-input.component";
-import { MessagesListComponent }  from "./messages-list.component";
-import { EmojiComponent }  from "./emoji.component";
-import { PopupMenuComponent }  from "./popup-menu.component";
-import { SearchComponent }  from "./search.component";
+import { DialogListComponent }  from "./dialogs-list";
+import { DialogComponent, MessageInputComponent, MessagesListComponent }  from "./dialog";
+import { LoginComponent }  from "./login";
+import { EmojiComponent }  from "./emoji";
+import { PopupMenuComponent }  from "./popup-menu";
+import { SearchComponent }  from "./search";
 import { routing } from "./app.routing";
 
-import { DialogService } from "./dialogs-service";
-import { UserService } from "./user-service";
-import { VKService } from "./vk-service";
-import { ChromeAPIService } from "./chrome-api-service";
+import { DialogService } from "./services";
+import { UserService } from "./services";
+import { VKService } from "./services";
+import { ChromeAPIService } from "./services";
 import { OptionsService } from "./services";
-import { FileUploadService } from "./file-upload.service";
+import { FileUploadService } from "./services";
 import { PIPES } from "./pipes";
 
 @NgModule({

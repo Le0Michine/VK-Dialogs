@@ -3,11 +3,10 @@ import { Http, Response } from "@angular/http";
 import { Observable }     from "rxjs/Observable";
 import { Router } from "@angular/router";
 
-import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "./chrome-api-service";
+import { ChromeAPIService } from "./chrome-api.service";
 
-import { VKConsts } from "./vk-consts";
-import { SessionInfo } from "./datamodels/datamodels";
+import { VKConsts } from "../vk-consts";
+import { SessionInfo } from "../datamodels";
 
 @Injectable()
 export class VKService {

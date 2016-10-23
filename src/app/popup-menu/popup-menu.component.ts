@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, animate, trigger, style, keyframes, state, transition } from "@angular/core";
 
-import { MenuItem } from "./menu-item";
+import { MenuItem } from "../datamodels";
 
 @Component({
     selector: "popup-menu",

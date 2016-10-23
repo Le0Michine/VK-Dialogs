@@ -1,21 +1,17 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild, ElementRef, Renderer, Input, Output, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { DialogService } from "./dialogs-service";
-import { UserService } from "./user-service";
-import { VKService } from "./vk-service";
-import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "./chrome-api-service";
-import { MenuItem } from "./menu-item";
+import { DialogService, UserService, VKService, ChromeAPIService } from "../services";
+import { MenuItem } from "../datamodels";
 
 @Component({
     selector: "message-input",
     templateUrl: "message-input.component.html",
     styleUrls: [
         "message-input.component.css",
-        "css/round-buttons.css",
-        "css/font-style.css",
-        "css/color-scheme.css"
+        "../css/round-buttons.css",
+        "../css/font-style.css",
+        "../css/color-scheme.css"
     ]
 })
 export class MessageInputComponent {

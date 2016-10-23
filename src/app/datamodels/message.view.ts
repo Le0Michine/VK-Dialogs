@@ -1,4 +1,4 @@
-import { UserInfo, SingleMessageInfo } from "./datamodels";
+import { UserInfo, SingleMessageInfo } from "./";
 
 export class MessageViewModel {
     from: UserInfo;

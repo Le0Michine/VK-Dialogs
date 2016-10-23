@@ -1,4 +1,4 @@
-import { SingleMessageInfo } from "./datamodels";
+import { SingleMessageInfo } from "./";
 
 export class DialogView {
     message: SingleMessageInfo;

@@ -1,11 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
-import { Channels } from "../app.background/channels";
-
-import { VKService } from "./vk-service";
-import { ChromeAPIService } from "./chrome-api-service";
-import { UserInfo } from "./datamodels/datamodels";
+import { VKService } from "./vk.service";
+import { ChromeAPIService } from "./chrome-api.service";
+import { UserInfo } from "../datamodels";
 
 @Injectable()
 export class UserService {

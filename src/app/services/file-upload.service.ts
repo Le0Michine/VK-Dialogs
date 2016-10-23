@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 
-import { VKService } from "./vk-service";
-import { ChromeAPIService } from "./chrome-api-service";
+import { VKService } from "./vk.service";
+import { ChromeAPIService } from "./chrome-api.service";
 
 @Injectable()
 export class FileUploadService {

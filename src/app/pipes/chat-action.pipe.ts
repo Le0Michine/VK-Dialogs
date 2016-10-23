@@ -1,6 +1,6 @@
 import { Pipe } from "@angular/core";
 
-import { SingleMessageInfo } from "../datamodels/datamodels";
+import { SingleMessageInfo } from "../datamodels";
 
 @Pipe({
     name: "chatAction",

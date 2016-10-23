@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { Http, Response, RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 
-import { VKService } from "./vk-service";
-import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo, DialogShortInfo } from "./datamodels/datamodels";
-import { Channels } from "../app.background/channels";
-import { ChromeAPIService } from "./chrome-api-service";
+import { VKService } from "./vk.service";
+import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo, DialogShortInfo } from "../datamodels";
+import { Channels } from "../../app.background/channels";
+import { ChromeAPIService } from "./chrome-api.service";
 
 @Injectable()
 export class DialogService {

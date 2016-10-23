@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, animate, trigger, style, keyframes, state, transition, Renderer, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
 
-import { MenuItem } from "./menu-item";
+import { MenuItem } from "../datamodels";
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
@@ -10,9 +10,9 @@ const ENTER = 13;
     selector: "search-autocomplete",
     templateUrl: "search.component.html",
     styleUrls: [
-        "css/font-style.css",
-        "css/round-buttons.css",
-        "css/color-scheme.css",
+        "../css/font-style.css",
+        "../css/round-buttons.css",
+        "../css/color-scheme.css",
         "search.component.css"
     ],
     animations: [
