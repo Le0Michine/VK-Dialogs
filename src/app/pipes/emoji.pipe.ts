@@ -1,4 +1,4 @@
-///<reference path="../../twemoji.d.ts"/>
+///<reference path="../../../lib/twemoji.d.ts"/>
 import { Pipe } from "@angular/core";
 
 @Pipe({ name: "emoji" })

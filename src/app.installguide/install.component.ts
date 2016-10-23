@@ -1,4 +1,3 @@
-///<reference path="../typings/globals/chrome/index.d.ts"/>
 import { Component, ChangeDetectorRef, trigger, state, transition, style, animate } from "@angular/core";
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "../app/chrome-api-service";

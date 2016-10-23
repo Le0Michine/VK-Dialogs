@@ -1,4 +1,3 @@
-///<reference path="../typings/globals/chrome/index.d.ts"/>
 import { Component, ChangeDetectorRef, Renderer, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
 import { Observable } from "rxjs/Observable";

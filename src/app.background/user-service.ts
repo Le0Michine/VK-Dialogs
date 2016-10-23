@@ -15,7 +15,7 @@ import { Channels } from "./channels";
 
 @Injectable()
 export class UserService {
-    private onUsersUpdate: Subject<{ [id: number] : UserInfo }> = new Subject();
+    private onUsersUpdate = new Subject();
     private initialized: boolean = false;
 
     constructor(
