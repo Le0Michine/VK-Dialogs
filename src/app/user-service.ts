@@ -11,11 +11,11 @@ import { UserInfo } from "./datamodels/datamodels";
 export class UserService {
     constructor(private chromeapi: ChromeAPIService) { }
 
-    getUsers(): Observable<{ [id: number] : UserInfo }> {
+    getUsers(): Observable<{ [id: number]: UserInfo }> {
         let o = this.chromeapi.subscribeOnMessage("users_update").map(x => x.data);
         this.chromeapi.PostPortMessage({
             name: "get_users",
         });
-        return o
+        return o;
     }
 }

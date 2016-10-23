@@ -1,3 +1,3 @@
-import { OptionsService } from "../app.background/options.service"
+import { OptionsService } from "../app.background/options.service";
 
 export { OptionsService }

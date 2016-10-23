@@ -3,8 +3,8 @@
 	(scroll)="onScroll(conversationsWrapper.scrollTop, conversationsWrapper.scrollHeight)"
 	>
 	<messages-list
-		[conversation_id]="conversation_id"
-		[is_chat]="is_chat"
+		[conversationId]="conversationId"
+		[isChat]="isChat"
 		[markAsRead]="markAsRead"
 		[historyUpdate]="historyUpdate"
 	></messages-list>
@@ -50,8 +50,8 @@
 		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
 	</div>
 	<message-input
-		[conversation_id]="conversation_id"
-		[is_chat]="is_chat"
+		[conversationId]="conversationId"
+		[isChat]="isChat"
 		[selectEmoji]="selectEmoji"
 		[onSendMessageClick]="onSendMessageClick"
 		[newAttachment]="newAttachment"

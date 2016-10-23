@@ -6,11 +6,11 @@ import "rxjs/add/operator/map";
 
 @Injectable()
 export class NotificationService {
-    sendChromeNotification(id: string, text, title, subtitle, user_photo) {
+    sendChromeNotification(id: string, text, title, subtitle, userPhoto) {
         let notification: any = {
             "type": "basic",
             "notificationId": id,
-            "iconUrl": user_photo,
+            "iconUrl": userPhoto,
             "title": title,
             "message": text,
             "contextMessage": subtitle,

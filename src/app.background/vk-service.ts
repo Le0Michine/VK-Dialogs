@@ -18,13 +18,9 @@ import { AuthHelper } from "./auth-helper";
 @Injectable()
 export class VKService {
     onLogOff: EventEmitter<{}> = new EventEmitter();
-    private session_info: SessionInfo;
+    private sessionInfo: SessionInfo;
     private authorized: boolean = false;
-    private set_online = "account.setOnline";
-
-    private handleError(error: any) {
-        console.error("An error occurred", error);
-    }
+    private setOnlineApiMethod = "account.setOnline";
 
     constructor(private http: Http) {
         this.initializeSeesion();
@@ -40,24 +36,24 @@ export class VKService {
             }).subscribe(session => {
                     if (session) {
                         console.log("authorization successful");
-                        this.session_info = session;
+                        this.sessionInfo = session;
                         this.authorized = true;
                     }
                 },
                 error => {
-                    console.error("authorization failed: ", error)
+                    console.error("authorization failed: ", error);
                 }
             );
             return obs;
         }
         else {
             this.authorized = true;
-            return Observable.of(this.session_info);
+            return Observable.of(this.sessionInfo);
         }
     }
 
     initializeSeesion(): void {
-        this.session_info = JSON.parse(window.localStorage.getItem(VKConsts.vk_session_info));
+        this.sessionInfo = JSON.parse(window.localStorage.getItem(VKConsts.vkSessionInfo));
     }
 
     isAuthorized(): boolean {
@@ -67,11 +63,11 @@ export class VKService {
     isSessionValid(): boolean {
         this.initializeSeesion();
         return Boolean(
-            this.session_info
-            && this.session_info.access_token
-            && this.session_info.timestamp
-            && this.session_info.user_id
-            && (this.session_info.token_exp === 0 || Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp)
+            this.sessionInfo
+            && this.sessionInfo.accessToken
+            && this.sessionInfo.timestamp
+            && this.sessionInfo.userId
+            && (this.sessionInfo.tokenExp === 0 || Math.floor(Date.now() / 1000) - this.sessionInfo.timestamp < this.sessionInfo.tokenExp)
         );
     }
 
@@ -79,21 +75,21 @@ export class VKService {
         if (!this.isSessionValid()) {
             return this.auth();
         }
-        return Observable.of(this.session_info);
+        return Observable.of(this.sessionInfo);
     }
 
     logoff(): void {
-        this.session_info = null;
-        window.localStorage.removeItem(VKConsts.vk_session_info);
+        this.sessionInfo = null;
+        window.localStorage.removeItem(VKConsts.vkSessionInfo);
         this.onLogOff.emit();
     }
 
     setOnline(): void {
         this.getSession().concatMap(session => {
             console.log("set online, got session: ", session);
-            let uri: string = VKConsts.api_url + this.set_online
-                + "?access_token=" + session.access_token
-                + "&v=" + VKConsts.api_version;
+            let uri: string = VKConsts.apiUrl + this.setOnlineApiMethod
+                + "?access_token=" + session.accessToken
+                + "&v=" + VKConsts.apiVersion;
 
             return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
             /** response: {count: number, items: Message[]} */
@@ -119,7 +115,7 @@ export class VKService {
                     message: "Unable to get session"
                 });
             }
-            let url = `${VKConsts.api_url}${method}?access_token=${session.access_token}&v=${VKConsts.api_version}`;
+            let url = `${VKConsts.apiUrl}${method}?access_token=${session.accessToken}&v=${VKConsts.apiVersion}`;
             if (parameters) {
                 url += "&" + parameters;
             }
@@ -129,7 +125,7 @@ export class VKService {
                 .concatMap(json => ErrorHelper.checkErrors(json) || !json.response ? Observable.throw(json) : Observable.of(json.response));
         })
         .retryWhen(error => {
-            console.warn("failed api request: ", error)
+            console.warn("failed api request: ", error);
             return error.delay(500);
         })
         .take(100)
@@ -142,6 +138,10 @@ export class VKService {
     }
 
     getCurrentUserId(): number {
-        return this.session_info.user_id;
+        return this.sessionInfo.userId;
+    }
+
+    private handleError(error: any) {
+        console.error("An error occurred", error);
     }
 }

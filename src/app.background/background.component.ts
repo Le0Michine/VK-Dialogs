@@ -24,7 +24,7 @@ import { Channels } from "./channels";
     template: "<span>Background component</span>",
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
-    private last_opened_conversation: any = null;
+    private lastOpenedConversation: any = null;
     private subscriptions: Subscription[] = [];
     private onUnreadCountUpdate: Subscription;
 
@@ -61,15 +61,15 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             this.chromeapi.OnMessage("last_opened").subscribe((message: any) => {
                 if (message.last_opened) {
                     console.log("set last opened");
-                    this.last_opened_conversation = message.last_opened;
+                    this.lastOpenedConversation = message.last_opened;
                 }
                 else if (message.go_back) {
                     console.log("go back");
-                    this.last_opened_conversation = null;
+                    this.lastOpenedConversation = null;
                 }
                 else {
                     console.log("get last opened");
-                    message.sendResponse({ last_opened: this.last_opened_conversation });
+                    message.sendResponse({ last_opened: this.lastOpenedConversation });
                 }
                 return false;
             })
@@ -115,7 +115,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.mark_as_read_request).subscribe((message: any) => {
+            this.chromeapi.OnMessage(Channels.markAsReadRequest).subscribe((message: any) => {
                 this.dialogsService.markAsRead(message.message_ids).subscribe(response => {
                     message.sendResponse({data: response});
                     console.log("mark as read result: ", response);
@@ -125,11 +125,12 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.send_message_request).subscribe((message: any) => {
-                this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat, message.attachments).subscribe(message_id => {
-                    message.sendResponse({ data: message_id });
-                    console.log("message id sent: ", message_id);
-                });
+            this.chromeapi.OnMessage(Channels.sendMessageRequest).subscribe((message: any) => {
+                this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat, message.attachments)
+                    .subscribe(messageId => {
+                        message.sendResponse({ data: messageId });
+                        console.log("message id sent: ", messageId);
+                    });
                 return true;
             })
         );
@@ -147,7 +148,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             console.log("got authorization request");
             if (this.vkservice.isAuthorized()) {
                 console.log("already authorized");
-                window.localStorage.setItem(VKConsts.user_denied, "false");
+                window.localStorage.setItem(VKConsts.userDenied, "false");
                 if (message.sendResponse) {
                     message.sendResponse();
                 }
@@ -157,13 +158,13 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 console.log("authorized: ", session);
                 this.chromeapi.UpdateActionBadge("");
                 this.initServices();
-                //sub.unsubscribe();
+                // sub.unsubscribe();
                 this.createContextMenuItems();
                 if (message.sendResponse) {
                     message.sendResponse();
                 }
             });
-        })
+        });
     }
 
     private initServices() {
@@ -185,7 +186,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             if (value) {
                 this.vkservice.setOnline();
                 this.vkservice.getSession().subscribe(session => {
-                    this.userService.updateUsers(session.user_id.toString());
+                    this.userService.updateUsers(session.userId.toString());
                 });
             }
             else {
@@ -205,15 +206,15 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             title: chrome.i18n.getMessage("logOff"),
             contexts: ["browser_action"],
             onclick: () => this.logOff()
-        }
+        };
     }
 
     private logOff() {
         console.log("LOG OFF");
-        window.localStorage.setItem(VKConsts.user_denied, "true");
+        window.localStorage.setItem(VKConsts.userDenied, "true");
         this.chromeapi.UpdateActionBadge("off");
         this.vkservice.logoff();
-        //this.waitForAuthorizeRequest();
+        // this.waitForAuthorizeRequest();
         if (this.onUnreadCountUpdate) {
             this.onUnreadCountUpdate.unsubscribe();
             this.onUnreadCountUpdate = null;
@@ -245,7 +246,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     this.openSeparateWindow(size.w, size.h);
                     s.unsubscribe();
                 });
-            } 
-        }
+            }
+        };
     }
 }

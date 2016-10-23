@@ -3,7 +3,7 @@ import { Router, NavigationEnd } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/interval";
-import { Location } from '@angular/common';
+import { Location } from "@angular/common";
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { ChromeAPIService } from "./chrome-api-service";
 import { OptionsService } from "./services";
@@ -71,7 +71,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             console.log("current lang", lang);
             this.translate.use(lang);
             this.translate.get("dialogs").subscribe(value => {
-                this.mainTitle = value; 
+                this.mainTitle = value;
                 this.routeChanged();
             });
         });
@@ -102,7 +102,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             console.log("got search result", result);
             this.foundDialogs = result;
             this.ref.detectChanges();
-        })
+        });
     }
 
     private openMenu(event: MouseEvent) {
@@ -126,7 +126,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         }
         else {
             this.conversationId = Number(path[2]);
-            this.isChat = path[3] === "chat"
+            this.isChat = path[3] === "chat";
             try {
                 let urlTree = this.router.parseUrl(path[path.length - 1]);
                 this.title = urlTree.root.children["primary"].segments[0].path;
@@ -152,7 +152,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     private openSettings() {
-        chrome.extension.getURL("/app.options/options.html")
+        chrome.extension.getURL("/app.options/options.html");
         chrome.tabs.create({
             url: chrome.extension.getURL("/app.options/options.html"),
             selected: true

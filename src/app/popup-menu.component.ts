@@ -8,14 +8,14 @@ import { MenuItem } from "./menu-item";
     styleUrls: [ "popup-menu.component.css" ],
     animations: [
         trigger("openClose", [
-            state("in", style({ 'max-height': "500px", display: "block", opacity: 1 })),
+            state("in", style({ "max-height": "500px", display: "block", opacity: 1 })),
             transition("void => *", animate(400, keyframes([
-                style({ transform: 'max-height', 'max-height': 0, offset: 0 }),
-                style({ transform: 'max-height', 'max-height': '500px', offset: 1})
+                style({ transform: "max-height", "max-height": 0, offset: 0 }),
+                style({ transform: "max-height", "max-height": "500px", offset: 1})
             ]))),
             transition("* => void", animate(400, keyframes([
-                style({ transform: 'max-height', 'max-height': '500px', offset: 0}),
-                style({ transform: 'max-height', 'max-height': 0, offset: 1 })
+                style({ transform: "max-height", "max-height": "500px", offset: 0}),
+                style({ transform: "max-height", "max-height": 0, offset: 1 })
             ])))
         ])
     ]
@@ -32,7 +32,7 @@ export class PopupMenuComponent {
 
     @Input("state")
     set state(value) {
-        this._state = Boolean(value) ? "in" : "out"
+        this._state = Boolean(value) ? "in" : "out";
     }
 
     get state(): string {
@@ -40,16 +40,13 @@ export class PopupMenuComponent {
     }
 
     ngOnInit() {
-        console.info("menu init");
     }
 
     select(value: number): void {
-        console.info("menu item select", value);
         this.onSelect.emit(value);
     }
 
     remove(value: number): void {
-        console.info("item remove", value);
         this.onRemove.emit(value);
     }
 }

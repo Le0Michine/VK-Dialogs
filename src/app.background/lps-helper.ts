@@ -4,31 +4,31 @@ import { SingleMessageInfo } from "./datamodels/datamodels";
 export class LPSHelper {
 
     /* [4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments] -- add a new message */
-    public static processMessage(update: any): SingleMessageInfo {
-        let message_id = update[1];
+    /* public static processMessage(update: any): SingleMessageInfo {
+        let messageId = update[1];
         let flags = update[2];
-        let from_id = update[3];
+        let fromId = update[3];
         let timestamp = update[4];
         let subject = update[5];
         let text = update[6];
         let attachments = update[7];
 
-        let is_chat = (flags & message_flags.CHAT) !== message_flags.CHAT;
-        let read_state = (flags & message_flags.UNREAD) !== message_flags.UNREAD;
+        let isChat = (flags & message_flags.CHAT) !== message_flags.CHAT;
+        let readState = (flags & message_flags.UNREAD) !== message_flags.UNREAD;
         let out = (flags & message_flags.OUTBOX) === message_flags.OUTBOX;
 
         let message = new SingleMessageInfo();
 
-        message.conversationId = from_id;
-        message.isRead = read_state;
+        message.conversationId = fromId;
+        message.isRead = readState;
         message.out = out;
         message.title = subject;
         message.body = text;
-        message.userId = attachments.from || from_id;
-        message.id = message_id;
+        message.userId = attachments.from || fromId;
+        message.id = messageId;
         message.date = timestamp;
         return message;
-    }
+    } */
 }
 
 const enum message_flags {

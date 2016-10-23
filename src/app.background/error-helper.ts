@@ -11,6 +11,12 @@ export class ErrorHelper {
                     AuthHelper.clearSession();
                     AuthHelper.authorize(true);
                     break;
+                case 6:
+                    console.warn("too many requests per second");
+                    break;
+                default:
+                    console.error("unknown error", json);
+                    break;
             }
             console.log("error code", code);
             return code;

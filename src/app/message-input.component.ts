@@ -21,8 +21,8 @@ import { MenuItem } from "./menu-item";
 export class MessageInputComponent {
     @ViewChild("minput") input: ElementRef;
 
-    @Input() conversation_id: number;
-    @Input() is_chat: boolean;
+    @Input() conversationId: number;
+    @Input() isChat: boolean;
     @Input() selectEmoji: Observable<string>;
     @Input() onSendMessageClick: Observable<string>;
     @Input() attachmentUploaded: Observable<boolean>;
@@ -79,10 +79,10 @@ export class MessageInputComponent {
     }
 
     constructor (
-        private messages_service: DialogService,
+        private messagesService: DialogService,
         private vkservice: VKService,
-        private user_service: UserService,
-        private change_detector: ChangeDetectorRef,
+        private userService: UserService,
+        private changeDetector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private renderer: Renderer) { }
 
@@ -94,7 +94,7 @@ export class MessageInputComponent {
         this.subscriptions.push(this.selectEmoji.subscribe(emoji => this.onEmojiSelect(emoji)));
         this.subscriptions.push(this.onSendMessageClick.subscribe(() => this.sendMessage(this.inputText)));
         this.subscriptions.push(this.attachmentUploaded.subscribe(value => this.sendingBlocked = !value));
-        this.restoreCachedMessages(this.conversation_id, this.is_chat);
+        this.restoreCachedMessages(this.conversationId, this.isChat);
         this.newAttachment.subscribe(value => this.addAttachment(value));
         this.removeAttachment.subscribe(value => {
             console.log("remove attachment", value);
@@ -108,7 +108,6 @@ export class MessageInputComponent {
     }
 
     ngOnChanges() {
-        console.info("ng on changes");
     }
 
     ngOnDestroy() {
@@ -174,7 +173,6 @@ export class MessageInputComponent {
     }
 
     onEmojiSelect(emoji: string) {
-        console.info("add emoji to text", emoji);
         this.cacheCurrentMessage();
         this.inputText += emoji;
         this.updateInputMessage();
@@ -201,7 +199,7 @@ export class MessageInputComponent {
     }
 
     cacheCurrentMessage(last: boolean = false) {
-        let key = "cached_message_" + this.conversation_id + this.is_chat;
+        let key = "cached_message_" + this.conversationId + this.isChat;
         this.chromeapi.PostPortMessage({
             name: "current_message",
             key: key,
@@ -233,22 +231,24 @@ export class MessageInputComponent {
 
         text = this.escape(text);
 
-        this.messages_service.sendMessage(this.conversation_id, { body: text, attachments: this.getAttachment()}, this.is_chat).subscribe(
-            message => {
-                this.sendingBlocked = false;
-                this.onMessageSent.emit(true);
-                this.clearCache();
-                console.log("result: ", message);},
-            error => {
-                this.errorHandler(error);
-                this.sendingBlocked = false;
-                this.onMessageSent.emit(true);
-            },
-            () => {
-                console.log("message sent");
-                this.clearCache();
-                this.sendingBlocked = false;
-                this.onMessageSent.emit(true);
+        this.messagesService.sendMessage(this.conversationId, { body: text, attachments: this.getAttachment()}, this.isChat)
+            .subscribe(
+                message => {
+                    this.sendingBlocked = false;
+                    this.onMessageSent.emit(true);
+                    this.clearCache();
+                    console.log("result: ", message);
+                },
+                error => {
+                    this.errorHandler(error);
+                    this.sendingBlocked = false;
+                    this.onMessageSent.emit(true);
+                },
+                () => {
+                    console.log("message sent");
+                    this.clearCache();
+                    this.sendingBlocked = false;
+                    this.onMessageSent.emit(true);
             });
     }
 
@@ -261,7 +261,7 @@ export class MessageInputComponent {
 
     updateInputMessage() {
         this.renderer.setElementProperty(this.input.nativeElement, "innerHTML", twemoji.parse(this.inputText));
-        this.change_detector.detectChanges();
+        this.changeDetector.detectChanges();
     }
 
     errorHandler(error) {

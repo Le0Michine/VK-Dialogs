@@ -15,10 +15,10 @@ export class FileUploadService {
         this.chromeapi.SendRequest({ name: "get_file_server" }).subscribe(response => {
             let uploadUrl = response.data;
 
-            var data = new FormData();
-            data.append("file", file);
+            let formData = new FormData();
+            formData.append("file", file);
 
-            this.performAjaxRequest(uploadUrl, data)
+            this.performAjaxRequest(uploadUrl, formData)
                 .subscribe(photo => {
                     console.log("file uploaded", photo);
                     let data = JSON.parse(photo.photo);
@@ -27,34 +27,32 @@ export class FileUploadService {
                         result.next("");
                     }
                     this.chromeapi.SendRequest({ name: "get_message_photo", data: photo })
-                        .subscribe(response => {
-                            console.log("got photo", response);
-                            result.next(response.data);
+                        .subscribe(responsePhoto => {
+                            console.log("got photo", responsePhoto);
+                            result.next(responsePhoto.data);
                         });
-                })
+                });
         });
 
         return result;
     }
 
-    private performAjaxRequest(url, data): Observable<any> {
+    private performAjaxRequest(url, requestData): Observable<any> {
         return Observable.bindCallback((onSuccess: any) => {
             $.ajax({
                 url: url,
-                type: 'POST',
-                data: data,
+                type: "POST",
+                data: requestData,
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: (data, textStatus, jqXHR) => onSuccess(JSON.parse(data)),
                 error: function(jqXHR, textStatus, errorThrown)
                 {
-                    console.log('ERRORS: ' + textStatus);
+                    console.log("ERRORS: " + textStatus);
                     onSuccess(textStatus);
                 }
             });
         })();
     }
-    //get_file_server
-    //get_message_photo
 }

@@ -1,7 +1,7 @@
 export class SessionInfo {
-    public user_id: number;
-    public access_token: string;
-    public token_exp: number;
+    public userId: number;
+    public accessToken: string;
+    public tokenExp: number;
     public timestamp: number;
 
     public isExpired(): boolean {

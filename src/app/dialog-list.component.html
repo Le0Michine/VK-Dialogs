@@ -1,5 +1,5 @@
 <ul class="dialogs-list">
-	<li *ngFor="let dialog of dialogs_to_show; let isFirst=first" (click)="gotoDialog(dialog.message)" class="dialog-li" id="{{ dialog.message.conversationId }}">
+	<li *ngFor="let dialog of dialogsToShow; let isFirst=first" (click)="gotoDialog(dialog.message)" class="dialog-li" id="{{ dialog.message.conversationId }}">
 		<div class="dialog-div" [class.borderless]="isFirst">
 			<div class="user-avatar-div pull-left">
 				<div *ngFor="let img of dialog.photos">
@@ -14,7 +14,7 @@
 					<div class="last-message-date pull-right">{{dialog.message.date*1000 | date:(dialog.message.date | formatDate)}}</div>
 					<div class="message_body">
 						<span [innerHtml]="dialog.sender + ': ' + dialog.message.body | emoji | safe"></span>
-						<span class="dialog_attachments" *ngIf="dialog.attachment_only">[{{ 'attachment.' + dialog.attachment_type | translate }}]</span>
+						<span class="dialog_attachments" *ngIf="dialog.attachmentOnly">[{{ 'attachment.' + dialog.attachmentType | translate }}]</span>
 						<span class="chat_action dialog_attachments" *ngIf="!dialog.message.body && dialog.message.action">[{{ dialog.message | chatAction | translate:{"user": getUserName(dialog.message.userId), "user2": getUserName(dialog.message.actionMid)} }}]</span>
 					</div>
 				</div>

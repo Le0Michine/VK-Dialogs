@@ -11,11 +11,7 @@ import { SessionInfo } from "./datamodels/datamodels";
 
 @Injectable()
 export class VKService {
-    private session_info: SessionInfo;
-
-    private handleError(error: any) {
-        console.error("An error occurred", error);
-    }
+    private sessionInfo: SessionInfo;
 
     constructor(private router: Router, private chromeapi: ChromeAPIService) { }
 
@@ -23,24 +19,8 @@ export class VKService {
         this.initializeSeesion();
     }
 
-    private initializeSeesion() {
-        this.session_info = JSON.parse(window.localStorage.getItem(VKConsts.vk_session_info));
-    }
-
-    private isSessionValid() {
-        return Boolean(
-            this.session_info
-            && this.session_info.access_token
-            && this.session_info.timestamp
-            // && this.session_info.token_exp
-            && this.session_info.user_id
-            // && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
-        );
-    }
-
     auth() {
-        console.log("authorization requested");
-        console.trace("auth", this.session_info);
+        console.log("authorization requested", this.sessionInfo);
         let request = this.chromeapi.SendRequest({ name: "authorize" });
         request.subscribe(() => this.initializeSeesion());
         return request;
@@ -53,10 +33,29 @@ export class VKService {
     }
 
     getCurrentUserId() {
-        return this.session_info.user_id;
+        return this.sessionInfo.userId;
     }
 
     setOnline() {
-        this.chromeapi.SendMessage({name: "set_online"})
+        this.chromeapi.SendMessage({name: "set_online"});
+    }
+
+    private handleError(error: any) {
+        console.error("An error occurred", error);
+    }
+
+    private initializeSeesion() {
+        this.sessionInfo = JSON.parse(window.localStorage.getItem(VKConsts.vkSessionInfo));
+    }
+
+    private isSessionValid() {
+        return Boolean(
+            this.sessionInfo
+            && this.sessionInfo.accessToken
+            && this.sessionInfo.timestamp
+            // && this.session_info.token_exp
+            && this.sessionInfo.userId
+            // && Math.floor(Date.now() / 1000) - this.session_info.timestamp < this.session_info.token_exp
+        );
     }
 }

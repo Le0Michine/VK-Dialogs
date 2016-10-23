@@ -19,13 +19,12 @@ import { UserService } from "./user-service";
 
 @Injectable()
 export class LPSService {
-    private get_lps: string = "messages.getLongPollServer";
-
-    private server: LongPollServerInfo = null;
-
     messageUpdate: EventEmitter<{}> = new EventEmitter();
     userUpdate: EventEmitter<string> = new EventEmitter();
     resetHistory: EventEmitter<{}> = new EventEmitter();
+
+    private getLpsApiMethod: string = "messages.getLongPollServer";
+    private server: LongPollServerInfo = null;
 
     constructor(
         private http: Http,
@@ -61,7 +60,7 @@ export class LPSService {
     private processLongPollResponse(json) {
         let updates = json.updates;
         let messagesUpdate = 0;
-        let user_ids = [];
+        let userIds = [];
         for (let update of updates) {
             switch (update[0]) {
                 case 0:
@@ -82,7 +81,6 @@ export class LPSService {
                     break;
                 case 4:
                     /* 4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments -- add a new message */
-                    // this.processNewMessage(update);
                     messagesUpdate++;
                     break;
                 case 6:
@@ -96,14 +94,14 @@ export class LPSService {
                 case 8:
                     /* 8,-$user_id,$extra -- a friend of $user_id is online, $extra is not 0 if flag 64 was transmitted in mode.
                     $extra mod 256 is a platform id (see the list below) */
-                    user_ids.push(-Number(update[1]));
+                    userIds.push(-Number(update[1]));
                     break;
                 case 9:
                     /* 9,-$user_id,$flags -- a friend of $user_id is offline
                     ($flags equals 0 if the user has left the site
                     (for example, clicked on "Log Out"),
                     and 1 if offline upon timeout (for example, the status is set to "away")) */
-                    user_ids.push(-Number(update[1]));
+                    userIds.push(-Number(update[1]));
                     break;
                 case 51:
                     /* 51,$chat_id,$self -- one of $chat_id's parameters (title, participants) was changed.
@@ -138,9 +136,9 @@ export class LPSService {
         if (messagesUpdate > 0) {
             this.messageUpdate.emit();
         }
-        if (user_ids.length > 0) {
-            console.log("need to update the following users: ", user_ids);
-            this.userUpdate.emit(user_ids.join());
+        if (userIds.length > 0) {
+            console.log("need to update the following users: ", userIds);
+            this.userUpdate.emit(userIds.join());
         }
     }
 
@@ -190,7 +188,7 @@ export class LPSService {
 
     private getLongPollServer(): Observable<LongPollServerInfo> {
         console.log("lps requested");
-        return this.vkservice.performAPIRequest(this.get_lps, `use_ssl=1`)
+        return this.vkservice.performAPIRequest(this.getLpsApiMethod, `use_ssl=1`)
             .timeout(35000, new Error("35s timeout occured"));
     }
 
@@ -211,28 +209,6 @@ export class LPSService {
                 message: "User logged off"
             }))
         )
-        .first((x) => true)
+        .first((x) => true);
     }
-
-    /* [0: 4, 1: $message_id, 2: $flags, 3: $from_id, 4: $timestamp, 5: $subject, 6: $text, 7: $attachments] -- add a new message */
-    private processNewMessage(update: string[]) {
-        let id = update[1];
-        let user_id = update[7]["from"];
-        let chat = user_id ? true : false;
-        if (!chat) user_id = update[3];
-        let title = update[5];
-        let text = update[6];
-        let flags = Number(update[2]);
-        let read_state = (flags & message_flags.UNREAD) !== message_flags.UNREAD;
-
-        /*this.users.getUser(user_id).subscribe(user => {
-            let fullName = user.first_name + " " + user.last_name;
-            if (!chat) title = user.first_name + " " + user.last_name;
-            this.notification.sendChromeNotification(id, text, title, chat ? fullName : null, user.photo_50);
-        });*/
-    }  
 }
-
-const enum message_flags {
-    UNREAD = 1, OUTBOX = 2, REPLIED = 4, IMPORTANT = 8, CHAT = 16, FRIENDS = 32, SPAM = 64, DELЕTЕD = 128, FIXED = 256, MEDIA = 512
-};

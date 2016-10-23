@@ -18,23 +18,23 @@ import { Channels } from "./channels";
 
 @Injectable()
 export class DialogService {
-    private get_dialogs: string = "messages.getDialogs";
-    private get_history: string = "messages.getHistory";
-    private get_chat: string = "messages.getChat";
-    private get_message: string = "messages.getById";
-    private send_message: string = "messages.send";
-    private mark_as_read: string = "messages.markAsRead";
-    private search_dialogs: string = "messages.searchDialogs";
-
-    private opened_conversations: any[] = [];
-    private initialized = false;
-
-    dialogs_count: number = 20;
-
-    max_dialogs_count: number;
-
     unreadCountUpdate: EventEmitter<string> = new EventEmitter();
     onUpdate: EventEmitter<{}> = new EventEmitter();
+
+    private getDialogsApiMethod: string = "messages.getDialogs";
+    private getHistoryApiMethod: string = "messages.getHistory";
+    private getChatApiMethod: string = "messages.getChat";
+    private getMessageApiMethod: string = "messages.getById";
+    private sendMessageApiMethod: string = "messages.send";
+    private markAsReadApiMethod: string = "messages.markAsRead";
+    private searchDialogsApiMethod: string = "messages.searchDialogs";
+
+    private openedConversations: any[] = [];
+    private initialized = false;
+
+    private dialogsCount: number = 20;
+
+    private maxDialogsCount: number;
 
     constructor(
         private vkservice: VKService,
@@ -54,9 +54,9 @@ export class DialogService {
             .filter((sub: any) => sub.name.includes("history_update"))
             .subscribe((sub: any) => {
                 console.log("unsubscribe from history_update: ", sub);
-                let i = this.opened_conversations.findIndex(x => "history_update" + x.conversation_id === sub.name);
+                let i = this.openedConversations.findIndex(x => "history_update" + x.conversation_id === sub.name);
                 if (i > -1) {
-                    this.opened_conversations.splice(i, 1);
+                    this.openedConversations.splice(i, 1);
                 }
         });
 
@@ -72,11 +72,11 @@ export class DialogService {
             error => this.handleError(error)
         );
 
-        this.chromeapi.OnMessage(Channels.request_everything).subscribe((message: any) => {
+        this.chromeapi.OnMessage(Channels.requestEverything).subscribe((message: any) => {
             message.sendResponse({
-                dialogs: this.cache.dialogs_cache,
-                users: this.cache.users_cache,
-                chats: this.cache.chats_cache,
+                dialogs: this.cache.dialogsCache,
+                users: this.cache.usersCache,
+                chats: this.cache.chatsCache,
                 current_user_id: this.vkservice.getCurrentUserId()
             });
             return false;
@@ -102,25 +102,25 @@ export class DialogService {
         });
 
         this.chromeapi.OnMessage("conversation_id").subscribe((message: any) => {
-            let opened_conversation = {
+            let openedConversation = {
                 messages_count: 20,
                 conversation_id: message.id,
                 is_chat: message.is_chat
             };
-            if (this.opened_conversations.findIndex(x => x.conversation_id === opened_conversation.conversation_id) < 0) {
-                this.opened_conversations.push(opened_conversation);
+            if (this.openedConversations.findIndex(x => x.conversation_id === openedConversation.conversation_id) < 0) {
+                this.openedConversations.push(openedConversation);
             }
 
             this.postHistoryUpdate();
 
-            this.getHistory(opened_conversation.conversation_id, opened_conversation.is_chat).subscribe(history => {
+            this.getHistory(openedConversation.conversation_id, openedConversation.is_chat).subscribe(history => {
                 if (history) {
                     this.cache.pushHistory(history.messages, history.count);
                     this.loadUsersFromMessages(history.messages);
                     this.postHistoryUpdate();
                 }
-                if (opened_conversation.is_chat) {
-                    this.getChatParticipants(opened_conversation.conversation_id).subscribe(users => {
+                if (openedConversation.is_chat) {
+                    this.getChatParticipants(openedConversation.conversation_id).subscribe(users => {
                         this.cache.pushUsers(users);
                         this.userService.postUsersUpdate();
                     });
@@ -129,17 +129,17 @@ export class DialogService {
             error => this.handleError(error));
         });
 
-        this.chromeapi.OnMessage(Channels.load_old_messages_request).subscribe((message: any) => {
-            let conversation = this.opened_conversations.find(c => c.conversation_id === message.id);
+        this.chromeapi.OnMessage(Channels.loadOldMessagesRequest).subscribe((message: any) => {
+            let conversation = this.openedConversations.find(c => c.conversation_id === message.id);
             console.log("load old messages for: ", conversation);
             this.loadOldMessages(conversation);
         });
 
         this.chromeapi.OnDisconnect().subscribe(() => {
-            this.dialogs_count = 20;
+            this.dialogsCount = 20;
         });
 
-        this.chromeapi.OnPortMessage(Channels.load_old_dialogs_request).subscribe(() => {
+        this.chromeapi.OnPortMessage(Channels.loadOldDialogsRequest).subscribe(() => {
             this.loadOldDialogs();
         });
 
@@ -154,34 +154,34 @@ export class DialogService {
 
     monitorCurrentMessage(): void {
         let key = null;
-        let current_message = {};
+        let currentMessage = {};
 
         let save = () => {
             if (key) {
-                if (current_message[key].text || current_message[key].attachments) {
-                    console.log("update message: ", current_message);
-                    chrome.storage.sync.set(current_message);
+                if (currentMessage[key].text || currentMessage[key].attachments) {
+                    console.log("update message: ", currentMessage);
+                    chrome.storage.sync.set(currentMessage);
                 }
                 else {
-                    console.log("remove message: ", current_message);
+                    console.log("remove message: ", currentMessage);
                     chrome.storage.sync.remove(key);
                 }
             }
         };
 
         let subscription = Observable.interval(10000)
-            .map(x => current_message)
+            .map(x => currentMessage)
             .distinct((x, y) => x[key] === y[key])
             .subscribe(() => {
-                console.log("store current message: ", current_message);
+                console.log("store current message: ", currentMessage);
                 save();
         });
 
         let sub = this.chromeapi.OnPortMessage("current_message").subscribe(message => {
             key = message.key;
-            current_message[key] = {};
-            current_message[key].text = message.text;
-            current_message[key].attachments = message.attachments;
+            currentMessage[key] = {};
+            currentMessage[key].text = message.text;
+            currentMessage[key].attachments = message.attachments;
             if (message.is_last) {
                 console.log("last message, unsubscribe");
                 subscription.unsubscribe();
@@ -200,13 +200,13 @@ export class DialogService {
     }
 
     postDialogsUpdate(): void {
-        if (this.cache.dialogs_cache.dialogs.length === 0) {
+        if (this.cache.dialogsCache.dialogs.length === 0) {
             console.log("no dialogs, nothing to post");
             return;
         }
         let dialogs = new DialogsInfo();
-        dialogs.dialogs = this.cache.dialogs_cache.dialogs.slice(0, this.dialogs_count);
-        dialogs.count = this.cache.dialogs_cache.count;
+        dialogs.dialogs = this.cache.dialogsCache.dialogs.slice(0, this.dialogsCount);
+        dialogs.count = this.cache.dialogsCache.count;
         this.onUpdate.next({
             name: "dialogs_update",
             data: dialogs
@@ -214,8 +214,8 @@ export class DialogService {
     }
 
     postHistoryUpdate(): void {
-        console.log("post history_update message", this.opened_conversations);
-        for (let h of this.opened_conversations) {
+        console.log("post history_update message", this.openedConversations);
+        for (let h of this.openedConversations) {
             this.postSingleConversationHistoryUpdate(h);
         }
     }
@@ -235,13 +235,13 @@ export class DialogService {
     }
 
     postChatsUpdate(): void {
-        if (Object.keys(this.cache.chats_cache).length === 0) {
+        if (Object.keys(this.cache.chatsCache).length === 0) {
             console.log("no chats, nothing to post");
             return;
         }
         this.onUpdate.next({
-            name: Channels.update_chats,
-            data: this.cache.chats_cache
+            name: Channels.updateChats,
+            data: this.cache.chatsCache
         });
     }
 
@@ -251,7 +251,7 @@ export class DialogService {
             this.loadDialogUsers(dialogs);
         });
 
-        for (let conv of this.opened_conversations) {
+        for (let conv of this.openedConversations) {
             this.getHistory(conv.conversation_id, conv.is_chat).subscribe(history => {
                     if (!history) return;
                     this.cache.pushHistory(history.messages, history.count);
@@ -267,7 +267,7 @@ export class DialogService {
         this.cache.pushDialogs(dialogs);
         let users = [];
         let chats = [];
-        for (let dialog of this.cache.dialogs_cache.dialogs) {
+        for (let dialog of this.cache.dialogsCache.dialogs) {
             if (dialog.message.chatId) {
                 chats.push(dialog.message.chatId);
             }
@@ -293,12 +293,62 @@ export class DialogService {
         ids = [].concat.apply([], ids) as number[];
         /** distinct */
         ids = ids.filter((value, i, self) => self.indexOf(value) === i);
-        ids = ids.filter((value, i, self) => this.cache.users_cache[value] ? false : true);
+        ids = ids.filter((value, i, self) => this.cache.usersCache[value] ? false : true);
         this.userService.loadUsers(ids.join());
     }
 
-    private loadChats(chat_ids: string): void {
-        this.getChats(chat_ids).subscribe(chats => {
+
+    getDialogs(count: number = 20, fromId: number = null): Observable<DialogsInfo> {
+        console.log("dialogs are requested");
+        return this.vkservice.performAPIRequest(
+            this.getDialogsApiMethod,
+            `count=${count}${fromId ? "&start_message_id=" + fromId : ""}`)
+            .map(json => this.toDialogsInfo(json));
+    }
+
+    getHistory(id: number, chat: boolean, count: number = 20, fromId: number = null): Observable<HistoryInfo> {
+        console.log("history is requested. id:" + id + ", chat:" + chat + ", cout:" + count + ", from_id:" + fromId);
+        return this.vkservice.performAPIRequest(
+            this.getHistoryApiMethod,
+            `${chat ? "chat_id=" + id : "user_id=" + id}${fromId ? "&start_message_id=" + fromId : ""}&count=${count}&rev=0`)
+            .map(json => this.toHistoryViewModel(json));
+            /** response: {count: number, items: Message[]} */
+    }
+
+    getChatParticipants(chatId: number): Observable<{ [id: number]: UserInfo }> {
+        console.log("chat participants requested");
+        return this.vkservice.performAPIRequest(this.getChatApiMethod, `chat_ids=${chatId}&fields=photo_50,online`)
+            .map(json => this.userService.toUsersDictionary(json));
+    }
+
+    getChats(chatIds: string): Observable<{ [id: number]: ChatInfo }> {
+        console.log("chats requested");
+        return this.vkservice.performAPIRequest(this.getChatApiMethod, `chat_ids=${chatIds}&fields=photo_50,online`)
+            .map(json => this.toChatDict(json));
+    }
+
+    markAsRead(ids: string): Observable<number> {
+        console.log("mark as read message(s) with id: " + ids);
+        return this.vkservice.performAPIRequest(this.markAsReadApiMethod, `message_ids=${ids}`);
+    }
+
+    sendMessage(id: number, message: string, chat: boolean, attachments: string): Observable<number> {
+        console.log("sending message");
+        return this.vkservice.performAPIRequest(
+            this.sendMessageApiMethod,
+            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1&attachment=${attachments}`);
+    }
+
+    searchDialogs(searchTerm: string): Observable<DialogShortInfo[]> {
+        console.log("search dialogs", searchTerm);
+        return this.vkservice.performAPIRequest(
+            this.searchDialogsApiMethod,
+            `&q=${searchTerm}&limit=10`
+        ).map(r => this.toDialogsShort(r));
+    }
+
+    private loadChats(chatIds: string): void {
+        this.getChats(chatIds).subscribe(chats => {
                 this.cache.updateChats(chats);
                 this.postChatsUpdate();
             },
@@ -308,16 +358,16 @@ export class DialogService {
     }
 
     private loadOldDialogs(): void{
-        if (this.dialogs_count >= this.max_dialogs_count) {
+        if (this.dialogsCount >= this.maxDialogsCount) {
             console.log("all dialogs are loaded");
             return;
         }
         console.log("load old dialogs");
-        this.dialogs_count += 20;
+        this.dialogsCount += 20;
         window.setTimeout(() => {
-            this.dialogs_count = Math.max(20, this.dialogs_count - 20), 3000 * 60;
+            this.dialogsCount = Math.max(20, this.dialogsCount - 20);
         }, 3000 * 60);
-        if (this.dialogs_count <= this.cache.dialogs_cache.dialogs.length) {
+        if (this.dialogsCount <= this.cache.dialogsCache.dialogs.length) {
             this.postDialogsUpdate();
         }
 
@@ -350,55 +400,6 @@ export class DialogService {
         () => console.log("old messages loaded"));
     }
 
-    getDialogs(count: number = 20, from_id: number = null): Observable<DialogsInfo> {
-        console.log("dialogs are requested");
-        return this.vkservice.performAPIRequest(
-            this.get_dialogs,
-            `count=${count}${from_id ? "&start_message_id=" + from_id : ""}`)
-            .map(json => this.toDialogsInfo(json));
-    }
-
-    getHistory(id: number, chat: boolean, count: number = 20, from_id: number = null): Observable<HistoryInfo> {
-        console.log("history is requested. id:" + id + ", chat:" + chat + ", cout:" + count + ", from_id:" + from_id);
-        return this.vkservice.performAPIRequest(
-            this.get_history,
-            `${chat ? "chat_id=" + id : "user_id=" + id}${from_id ? "&start_message_id=" + from_id : ""}&count=${count}&rev=0`)
-            .map(json => this.toHistoryViewModel(json));
-            /** response: {count: number, items: Message[]} */
-    }
-
-    getChatParticipants(chat_id: number): Observable<{ [id: number] : UserInfo }> {
-        console.log("chat participants requested");
-        return this.vkservice.performAPIRequest(this.get_chat, `chat_ids=${chat_id}&fields=photo_50,online`)
-            .map(json => this.userService.toUsersDictionary(json));
-    }
-
-    getChats(chat_ids: string): Observable<{ [id: number] : ChatInfo }> {
-        console.log("chats requested");
-        return this.vkservice.performAPIRequest(this.get_chat, `chat_ids=${chat_ids}&fields=photo_50,online`)
-            .map(json => this.toChatDict(json));
-    }
-
-    markAsRead(ids: string): Observable<number> {
-        console.log("mark as read message(s) with id: " + ids);
-        return this.vkservice.performAPIRequest(this.mark_as_read, `message_ids=${ids}`);
-    }
-
-    sendMessage(id: number, message: string, chat: boolean, attachments: string): Observable<number> {
-        console.log("sending message");
-        return this.vkservice.performAPIRequest(
-            this.send_message,
-            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1&attachment=${attachments}`);
-    }
-
-    searchDialogs(searchTerm: string): Observable<DialogShortInfo[]> {
-        console.log("search dialogs", searchTerm);
-        return this.vkservice.performAPIRequest(
-            this.search_dialogs,
-            `&q=${searchTerm}&limit=10`
-        ).map(r => this.toDialogsShort(r));
-    }
-
     private toDialogsShort(json): DialogShortInfo[] {
         let dialogs: DialogShortInfo[] = [];
         for (let x of json) {
@@ -411,8 +412,8 @@ export class DialogService {
         return dialogs;
     }
 
-    private toChatDict(json): { [id: number] : ChatInfo } {
-        let chats: { [id: number] : ChatInfo } = {};
+    private toChatDict(json): { [id: number]: ChatInfo } {
+        let chats: { [id: number]: ChatInfo } = {};
         for (let jsonChat of json) {
             chats[jsonChat.id] = this.toChatViewModel(jsonChat);
         }
@@ -431,7 +432,7 @@ export class DialogService {
         chat.adminId = json.admin_id;
         chat.id = json.id;
         chat.title = json.title;
-        chat.users =json.users.map(u => this.userService.toUserViewModel(u));
+        chat.users = json.users.map(u => this.userService.toUserViewModel(u));
         chat.type = json.type;
         return chat;
     }
@@ -453,20 +454,20 @@ export class DialogService {
         message.photo50 = json.photo_50;
         message.title = json.title;
         message.conversationId = message.chatId || message.userId;
-        //console.info(json, message);
+        // console.info(json, message);
         return message;
     }
 
     private toDialogViewModel(json): DialogInfo {
         let dialog = new DialogInfo();
         dialog.unreadCount = json.unread;
-        dialog.message = this.toSingleMessageViewModel(json.message)
+        dialog.message = this.toSingleMessageViewModel(json.message);
         return dialog;
     }
 
     private toDialogsInfo(json): DialogsInfo {
         console.log("dialogs cout " + json.count);
-        this.max_dialogs_count = json.count;
+        this.maxDialogsCount = json.count;
         this.unreadCountUpdate.emit(json.unread_dialogs ? json.unread_dialogs : "");
 
         let dialogs = new DialogsInfo();

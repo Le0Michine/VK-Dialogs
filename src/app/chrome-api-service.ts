@@ -3,17 +3,13 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/Observable/fromEventPattern";
 import "rxjs/add/Observable/bindCallback";
 
-Injectable()
+@Injectable()
 export class ChromeAPIService {
-    private port_name: string = "message_port";
+    private portName: string = "message_port";
     private port: chrome.runtime.Port = null;
 
     constructor() {
-        this.init();
-    }
-
-    private init() {
-        this.port = chrome.runtime.connect({ name: this.port_name });
+        this.port = chrome.runtime.connect({ name: this.portName });
     }
 
     subscribeOnMessage(on: string): Observable<any> {
@@ -22,10 +18,10 @@ export class ChromeAPIService {
             eventName: on
         });
         return Observable.fromEventPattern(
-            (handler: (Object) => void) => {
+            (handler: (o: Object) => void) => {
                 this.AddMessageListener(this.port, on, handler);
             },
-            (handler: (Object) => void) => {
+            (handler: (o: Object) => void) => {
                 console.log("unsubscribe from: ", on);
                 this.port.postMessage({
                     name: "unsubscribe",
@@ -42,7 +38,7 @@ export class ChromeAPIService {
      */
     OnMessage(name: string): Observable<any> {
         return Observable.fromEventPattern(
-            (handler: (Object) => void) => chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            (handler: (o: Object) => void) => chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if (message.name === name) {
                     console.log("got message", message);
                     message.sendResponse = sendResponse;
@@ -50,7 +46,7 @@ export class ChromeAPIService {
                     handler(message);
                     return true;
             }}),
-            (handler: (Object) => void) => chrome.runtime.onMessage.removeListener(handler)
+            (handler: (o: Object) => void) => chrome.runtime.onMessage.removeListener(handler)
         );
     }
 
@@ -61,7 +57,7 @@ export class ChromeAPIService {
     SendRequest(message): Observable<any> {
         console.log("send request to background", message, chrome.runtime.lastError);
         return Observable.bindCallback(
-            (callback: (Object) => void) => chrome.runtime.sendMessage(message, x => {
+            (callback: (o: Object) => void) => chrome.runtime.sendMessage(message, x => {
                 console.log("got request response", message);
                 if (chrome.runtime.lastError) {
                     console.error("error occured while send request to background: ", message);
@@ -86,10 +82,10 @@ export class ChromeAPIService {
      */
     OnPortMessage(name): Observable<any> {
         return Observable.fromEventPattern(
-            (handler: (Object) => void) => {
+            (handler: (o: Object) => void) => {
                 this.AddMessageListener(this.port, name, handler);
             },
-            (handler: (Object) => void) => {
+            (handler: (o: Object) => void) => {
                 if (this.port) {
                     this.port.onMessage.removeListener(handler);
                 }

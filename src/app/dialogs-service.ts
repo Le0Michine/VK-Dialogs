@@ -9,8 +9,8 @@ import { ChromeAPIService } from "./chrome-api-service";
 
 @Injectable()
 export class DialogService {
-    chat_observable: Observable<{ [chatId: number] : ChatInfo }>;
-    dialogs_observable: Observable<DialogsInfo>;
+    chatObservable: Observable<{ [chatId: number]: ChatInfo }>;
+    dialogsObservable: Observable<DialogsInfo>;
 
     private chats;
 
@@ -28,7 +28,7 @@ export class DialogService {
     markAsRead(ids: string): Observable<number> {
         console.log("requested message(s) with id: " + ids);
         return this.chromeapi.SendRequest({
-            name: Channels.mark_as_read_request,
+            name: Channels.markAsReadRequest,
             message_ids: ids
         }).map(x => x.data);
     }
@@ -36,7 +36,7 @@ export class DialogService {
     sendMessage(id: number, message: any, chat: boolean): Observable<number> {
         console.log("sending message", message);
         return this.chromeapi.SendRequest({
-            name: Channels.send_message_request,
+            name: Channels.sendMessageRequest,
             user_id: id,
             message_body: message.body,
             attachments: message.attachments,
@@ -50,44 +50,44 @@ export class DialogService {
 
     loadOldDialogs(): void {
         this.chromeapi.PostPortMessage({
-            name: Channels.load_old_dialogs_request
+            name: Channels.loadOldDialogsRequest
         });
     }
 
-    loadOldMessages(conversation_id): void {
+    loadOldMessages(conversationId): void {
         this.chromeapi.SendMessage({
-            name: Channels.load_old_messages_request,
-            id: conversation_id
+            name: Channels.loadOldMessagesRequest,
+            id: conversationId
         });
     }
 
     subscribeOnMessagesCountUpdate(callback: (messagesCount: number) => void): void {
-        this.chromeapi.OnPortMessage(Channels.messages_count_update).subscribe((message: any) => {
+        this.chromeapi.OnPortMessage(Channels.messagesCountUpdate).subscribe((message: any) => {
             console.log("got messages_count_update message");
             callback(message.data);
         });
     }
 
     initChatsUpdate(): void {
-        this.chat_observable = this.chromeapi.subscribeOnMessage(Channels.update_chats).map(x => x.data);
+        this.chatObservable = this.chromeapi.subscribeOnMessage(Channels.updateChats).map(x => x.data);
         this.chromeapi.PostPortMessage({
             name: "get_chats"
         });
     }
 
     initDialogsUpdate(): void {
-        this.dialogs_observable = this.chromeapi.subscribeOnMessage("dialogs_update").map(x => x.data);
+        this.dialogsObservable = this.chromeapi.subscribeOnMessage("dialogs_update").map(x => x.data);
         this.chromeapi.PostPortMessage({
             name: "get_dialogs"
         });
     }
 
-    getHistory(conversation_id, is_chat): Observable<any> {
-        let o = this.chromeapi.subscribeOnMessage("history_update" + conversation_id).map(x => x.data);
+    getHistory(conversationId, isChat): Observable<any> {
+        let o = this.chromeapi.subscribeOnMessage("history_update" + conversationId).map(x => x.data);
         this.chromeapi.SendMessage({
             name: "conversation_id",
-            id: conversation_id,
-            is_chat: is_chat
+            id: conversationId,
+            is_chat: isChat
         });
         return o;
         // {history:SingleMessageInfo[], count: number}

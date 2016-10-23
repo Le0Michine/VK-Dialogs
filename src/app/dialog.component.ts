@@ -23,21 +23,21 @@ import { MenuItem } from "./menu-item";
         "dialog.component.css",
     ],
     animations: [
-        trigger('flyInOut', [
-            state('in', style({transform: 'translateX(0) scale(1)'})),
-            state('out', style({transform: 'translateX(0) scale(0)', opacity: 0, display: 'none'})),
-            transition('out => in', [
+        trigger("flyInOut", [
+            state("in", style({transform: "translateX(0) scale(1)"})),
+            state("out", style({transform: "translateX(0) scale(0)", opacity: 0, display: "none"})),
+            transition("out => in", [
                 animate(200, keyframes([
-                    style({opacity: 0, transform: 'translateX(0) scale(0)', offset: 0}),
-                    style({opacity: 1, transform: 'translateX(0) scale(1.1)', offset: 0.3}),
-                    style({opacity: 1, transform: 'translateX(0) scale(1)', offset: 1.0})
+                    style({opacity: 0, transform: "translateX(0) scale(0)", offset: 0}),
+                    style({opacity: 1, transform: "translateX(0) scale(1.1)", offset: 0.3}),
+                    style({opacity: 1, transform: "translateX(0) scale(1)", offset: 1.0})
                 ]))
             ]),
-            transition('in => out', [
-                animate(100, style({transform: 'translateX(0) scale(0)'}))
+            transition("in => out", [
+                animate(100, style({transform: "translateX(0) scale(0)"}))
             ]),
-            transition('void => *', [
-                animate(0, style({transform: 'translateX(0) scale(0)', opacity: 0, display: 'none'}))
+            transition("void => *", [
+                animate(0, style({transform: "translateX(0) scale(0)", opacity: 0, display: "none"}))
             ])
         ])
     ]
@@ -47,9 +47,9 @@ export class DialogComponent implements OnInit, OnDestroy {
     isBeta: boolean = false;
 
     title = "Dialog";
-    is_chat: boolean;
-    conversation_id: number;
-    attachments_uploading_count: number = 0;
+    isChat: boolean;
+    conversationId: number;
+    attachmentsUploadingCount: number = 0;
     attachments: MenuItem[] = [];
 
     attachmentUploaded: EventEmitter<boolean> = new EventEmitter();
@@ -76,15 +76,15 @@ export class DialogComponent implements OnInit, OnDestroy {
     scrollHeight: number = 1000000;
     autoScrollToBottom: boolean = true;
 
-    subscriptions: Subscription[] = []
+    subscriptions: Subscription[] = [];
 
     constructor (
-        private messages_service: DialogService,
+        private messagesService: DialogService,
         private vkservice: VKService,
-        private user_service: UserService,
+        private userService: UserService,
         private router: Router,
         private route: ActivatedRoute,
-        private change_detector: ChangeDetectorRef,
+        private changeDetector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private fileUpload: FileUploadService,
         private renderer: Renderer,
@@ -94,20 +94,20 @@ export class DialogComponent implements OnInit, OnDestroy {
         console.log("specific dialog component init");
         this.route.params.subscribe(params => {
             this.title = params["title"];
-            this.conversation_id = +params["id"];
+            this.conversationId = +params["id"];
             let type = params["type"];
-            this.is_chat = type === "dialog" ? false : true;
+            this.isChat = type === "dialog" ? false : true;
 
             this.chromeapi.SendMessage({
                 name: "last_opened",
                 last_opened: {
-                    id: this.conversation_id,
+                    id: this.conversationId,
                     title: this.title,
-                    type: this.is_chat ? "chat" : "dialog"
+                    type: this.isChat ? "chat" : "dialog"
                 }
             });
 
-            this.subscriptions.push(this.messages_service.getHistory(this.conversation_id, this.is_chat).subscribe(data => {
+            this.subscriptions.push(this.messagesService.getHistory(this.conversationId, this.isChat).subscribe(data => {
                 console.log("got history update", data);
                 let historyInfo = new HistoryInfo();
                 historyInfo.messages = data.history;
@@ -115,7 +115,7 @@ export class DialogComponent implements OnInit, OnDestroy {
                 this.historyUpdate.emit(historyInfo);
                 if (!this.autoReadMessages) {
                     this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
-                    this.change_detector.detectChanges();
+                    this.changeDetector.detectChanges();
                 }
                 else {
                     this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
@@ -179,7 +179,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         event.preventDefault();
         event.stopPropagation();
         for (let div of divs) {
-            div.onmousemove = (event) => this.resize(event);
+            div.onmousemove = e => this.resize(e);
         }
     }
 
@@ -217,7 +217,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     onMarkAsRead() {
         this.markAsRead.emit(true);
         this.unreadMessages = "out";
-        this.change_detector.detectChanges();
+        this.changeDetector.detectChanges();
     }
 
     onScroll(current: number, max: number) {
@@ -228,7 +228,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     onEmojiSelect(event): void {
-        console.info("on emoji select", event);
         this.selectEmoji.emit(event);
     }
 
@@ -246,30 +245,30 @@ export class DialogComponent implements OnInit, OnDestroy {
             return;
         }
         this.attachmentUploaded.emit(false);
-        this.change_detector.detectChanges();
+        this.changeDetector.detectChanges();
         for (let i = 0; i < event.target.files.length; i++) {
             this.uploadFile(event.target.files.item(i));
         }
     }
 
     uploadFile(file: File) {
-        this.attachments_uploading_count++;
+        this.attachmentsUploadingCount++;
         let fileName = file.name;
         this.fileUpload.uploadFile(file).subscribe(att => {
             console.log("attachment is ready to send", att);
-            this.attachments_uploading_count--;
-            if (!this.attachments_uploading_count) {
+            this.attachmentsUploadingCount--;
+            if (!this.attachmentsUploadingCount) {
                 this.attachmentUploaded.emit(true);
             }
             this.newAttachment.emit({ name: fileName, id: att, termId: "" });
-            this.change_detector.detectChanges();
+            this.changeDetector.detectChanges();
         });
     }
 
     onAttachmentsUpdate(attachments: MenuItem[]): void {
         console.log("update attachments", this.attachments, attachments);
         this.attachments = attachments;
-        this.change_detector.detectChanges();
+        this.changeDetector.detectChanges();
     }
 
     onAttachedFileRemove(fileId: string): void {
@@ -282,7 +281,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     hideAttachments(): void {
-        this.isAttachedFilesOpened = false
+        this.isAttachedFilesOpened = false;
     }
 
     uploadFilesFromClipboard(event: ClipboardEvent) {

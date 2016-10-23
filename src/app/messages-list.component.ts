@@ -20,46 +20,46 @@ import { OptionsService } from "./services";
     ]
 })
 export class MessagesListComponent implements OnInit, OnDestroy {
-    @Input() is_chat: boolean;
-    @Input() conversation_id: number;
+    @Input() isChat: boolean;
+    @Input() conversationId: number;
     @Input() markAsRead: Observable<boolean>;
     @Input() historyUpdate: Observable<HistoryInfo>;
 
-    participants: { [userId: number] : UserInfo } = {};
-    user_id: number;
+    participants: { [userId: number]: UserInfo } = {};
+    userId: number;
     history: SingleMessageInfo[] = [];
-    messages_count: number;
+    messagesCount: number;
     subscriptions: Subscription[] = [];
-    history_to_show = [];
+    historyToShow = [];
 
     constructor (
-        private messages_service: DialogService,
+        private messagesService: DialogService,
         private vkservice: VKService,
-        private user_service: UserService,
+        private userService: UserService,
         private router: Router,
-        private change_detector: ChangeDetectorRef,
+        private changeDetector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private settings: OptionsService,
         private renderer: Renderer) { }
 
     ngOnInit() {
         console.log("messages list component init");
-        this.user_id = this.vkservice.getCurrentUserId();
+        this.userId = this.vkservice.getCurrentUserId();
 
         this.subscriptions.push(this.historyUpdate
             .subscribe(history => {
                 this.history = history.messages;
-                this.messages_count = history.count;
-                this.history_to_show = this.getHistory(this.history);
+                this.messagesCount = history.count;
+                this.historyToShow = this.getHistory(this.history);
                 console.log("force update 1");
                 this.refreshView();
             })
         );
 
-        this.subscriptions.push(this.user_service.getUsers()
+        this.subscriptions.push(this.userService.getUsers()
             .subscribe(users => {
                 this.participants = users;
-                this.history_to_show = this.getHistory(this.history);
+                this.historyToShow = this.getHistory(this.history);
                 console.log("force update 2");
                 this.refreshView();
             },
@@ -67,7 +67,7 @@ export class MessagesListComponent implements OnInit, OnDestroy {
             () => console.log("finished users update")
         ));
 
-        this.messages_service.subscribeOnMessagesCountUpdate(count => this.messages_count = count);
+        this.messagesService.subscribeOnMessagesCountUpdate(count => this.messagesCount = count);
 
         this.subscriptions.push(this.markAsRead.subscribe(value => this.onMarkAsRead(value)));
     }
@@ -80,7 +80,7 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     }
 
     refreshView() {
-        this.change_detector.detectChanges();
+        this.changeDetector.detectChanges();
     }
 
     getHistory(messages: SingleMessageInfo[]): MessageViewModel[] {
@@ -200,10 +200,10 @@ export class MessagesListComponent implements OnInit, OnDestroy {
             console.log("unread messages was not found");
             return;
         }
-        this.messages_service.markAsRead(ids.join()).subscribe(result => {
+        this.messagesService.markAsRead(ids.join()).subscribe(result => {
             if (result) {
                 console.log("marked as read", ids);
-                this.change_detector.detectChanges();
+                this.changeDetector.detectChanges();
             }
             else {
                 console.log("failed to mark messages as read", ids);
@@ -212,7 +212,7 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     }
 
     loadOldMessages(): void {
-        this.messages_service.loadOldMessages(this.conversation_id);
+        this.messagesService.loadOldMessages(this.conversationId);
     }
 
     changePhotoSize(img: HTMLImageElement, photo: any): void {

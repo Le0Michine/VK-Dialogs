@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
+import "rxjs/add/Operator/combineLatest";
 import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "./datamodels/datamodels";
 import { DialogComponent } from "./dialog.component";
 import { UserService } from "./user-service";
@@ -17,12 +18,12 @@ import { VKConsts } from "./vk-consts";
 })
 export class DialogListComponent implements OnInit, OnDestroy {
     user: UserInfo = new UserInfo();
-    users: { [userId: number] : UserInfo };
-    chats: { [chatId: number] : ChatInfo };
-    dialogs_count: number;
-    is_destroyed: boolean = false;
+    users: { [userId: number]: UserInfo };
+    chats: { [chatId: number]: ChatInfo };
+    dialogsCount: number;
+    isDestroyed: boolean = false;
 
-    dialogs_to_show: DialogView[] = [];
+    dialogsToShow: DialogView[] = [];
 
     i: number = 0;
 
@@ -31,13 +32,13 @@ export class DialogListComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     constructor(
-        private user_service: UserService,
+        private userService: UserService,
         private router: Router,
         private title: Title,
         private vkservice: VKService,
-        private dialog_service: DialogService,
+        private dialogService: DialogService,
         private chromeapi: ChromeAPIService,
-        private change_detector: ChangeDetectorRef) { }
+        private changeDetector: ChangeDetectorRef) { }
 
     gotoDialog(dialog: SingleMessageInfo) {
         let link: string[];
@@ -58,7 +59,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
     }
 
     loadOldDialogs() {
-        this.dialog_service.loadOldDialogs();
+        this.dialogService.loadOldDialogs();
     }
 
     track(d, i) {
@@ -66,18 +67,17 @@ export class DialogListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.trace("init dialogs component");
         this.vkservice.init();
 
         console.log("authorized, continue initialization");
 
-        this.dialog_service.init();
+        this.dialogService.init();
         this.title.setTitle("Dialogs");
 
-        if (window.localStorage.getItem(VKConsts.user_denied) === "true" || !this.vkservice.hasValidSession()) {
+        if (window.localStorage.getItem(VKConsts.userDenied) === "true" || !this.vkservice.hasValidSession()) {
             console.log("navigate to login page");
             setTimeout(() => this.router.navigate(["authorize"]), 0);
-            //this.router.navigate(["authorize"]);
+            // this.router.navigate(["authorize"]);
             return;
         }
 
@@ -85,25 +85,26 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
         this.chromeapi.SendRequest({ name: "last_opened" }).subscribe((response: any) => {
             if (response.last_opened) {
-                let last_opened = response.last_opened;
-                this.router.navigate(["dialog", last_opened.id, last_opened.type, last_opened.title]);
+                let lastOpened = response.last_opened;
+                this.router.navigate(["dialog", lastOpened.id, lastOpened.type, lastOpened.title]);
             }
         });
 
-        this.subscriptions.push(this.dialog_service.dialogs_observable.subscribe(dialogs => {
+        this.subscriptions.push(this.dialogService.dialogsObservable.subscribe(dialogs => {
                 console.log("DIALOGS", dialogs);
                 this.dialogs = dialogs.dialogs;
-                this.dialogs_count = dialogs.count;
-                this.dialogs_to_show = this.getDialogs();
+                this.dialogsCount = dialogs.count;
+                this.dialogsToShow = this.getDialogs();
                 this.refreshView();
             },
             error => this.errorHandler(error),
             () => console.log("finished dialogs update")
         ));
 
-        this.subscriptions.push(this.user_service.getUsers().subscribe(users => {
+        this.subscriptions.push(this.userService.getUsers().subscribe(users => {
+                    console.log("USERS", users);
                     this.users = users;
-                    this.dialogs_to_show = this.getDialogs();
+                    this.dialogsToShow = this.getDialogs();
                     this.refreshView();
                 },
                 error => this.errorHandler(error),
@@ -111,9 +112,9 @@ export class DialogListComponent implements OnInit, OnDestroy {
             )
         );
 
-        this.subscriptions.push(this.dialog_service.chat_observable.subscribe(chats => {
+        this.subscriptions.push(this.dialogService.chatObservable.subscribe(chats => {
                 this.chats = chats;
-                this.dialogs_to_show = this.getDialogs();
+                this.dialogsToShow = this.getDialogs();
                 this.refreshView();
             },
             error => this.errorHandler(error),
@@ -126,13 +127,13 @@ export class DialogListComponent implements OnInit, OnDestroy {
         for (let sub of this.subscriptions) {
             sub.unsubscribe();
         }
-        this.is_destroyed = true;
+        this.isDestroyed = true;
         this.chromeapi.PostPortMessage("store_current_message");
     }
 
     refreshView() {
-        if (!this.is_destroyed) {
-            this.change_detector.detectChanges();
+        if (!this.isDestroyed) {
+            this.changeDetector.detectChanges();
         }
     }
 
@@ -159,7 +160,10 @@ export class DialogListComponent implements OnInit, OnDestroy {
     }
 
     getDialogs(): DialogView[] {
-        if (!this.users) return [];
+        if (!this.users) {
+            console.log("not enough data");
+            return [];
+        }
         let dialogs: DialogView[] = [];
         for (let dialog of this.dialogs) {
             let uid = dialog.message.userId;
@@ -171,12 +175,12 @@ export class DialogListComponent implements OnInit, OnDestroy {
             dts.sender = this.getUserFirstName(message.fromId);
 
             if (message.fwdMessages) {
-                dts.attachment_type = "fwd_messages";
+                dts.attachmentType = "fwd_messages";
             }
             else if (message.attachments && message.attachments[0]) {
-                dts.attachment_type = message.attachments[0].type;
+                dts.attachmentType = message.attachments[0].type;
             }
-            dts.attachment_only = dts.attachment_type !== "" && dts.message.body === "";
+            dts.attachmentOnly = dts.attachmentType !== "" && dts.message.body === "";
 
             if (message.chatId) {
                 dts.online = false;

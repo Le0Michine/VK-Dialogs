@@ -5,58 +5,62 @@ import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "./datamodels/datamodels";
 
 export class AuthHelper {
-    static client_id: number = 5573653;
-    static auth_url: string = "https://oauth.vk.com/authorize?";
-    static redirect_uri: string = "https://oauth.vk.com/blank.html";
+    static clientId: number = 5573653;
+    static authUrl: string = "https://oauth.vk.com/authorize?";
+    static redirectUri: string = "https://oauth.vk.com/blank.html";
     static scope: string = "messages,users,friends,status,offline,photos";
     static display: string = "page";
-    static response_type: string = "token";
-    static tab_id: number;
-    static authorization_in_progress_count: number = 0;
-    static current_authorisation: Observable<any>;
+    static responseType: string = "token";
+    static tabId: number;
+    static authorizationInProgressCount: number = 0;
+    static currentAuthorisation: Observable<any>;
 
     static selectTab() {
-        if (AuthHelper.tab_id) {
+        if (AuthHelper.tabId) {
             console.log("set vk auth tab active");
-            chrome.tabs.update(AuthHelper.tab_id, {active: true});
+            chrome.tabs.update(AuthHelper.tabId, {active: true});
         }
     }
 
     static authorize(forced: boolean = false): Observable<SessionInfo> {
         console.log("start authorization");
-        if (AuthHelper.authorization_in_progress_count > 0) {
+        if (AuthHelper.authorizationInProgressCount > 0) {
             console.log("another authorization in progress, cancel request");
             AuthHelper.selectTab();
-            return AuthHelper.current_authorisation;
+            return AuthHelper.currentAuthorisation;
         }
-        if (window.localStorage.getItem(VKConsts.user_denied) === "true" && !forced) {
+        if (window.localStorage.getItem(VKConsts.userDenied) === "true" && !forced) {
             console.log("authorization rejected by user");
-            return Observable.bindCallback((callback: (SessionInfo) => void) => callback(null))();
+            return Observable.bindCallback((callback: (s: SessionInfo) => void) => callback(null))();
         }
         else {
-            window.localStorage.removeItem(VKConsts.user_denied);
+            window.localStorage.removeItem(VKConsts.userDenied);
         }
-        let authUrl: string = AuthHelper.auth_url
-            + "client_id=" + AuthHelper.client_id
+        let authUrl: string = AuthHelper.authUrl
+            + "client_id=" + AuthHelper.clientId
             + "&scope=" + AuthHelper.scope
-            + "&redirect_uri=" + AuthHelper.redirect_uri
+            + "&redirect_uri=" + AuthHelper.redirectUri
             + "&display=" + AuthHelper.display
-            + "&response_type=" + AuthHelper.response_type
-            + "&v=" + VKConsts.api_version;
-        AuthHelper.authorization_in_progress_count ++;
+            + "&response_type=" + AuthHelper.responseType
+            + "&v=" + VKConsts.apiVersion;
+        AuthHelper.authorizationInProgressCount ++;
 
-        let observable = Observable.bindCallback((callback: (SessionInfo) => void) => {
+        let observable = Observable.bindCallback((callback: (s: SessionInfo) => void) => {
             AuthHelper.addTabListener(callback);
-            chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tab_id = tab.id);
+            chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tabId = tab.id);
         });
-        AuthHelper.current_authorisation = observable();
-        return AuthHelper.current_authorisation;
+        AuthHelper.currentAuthorisation = observable();
+        return AuthHelper.currentAuthorisation;
+    }
+
+    static clearSession() {
+        window.localStorage.removeItem(VKConsts.vkSessionInfo);
     }
 
     private static addTabListener(callback) {
         chrome.tabs.onRemoved.addListener(function(tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) {
-            if (tabId === AuthHelper.tab_id) {
-                AuthHelper.authorization_in_progress_count --;
+            if (tabId === AuthHelper.tabId) {
+                AuthHelper.authorizationInProgressCount --;
             }
         });
         let o = Observable.fromEventPattern(
@@ -76,10 +80,10 @@ export class AuthHelper {
             let tabId: number = v.tabId;
             let changeInfo: chrome.tabs.TabChangeInfo = v.changeInfo;
             let tab: chrome.tabs.Tab = v.tab;
-            if (tabId === AuthHelper.tab_id && tab.url.split("#")[0] === AuthHelper.redirect_uri && tab.status === "complete" && changeInfo.status === "complete") {
+            if (tabId === AuthHelper.tabId && tab.url.split("#")[0] === AuthHelper.redirectUri && tab.status === "complete" && changeInfo.status === "complete") {
                 console.log("found auth tab: ", tab.url);
-                AuthHelper.authorization_in_progress_count --;
-                AuthHelper.current_authorisation = null;
+                AuthHelper.authorizationInProgressCount --;
+                AuthHelper.currentAuthorisation = null;
                 let session: SessionInfo = new SessionInfo();
                 let query: string[] = tab.url.split("#")[1].split("&");
                 let error: any;
@@ -89,13 +93,13 @@ export class AuthHelper {
 
                     switch (key) {
                         case "access_token":
-                            session.access_token = value;
+                            session.accessToken = value;
                             break;
                         case "user_id":
-                            session.user_id = Number(value);
+                            session.userId = Number(value);
                             break;
                         case "expires_in":
-                            session.token_exp = Number(value);
+                            session.tokenExp = Number(value);
                             break;
                         case "error":
                             error = {};
@@ -107,6 +111,9 @@ export class AuthHelper {
                         case "error_description":
                             error.error_description = value;
                             break;
+                        default:
+                            console.warn("unknown authorization parameter", key);
+                            break;
                     }
                 }
                 if (error) {
@@ -116,7 +123,7 @@ export class AuthHelper {
                 else {
                     session.timestamp = Math.floor(Date.now() / 1000);
                     console.log("store session");
-                    window.localStorage.setItem(VKConsts.vk_session_info, JSON.stringify(session));
+                    window.localStorage.setItem(VKConsts.vkSessionInfo, JSON.stringify(session));
                 }
                 try {
                     chrome.tabs.remove(tabId);
@@ -124,27 +131,23 @@ export class AuthHelper {
                 catch (e) {
                     console.log("tab already closed");
                 }
-                AuthHelper.tab_id = null;
+                AuthHelper.tabId = null;
                 s.unsubscribe();
                 callback(session);
             }
         });
     }
 
-    static processError(error) {
+    private static processError(error) {
         console.log("error ocured during authorization: ", error);
         switch (error.error_reason) {
             case "user_denied":
                 console.log("user cancelled authorization request, only manual authorization is possible");
-                window.localStorage.setItem(VKConsts.user_denied, "true");
+                window.localStorage.setItem(VKConsts.userDenied, "true");
                 break;
             default:
                 console.error("unknown error");
                 break;
         }
-    }
-
-    static clearSession() {
-        window.localStorage.removeItem(VKConsts.vk_session_info);
     }
 }

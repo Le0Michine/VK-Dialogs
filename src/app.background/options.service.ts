@@ -14,7 +14,7 @@ export class OptionsService {
 
     private currentSettings: Settings;
 
-    private windowSizes: { [size: string] : WindowSize } = {
+    private windowSizes: { [size: string]: WindowSize } = {
         "small": { w: 300, h: 400, size: "s" },
         "medium": { w: 400, h: 500, size: "m" },
         "large": { w: 600, h: 600, size: "l" },
@@ -29,8 +29,8 @@ export class OptionsService {
     };
 
     constructor() {
-        let settings = JSON.parse(window.localStorage.getItem("settings")) as Settings;
-        this.currentSettings = settings || this.defaultSettings;
+        let storedSettings = JSON.parse(window.localStorage.getItem("settings")) as Settings;
+        this.currentSettings = storedSettings || this.defaultSettings;
         this.initSubjects(this.currentSettings);
 
         chrome.storage.sync.get({ "settings": this.defaultSettings }, (item: any) => {

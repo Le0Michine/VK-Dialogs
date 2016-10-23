@@ -13,59 +13,59 @@ export class EmojiService {
      * Other additional symbols ( 1F30D - 1F567 )
      */
 
-    private emoticons_start = "1F601";
-    private emoticons_end = "1F64F";
-    private add_emoticons_start = "1F600";
-    private add_emoticons_end = "1F636";
-    private transport_map_start = "1F680";
-    private transport_map_end = "1F6C0";
-    private add_transport_map_start = "1F681";
-    private add_transport_map_end = "1F6C5";
-    private dingbats_start = "2702";
-    private dingbats_end = "27B0";
-    private enclosed_chars_start = "24C2";
-    private enclosed_chars_end = "1F251";
+    private emoticonsStart = "1F601";
+    private emoticonsEnd = "1F64F";
+    private addEmoticonsStart = "1F600";
+    private addEmoticonsEnd = "1F636";
+    private transportMapStart = "1F680";
+    private transportMapEnd = "1F6C0";
+    private addTransportMapStart = "1F681";
+    private addTransportMapEnd = "1F6C5";
+    private dingbatsStart = "2702";
+    private dingbatsEnd = "27B0";
+    private enclosedCharsStart = "24C2";
+    private enclosedCharsEnd = "1F251";
 
-    private emoji_dec_codes = [];
+    private emojiDecCodes = [];
 
     private template = "<div style=\"font-size: 35px; color: #428bca; display: inline-block; margin-left: 2px; font-family: -apple-system EmojiOneColor\">{{emoji}}</div>";
 
     constructor() {
         /** Emoticons */
-        this.addEmojiRange(this.emoticons_start, this.emoticons_end);
+        this.addEmojiRange(this.emoticonsStart, this.emoticonsEnd);
 
         /** Additional emoticons */
-        this.addEmojiRange(this.add_emoticons_start, this.add_emoticons_end);
+        this.addEmojiRange(this.addEmoticonsStart, this.addEmoticonsEnd);
 
         /** Transport and map symbols */
-        this.addEmojiRange(this.transport_map_start, this.transport_map_end);
+        this.addEmojiRange(this.transportMapStart, this.transportMapEnd);
 
         /** Additional transport and map symbols */
-        this.addEmojiRange(this.add_transport_map_start, this.add_transport_map_end);
+        this.addEmojiRange(this.addTransportMapStart, this.addTransportMapEnd);
 
         /** Dingbats */
-        this.addEmojiRange(this.dingbats_start, this.dingbats_end);
+        this.addEmojiRange(this.dingbatsStart, this.dingbatsEnd);
 
         /** Enclosed characters */
-        this.addEmojiRange(this.enclosed_chars_start, this.enclosed_chars_end);
+        this.addEmojiRange(this.enclosedCharsStart, this.enclosedCharsEnd);
     }
 
     getEmojiChars() {
-        return this.emoji_dec_codes;
+        return this.emojiDecCodes;
     }
 
     wrapEmoji(emoji) {
         return this.template.replace("{{emoji}}", emoji);
     }
 
-    private addEmojiRange(start_hex: string, end_hex: string) {
-        let start_dec = parseInt(start_hex, 16);
-        let end_dec = parseInt(end_hex, 16);
+    private addEmojiRange(startHex: string, endHex: string) {
+        let startDec = parseInt(startHex, 16);
+        let endDec = parseInt(endHex, 16);
 
-        for (let i = start_dec; i <= end_dec; i++) {
+        for (let i = startDec; i <= endDec; i++) {
             let emoji = twemoji.convert.fromCodePoint(i.toString(16));
             if (twemoji.parse(emoji) === emoji) continue; /** if emoji isn't supported by twemoji */
-            this.emoji_dec_codes.push(emoji);
+            this.emojiDecCodes.push(emoji);
         }
     }
 }

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output, Input, ChangeDetectorRef } from "@angular/core";
 import { trigger, state, transition, style, animate, keyframes } from "@angular/core";
 import { Observable } from "rxjs/Observable";
-import { EmojiService } from "./emoji-service";
 
 const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
 
@@ -10,42 +9,42 @@ const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
     templateUrl: "emoji.component.html",
     styleUrls: [ "emoji.component.css" ],
     animations: [
-        trigger('toggleEmoji', [
-            state('in', style({height: '210px', opacity: 1})),
-            state('out', style({height: '0', opacity: 0, display: 'none'})),
-            transition('out => in', [
+        trigger("toggleEmoji", [
+            state("in", style({height: "210px", opacity: 1})),
+            state("out", style({height: "0", opacity: 0, display: "none"})),
+            transition("out => in", [
                 animate(`400ms ${animationCurve}`, keyframes([
-                    style({transform: 'height', opacity: 0, height: '0', offset: 0}),
-                    style({transform: 'height', opacity: 1, height: '210px', offset: 1.0})
+                    style({transform: "height", opacity: 0, height: "0", offset: 0}),
+                    style({transform: "height", opacity: 1, height: "210px", offset: 1.0})
                 ]))
             ]),
-            transition('in => out', [
+            transition("in => out", [
                 animate(`400ms ${animationCurve}`, keyframes([
-                    style({transform: 'height', opacity: 1, height: '210px', offset: 0}),
-                    style({transform: 'height', opacity: 0, height: '0', offset: 1.0})
+                    style({transform: "height", opacity: 1, height: "210px", offset: 0}),
+                    style({transform: "height", opacity: 0, height: "0", offset: 1.0})
                 ]))
             ]),
-            transition('void => *', [
-                animate(0, style({height: '0', opacity: 0, display: 'none'}))
+            transition("void => *", [
+                animate(0, style({height: "0", opacity: 0, display: "none"}))
             ])
         ]),
-        trigger('slidePage', [
-            state('in', style({transform: 'translateX(0)', opacity: 1})),
-            state('out_r', style({transform: 'translateX(100%)', opacity: 0, display: 'none'})),
-            state('out_l', style({transform: 'translateX(-100%)', opacity: 0, display: 'none'})),
-            transition('* => *', [
+        trigger("slidePage", [
+            state("in", style({transform: "translateX(0)", opacity: 1})),
+            state("out_r", style({transform: "translateX(100%)", opacity: 0, display: "none"})),
+            state("out_l", style({transform: "translateX(-100%)", opacity: 0, display: "none"})),
+            transition("* => *", [
                 animate(`300ms ${animationCurve}`)
             ])
         ])
     ]
 })
 export class EmojiComponent {
-    @Input() private emojiPanelPosition: number;
+    @Input() emojiPanelPosition: number;
     @Input() toggle: Observable<boolean>;
     @Output() onSelect = new EventEmitter<string>();
 
-    private emoji_code_points = [];
-    private current_tab: HTMLButtonElement = null;
+    private emojiCodePoints = [];
+    private currentTab: HTMLButtonElement = null;
     private emojiPanelState: string = "out";
     private canToggle: boolean = false;
 
@@ -60,26 +59,24 @@ export class EmojiComponent {
         {page: "flags",    state: "out_r"},
     ];
 
-    constructor(private changeDetector: ChangeDetectorRef,
-                private emoji: EmojiService) {
-        this.emoji_code_points = emoji.getEmojiChars();
+    constructor(private changeDetector: ChangeDetectorRef) {
     }
 
     ngOnInit() {
-        let emoji_wrapper = document.getElementById("emoji_wrapper");
-        for (let i = 0; i < emoji_wrapper.children.length; i++) {
-            emoji_wrapper.children[i].innerHTML = twemoji.parse(emoji_wrapper.children[i].innerHTML);
+        let emojiWrapper = document.getElementById("emoji_wrapper");
+        for (let i = 0; i < emojiWrapper.children.length; i++) {
+            emojiWrapper.children[i].innerHTML = twemoji.parse(emojiWrapper.children[i].innerHTML);
         }
-        let emoji_imgs = document.getElementsByClassName("emoji");
-        for (let i = 0; i < emoji_imgs.length; i++) {
-            let emoji_img = emoji_imgs.item(i) as HTMLImageElement;
-            if (emoji_img) {
-                emoji_img.onclick = () => this.selectEmoji(emoji_img.alt);
+        let emojiImgs = document.getElementsByClassName("emoji");
+        for (let i = 0; i < emojiImgs.length; i++) {
+            let emojiImg = emojiImgs.item(i) as HTMLImageElement;
+            if (emojiImg) {
+                emojiImg.onclick = () => this.selectEmoji(emojiImg.alt);
             }
         }
-        let flags_img = document.getElementById("flags").getElementsByTagName("img");
-        for (let i = 0; i < flags_img.length; i++) {
-            flags_img.item(i).setAttribute("title", countries[flags_img.item(i).alt]);
+        let flagsImg = document.getElementById("flags").getElementsByTagName("img");
+        for (let i = 0; i < flagsImg.length; i++) {
+            flagsImg.item(i).setAttribute("title", countries[flagsImg.item(i).alt]);
         }
 
         this.toggle.subscribe(value => {
@@ -97,8 +94,8 @@ export class EmojiComponent {
         }
     }
 
-    selectEmoji(emoji_code_point) {
-        this.onSelect.emit(emoji_code_point);
+    selectEmoji(emojiCodePoint) {
+        this.onSelect.emit(emojiCodePoint);
     }
 
     selectTab(page: string) {

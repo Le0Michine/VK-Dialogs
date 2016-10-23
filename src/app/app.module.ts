@@ -18,7 +18,6 @@ import { routing } from "./app.routing";
 import { DialogService } from "./dialogs-service";
 import { UserService } from "./user-service";
 import { VKService } from "./vk-service";
-import { EmojiService } from "./emoji-service";
 import { ChromeAPIService } from "./chrome-api-service";
 import { OptionsService } from "./services";
 import { FileUploadService } from "./file-upload.service";
@@ -73,7 +72,6 @@ import { MessageAttachmentIconPipe, MessageAttachmentSubTitlePipe, MessageAttach
         UserService,
         VKService,
         DialogService,
-        EmojiService,
         ChromeAPIService,
         OptionsService,
         FileUploadService

@@ -32,7 +32,7 @@ export class UserService {
         this.lpsService.userUpdate.subscribe(uids => this.updateUsers(uids));
         this.lpsService.resetHistory.subscribe(() => {
             console.log("update all users");
-            let uids = Object.keys(this.cache.users_cache);
+            let uids = Object.keys(this.cache.usersCache);
             this.updateUsers(uids.join());
         });
         this.chromeapi.registerObservable(this.onUsersUpdate);
@@ -51,19 +51,19 @@ export class UserService {
     }
 
     postUsersUpdate(): void {
-        console.log("post users update: ", this.cache.users_cache);
-        if (Object.keys(this.cache.users_cache).length === 0) {
+        console.log("post users update: ", this.cache.usersCache);
+        if (Object.keys(this.cache.usersCache).length === 0) {
             console.log("there is no users, nothing to post");
             return;
         }
         this.onUsersUpdate.next({
             name: "users_update",
-            data: this.cache.users_cache
+            data: this.cache.usersCache
         });
     }
 
     loadUsers(uids: string): void {
-        console.log("load users: ", uids)
+        console.log("load users: ", uids);
         if (!uids || uids.length === 0) return;
         this.getUsers(uids).subscribe(users => {
             this.cache.pushUsers(users);
@@ -73,19 +73,19 @@ export class UserService {
         () => console.log("loaded users: " + uids));
     }
 
-    getUsers(uids: string, cache: boolean = true): Observable<{ [id: number] : UserInfo }> {
-        let already_cached = true;
+    getUsers(uids: string, cache: boolean = true): Observable<{ [id: number]: UserInfo }> {
+        let alreadyCached = true;
         let users = {};
         for (let uid of uids.split(",").map(id => Number(id))) {
-            if (uid in this.cache.users_cache) {
-                users[uid] = this.cache.users_cache[uid];
+            if (uid in this.cache.usersCache) {
+                users[uid] = this.cache.usersCache[uid];
             }
             else {
-                already_cached = false;
+                alreadyCached = false;
                 break;
             }
         }
-        if (already_cached && cache) {
+        if (alreadyCached && cache) {
             return Observable.of(users);
         }
 
@@ -94,17 +94,17 @@ export class UserService {
             .map(json => this.toUsersDictionary(json));
     }
 
-    toUsersDictionary(json): {[id: number] : UserInfo } {
-        let users: {[id: number] : UserInfo } = {};
-        for (let user_json of json) {
-            users[user_json.id] = this.toUserViewModel(user_json);
-            this.cache.users_cache[user_json.id] = this.toUserViewModel(user_json);
+    toUsersDictionary(json): {[id: number]: UserInfo } {
+        let users: {[id: number]: UserInfo } = {};
+        for (let userJson of json) {
+            users[userJson.id] = this.toUserViewModel(userJson);
+            this.cache.usersCache[userJson.id] = this.toUserViewModel(userJson);
         }
         return users;
     }
 
     toUserViewModel(json): UserInfo {
-        var user = new UserInfo();
+        let user = new UserInfo();
         user.firstName = json.first_name;
         user.lastName = json.last_name;
         user.id = json.id;

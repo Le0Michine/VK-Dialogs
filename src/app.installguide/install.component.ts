@@ -7,23 +7,23 @@ import { ChromeAPIService } from "../app/chrome-api-service";
     templateUrl: "install.component.html",
     styleUrls: ["install.component.css"],
     animations: [
-        trigger('flyInOut', [
-            state('in', style({transform: 'translateX(0)'})),
-            state('out_r', style({transform: 'translateX(200%)', display: "none"})),
-            state('out_l', style({transform: 'translateX(-200%)', display: "none"})),
-            transition('out_r => in', [
-                style({transform: 'translateX(200%)'}),
+        trigger("flyInOut", [
+            state("in", style({transform: "translateX(0)"})),
+            state("out_r", style({transform: "translateX(200%)", display: "none"})),
+            state("out_l", style({transform: "translateX(-200%)", display: "none"})),
+            transition("out_r => in", [
+                style({transform: "translateX(200%)"}),
                 animate(300)
             ]),
-            transition('out_l => in', [
-                style({transform: 'translateX(-200%)'}),
+            transition("out_l => in", [
+                style({transform: "translateX(-200%)"}),
                 animate(300)
             ]),
-            transition('in => out_r', [
-                animate(300, style({transform: 'translateX(200%)'}))
+            transition("in => out_r", [
+                animate(300, style({transform: "translateX(200%)"}))
             ]),
-            transition('in => out_l', [
-                animate(300, style({transform: 'translateX(-200%)'}))
+            transition("in => out_l", [
+                animate(300, style({transform: "translateX(-200%)"}))
             ])
         ])
     ]
@@ -39,7 +39,7 @@ export class InstallComponent {
         { name: "step_last", progress: 100, state: "out_r"},
     ];
 
-    constructor(translate: TranslateService, private changes: ChangeDetectorRef, private chromeapi: ChromeAPIService) {
+    constructor(translate: TranslateService, private changeDetector: ChangeDetectorRef, private chromeapi: ChromeAPIService) {
 
         translate.setDefaultLang("en");
         translate.use("ru"); /** need to be initialized without delay caused by chrome.storage.sync.get */
@@ -63,7 +63,7 @@ export class InstallComponent {
         this.chromeapi.SendRequest({ name: "authorize" }).subscribe(() => {
             console.log("authorization complete");
             this.next("step_auth");
-            this.changes.detectChanges();
+            this.changeDetector.detectChanges();
         });
     }
 
@@ -72,7 +72,7 @@ export class InstallComponent {
     }
 
     back(current) {
-        this.changeFromToDelta(current, -1)
+        this.changeFromToDelta(current, -1);
     }
 
     changeFromToDelta(current, delta: number) {

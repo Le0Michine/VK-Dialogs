@@ -9,7 +9,7 @@ const ENTER = 13;
 @Component({
     selector: "search-autocomplete",
     templateUrl: "search.component.html",
-    styleUrls: [ 
+    styleUrls: [
         "css/font-style.css",
         "css/round-buttons.css",
         "css/color-scheme.css",
@@ -17,14 +17,14 @@ const ENTER = 13;
     ],
     animations: [
         trigger("openClose", [
-            state("in", style({ 'max-height': "500px", display: "block", opacity: 1 })),
+            state("in", style({ "max-height": "500px", display: "block", opacity: 1 })),
             transition("void => *", animate(400, keyframes([
-                style({ transform: 'max-height', 'max-height': 0, offset: 0 }),
-                style({ transform: 'max-height', 'max-height': '500px', offset: 1})
+                style({ transform: "max-height", "max-height": 0, offset: 0 }),
+                style({ transform: "max-height", "max-height": "500px", offset: 1})
             ]))),
             transition("* => void", animate(400, keyframes([
-                style({ transform: 'max-height', 'max-height': '500px', offset: 0}),
-                style({ transform: 'max-height', 'max-height': 0, offset: 1 })
+                style({ transform: "max-height", "max-height": "500px", offset: 0}),
+                style({ transform: "max-height", "max-height": 0, offset: 1 })
             ])))
         ])
     ]
@@ -46,7 +46,7 @@ export class SearchComponent implements AfterViewInit {
         this.focus.subscribe(v => {
             if (v && this.searchField) {
                 this.show = true;
-                setTimeout(() => this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus"),0);
+                setTimeout(() => this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus"), 0);
             }
         });
     }
