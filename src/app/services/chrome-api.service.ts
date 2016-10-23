@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
-import "rxjs/add/Observable/fromEventPattern";
-import "rxjs/add/Observable/bindCallback";
+import "rxjs/add/observable/fromEventPattern";
+import "rxjs/add/observable/bindCallback";
 
 @Injectable()
 export class ChromeAPIService {

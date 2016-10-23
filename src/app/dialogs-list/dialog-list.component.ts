@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
-import "rxjs/add/Operator/combineLatest";
+import "rxjs/add/operator/combineLatest";
 import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "../datamodels";
 import { UserService, VKService, DialogService, ChromeAPIService } from "../services";
 import { VKConsts } from "../vk-consts";

@@ -1,5 +1,5 @@
 import { Observable } from "rxjs/Observable";
-import "rxjs/add/Observable/fromEventPattern";
+import "rxjs/add/observable/fromEventPattern";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "./datamodels/datamodels";
