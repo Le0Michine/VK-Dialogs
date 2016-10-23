@@ -149,23 +149,23 @@ pre {
 }
 
 .att_doc_img {
-    background: url("../icons/doc_icons.png") no-repeat;
+    background: url("../../icons/doc_icons.png") no-repeat;
 }
 
 .att_vid_img {
-    background: url("../icons/doc_icons.png") no-repeat 0px -120px;
+    background: url("../../icons/doc_icons.png") no-repeat 0px -120px;
 }
 
 .att_aud_img {
-    background: url("../icons/doc_icons.png") no-repeat 0px -90px;
+    background: url("../../icons/doc_icons.png") no-repeat 0px -90px;
 }
 
 .att_url_img {
-    background: url("../icons/doc_icons.png") no-repeat 0px -180px;
+    background: url("../../icons/doc_icons.png") no-repeat 0px -180px;
 }
 
 .att_zip_img {
-    background: url("../icons/doc_icons.png") no-repeat 0px -30px;
+    background: url("../../icons/doc_icons.png") no-repeat 0px -30px;
 }
 
 .user-avatar {
