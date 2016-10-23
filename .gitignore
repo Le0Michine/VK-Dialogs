@@ -1,11 +1,5 @@
-src/node_modules/
+coverage/
 node_modules/
-src/typings/
-src/app/*.js
-src/app.background/*.js
-src/app/*.map
-*.map
-src/npm-debug.log
-src/dist/
 out/
+npm-debug.log
 .vscode
