@@ -174,6 +174,7 @@ module.exports = function(options) {
          * See: https://github.com/webpack/raw-loader
          */
         { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] },
+        { test: /\.(jpg|png|gif)$/, loader: 'file' },
         ...postLoaders
       ]
     },
