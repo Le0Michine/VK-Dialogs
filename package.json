@@ -10,9 +10,10 @@
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile --env.clean false",
     "build:clean": "webpack --config config/webpack.dev.js --progress --profile --env.clean true",
     "build:prod": "webpack --config config/webpack.prod.js --progress --profile",
-    "test": "karma start --full-coverage",
+    "test": "npm run test:once",
+    "test:once": "karma start --full-coverage",
     "test:nocov": "karma start",
-    "test:dev": "karma start --debug",
+    "test:dev": "karma start --debug --full-coverage",
     "tslint": "tslint -c tslint.json \"src/**/*.ts\" -e src/app/datamodels/attachment-data-types.ts --force"
   },
   "dependencies": {
