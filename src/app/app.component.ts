@@ -76,6 +76,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.settings.windowSize.subscribe(size => {
             this.windowWidth = size.w + "px";
             this.windowHeight = size.h + "px";
+            this.ref.detectChanges();
         });
         this.router.events.subscribe((event) => {
             this.routeChanged();
@@ -108,16 +109,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     private routeChanged(): void {
         let path: string[] = this.location.path().split("/").filter(s => s);
-        if (path.length < 2) {
-            if (path[1] === "authorize") {
-                this.windowHeight = "150px";
-            } else {
-                this.showSearchBar = true;
-            }
-        } else {
-            this.showSearchBar = false;
-        }
-        this.ref.detectChanges();
+        this.showSearchBar = path.length < 2 && !path.find(x => x === "authorize");
     }
 
     private logOff() {
