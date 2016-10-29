@@ -161,6 +161,9 @@ export class MessageInputComponent {
             else if (node.nodeName === "IMG" && node.attributes && node.attributes.getNamedItem("class").value === "emoji") {
                 text += node.attributes.getNamedItem("alt").value;
             }
+            else if (node["innerText"]) {
+                text += node["innerText"];
+            }
             else {
                 text += this.getText(node.childNodes);
             }
@@ -265,20 +268,6 @@ export class MessageInputComponent {
     }
 
     escape(text) {
-        return text.trim()
-            .replace(/%/g,  "%25")
-            .replace(/\n/g, "%0A")
-            .replace(/!/g,  "%21")
-            .replace(/"/g,  "%22")
-            .replace(/#/g,  "%23")
-            .replace(/\$/g, "%24")
-            .replace(/&/g,  "%26")
-            .replace(/'/g,  "%27")
-            .replace(/\(/g, "%28")
-            .replace(/\)/g, "%29")
-            .replace(/\*/g, "%2A")
-            .replace(/\+/g, "%2B")
-            .replace(/,/g,  "%2C")
-            .replace(/-/g,  "%2D");
+        return encodeURI(text.trim());
     }
 }
