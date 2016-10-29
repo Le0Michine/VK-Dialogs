@@ -48,6 +48,7 @@ export class VKService {
         }
         else {
             this.authorized = true;
+            window.localStorage.removeItem(VKConsts.userDenied);
             return Observable.of(this.sessionInfo);
         }
     }

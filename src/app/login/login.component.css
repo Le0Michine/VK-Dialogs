@@ -6,8 +6,6 @@
 #auth {
     box-sizing: border-box;
     color: rgb(51, 51, 51);
-    height: 78px;
-    width: 334px;
     border: none;
     padding: 10px;
     margin-bottom: 10px;
@@ -15,8 +13,6 @@
 
 p {
     box-sizing: border-box;
-    height: 34px;
-    width: 334px;
     border: none;
     margin: 0px 0px 10px;
     font: inherit;

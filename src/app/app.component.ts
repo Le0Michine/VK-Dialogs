@@ -28,12 +28,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     @ViewChild("main") mainDiv: ElementRef;
     showSearchBar: boolean = false;
     searchFocus: Subject<boolean> = new Subject();
-    mainTitle: string = "";
     title: string = "";
     unreadCount: number = 6;
     conversationId: number;
     isChat: boolean;
-    backIsAvailable: boolean = false;
     isPopupMenuOpened: boolean = false;
 
     windowWidth: string = "300px";
@@ -49,14 +47,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     foundDialogs: DialogShortInfo[] = [];
 
     constructor(
-            private translate: TranslateService,
-            private location: Location,
-            private router: Router,
-            private ref: ChangeDetectorRef,
-            private chromeapi: ChromeAPIService,
-            private dialogs: DialogService,
-            private settings: OptionsService,
-            private renderer: Renderer) {
+        private translate: TranslateService,
+        private location: Location,
+        private router: Router,
+        private ref: ChangeDetectorRef,
+        private chromeapi: ChromeAPIService,
+        private dialogs: DialogService,
+        private settings: OptionsService,
+        private renderer: Renderer
+    ) {
         translate.setDefaultLang("en");
     }
 
@@ -70,10 +69,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.settings.language.subscribe(lang => {
             console.log("current lang", lang);
             this.translate.use(lang);
-            this.translate.get("dialogs").subscribe(value => {
-                this.mainTitle = value;
-                this.routeChanged();
-            });
         });
         this.settings.windowSize.subscribe(size => {
             this.windowWidth = size.w + "px";
@@ -90,7 +85,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     onDialogSelect(dialog: DialogShortInfo) {
-        this.router.navigate(["dialog", dialog.id, dialog.type === "profile" ? "dialog" : "chat", dialog.title]);
+        this.router.navigate(["dialogs", dialog.type === "profile" ? "dialog" : "chat", dialog.id, dialog.title]);
     }
 
     private search(searchTerm: string) {
@@ -110,30 +105,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.isPopupMenuOpened = !this.isPopupMenuOpened;
     }
 
-    private goBack() {
-        this.location.back();
-        this.backIsAvailable = false;
-    }
-
     private routeChanged(): void {
         let path: string[] = this.location.path().split("/");
         if (path.length < 2 || path[1] !== "dialog") {
-            this.backIsAvailable = false;
             if (path[1] === "authorize") {
-                this.translate.get("authorize_btn").subscribe(value => this.mainTitle = value);
                 this.windowHeight = "150px";
-            }
-        }
-        else {
-            this.conversationId = Number(path[2]);
-            this.isChat = path[3] === "chat";
-            try {
-                let urlTree = this.router.parseUrl(path[path.length - 1]);
-                this.title = urlTree.root.children["primary"].segments[0].path;
-                this.backIsAvailable = true;
-            }
-            catch (e) {
-                console.dir(e);
             }
         }
         this.ref.detectChanges();

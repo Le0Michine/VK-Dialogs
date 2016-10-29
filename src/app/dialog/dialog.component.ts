@@ -1,11 +1,16 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, Renderer, EventEmitter } from "@angular/core";
 import { trigger, state, transition, style, animate, keyframes } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Title } from "@angular/platform-browser";
+import { Store } from "@ngrx/Store";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+
 import { DialogService, UserService, VKService, ChromeAPIService, FileUploadService, OptionsService } from "../services";
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
 import { MenuItem } from "../datamodels";
+import { BreadcrumbActions } from "../reducers";
+import { AppStore } from "../app.store";
 
 @Component({
     selector: "messages",
@@ -77,20 +82,27 @@ export class DialogComponent implements OnInit, OnDestroy {
         private vkservice: VKService,
         private userService: UserService,
         private router: Router,
+        private pageTitle: Title,
         private route: ActivatedRoute,
         private changeDetector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private fileUpload: FileUploadService,
         private renderer: Renderer,
-        private settings: OptionsService) { }
+        private settings: OptionsService,
+        private store: Store<AppStore>
+    ) { }
 
     ngOnInit() {
         console.log("specific dialog component init");
+
         this.route.params.subscribe(params => {
             this.title = params["title"];
             this.conversationId = +params["id"];
             let type = params["type"];
             this.isChat = type === "dialog" ? false : true;
+
+            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{ title: this.title, navigationLink: "dialogs", leftArrow: true }] });
+            this.pageTitle.setTitle(this.title);
 
             this.chromeapi.SendMessage({
                 name: "last_opened",

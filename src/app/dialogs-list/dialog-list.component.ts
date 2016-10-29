@@ -1,11 +1,16 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { Store } from "@ngrx/Store";
 import { Title } from "@angular/platform-browser";
 import { Router } from "@angular/router";
+import { TranslateService } from "ng2-translate/ng2-translate";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/combineLatest";
+
 import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "../datamodels";
 import { UserService, VKService, DialogService, ChromeAPIService } from "../services";
 import { VKConsts } from "../vk-consts";
+import { AppStore } from "../app.store";
+import { BreadcrumbActions } from "../reducers";
 
 @Component({
   selector: "dialogs",
@@ -34,21 +39,24 @@ export class DialogListComponent implements OnInit, OnDestroy {
         private vkservice: VKService,
         private dialogService: DialogService,
         private chromeapi: ChromeAPIService,
-        private changeDetector: ChangeDetectorRef) { }
+        private changeDetector: ChangeDetectorRef,
+        private store: Store<AppStore>,
+        private translate: TranslateService
+    ) { }
 
     gotoDialog(dialog: SingleMessageInfo) {
         let link: string[];
         if (dialog.chatId) {
-            link = ["dialog", dialog.chatId.toString(), "chat", dialog.title];
+            link = ["dialogs", "chat", dialog.chatId.toString(), dialog.title];
         }
         else {
             let user: UserInfo = this.users[dialog.userId];
             let title: string = !dialog.title || dialog.title === " ... " ? user.firstName + " " + user.lastName : dialog.title;
             this.title.setTitle(title);
             link = [
+                "dialogs",
                 "dialog",
                 dialog.userId.toString(),
-                "dialog",
                 title];
         }
         this.router.navigate(link);
@@ -65,24 +73,19 @@ export class DialogListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.vkservice.init();
 
-        console.log("authorized, continue initialization");
-
         this.dialogService.init();
-        this.title.setTitle("Dialogs");
 
-        if (window.localStorage.getItem(VKConsts.userDenied) === "true" || !this.vkservice.hasValidSession()) {
-            console.log("navigate to login page");
-            setTimeout(() => this.router.navigate(["authorize"]), 0);
-            // this.router.navigate(["authorize"]);
-            return;
-        }
+        this.translate.get("dialogs").subscribe(value => {
+            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{ title: value, href: "https://vk.com/im" }] });
+            this.title.setTitle(value);
+        });
 
         this.vkservice.setOnline();
 
         this.chromeapi.SendRequest({ name: "last_opened" }).subscribe((response: any) => {
             if (response.last_opened) {
                 let lastOpened = response.last_opened;
-                this.router.navigate(["dialog", lastOpened.id, lastOpened.type, lastOpened.title]);
+                this.router.navigate(["dialogs", lastOpened.type, lastOpened.id, lastOpened.title]);
             }
         });
 

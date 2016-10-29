@@ -1,0 +1,11 @@
+<div>
+    <div class="pull-left breadcrumb-item"
+        [class.clickable]="item.navigationLink || item.href"
+        *ngFor="let last=last; let item of items | async"
+    >
+        <a *ngIf="item.navigationLink" routerLink="{{item.navigationLink}}"></a>
+        <a *ngIf="item.href" [href]="item.href" target="_blank"></a>
+        <div *ngIf="item.leftArrow" class="material-icons pull-left">chevron_left</div>
+        <h1 class="breadcrumb-item-title primary-color">{{item.title}}</h1><i *ngIf="!last" class="material-icons">chevron_right</i>
+    </div>
+</div>

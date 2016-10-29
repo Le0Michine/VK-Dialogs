@@ -1,0 +1,32 @@
+a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.breadcrumb-item-title {
+    margin-top: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 235px;
+}
+
+.breadcrumb-item {
+    margin-left: 5px;
+    position: relative;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable::hover {
+    background-color: lightgray;
+}
+
+h1 {
+    display: inline-block;
+    margin: 0;
+}

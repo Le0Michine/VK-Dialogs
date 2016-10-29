@@ -1,29 +1,19 @@
 <div #main [style.width]="windowWidth" [style.height]="windowHeight" (click)="closePopupMenu()" (keydown)="keyDown($event)" tabindex="1">
-<div id="topPanel" class="primary-color text-normal">
-	<a (click)="goBack()" class="btn-back text-normal" *ngIf="backIsAvailable">
-		<div class="material-icons pull-left">keyboard_arrow_left</div>
-		<h1 id="dialog_title" class="pull-left">{{ title }}</h1>
-		<!--<button class="btn-menu material-icons ontop pull-right" title="Settings">
-			mail
-			<div *ngIf="true" class="unread-count">{{unreadCount}}</div>
-		</button>-->
-	</a>
-	<a href="https://vk.com/im" target="_blank" class="btn-back space-left outline-none pull-left" *ngIf="!backIsAvailable"> 
-		<h1 id="dialog_title" class="pull-left">{{ mainTitle }}</h1>
-	</a>
-	<div class="pull-left" *ngIf="!backIsAvailable"><search-autocomplete *ngIf="showSearchBar" [items]="foundDialogs" (onInput)="search($event)" (onSelect)="onDialogSelect($event)" [focus]="searchFocus"></search-autocomplete></div>
-	<button class="btn-menu material-icons ontop pull-right" (click)="openMenu($event)" title="Settings">more_vert</button>
-</div>
-<div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">
-	<popup-menu
-		[selectable]="true"
-		[deletable]="false"
-		[state]="isPopupMenuOpened"
-		[menuItems]="popupMenuItems"
-		(onSelect)="onMenuItemSelect($event)">
-	</popup-menu>
-</div>
-<div id="content">
-	<router-outlet></router-outlet>
-</div>
+	<div id="topPanel" class="primary-color text-normal">
+		<breadcrumb></breadcrumb>
+		<div class="pull-left" *ngIf="!backIsAvailable"><search-autocomplete *ngIf="showSearchBar" [items]="foundDialogs" (onInput)="search($event)" (onSelect)="onDialogSelect($event)" [focus]="searchFocus"></search-autocomplete></div>
+		<button class="btn-menu material-icons ontop pull-right" (click)="openMenu($event)" title="Settings">more_vert</button>
+	</div>
+	<div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">
+		<popup-menu
+			[selectable]="true"
+			[deletable]="false"
+			[state]="isPopupMenuOpened"
+			[menuItems]="popupMenuItems"
+			(onSelect)="onMenuItemSelect($event)">
+		</popup-menu>
+	</div>
+	<div id="content">
+		<router-outlet></router-outlet>
+	</div>
 </div>

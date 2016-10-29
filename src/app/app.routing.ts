@@ -4,15 +4,18 @@ import { DialogComponent } from "./dialog";
 import { DialogListComponent } from "./dialogs-list";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login";
+import { AuthorizationGuard } from "./guards";
 
 const routes: Routes = [
   {
-    path: "dialog/:id/:type/:title",
-    component: DialogComponent
+    path: "dialogs/:type/:id/:title",
+    component: DialogComponent,
+    canActivate: [ AuthorizationGuard ]
   },
   {
     path: "dialogs",
-    component: DialogListComponent
+    component: DialogListComponent,
+    canActivate: [ AuthorizationGuard ]
   },
   {
     path: "authorize",
@@ -21,7 +24,7 @@ const routes: Routes = [
   {
     path: "",
     redirectTo: "/dialogs",
-    pathMatch: "full"
+    pathMatch: "full",
   },
   {
     path: "popup.html",
@@ -30,4 +33,4 @@ const routes: Routes = [
   }
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes);
+export const routing: ModuleWithProviders = RouterModule.forRoot(routes, { useHash: true });

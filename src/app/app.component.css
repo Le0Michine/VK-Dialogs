@@ -79,3 +79,7 @@
     display: inline-block;
     position: relative;
 }
+
+div[tabindex] {
+    outline: none;
+}
