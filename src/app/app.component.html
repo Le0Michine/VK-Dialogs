@@ -1,7 +1,15 @@
 <div #main [style.width]="windowWidth" [style.height]="windowHeight" (click)="closePopupMenu()" (keydown)="keyDown($event)" tabindex="1">
 	<div id="topPanel" class="primary-color text-normal">
 		<breadcrumb></breadcrumb>
-		<div class="pull-left" *ngIf="!backIsAvailable"><search-autocomplete *ngIf="showSearchBar" [items]="foundDialogs" (onInput)="search($event)" (onSelect)="onDialogSelect($event)" [focus]="searchFocus"></search-autocomplete></div>
+		<div class="search-bar">
+			<search-autocomplete
+				*ngIf="showSearchBar"
+				[items]="foundDialogs"
+				(onInput)="search($event)"
+				(onSelect)="onDialogSelect($event)"
+				[focus]="searchFocus"
+			></search-autocomplete>
+		</div>
 		<button class="btn-menu material-icons ontop pull-right" (click)="openMenu($event)" title="Settings">more_vert</button>
 	</div>
 	<div id="menuWrapper" class="ontop" *ngIf="isPopupMenuOpened">

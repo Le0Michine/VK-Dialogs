@@ -9,7 +9,8 @@
     width: 100%;
     z-index: 100;
     box-shadow: 0 0px 5px rgba(0, 0, 0, 0.8);
-    padding: 10px;
+    padding: 10px 5px 10px 10px;
+    display: flex;
 }
 
 .btn-menu {
@@ -17,7 +18,14 @@
     border: none;
     background: none;
     color: white;
+    max-width: 36px;
+    flex: 1;
     /*font-size: 25px;*/
+}
+
+.search-bar {
+    flex: 1;
+    display: inline-block;
 }
 
 .unread-count {

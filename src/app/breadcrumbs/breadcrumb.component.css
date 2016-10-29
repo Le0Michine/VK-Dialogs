@@ -14,8 +14,11 @@ a {
 }
 
 .breadcrumb-item {
-    margin-left: 5px;
     position: relative;
+}
+
+.left-buffer {
+    margin-left: 5px;
 }
 
 .clickable {

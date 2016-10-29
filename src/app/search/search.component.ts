@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, animate, trigger, style, keyframes, state, transition, Renderer, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
+import { Observable } from "rxjs/Observable";
 
 import { MenuItem } from "../datamodels";
 
@@ -26,17 +27,41 @@ const ENTER = 13;
                 style({ transform: "max-height", "max-height": "500px", offset: 0}),
                 style({ transform: "max-height", "max-height": 0, offset: 1 })
             ])))
+        ]),
+        trigger("focusInOut", [
+            state("in", style({transform: "translateX(0) scale(1)"})),
+            state("out", style({transform: "translateX(0) scale(0)", opacity: 0, display: "none"})),
+            transition("out => in", [
+                animate("200ms ease", keyframes([
+                    style({opacity: 0, transform: "translateX(0) scale(0)", offset: 0}),
+                    style({opacity: 1, transform: "translateX(0) scale(1)", offset: 1.0})
+                ]))
+            ]),
+            transition("in => out", [
+                animate("100ms ease", style({transform: "translateX(0) scale(0)"}))
+            ])
+        ]),
+        trigger("dropdown", [
+            transition(":enter", [
+                style({ transition: "max-height" }),
+                animate("200ms ease-in")
+            ]),
+            transition(":leave", [
+                animate("200ms ease-out", style({ "opacity": 0 }))
+            ])
         ])
     ]
 })
 export class SearchComponent implements AfterViewInit {
     @ViewChild("searchInput") searchField: ElementRef;
     @Input() items;
-    @Input() focus;
+    @Input() focus: Observable<boolean>;
     @Output() onInput = new EventEmitter();
     @Output() onSelect = new EventEmitter();
 
-    show: boolean = false;
+    focusState: string = "out";
+    placeholder: string = "";
+    showItems: boolean = false;
     private _input: string;
     private _selectedItem: number = -1;
 
@@ -45,8 +70,9 @@ export class SearchComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.focus.subscribe(v => {
             if (v && this.searchField) {
-                this.show = true;
-                setTimeout(() => this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus"), 0);
+                this.setFocus();
+            } else {
+                this.blur();
             }
         });
     }
@@ -58,6 +84,20 @@ export class SearchComponent implements AfterViewInit {
 
     get input(): string {
         return this._input;
+    }
+
+    setFocus() {
+        this.placeholder = "search_in_dialogs";
+        this.focusState = "in";
+        this.showItems = true;
+        this.renderer.invokeElementMethod(this.searchField.nativeElement, "focus");
+    }
+
+    blur() {
+        this.focusState = "out";
+        this.placeholder = "";
+        this.showItems = false;
+        this.input = "";
     }
 
     select(item) {

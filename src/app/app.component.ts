@@ -30,7 +30,7 @@ const rotateAnimationLength = 200;
 })
 export class AppComponent implements AfterViewInit, OnInit {
     @ViewChild("main") mainDiv: ElementRef;
-    showSearchBar: boolean = false;
+    showSearchBar: boolean = true;
     searchFocus: Subject<boolean> = new Subject();
     title: string = "";
     unreadCount: number = 6;
@@ -83,8 +83,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.chromeapi.OnPortMessage("unread_count").map(x => x.data as number).subscribe(n => {
             this.unreadCount = n;
         });
-
-        this.settings.activatePreviewFeatures.subscribe(v => this.showSearchBar = v);
     }
 
     onDialogSelect(dialog: DialogShortInfo) {
@@ -109,11 +107,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     private routeChanged(): void {
-        let path: string[] = this.location.path().split("/");
-        if (path.length < 2 || path[1] !== "dialog") {
+        let path: string[] = this.location.path().split("/").filter(s => s);
+        if (path.length < 2) {
+            this.showSearchBar = true;
             if (path[1] === "authorize") {
                 this.windowHeight = "150px";
             }
+        } else {
+            this.showSearchBar = false;
         }
         this.ref.detectChanges();
     }

@@ -5,6 +5,8 @@
     "load_previous_messages": "Load previous messages",
     "not_authorized": "You are not authorized.\r\nPlease click \"Authorize\" to access your VK data.",
     "authorize_btn": "Authorize",
+    "search_in_dialogs": "Search in dialogs",
+    "conversation_start": "Conversation begining",
     "skip_btn": "Skip",
     "close_btn": "Close",
     "back_btn": "Back",

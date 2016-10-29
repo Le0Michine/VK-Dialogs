@@ -1,8 +1,27 @@
-<div class="search-widget" (keydown)="onKeyPress($event)" [hidden]="!show">
-    <!--<button class="btn-search">search</button>-->
-    <!--<button class="search-close-button">close</button>-->
-    <input #searchInput [(ngModel)]="input" name="searchInput" placeholder="Search" type="text" id="searchInput" autocomplete="off" class="primary-color">
-    <ul>
-        <li *ngFor="let item of items; let i = index;" (click)="select(item)" class="text-normal" [class.selected]="i === _selectedItem" (mouseover)="onHover(i)">{{item.title}}</li>
+<div class="search-widget" (keydown)="onKeyPress($event)">
+    <div class="controls">
+        <button class="btn-search material-icons" (click)="setFocus()">search</button>
+        <input
+            #searchInput
+            id="searchInput"
+            name="searchInput"
+            type="text"
+            class="primary-color"
+            [placeholder]="placeholder | translate"
+            autocomplete="off"
+            [(ngModel)]="input"
+            (blur)="blur()"
+            (focus)="setFocus()"
+        >
+    </div>
+    <div [@focusInOut]="focusState" class="underline"></div>
+    <ul *ngIf="showItems" @dropdown>
+        <li
+            *ngFor="let item of items; let i = index;"
+            (click)="select(item)"
+            class="text-normal"
+            [class.selected]="i === _selectedItem"
+            (mouseover)="onHover(i)"
+        >{{item.title}}</li>
     </ul>
 </div>

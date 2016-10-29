@@ -1,12 +1,17 @@
 input {
     border: none;
-    border-bottom: 0.5px solid white;
+    /* border-bottom: 0.5px solid white; */
     outline: none;
     width: 100%;
 }
 
-input:focus {
-    border-bottom: 1px solid white;
+
+.underline {
+    height: 0;
+    width: 100%;
+    display: block;
+    border: 1px solid white;
+    border-radius: 1px;
 }
 
 ul {
@@ -29,4 +34,18 @@ li {
 
 li.selected {
     background-color: #DDD;
+}
+
+.controls {
+    display: flex;
+}
+
+button {
+    border: none;
+    outline: none;
+    background: inherit;
+}
+
+#searchInput {
+    flex: 1;
 }

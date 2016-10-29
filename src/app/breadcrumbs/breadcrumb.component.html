@@ -1,7 +1,8 @@
 <div>
     <div class="pull-left breadcrumb-item"
         [class.clickable]="item.navigationLink || item.href"
-        *ngFor="let last=last; let item of items | async"
+        [class.left-buffer]="!first"
+        *ngFor="let last=last; let first=first; let item of items | async"
     >
         <a *ngIf="item.navigationLink" routerLink="{{item.navigationLink}}"></a>
         <a *ngIf="item.href" [href]="item.href" target="_blank"></a>

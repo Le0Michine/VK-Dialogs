@@ -5,6 +5,8 @@
     "load_previous_messages": "Загрузить предыдущие сообщения",
     "not_authorized": "Вы не авторизованы. Нажмите \"Авторизация\" для доступа к вашему аккаунту VK.",
     "authorize_btn": "Авторизация",
+    "search_in_dialogs": "Поиск в диалогах",
+    "conversation_start": "Начало беседы",
     "skip_btn": "Пропустить",
     "close_btn": "Закрыть",
     "back_btn": "Назад",
