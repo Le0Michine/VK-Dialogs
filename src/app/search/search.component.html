@@ -18,9 +18,9 @@
     <ul *ngIf="showItems" @dropdown>
         <li
             *ngFor="let item of items; let i = index;"
-            (click)="select(item)"
             class="text-normal"
             [class.selected]="i === _selectedItem"
+            (mousedown)="select(item)"
             (mouseover)="onHover(i)"
         >{{item.title}}</li>
     </ul>
