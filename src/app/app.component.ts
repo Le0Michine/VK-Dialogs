@@ -126,8 +126,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     private goToConversation() {
         this.store.select(s => s.history).first().subscribe(h => {
+            let url = "https://vk.com/im";
+            if (h) {
+                url += `?sel=${h.isChat ? "c" : ""}${h.conversationId}`;
+            }
             chrome.tabs.create({
-                url: `https://vk.com/im?sel=${h.isChat ? "c" : ""}${h.conversationId}`,
+                url: url,
                 selected: true
             });
         });

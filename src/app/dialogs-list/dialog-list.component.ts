@@ -10,7 +10,7 @@ import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from ".
 import { UserService, VKService, DialogService, ChromeAPIService } from "../services";
 import { VKConsts } from "../vk-consts";
 import { AppStore } from "../app.store";
-import { BreadcrumbActions } from "../reducers";
+import { BreadcrumbActions, HistoryActions } from "../reducers";
 
 @Component({
   selector: "dialogs",
@@ -86,6 +86,8 @@ export class DialogListComponent implements OnInit, OnDestroy {
             if (response.last_opened) {
                 let lastOpened = response.last_opened;
                 this.router.navigate(["dialogs", lastOpened.type, lastOpened.id, lastOpened.title]);
+            } else {
+                this.store.dispatch({ type: HistoryActions.HISTORY_LOADED, payload: null });
             }
         });
 

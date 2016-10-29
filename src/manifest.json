@@ -3,14 +3,14 @@
     "name": "__MSG_appName__",
     "description": "__MSG_appDesc__",
     "default_locale": "ru",
-    "version": "2.4.1.384",
+    "version": "2.4.1.387",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "options_page": "app.options/options.html",
     "background": {
         "page": "background.html"
     },
     "browser_action": {
-        "default_icon": "icons/snapchat.png",
+        "default_icon": "icons/icon_19.png",
         "default_popup": "index.html"
     },
     "icons": {

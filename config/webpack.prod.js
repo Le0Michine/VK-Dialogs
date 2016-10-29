@@ -54,7 +54,7 @@ module.exports = (function(options) {
                     cascade: true,
                     if_return: true,
                     join_vars: true,
-                    //drop_console: true,
+                    drop_console: true,
                     drop_debugger: true,
                     //unsafe: true,
                     hoist_vars: true,
