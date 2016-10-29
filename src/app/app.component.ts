@@ -109,9 +109,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     private routeChanged(): void {
         let path: string[] = this.location.path().split("/").filter(s => s);
         if (path.length < 2) {
-            this.showSearchBar = true;
             if (path[1] === "authorize") {
                 this.windowHeight = "150px";
+            } else {
+                this.showSearchBar = true;
             }
         } else {
             this.showSearchBar = false;
