@@ -100,6 +100,12 @@ module.exports = function(config) {
     configuration.autoWatch = true;
   }
 
+  if (process.argv.includes("--continious")) {
+    configuration.browsers = ['PhantomJS'];
+    configuration.singleRun = false;
+    configuration.autoWatch = true;
+  }
+
   if (process.argv.includes("--full-coverage")) {
     process.env["FULL_COVERAGE"] = true;
   }
