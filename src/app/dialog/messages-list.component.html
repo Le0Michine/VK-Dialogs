@@ -12,7 +12,7 @@
 			<a [href]="message.from.id | linkToUser" target="_blank" class="user-name">{{getUserName(message.from.id)}}</a>
 			<span class="message-timestamp space-left">{{message.date*1000 | date:(message.date | formatDate) }}</span>
 		</div>
-		<ul class="messages-list max-width-80">
+		<ul class="messages-list">
 			<li class="message-item" *ngFor="let isFirst=first; let isLast=last; let item of message.messages | reverse" id="{{item.id}}">
 				<div class="message-body clearfix"
 					[class.unread]="!item.isRead"

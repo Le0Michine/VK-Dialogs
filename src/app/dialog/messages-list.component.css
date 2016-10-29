@@ -242,6 +242,7 @@ pre {
 
 .messages-list {
     width: fit-content;
+    max-width: calc(100% - 50px);
     list-style: none outside none;
     padding-left: 0px;
     position: relative;
