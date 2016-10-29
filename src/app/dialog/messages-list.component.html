@@ -23,15 +23,15 @@
 						[innerHTML]="item.body | cutLinks | emoji | safe" 
 						></pre>
 					<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": getUserName(item.userId), "user2": getUserName(item.actionMid)} }}</div>
-					<div class="message-attachment pull-left" *ngFor="let attachment of item.attachments">
+					<div class="message-attachment" *ngFor="let attachment of item.attachments">
 						<div *ngIf="attachment.photo" class="att_photo">
 							<img class="att_photo_img zoom_in" #att_photo alt="" [src]="attachment.photo.photo_130" (click)="changePhotoSize(att_photo,attachment.photo)" />
 						</div>
 						<div *ngIf="attachment.sticker">
 							<img class="att_photo_img" [src]="attachment.sticker | stickerLink | async" />
 						</div>
-						<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix">
-							<a class="att-doc-icon {{attachment | attachment_icon}} pull-left" [class.unread-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
+						<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix att-doc-container">
+							<a class="att-doc-icon {{attachment | attachment_icon}}" [class.unread-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
 							<div class="attachment-description">
 								<a class="att-doc" [href]="attachment | attachment_url:item.user_id" [class.unread-text]="!item.isRead" target="_blank" title="{{attachment | attachment_title}}">{{attachment | attachment_title}}</a>
 								<div class="att-doc-size" [class.unread-text]="!item.isRead">{{attachment | attachment_size}}</div>

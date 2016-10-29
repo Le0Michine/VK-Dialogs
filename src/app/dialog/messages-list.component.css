@@ -102,6 +102,10 @@ pre {
     padding-top: 3px; 
 }
 
+.att-doc-container {
+    display: flex;
+}
+
 .att-doc {
     cursor: pointer;
     display: block;
@@ -120,7 +124,9 @@ pre {
 
 .attachment-description {
     display: inline-block;
-    max-width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .narrow {
@@ -137,9 +143,10 @@ pre {
 }
 
 .att-doc-icon {
+    flex: 1;
     display: inline-block;
     position: relative;
-    width: 30px;
+    min-width: 30px;
     height: 30px;
     margin-right: 8px;
     border-radius: 2px;
