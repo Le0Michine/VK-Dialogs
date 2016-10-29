@@ -1,12 +1,12 @@
 <ul class="dialogs-list">
 	<li *ngFor="let dialog of dialogsToShow; let isFirst=first" (click)="gotoDialog(dialog.message)" class="dialog-li" id="{{ dialog.message.conversationId }}">
 		<div class="dialog-div" [class.borderless]="isFirst">
-			<div class="user-avatar-div pull-left">
+			<div class="user-avatar-div">
 				<div *ngFor="let img of dialog.photos">
 					<img [src]="img" class="user_avatar pull-left" [class.mini_avatar]="dialog.photos.length > 1" />
 				</div>
 			</div>
-			<div class="dialog-content-div pull-left">
+			<div class="dialog-content-div">
 				<div class="dialog-content-text">
 					<div class="dialog-title-div">
 						 <span [class.online]="dialog.online" class="dialog-title-span">{{dialog.title}}</span>

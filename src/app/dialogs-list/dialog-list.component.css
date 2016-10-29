@@ -56,6 +56,7 @@ li:hover {
     height: 52px;
     width: 52px;
     display: inline-block;
+    flex: 1;
 }
 
 .user_avatar {
@@ -140,6 +141,7 @@ li:hover {
     border-top: 1px solid rgb(231, 232, 236);
     margin: 0;
     padding: 10px 15px 0px 0px;
+    display: flex;
 }
 
 .dialog-content-div {
@@ -147,6 +149,7 @@ li:hover {
     padding: 0;
     margin-left: 10px;
     width: calc(100% - 65px);
+    position: relative;
 }
 
 .last-message-date {
@@ -156,7 +159,9 @@ li:hover {
 
 @media screen and (max-width: 300px) {
     .last-message-date {
-        display: none;
+        display: block;
+        width: 100%;
+        float: left !important;
     }
 }
 
