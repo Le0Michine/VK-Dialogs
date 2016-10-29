@@ -116,7 +116,7 @@ export class DialogComponent implements OnInit, OnDestroy {
             this.subscriptions.push(this.messagesService.getHistory(this.conversationId, this.isChat).subscribe(data => {
                 console.log("got history update", data);
                 let historyInfo = new HistoryInfo();
-                historyInfo.messages = data.history;
+                historyInfo.messages = data.messages;
                 historyInfo.count = data.count;
                 this.historyUpdate.emit(historyInfo);
                 if (!this.autoReadMessages) {

@@ -1,15 +1,19 @@
 import { Component, ChangeDetectorRef, Renderer, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
+import { Location } from "@angular/common";
+import { Store } from "@ngrx/Store";
+import { TranslateService } from "ng2-translate/ng2-translate";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/interval";
-import { Location } from "@angular/common";
-import { TranslateService } from "ng2-translate/ng2-translate";
+import "rxjs/add/operator/first";
+
 import { ChromeAPIService } from "./services";
 import { OptionsService } from "./services";
 import { DialogService } from "./services";
 import { MenuItem } from "./datamodels";
 import { DialogShortInfo } from "./datamodels";
+import { AppStore } from "./app.store";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;
@@ -30,8 +34,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     searchFocus: Subject<boolean> = new Subject();
     title: string = "";
     unreadCount: number = 6;
-    conversationId: number;
-    isChat: boolean;
     isPopupMenuOpened: boolean = false;
 
     windowWidth: string = "300px";
@@ -47,6 +49,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     foundDialogs: DialogShortInfo[] = [];
 
     constructor(
+        private store: Store<AppStore>,
         private translate: TranslateService,
         private location: Location,
         private router: Router,
@@ -121,9 +124,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     private goToConversation() {
-        chrome.tabs.create({
-            url: `https://vk.com/im?sel=${this.isChat ? "c" : ""}${this.conversationId}`,
-            selected: true
+        this.store.select(s => s.history).first().subscribe(h => {
+            chrome.tabs.create({
+                url: `https://vk.com/im?sel=${h.isChat ? "c" : ""}${h.conversationId}`,
+                selected: true
+            });
         });
     }
 

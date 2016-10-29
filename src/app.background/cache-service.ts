@@ -48,29 +48,29 @@ export class CacheService {
     }
 
     /** count -- total amount of messages */
-    pushHistory(messages: SingleMessageInfo[], count: number = null): boolean {
-        let conversationId = messages[0].conversationId;
+    pushHistory(history: HistoryInfo): boolean {
+        let conversationId = history.conversationId;
         if (this.messagesCache[conversationId] && this.messagesCache[conversationId].messages) {
-            let i = this.messagesCache[conversationId].messages.findIndex(m => m.id === messages[0].id);
+            let i = this.messagesCache[conversationId].messages.findIndex(m => m.id === history.messages[0].id);
             if (i === -1 || i === 0) {
-                i = this.messagesCache[conversationId].messages.findIndex(m => m.id === messages[messages.length - 1].id);
+                i = this.messagesCache[conversationId].messages.findIndex(m => m.id === history.messages[history.messages.length - 1].id);
                 if (i === -1) { /** cache is invalid, refreshing */
-                    this.updateHistory(messages, count);
+                    this.updateHistory(history);
                 }
                 else { /** add messages to the begining */
                     let tmp = this.messagesCache[conversationId].messages;
-                    this.messagesCache[conversationId].messages = messages.concat(tmp.slice(i + 1, tmp.length - i));
+                    this.messagesCache[conversationId].messages = history.messages.concat(tmp.slice(i + 1, tmp.length - i));
                 }
             }
             else if (i === 0) { /** nothing to update */
                 return false;
             }
             else { /** add messages to the end */
-                this.messagesCache[conversationId].messages = this.messagesCache[conversationId].messages.slice(0, i).concat(messages);
+                this.messagesCache[conversationId].messages = this.messagesCache[conversationId].messages.slice(0, i).concat(history.messages);
             }
         }
         else {
-            this.updateHistory(messages, count);
+            this.updateHistory(history);
         }
         return true;
     }
@@ -85,9 +85,15 @@ export class CacheService {
         return this.dialogsCache.dialogs[this.dialogsCache.dialogs.length - 1].message.id;
     }
 
-    getHistory(conversationId: number): SingleMessageInfo[] {
+    getHistory(conversationId: number, count: number = 0): HistoryInfo {
         let h = this.messagesCache[conversationId];
-        return h ? h.messages : [];
+        if (count && h && h.messages && h.messages.length) {
+            h.messages = h.messages.slice(0, count);
+        }
+        if (!h) {
+            h = new HistoryInfo();
+        }
+        return h;
     }
 
     getMessagesCount(conversationId: number): number {
@@ -102,11 +108,10 @@ export class CacheService {
         }
     }
 
-    private updateHistory(messages: SingleMessageInfo[], count: number = null): void {
-        let conversationId = messages[0].conversationId;
+    private updateHistory(history: HistoryInfo): void {
+        let conversationId = history.conversationId;
         if (!this.messagesCache[conversationId]) this.messagesCache[conversationId] = new HistoryInfo();
-        this.messagesCache[conversationId].messages = messages;
-        if (count) this.messagesCache[conversationId].count = count;
+        this.messagesCache[conversationId] = history;
     }
 
     private updateDialogs(dialogs: DialogsInfo): void {

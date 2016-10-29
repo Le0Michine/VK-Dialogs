@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Http, Response, RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs/Observable";
+import { Store } from "@ngrx/Store";
 
 import { VKService } from "./vk.service";
-import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo, DialogShortInfo } from "../datamodels";
+import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo, DialogShortInfo, HistoryInfo } from "../datamodels";
 import { Channels } from "../../app.background/channels";
 import { ChromeAPIService } from "./chrome-api.service";
+import { AppStore, HistoryActions } from "../app.store";
 
 @Injectable()
 export class DialogService {
@@ -17,7 +19,9 @@ export class DialogService {
     constructor(
         private http: Http,
         private vkservice: VKService,
-        private chromeapi: ChromeAPIService) { }
+        private chromeapi: ChromeAPIService,
+        private store: Store<AppStore>
+    ) { }
 
     init() {
         console.log("init dialog service");
@@ -82,14 +86,14 @@ export class DialogService {
         });
     }
 
-    getHistory(conversationId, isChat): Observable<any> {
+    getHistory(conversationId, isChat): Observable<HistoryInfo> {
         let o = this.chromeapi.subscribeOnMessage("history_update" + conversationId).map(x => x.data);
         this.chromeapi.SendMessage({
             name: "conversation_id",
             id: conversationId,
             is_chat: isChat
         });
+        o.subscribe(history => this.store.dispatch({ type: HistoryActions.HISTORY_LOADED, payload: history }));
         return o;
-        // {history:SingleMessageInfo[], count: number}
     }
 }

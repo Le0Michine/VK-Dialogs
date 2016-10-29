@@ -115,7 +115,7 @@ export class DialogService {
 
             this.getHistory(openedConversation.conversation_id, openedConversation.is_chat).subscribe(history => {
                 if (history) {
-                    this.cache.pushHistory(history.messages, history.count);
+                    this.cache.pushHistory(history);
                     this.loadUsersFromMessages(history.messages);
                     this.postHistoryUpdate();
                 }
@@ -221,16 +221,13 @@ export class DialogService {
     }
 
     postSingleConversationHistoryUpdate(conversation): void {
-        if (this.cache.getHistory(conversation.conversation_id).length === 0) {
+        if (!this.cache.getHistory(conversation.conversation_id).count) {
             console.log(`no history for ${conversation.conversation_id}, nothing to post`);
             return;
         }
         this.onUpdate.next({
             name: "history_update" + conversation.conversation_id,
-            data: {
-                history: this.cache.getHistory(conversation.conversation_id).slice(0, conversation.messages_count),
-                count: this.cache.getMessagesCount(conversation.conversation_id)
-            }
+            data: this.cache.getHistory(conversation.conversation_id, conversation.messages_count)
         });
     }
 
@@ -254,7 +251,7 @@ export class DialogService {
         for (let conv of this.openedConversations) {
             this.getHistory(conv.conversation_id, conv.is_chat).subscribe(history => {
                     if (!history) return;
-                    this.cache.pushHistory(history.messages, history.count);
+                    this.cache.pushHistory(history);
                     this.loadUsersFromMessages(history.messages);
                     this.postSingleConversationHistoryUpdate(conv);
                 },
@@ -312,7 +309,6 @@ export class DialogService {
             this.getHistoryApiMethod,
             `${chat ? "chat_id=" + id : "user_id=" + id}${fromId ? "&start_message_id=" + fromId : ""}&count=${count}&rev=0`)
             .map(json => this.toHistoryViewModel(json));
-            /** response: {count: number, items: Message[]} */
     }
 
     getChatParticipants(chatId: number): Observable<{ [id: number]: UserInfo }> {
@@ -379,19 +375,20 @@ export class DialogService {
     }
 
     private loadOldMessages(conversation): void {
-        if (this.cache.getHistory(conversation.conversation_id).length >= this.cache.getMessagesCount(conversation.conversation_id)) {
+        let h = this.cache.getHistory(conversation.conversation_id);
+        if (h.messages.length >= h.count) {
             console.log("all messages are loaded");
             return;
         }
         console.log("load old messages");
         conversation.messages_count += 20;
-        if (this.cache.getHistory(conversation.conversation_id).length >= conversation.messages_count) {
+        if (h.messages.length >= conversation.messages_count) {
             this.postSingleConversationHistoryUpdate(conversation);
             return;
         }
         this.getHistory(conversation.conversation_id, conversation.is_chat, 20, this.cache.getLastMessageId(conversation.conversation_id)).subscribe(history => {
             if (!history) return;
-            if (this.cache.pushHistory(history.messages, history.count)) {
+            if (this.cache.pushHistory(history)) {
                 this.loadUsersFromMessages(history.messages);
                 this.postSingleConversationHistoryUpdate(conversation);
             }
@@ -424,6 +421,9 @@ export class DialogService {
         let history = new HistoryInfo();
         history.count = json.count;
         history.messages = json.items.map(x => this.toSingleMessageViewModel(x));
+        history.conversationId = history.messages.length ? history.messages[0].conversationId : 0;
+        history.isChat = history.messages.length && history.messages[0].chatId ? true : false;
+        history.conversationTitle = history.messages.length ? history.messages[0].title : "";
         return history;
     }
 
