@@ -41,7 +41,8 @@ export class DialogService {
         private cache: CacheService,
         private userService: UserService,
         private lpsService: LPSService,
-        private chromeapi: ChromeAPIService) { }
+        private chromeapi: ChromeAPIService
+    ) { }
 
     init(): void {
         if (this.initialized) {

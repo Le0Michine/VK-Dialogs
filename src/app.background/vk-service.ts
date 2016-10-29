@@ -14,6 +14,7 @@ import { VKConsts } from "../app/vk-consts";
 import { SessionInfo } from "./datamodels/datamodels";
 import { ErrorHelper } from "./error-helper";
 import { AuthHelper } from "./auth-helper";
+import { OptionsService } from "./options.service";
 
 @Injectable()
 export class VKService {
@@ -21,9 +22,14 @@ export class VKService {
     private sessionInfo: SessionInfo;
     private authorized: boolean = false;
     private setOnlineApiMethod = "account.setOnline";
+    private lang: string;
 
-    constructor(private http: Http) {
+    constructor(
+        private http: Http,
+        private settings: OptionsService
+    ) {
         this.initializeSeesion();
+        this.settings.language.subscribe(v => this.lang = v);
     }
 
     auth(force: boolean = false): Observable<SessionInfo> {
@@ -116,7 +122,7 @@ export class VKService {
                     message: "Unable to get session"
                 });
             }
-            let url = `${VKConsts.apiUrl}${method}?access_token=${session.accessToken}&v=${VKConsts.apiVersion}`;
+            let url = `${VKConsts.apiUrl}${method}?access_token=${session.accessToken}&v=${VKConsts.apiVersion}&lang=${this.lang}`;
             if (parameters) {
                 url += "&" + parameters;
             }
