@@ -2,10 +2,12 @@
 function save_options() {
     var lang = document.getElementById("targetLangSel").value;
     var set_online = document.getElementById("set-online-checkbox").checked;
+    // var show_typing = document.getElementById("show-typing-checkbox").checked;
     chrome.storage.sync.set({
         settings: {
             currentLang: lang,
             setOnline: set_online,
+            // showTyping: show_typing,
             windowSize: document.getElementById("windowSize").value,
             stickerSize: document.getElementById("stickerSize").value,
             activatePreviewFeatures: document.getElementById("activatePreviewFeatures").checked,
@@ -31,6 +33,7 @@ function restore_options() {
     chrome.storage.sync.get({ settings: {
         "currentLang": "ru",
         "setOnline": true,
+        "showTyping": true,
         "windowSize": "medium",
         "stickerSize": "large",
         "activatePreviewFeatures": false,
@@ -39,6 +42,7 @@ function restore_options() {
         console.log("got settings: ", items);
         document.getElementById("targetLangSel").value = items.settings.currentLang;
         document.getElementById("set-online-checkbox").checked = items.settings.setOnline;
+        // document.getElementById("show-typing-checkbox").checked = items.settings.showTyping;
         document.getElementById("windowSize").value = items.settings.windowSize;
         document.getElementById("stickerSize").value = items.settings.stickerSize;
         document.getElementById("activatePreviewFeatures").checked = items.settings.activatePreviewFeatures;
@@ -59,6 +63,7 @@ function updateLocale() {
     document.getElementById("lang-option").innerText = chrome.i18n.getMessage("langOptions");
     document.getElementById("privacy-option").innerText = chrome.i18n.getMessage("privacyOptions");
     document.getElementById("set-online-checkbox-label").innerText = chrome.i18n.getMessage("setOnlineOption");
+    // document.getElementById("show-typing-checkbox-label").innerText = chrome.i18n.getMessage("showTypingOption");
     document.getElementById("window-size-option").innerText = chrome.i18n.getMessage("windowSizeOption");
     document.getElementById("sticker-size-option").innerText = chrome.i18n.getMessage("stickerSizeOption");
     document.getElementById("autoread-option").innerText = chrome.i18n.getMessage("autoreadOption");

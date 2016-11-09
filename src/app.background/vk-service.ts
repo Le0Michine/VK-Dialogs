@@ -22,6 +22,7 @@ export class VKService {
     private sessionInfo: SessionInfo;
     private authorized: boolean = false;
     private setOnlineApiMethod = "account.setOnline";
+    private setActivityApiMethod = "messages.setActivity";
     private lang: string;
 
     constructor(
@@ -89,6 +90,10 @@ export class VKService {
         this.sessionInfo = null;
         window.localStorage.removeItem(VKConsts.vkSessionInfo);
         this.onLogOff.emit();
+    }
+
+    setActive() {
+        // TODO: implement
     }
 
     setOnline(): void {

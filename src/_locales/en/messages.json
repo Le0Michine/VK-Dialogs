@@ -47,6 +47,9 @@
     "setOnlineOption": {
         "message": "Shown as \"online\""
     },
+    "showTypingOption": {
+        "message": "Shown typing"
+    },
     "openInSeparateWindow": {
         "message": "Open in a separate window"
     },

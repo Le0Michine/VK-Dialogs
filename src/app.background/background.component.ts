@@ -115,6 +115,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
+            this.chromeapi.OnMessage("set_active")
+                .subscribe((message: any) => {
+                    this.setActive();
+                    return false;
+                })
+        );
+
+        this.subscriptions.push(
             this.chromeapi.OnMessage(Channels.markAsReadRequest).subscribe((message: any) => {
                 this.dialogsService.markAsRead(message.message_ids).subscribe(response => {
                     message.sendResponse({data: response});
@@ -178,6 +186,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     this.chromeapi.PostPortMessage({name: "unread_count", data: text});
                 });
         }
+    }
+
+    private setActive() {
+        this.settings.showTyping.subscribe(value => {
+            if (value) {
+                this.vkservice.setActive();
+            }
+        });
     }
 
     private setOnline() {

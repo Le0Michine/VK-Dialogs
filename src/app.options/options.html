@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <script src="../jquery.js"></script>
+        <link rel="stylesheet" href="../lib/bootstrap.min.css">
+        <script src="../lib/jquery.js"></script>
         <script src="options.js"></script>
         <link rel="stylesheet" href="options.css">
         <title>Messenger for VK options</title>
@@ -27,9 +27,15 @@
             </div>
             <div class="options_row">
                 <div id="privacy-option" class="option_name">Privacy settings:</div>
-                <div class="option_picker">
-                    <input id="set-online-checkbox" type="checkbox" class="checkbox">
-                    <label for="set-online-checkbox" id="set-online-checkbox-label">Shown as online</label>
+                <div class="options-column">
+                    <div class="option_picker">
+                        <input id="set-online-checkbox" type="checkbox" class="checkbox">
+                        <label for="set-online-checkbox" id="set-online-checkbox-label">Shown as online</label>
+                    </div><!--
+                    <div class="option_picker">
+                        <input id="show-typing-checkbox" type="checkbox" class="checkbox">
+                        <label for="show-typing-checkbox" id="show-typing-checkbox-label">Show typing</label>
+                    </div>-->
                 </div>
             </div>
             <div class="options_row">

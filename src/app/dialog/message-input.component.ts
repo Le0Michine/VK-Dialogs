@@ -27,6 +27,7 @@ export class MessageInputComponent {
 
     @Output() onMessageSent: EventEmitter<boolean> = new EventEmitter();
     @Output() onAttachmentsUpdate: EventEmitter<MenuItem[]> = new EventEmitter();
+    @Output() onUserInput: EventEmitter<string> = new EventEmitter();
 
     sendingBlocked: boolean = false;
     inputLabelVisible: boolean = true;
@@ -116,6 +117,7 @@ export class MessageInputComponent {
     onInput(event: Event): void {
         this.removeStyle(event.srcElement.childNodes);
         this.inputText = this.getText(event.srcElement.childNodes);
+        this.onUserInput.emit(this.inputText);
     }
 
     showLabelContent() {

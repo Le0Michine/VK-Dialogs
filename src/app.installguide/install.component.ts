@@ -35,7 +35,7 @@ export class InstallComponent {
         { name: "step_auth", progress: 10, state: "in"},
         { name: "step_privacy", progress: 30, state: "out_r"},
         { name: "step_spy", progress: 50, state: "out_r"},
-        { name: "step_panels", progress: 70, state: "out_r"},
+        // { name: "step_panels", progress: 70, state: "out_r"},
         { name: "step_last", progress: 100, state: "out_r"},
     ];
 

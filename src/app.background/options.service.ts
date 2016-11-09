@@ -5,6 +5,7 @@ import { BehaviorSubject  } from "rxjs/BehaviorSubject";
 export class OptionsService {
     language: BehaviorSubject <string>;
     setOnline: BehaviorSubject <boolean>;
+    showTyping: BehaviorSubject <boolean>;
     windowSize: BehaviorSubject<WindowSize>;
     activatePreviewFeatures: BehaviorSubject<boolean>;
     stickerSize: BehaviorSubject<number>;
@@ -54,6 +55,7 @@ export class OptionsService {
         console.log("init settings", settings);
         this.language = new BehaviorSubject(settings.currentLang);
         this.setOnline = new BehaviorSubject(settings.setOnline);
+        this.showTyping = new BehaviorSubject(settings.showTyping);
         this.windowSize = new BehaviorSubject(this.windowSizes[settings.windowSize]);
         this.activatePreviewFeatures = new BehaviorSubject(settings.activatePreviewFeatures);
         this.stickerSize = new BehaviorSubject(this.stickerSizes[settings.stickerSize]);
@@ -68,6 +70,9 @@ export class OptionsService {
         if (settings.setOnline !== this.currentSettings.setOnline) {
             this.setOnline.next(settings.setOnline);
         }
+        if (settings.showTyping !== this.currentSettings.showTyping) {
+            this.showTyping.next(settings.showTyping);
+        }
         if (settings.activatePreviewFeatures !== this.currentSettings.activatePreviewFeatures) {
             this.activatePreviewFeatures.next(settings.activatePreviewFeatures);
         }
@@ -80,6 +85,7 @@ export class OptionsService {
 class Settings {
     currentLang: string = "ru";
     setOnline: boolean = false;
+    showTyping: boolean = false;
     windowSize: string = "medium";
     activatePreviewFeatures: boolean = false;
     stickerSize: string = "large";

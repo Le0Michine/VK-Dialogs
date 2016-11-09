@@ -5,6 +5,8 @@ import { Title } from "@angular/platform-browser";
 import { Store } from "@ngrx/Store";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
 
 import { DialogService, UserService, VKService, ChromeAPIService, FileUploadService, OptionsService } from "../services";
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
@@ -59,6 +61,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     onSendMessageClick: EventEmitter<{}> = new EventEmitter();
     newAttachment: EventEmitter<MenuItem> = new EventEmitter();
     removeAttachment: EventEmitter<string> = new EventEmitter();
+    onInput: Observable<string> = new Observable();
 
     unreadMessages: string = "out";
     autoReadMessages: boolean = true;
@@ -137,6 +140,8 @@ export class DialogComponent implements OnInit, OnDestroy {
                     this.scrollHeight += 1000000;
                 }
             }));
+
+            this.onInput.debounceTime(3000).distinctUntilChanged().subscribe(() => this.vkservice.setActive());
         });
 
         this.subscriptions.push(

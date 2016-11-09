@@ -59,5 +59,6 @@
 		[attachmentUploaded]="attachmentUploaded"
 		(onMessageSent)="messageSent($event)"
 		(onAttachmentsUpdate)="onAttachmentsUpdate($event)"
+		(onUserInput)="onInput.emit($event)"
 	></message-input>
 </div>

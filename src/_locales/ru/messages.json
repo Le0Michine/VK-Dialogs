@@ -47,6 +47,9 @@
     "setOnlineOption": {
         "message": "Виден \"в сети\""
     },
+    "showTypingOption": {
+        "message": "Показывать печать"
+    },
     "openInSeparateWindow": {
         "message": "Открыть в отдельном окне"
     },

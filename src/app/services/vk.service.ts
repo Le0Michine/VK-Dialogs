@@ -39,6 +39,10 @@ export class VKService {
         this.chromeapi.SendMessage({name: "set_online"});
     }
 
+    setActive() {
+        this.chromeapi.SendMessage({name: "set_active"});
+    }
+
     private handleError(error: any) {
         console.error("An error occurred", error);
     }
