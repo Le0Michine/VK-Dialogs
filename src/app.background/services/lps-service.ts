@@ -9,11 +9,11 @@ import "rxjs/add/observable/of";
 import "rxjs/add/operator/first";
 import "rxjs/add/observable/merge";
 
-import { VKConsts } from "../app/vk-consts";
+import { VKConsts } from "../../app/vk-consts";
 
 import { VKService } from "./vk-service";
-import { ErrorHelper } from "./error-helper";
-import { LongPollServerInfo } from "./datamodels/long-poll-server.info";
+import { ErrorHelper } from "../error-helper";
+import { LongPollServerInfo } from "../datamodels/long-poll-server.info";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 

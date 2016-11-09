@@ -7,16 +7,16 @@ import "rxjs/add/Observable/timer";
 import "rxjs/add/operator/throttleTime";
 
 import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "./datamodels/datamodels";
+import { SessionInfo } from "./datamodels";
 
 import { AuthHelper } from "./auth-helper";
-import { VKService } from "./vk-service";
-import { UserService } from "./user-service";
-import { DialogService } from "./dialogs-service";
-import { LPSService } from "./lps-service";
-import { ChromeAPIService } from "./chrome-api-service";
-import { FileUploadService } from "./file-upload.service";
-import { OptionsService } from "./options.service";
+import { VKService } from "./services";
+import { UserService } from "./services";
+import { DialogService } from "./services";
+import { LPSService } from "./services";
+import { ChromeAPIService } from "./services";
+import { FileUploadService } from "./services";
+import { OptionsService } from "./services";
 import { Channels } from "./channels";
 
 @Component({

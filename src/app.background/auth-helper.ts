@@ -2,7 +2,7 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/fromEventPattern";
 
 import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "./datamodels/datamodels";
+import { SessionInfo } from "./datamodels";
 
 export class AuthHelper {
     static clientId: number = 5573653;

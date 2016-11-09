@@ -7,14 +7,14 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/distinct";
 import "rxjs/add/operator/filter";
 
-import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogsInfo } from "./datamodels/datamodels";
-import { DialogShortInfo } from "./datamodels";
+import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogsInfo } from "../datamodels";
+import { DialogShortInfo } from "../datamodels";
 import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
-import { Channels } from "./channels";
+import { Channels } from "../channels";
 
 @Injectable()
 export class DialogService {

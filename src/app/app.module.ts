@@ -28,7 +28,6 @@ import { appStore } from "./app.store";
 @NgModule({
     imports: [
         BrowserModule,
-        HttpModule,
         FormsModule,
         routing,
         TranslateModule.forRoot(),

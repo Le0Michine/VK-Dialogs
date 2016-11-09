@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
-import { VKConsts } from "../app/vk-consts";
-import { SingleMessageInfo, UserInfo, DialogInfo, DialogsInfo, ChatInfo, HistoryInfo } from "./datamodels/datamodels";
+import { VKConsts } from "../../app/vk-consts";
+import { SingleMessageInfo, UserInfo, DialogInfo, DialogsInfo, ChatInfo, HistoryInfo } from "../datamodels";
 
 @Injectable()
 export class CacheService {

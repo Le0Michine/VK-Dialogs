@@ -1,5 +1,5 @@
 import { VKConsts } from "../app/vk-consts";
-import { SingleMessageInfo } from "./datamodels/datamodels";
+import { SingleMessageInfo } from "./datamodels";
 
 export class LPSHelper {
 

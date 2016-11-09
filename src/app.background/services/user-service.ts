@@ -5,7 +5,7 @@ import "rxjs/add/observable/of";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/concatMap";
 
-import { UserInfo } from "./datamodels/datamodels";
+import { UserInfo } from "../datamodels";
 
 import { VKService } from "./vk-service";
 import { CacheService } from "./cache-service";

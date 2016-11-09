@@ -10,10 +10,10 @@ import "rxjs/add/operator/retryWhen";
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/of";
 
-import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "./datamodels/datamodels";
-import { ErrorHelper } from "./error-helper";
-import { AuthHelper } from "./auth-helper";
+import { VKConsts } from "../../app/vk-consts";
+import { SessionInfo } from "../datamodels";
+import { ErrorHelper } from "../error-helper";
+import { AuthHelper } from "../auth-helper";
 import { OptionsService } from "./options.service";
 
 @Injectable()

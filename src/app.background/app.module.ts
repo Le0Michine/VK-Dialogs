@@ -1,19 +1,22 @@
 import { NgModule }      from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
+import { StoreModule } from "@ngrx/Store";
 
 import { BackgroundComponent }  from "./background.component";
-import { VKService } from "./vk-service";
-import { UserService } from "./user-service";
-import { CacheService } from "./cache-service";
-import { DialogService } from "./dialogs-service";
-import { LPSService } from "./lps-service";
-import { ChromeAPIService } from "./chrome-api-service";
-import { FileUploadService } from "./file-upload.service";
-import { OptionsService } from "./options.service";
+import { VKService } from "./services";
+import { UserService } from "./services";
+import { CacheService } from "./services";
+import { DialogService } from "./services";
+import { LPSService } from "./services";
+import { ChromeAPIService } from "./services";
+import { FileUploadService } from "./services";
+import { OptionsService } from "./services";
+
+import { appBackgroundStore } from "./app-background.store";
 
 @NgModule({
-    imports:      [ BrowserModule, HttpModule ],
+    imports:      [ BrowserModule, HttpModule, StoreModule.provideStore(appBackgroundStore) ],
     declarations: [ BackgroundComponent ],
     bootstrap:    [ BackgroundComponent ],
     providers: [

@@ -3,4 +3,4 @@ export * from "./dialog.service";
 export * from "./user.service";
 export * from "./file-upload.service";
 export * from "./vk.service";
-export * from "../../app.background/options.service";
+export { OptionsService } from "../../app.background/services";
