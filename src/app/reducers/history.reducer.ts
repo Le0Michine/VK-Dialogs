@@ -1,14 +1,14 @@
 import { ActionReducer, Action } from "@ngrx/Store";
 
-import { HistoryInfo } from "../datamodels";
+import { HistoryListInfo } from "../datamodels";
 
 export class HistoryActions {
-    static HISTORY_LOADED = "HISTORY_LOADED";
+    static UPDATE = "HISTORY_UPDATE";
 }
 
-export const historyReducer: ActionReducer<HistoryInfo> = (state: HistoryInfo, action: Action): HistoryInfo => {
+export const historyReducer: ActionReducer<HistoryListInfo> = (state: HistoryListInfo, action: Action): HistoryListInfo => {
     switch (action.type) {
-        case HistoryActions.HISTORY_LOADED:
+        case HistoryActions.UPDATE:
             return action.payload;
         default:
             return state;

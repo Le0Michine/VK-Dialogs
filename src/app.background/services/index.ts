@@ -1,4 +1,3 @@
-export * from "./cache-service";
 export * from "./chrome-api-service";
 export * from "./dialogs-service";
 export * from "./lps-service";

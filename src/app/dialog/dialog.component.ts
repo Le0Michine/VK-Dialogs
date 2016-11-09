@@ -8,7 +8,7 @@ import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 
-import { DialogService, UserService, VKService, ChromeAPIService, FileUploadService, OptionsService } from "../services";
+import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsService } from "../services";
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
 import { MenuItem } from "../datamodels";
 import { BreadcrumbActions } from "../reducers";
@@ -83,7 +83,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     constructor (
         private messagesService: DialogService,
         private vkservice: VKService,
-        private userService: UserService,
         private router: Router,
         private pageTitle: Title,
         private route: ActivatedRoute,
@@ -116,32 +115,36 @@ export class DialogComponent implements OnInit, OnDestroy {
                 }
             });
 
-            this.subscriptions.push(this.messagesService.getHistory(this.conversationId, this.isChat).subscribe(data => {
-                console.log("got history update", data);
-                let historyInfo = new HistoryInfo();
-                historyInfo.messages = data.messages;
-                historyInfo.count = data.count;
-                this.historyUpdate.emit(historyInfo);
-                if (!this.autoReadMessages) {
-                    this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
-                    this.changeDetector.detectChanges();
-                }
-                else {
-                    this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
-                        if (!minimized) {
-                            this.onMarkAsRead();
-                        }
-                    });
-                }
-                if (this.autoScrollToBottom) {
-                    setTimeout(() => this.scrollToBottom(), 0);
-                }
-                else {
-                    this.scrollHeight += 1000000;
-                }
-            }));
+            this.subscriptions.push(this.store.select(s => s.history)
+                .map(h => h.history[this.conversationId])
+                .filter(x => x ? true : false)
+                .subscribe(data => {
+                    console.log("HISTORY", data);
+                    let historyInfo = new HistoryInfo();
+                    historyInfo.messages = data.messages;
+                    historyInfo.count = data.count;
+                    this.historyUpdate.emit(historyInfo);
+                    if (!this.autoReadMessages) {
+                        this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
+                        this.changeDetector.detectChanges();
+                    }
+                    else {
+                        this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
+                            if (!minimized) {
+                                this.onMarkAsRead();
+                            }
+                        });
+                    }
+                    if (this.autoScrollToBottom) {
+                        setTimeout(() => this.scrollToBottom(), 0);
+                    }
+                    else {
+                        this.scrollHeight += 1000000;
+                    }
+                })
+            );
 
-            this.onInput.debounceTime(3000).distinctUntilChanged().subscribe(() => this.vkservice.setActive());
+            // this.onInput.debounceTime(3000).distinctUntilChanged().subscribe(() => this.vkservice.setActive());
         });
 
         this.subscriptions.push(

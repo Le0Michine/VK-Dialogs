@@ -1,15 +1,31 @@
 import { ActionReducer, Action } from "@ngrx/Store";
 
-import { UserInfo } from "../datamodels";
+import { UserListInfo, UserInfo } from "../datamodels";
 
 export class UsersActions {
-    static USERS_LOADED = "DIALOGS_LOADED";
+    static USERS_LOADED = "USERS_LOADED";
+    static USERS_UPDATED = "USERS_UPDATED";
 }
 
-export const usersReducer: ActionReducer<{ [id: number]: UserInfo }> = (state: { [id: number]: UserInfo }, action: Action): { [id: number]: UserInfo } => {
+export const usersReducer: ActionReducer<UserListInfo> = (state: UserListInfo, action: Action): UserListInfo => {
     switch (action.type) {
+        // payload -- UserInfo[]
         case UsersActions.USERS_LOADED:
-            return action.payload;
+            let newState = new UserListInfo();
+            action.payload.forEach((user: UserInfo) => {
+                newState.users[user.id] = user;
+                newState.userIds.push(user.id);
+            });
+            return newState;
+        case UsersActions.USERS_UPDATED:
+            let updatedState = Object.assign({}, state);
+            action.payload.forEach((user: UserInfo) => {
+                if (!updatedState.users[user.id]) {
+                    updatedState.userIds.push(user.id);
+                }
+                updatedState.users[user.id] = user;
+            });
+            return updatedState;
         default:
             return state;
     };

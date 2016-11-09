@@ -1,6 +1,6 @@
 {
   "name": "vk-messenger-webpack",
-  "version": "1.0.0",
+  "version": "2.5.0",
   "repository": "https://github.com/Le0Michine/Messenger",
   "description": "webpack project for building vk messenger",
   "author": "Lev Mishin",

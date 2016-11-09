@@ -6,4 +6,8 @@ export class HistoryInfo {
     conversationTitle: string;
     isChat: boolean;
     messages: SingleMessageInfo[];
+
+    constructor() {
+        this.messages = [];
+    }
 }

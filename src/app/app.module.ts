@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
-import { StoreModule } from "@ngrx/Store";
+import { StoreModule, INITIAL_STATE } from "@ngrx/Store";
 
 import { AppComponent }  from "./app.component";
 import { DialogListComponent }  from "./dialogs-list";
@@ -16,14 +16,14 @@ import { SearchComponent }  from "./search";
 import { routing } from "./app.routing";
 
 import { DialogService } from "./services";
-import { UserService } from "./services";
 import { VKService } from "./services";
 import { ChromeAPIService } from "./services";
 import { OptionsService } from "./services";
 import { FileUploadService } from "./services";
+import { StoreSyncService } from "./services";
 import { PIPES } from "./pipes";
 import { AuthorizationGuard } from "./guards";
-import { appStore } from "./app.store";
+import { appStore, INITIAL_APP_STATE } from "./app.store";
 
 @NgModule({
     imports: [
@@ -51,13 +51,17 @@ import { appStore } from "./app.store";
     ],
     providers: [
         Title,
-        UserService,
         VKService,
         DialogService,
         ChromeAPIService,
         OptionsService,
         FileUploadService,
-        AuthorizationGuard
+        AuthorizationGuard,
+        StoreSyncService,
+        {
+            provide: INITIAL_STATE,
+            useValue: INITIAL_APP_STATE
+        }
     ]
 })
 export class AppModule { }

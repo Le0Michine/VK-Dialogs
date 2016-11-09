@@ -15,7 +15,7 @@ describe("History reducer", () => {
         history.count = 7;
 
         // act
-        let result = historyReducer(state, { type: HistoryActions.HISTORY_LOADED, payload: history });
+        let result = historyReducer(state, { type: HistoryActions.UPDATE, payload: history });
 
         // assert
         expect(result).toBe(history);

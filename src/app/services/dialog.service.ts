@@ -4,18 +4,13 @@ import { Observable } from "rxjs/Observable";
 import { Store } from "@ngrx/Store";
 
 import { VKService } from "./vk.service";
-import { SingleMessageInfo, DialogInfo, DialogsInfo, ChatInfo, DialogShortInfo, HistoryInfo } from "../datamodels";
+import { SingleMessageInfo, DialogInfo, DialogListInfo, ChatInfo, DialogShortInfo, HistoryInfo } from "../datamodels";
 import { Channels } from "../../app.background/channels";
 import { ChromeAPIService } from "./chrome-api.service";
 import { AppStore, HistoryActions } from "../app.store";
 
 @Injectable()
 export class DialogService {
-    chatObservable: Observable<{ [chatId: number]: ChatInfo }>;
-    dialogsObservable: Observable<DialogsInfo>;
-
-    private chats;
-
     constructor(
         private http: Http,
         private vkservice: VKService,
@@ -25,8 +20,6 @@ export class DialogService {
 
     init() {
         console.log("init dialog service");
-        this.initChatsUpdate();
-        this.initDialogsUpdate();
     }
 
     markAsRead(ids: string): Observable<number> {
@@ -70,30 +63,5 @@ export class DialogService {
             console.log("got messages_count_update message");
             callback(message.data);
         });
-    }
-
-    initChatsUpdate(): void {
-        this.chatObservable = this.chromeapi.subscribeOnMessage(Channels.updateChats).map(x => x.data);
-        this.chromeapi.PostPortMessage({
-            name: "get_chats"
-        });
-    }
-
-    initDialogsUpdate(): void {
-        this.dialogsObservable = this.chromeapi.subscribeOnMessage("dialogs_update").map(x => x.data);
-        this.chromeapi.PostPortMessage({
-            name: "get_dialogs"
-        });
-    }
-
-    getHistory(conversationId, isChat): Observable<HistoryInfo> {
-        let o = this.chromeapi.subscribeOnMessage("history_update" + conversationId).map(x => x.data);
-        this.chromeapi.SendMessage({
-            name: "conversation_id",
-            id: conversationId,
-            is_chat: isChat
-        });
-        o.subscribe(history => this.store.dispatch({ type: HistoryActions.HISTORY_LOADED, payload: history }));
-        return o;
     }
 }

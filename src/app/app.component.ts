@@ -11,6 +11,7 @@ import "rxjs/add/operator/first";
 import { ChromeAPIService } from "./services";
 import { OptionsService } from "./services";
 import { DialogService } from "./services";
+import { StoreSyncService } from "./services";
 import { MenuItem } from "./datamodels";
 import { DialogShortInfo } from "./datamodels";
 import { AppStore } from "./app.store";
@@ -57,9 +58,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         private chromeapi: ChromeAPIService,
         private dialogs: DialogService,
         private settings: OptionsService,
-        private renderer: Renderer
+        private renderer: Renderer,
+        private storeSync: StoreSyncService
     ) {
         translate.setDefaultLang("en");
+        storeSync.init();
     }
 
     ngAfterViewInit() {
@@ -118,16 +121,20 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     private goToConversation() {
-        this.store.select(s => s.history).first().subscribe(h => {
-            let url = "https://vk.com/im";
-            if (h) {
-                url += `?sel=${h.isChat ? "c" : ""}${h.conversationId}`;
-            }
-            chrome.tabs.create({
-                url: url,
-                selected: true
+        this.store.select(s => s.currentConversationId)
+            .concatMap(id => this.store.select(s => s.history)
+            .map(x => x.history[id]))
+            .filter(x => x ? true : false)
+            .subscribe(h => {
+                let url = "https://vk.com/im";
+                if (h) {
+                    url += `?sel=${h.isChat ? "c" : ""}${h.conversationId}`;
+                }
+                chrome.tabs.create({
+                    url: url,
+                    selected: true
+                });
             });
-        });
     }
 
     private openSettings() {

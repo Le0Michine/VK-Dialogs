@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild, ElementRef, Renderer, Input, Output, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { DialogService, UserService, VKService, ChromeAPIService } from "../services";
+import { DialogService, VKService, ChromeAPIService } from "../services";
 import { MenuItem } from "../datamodels";
 
 @Component({
@@ -78,7 +78,6 @@ export class MessageInputComponent {
     constructor (
         private messagesService: DialogService,
         private vkservice: VKService,
-        private userService: UserService,
         private changeDetector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private renderer: Renderer) { }

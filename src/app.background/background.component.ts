@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Http } from "@angular/http";
+import { Store } from "@ngrx/Store";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/Observable/interval";
@@ -7,7 +8,7 @@ import "rxjs/add/Observable/timer";
 import "rxjs/add/operator/throttleTime";
 
 import { VKConsts } from "../app/vk-consts";
-import { SessionInfo } from "./datamodels";
+import { SessionInfo, DialogListInfo, HistoryInfo } from "./datamodels";
 
 import { AuthHelper } from "./auth-helper";
 import { VKService } from "./services";
@@ -18,6 +19,7 @@ import { ChromeAPIService } from "./services";
 import { FileUploadService } from "./services";
 import { OptionsService } from "./services";
 import { Channels } from "./channels";
+import { AppBackgroundStore } from "./app-background.store";
 
 @Component({
     selector: "background-app",
@@ -29,6 +31,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private onUnreadCountUpdate: Subscription;
 
     constructor(
+        private store: Store<AppBackgroundStore>,
         private http: Http,
         private dialogsService: DialogService,
         private userService: UserService,
@@ -36,7 +39,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         private lps: LPSService,
         private chromeapi: ChromeAPIService,
         private fileUpload: FileUploadService,
-        private settings: OptionsService) { }
+        private settings: OptionsService
+    ) { }
 
     ngOnInit() {
         this.chromeapi.AcceptConnections();
@@ -55,6 +59,11 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 }
             }
         );
+
+        this.chromeapi.registerObservable(this.store.select(s => s.chats).map(x => { return { name: "chats_update", data: x }; }));
+        this.chromeapi.registerObservable(this.store.select(s => s.dialogs).map(x => { return { name: "dialogs_update", data: x }; }));
+        this.chromeapi.registerObservable(this.store.select(s => s.history).map(x => { return { name: "history_update", data: x }; }));
+        this.chromeapi.registerObservable(this.store.select(s => s.users).map(x => { return { name: "users_update", data: x }; }));
 
         this.waitForAuthorizeRequest();
         this.subscriptions.push(
@@ -181,9 +190,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         this.dialogsService.init();
         if (!this.onUnreadCountUpdate) {
             this.onUnreadCountUpdate =
-                this.dialogsService.unreadCountUpdate.subscribe(text => {
-                    this.chromeapi.UpdateActionBadge(text);
-                    this.chromeapi.PostPortMessage({name: "unread_count", data: text});
+                this.store.select(s => s.dialogs).subscribe((dialogList: DialogListInfo) => {
+                    this.chromeapi.UpdateActionBadge(dialogList.unread ? dialogList.unread + "" : "");
                 });
         }
     }
@@ -202,7 +210,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             if (value) {
                 this.vkservice.setOnline();
                 this.vkservice.getSession().subscribe(session => {
-                    this.userService.updateUsers(session.userId.toString());
+                    this.userService.loadUsers(session.userId.toString());
                 });
             }
             else {

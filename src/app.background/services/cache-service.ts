@@ -1,13 +1,12 @@
 import { Injectable } from "@angular/core";
 
 import { VKConsts } from "../../app/vk-consts";
-import { SingleMessageInfo, UserInfo, DialogInfo, DialogsInfo, ChatInfo, HistoryInfo } from "../datamodels";
+import { SingleMessageInfo, UserInfo, DialogInfo, DialogListInfo, ChatInfo, HistoryInfo } from "../datamodels";
 
 @Injectable()
 export class CacheService {
-    dialogsCache: DialogsInfo = new DialogsInfo();
+    dialogsCache: DialogListInfo = new DialogListInfo();
     messagesCache: {[id: number]: HistoryInfo} = {}; /* conversation id -> { messages list, messages count } */
-    usersCache: { [id: number]: UserInfo } = {}; /* user id -> user */
     chatsCache: { [id: number]: ChatInfo } = {}; /* chat id -> users array */
 
     constructor() {
@@ -19,7 +18,7 @@ export class CacheService {
         this.chatsCache = chats;
     }
 
-    pushDialogs(dialogsInfo: DialogsInfo): boolean {
+    pushDialogs(dialogsInfo: DialogListInfo): boolean {
         console.log("pushing dialogs: ", dialogsInfo);
         let dialogs = dialogsInfo.dialogs;
         if (!dialogs || dialogs.length === 0) {
@@ -101,20 +100,13 @@ export class CacheService {
         return h ? h.count : 0;
     }
 
-    pushUsers(users): void {
-        console.log("push users: ", users);
-        for (let userId of users) {
-            this.usersCache[userId] = users[userId];
-        }
-    }
-
     private updateHistory(history: HistoryInfo): void {
         let conversationId = history.conversationId;
         if (!this.messagesCache[conversationId]) this.messagesCache[conversationId] = new HistoryInfo();
         this.messagesCache[conversationId] = history;
     }
 
-    private updateDialogs(dialogs: DialogsInfo): void {
+    private updateDialogs(dialogs: DialogListInfo): void {
         console.log("update dialogs");
         this.dialogsCache = dialogs;
     }

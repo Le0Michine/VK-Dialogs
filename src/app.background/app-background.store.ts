@@ -1,4 +1,4 @@
-import { DialogsInfo, UserInfo, ChatInfo, HistoryInfo } from "./datamodels";
+import { DialogListInfo, UserListInfo, ChatListInfo, HistoryListInfo } from "./datamodels";
 import { dialogListReducer, usersReducer, chatsReducer, historyReducer } from "./reducers";
 
 export const appBackgroundStore = {
@@ -9,10 +9,17 @@ export const appBackgroundStore = {
 };
 
 export interface AppBackgroundStore {
-    users: { [id: number]: UserInfo };
-    dialogs: DialogsInfo[];
-    chats: { [id: number]: ChatInfo };
-    history: { [id: number]: HistoryInfo };
+    users: UserListInfo;
+    dialogs: DialogListInfo;
+    chats: ChatListInfo;
+    history: HistoryListInfo;
 }
+
+export const INITIAL_APP_STATE = {
+    users: new UserListInfo(),
+    dialogs: new DialogListInfo(),
+    chats: new ChatListInfo(),
+    history: new HistoryListInfo()
+};
 
 export { DialogListActions, UsersActions, ChatsActions, HistoryActions } from "./reducers";

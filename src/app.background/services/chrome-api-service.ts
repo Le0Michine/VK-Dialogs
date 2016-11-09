@@ -13,6 +13,7 @@ export class ChromeAPIService {
 
     private subscriptionsCounter = {};
     private bindings = [];
+    private observables = [];
 
     /**
      * starts listen for chrome.runtime.onConnect.
@@ -39,6 +40,11 @@ export class ChromeAPIService {
                     if (message.name === "subscribe") {
                         console.log("subscribe on " + message.eventName);
                         binding.events.push(message.eventName);
+                        this.observables.forEach(o => o.first().subscribe(m => {
+                            if (m.name === message.eventName) {
+                                binding.port.postMessage(m);
+                            }
+                        }));
                         if (message.eventName in this.subscriptionsCounter) {
                             this.subscriptionsCounter[message.eventName] ++;
                         }
@@ -77,7 +83,7 @@ export class ChromeAPIService {
     registerObservable(o: Observable<{}>): void {
         o.subscribe(
             (next: any) => {
-                console.log("next event: ", next, this.bindings);
+                console.log("next event:", next, "bindings:", this.bindings);
                 this.bindings.filter(x => x.events.includes(next.name)).forEach(b => b.port.postMessage(next));
             },
             (error) => {
@@ -87,6 +93,7 @@ export class ChromeAPIService {
                 console.log("close observable");
             }
         );
+        this.observables.push(o);
     }
 
     /**
@@ -105,30 +112,6 @@ export class ChromeAPIService {
             }}),
             (handler: (o: Object) => void) => chrome.runtime.onMessage.removeListener(handler)
         );
-    }
-
-    /**
-     * chrome.runtime.sendMessage with response.
-     * @param {any} message - json message.
-     */
-    SendRequest(message): Observable<any> {
-        return Observable.bindCallback(
-            (callback: (o: Object) => void) => chrome.runtime.sendMessage(message, x => {
-                if (chrome.runtime.lastError) {
-                    console.error("error occured while send request: ", message);
-                    console.error(chrome.runtime.lastError);
-                }
-                callback(x);
-            })
-        )();
-    }
-
-    /**
-     * chrome.runtime.sendMessage without response.
-     * @param {any} message - json message.
-     */
-    SendMessage(message): void {
-        chrome.runtime.sendMessage(message);
     }
 
     /**
@@ -162,40 +145,6 @@ export class ChromeAPIService {
                 }
             }
         );
-    }
-
-    /**
-     * posts a message via chrome.runtime.Port if it exists
-     * else do nothing
-     * @param {any} message - json message.
-     */
-    PostPortMessage(message): void {
-        if (!this.port) {
-            console.log("port isn't connected");
-            return;
-        }
-        console.log("post port message: ", message);
-        this.port.postMessage(message);
-    }
-
-    /**
-     * posts a message as soon as port is connected
-     * else post a message on existing port.
-     * @param {any} message - json message.
-     * @deprecated will be removed
-     */
-    PostPortMessageOnConnect(message): void {
-        if (this.port) {
-            this.port.postMessage(message);
-        }
-        else {
-            chrome.runtime.onConnect.addListener(port => {
-                if (port.name === this.portName) {
-                    console.log("post port message on connect: ", message);
-                    port.postMessage(message);
-                }
-            });
-        }
     }
 
     /**

@@ -7,10 +7,10 @@ import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/combineLatest";
 
 import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "../datamodels";
-import { UserService, VKService, DialogService, ChromeAPIService } from "../services";
+import { VKService, DialogService, ChromeAPIService } from "../services";
 import { VKConsts } from "../vk-consts";
 import { AppStore } from "../app.store";
-import { BreadcrumbActions, HistoryActions } from "../reducers";
+import { BreadcrumbActions, HistoryActions, CurrentConversationIdActions } from "../app.store";
 
 @Component({
   selector: "dialogs",
@@ -33,7 +33,6 @@ export class DialogListComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     constructor(
-        private userService: UserService,
         private router: Router,
         private title: Title,
         private vkservice: VKService,
@@ -60,6 +59,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
                 title];
         }
         this.router.navigate(link);
+        this.store.dispatch({ type: CurrentConversationIdActions.UPDATED, payload: dialog.chatId || dialog.userId });
     }
 
     loadOldDialogs() {
@@ -86,12 +86,10 @@ export class DialogListComponent implements OnInit, OnDestroy {
             if (response.last_opened) {
                 let lastOpened = response.last_opened;
                 this.router.navigate(["dialogs", lastOpened.type, lastOpened.id, lastOpened.title]);
-            } else {
-                this.store.dispatch({ type: HistoryActions.HISTORY_LOADED, payload: null });
             }
         });
 
-        this.subscriptions.push(this.dialogService.dialogsObservable.subscribe(dialogs => {
+        this.subscriptions.push(this.store.select(s => s.dialogs).subscribe(dialogs => {
                 console.log("DIALOGS", dialogs);
                 this.dialogs = dialogs.dialogs;
                 this.dialogsCount = dialogs.count;
@@ -102,9 +100,9 @@ export class DialogListComponent implements OnInit, OnDestroy {
             () => console.log("finished dialogs update")
         ));
 
-        this.subscriptions.push(this.userService.getUsers().subscribe(users => {
+        this.subscriptions.push(this.store.select(s => s.users).subscribe(users => {
                     console.log("USERS", users);
-                    this.users = users;
+                    this.users = users.users;
                     this.dialogsToShow = this.getDialogs();
                     this.refreshView();
                 },
@@ -113,8 +111,8 @@ export class DialogListComponent implements OnInit, OnDestroy {
             )
         );
 
-        this.subscriptions.push(this.dialogService.chatObservable.subscribe(chats => {
-                this.chats = chats;
+        this.subscriptions.push(this.store.select(s => s.chats).subscribe(chats => {
+                this.chats = chats.chats;
                 this.dialogsToShow = this.getDialogs();
                 this.refreshView();
             },

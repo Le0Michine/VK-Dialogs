@@ -2,8 +2,11 @@ import { Component, Input, Output, OnInit, OnDestroy, ChangeDetectorRef, ViewChi
 import { Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { Store } from "@ngrx/Store";
+
 import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../datamodels";
-import { DialogService, UserService, VKService, ChromeAPIService, OptionsService } from "../services";
+import { DialogService, VKService, ChromeAPIService, OptionsService } from "../services";
+import { AppStore } from "../app.store";
 
 @Component({
     selector: "messages-list",
@@ -28,9 +31,9 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     historyToShow = [];
 
     constructor (
+        private store: Store<AppStore>,
         private messagesService: DialogService,
         private vkservice: VKService,
-        private userService: UserService,
         private router: Router,
         private changeDetector: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
@@ -51,9 +54,9 @@ export class MessagesListComponent implements OnInit, OnDestroy {
             })
         );
 
-        this.subscriptions.push(this.userService.getUsers()
+        this.subscriptions.push(this.store.select(s => s.users)
             .subscribe(users => {
-                this.participants = users;
+                this.participants = users.users;
                 this.historyToShow = this.getHistory(this.history);
                 console.log("force update 2");
                 this.refreshView();
