@@ -79,7 +79,7 @@ export class SearchComponent implements AfterViewInit {
 
     set input(value: string) {
         this._input = value;
-        // this.onInput.emit(value);
+        this.onInput.emit(value);
     }
 
     get input(): string {

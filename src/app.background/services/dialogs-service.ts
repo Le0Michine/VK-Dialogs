@@ -11,7 +11,6 @@ import "rxjs/add/operator/filter";
 import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo } from "../datamodels";
 import { DialogShortInfo, HistoryListInfo } from "../datamodels";
 import { VKService } from "./vk-service";
-import { CacheService } from "./cache-service";
 import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";

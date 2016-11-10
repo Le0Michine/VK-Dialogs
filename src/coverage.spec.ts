@@ -10,4 +10,6 @@ if (window.__env__["FULL_COVERAGE"]) {
     require("./app/popup-menu");
     require("./app/search");
     require("./app/services");
+    require("./app.background/services");
+    require("./app.background/reducers");
 }
