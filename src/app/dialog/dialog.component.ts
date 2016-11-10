@@ -11,7 +11,7 @@ import "rxjs/add/operator/distinctUntilChanged";
 import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsService, StoreSyncService } from "../services";
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
 import { MenuItem } from "../datamodels";
-import { BreadcrumbActions } from "../reducers";
+import { BreadcrumbActions, CurrentConversationIdActions } from "../reducers";
 import { AppStore } from "../app.store";
 
 @Component({
@@ -222,6 +222,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
+        this.store.dispatch({ type: CurrentConversationIdActions.UPDATED, payload: null });
     }
 
     onMarkAsRead() {

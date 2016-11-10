@@ -124,7 +124,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.store.select(s => s.currentConversationId)
             .concatMap(id => this.store.select(s => s.history)
             .map(x => x.history[id]))
-            .filter(x => x ? true : false)
             .subscribe(h => {
                 let url = "https://vk.com/im";
                 if (h) {
