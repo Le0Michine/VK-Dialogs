@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/Store";
 
 import { VKService } from "./vk.service";
@@ -37,5 +38,10 @@ export class StoreSyncService {
             );
 
         this.initialized = true;
+    }
+
+    subscribeOnHistory(conversatioId: number, isChat: boolean): Subscription {
+        return this.chromeapi.subscribeOnMessage(`history_update_${conversatioId}_${isChat}`)
+            .subscribe(() => {});
     }
 }

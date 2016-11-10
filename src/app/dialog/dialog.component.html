@@ -41,7 +41,7 @@
 		>drag_handle</div>
 		<button class="btn btn-round primary-color pull-right material-icons send-padding" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ send | translate }}">send</button>
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
-		<label *ngIf="isBeta" for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachments_uploading_count" (mouseenter)="showAttachments()">attach_file
+		<label for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachments_uploading_count" (mouseenter)="showAttachments()">attach_file
 			<div class="spinner btn-round"></div>
 			<div class="attachments-count" *ngIf="attachments.length">{{attachments.length}}</div>
 		</label>
@@ -59,6 +59,6 @@
 		[attachmentUploaded]="attachmentUploaded"
 		(onMessageSent)="messageSent($event)"
 		(onAttachmentsUpdate)="onAttachmentsUpdate($event)"
-		(onUserInput)="onInput.emit($event)"
 	></message-input>
+		<!--(onUserInput)="onInput.emit($event)"-->
 </div>

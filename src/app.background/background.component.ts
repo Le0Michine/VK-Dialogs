@@ -77,7 +77,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                     this.lastOpenedConversation = null;
                 }
                 else {
-                    console.log("get last opened");
+                    console.log("get last opened", this.lastOpenedConversation);
                     message.sendResponse({ last_opened: this.lastOpenedConversation });
                 }
                 return false;

@@ -8,7 +8,7 @@ import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 
-import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsService } from "../services";
+import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsService, StoreSyncService } from "../services";
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
 import { MenuItem } from "../datamodels";
 import { BreadcrumbActions } from "../reducers";
@@ -45,7 +45,6 @@ import { AppStore } from "../app.store";
 })
 export class DialogComponent implements OnInit, OnDestroy {
     @ViewChild("conversationsWrapper") messagesList: ElementRef;
-    isBeta: boolean = false;
 
     title = "Dialog";
     isChat: boolean;
@@ -91,7 +90,8 @@ export class DialogComponent implements OnInit, OnDestroy {
         private fileUpload: FileUploadService,
         private renderer: Renderer,
         private settings: OptionsService,
-        private store: Store<AppStore>
+        private store: Store<AppStore>,
+        private storeSync: StoreSyncService
     ) { }
 
     ngOnInit() {
@@ -114,6 +114,8 @@ export class DialogComponent implements OnInit, OnDestroy {
                     type: this.isChat ? "chat" : "dialog"
                 }
             });
+
+            this.subscriptions.push(this.storeSync.subscribeOnHistory(this.conversationId, this.isChat));
 
             this.subscriptions.push(this.store.select(s => s.history)
                 .map(h => h.history[this.conversationId])
@@ -146,12 +148,6 @@ export class DialogComponent implements OnInit, OnDestroy {
 
             // this.onInput.debounceTime(3000).distinctUntilChanged().subscribe(() => this.vkservice.setActive());
         });
-
-        this.subscriptions.push(
-            this.settings.activatePreviewFeatures.subscribe(value => {
-                this.isBeta = value;
-            })
-        );
 
         this.subscriptions.push(
             this.settings.autoReadMessages.subscribe(value => {

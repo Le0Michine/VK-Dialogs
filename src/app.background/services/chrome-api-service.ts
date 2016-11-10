@@ -7,6 +7,7 @@ import "rxjs/add/observable/bindCallback";
 @Injectable()
 export class ChromeAPIService {
     onUnsubscribe = new Subject();
+    onSubscribe = new Subject();
 
     private portName: string = "message_port";
     private port: chrome.runtime.Port = null;
@@ -39,6 +40,7 @@ export class ChromeAPIService {
                 port.onMessage.addListener((message: any) => {
                     if (message.name === "subscribe") {
                         console.log("subscribe on " + message.eventName);
+                        this.onSubscribe.next(message.eventName);
                         binding.events.push(message.eventName);
                         this.observables.forEach(o => o.first().subscribe(m => {
                             if (m.name === message.eventName) {

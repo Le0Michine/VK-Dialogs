@@ -53,7 +53,7 @@ export class DialogService {
             .filter((sub: any) => sub.name.includes("history_update"))
             .subscribe((sub: any) => {
                 console.log("unsubscribe from history_update: ", sub);
-                let i = this.openedConversations.findIndex(x => "history_update" + x.conversation_id === sub.name);
+                let i = this.openedConversations.findIndex(x => "history_update_" + x.conversation_id === sub.name);
                 if (i > -1) {
                     this.openedConversations.splice(i, 1);
                 }
@@ -78,11 +78,15 @@ export class DialogService {
             });
         });
 
-        this.chromeapi.OnMessage("conversation_id").subscribe((message: any) => {
+        this.chromeapi.onSubscribe.filter((s: string) => /^history_update_.+$/.test(s)).subscribe((s: string) => {
+            console.log("subscribe on history update", s);
+            let parts = s.split("_");
+            let id = +parts[parts.length - 2];
+            let isChat = parts[parts.length - 1] === "true" ? true : false;
             let openedConversation = {
                 messages_count: 20,
-                conversation_id: message.id,
-                is_chat: message.is_chat
+                conversation_id: id,
+                is_chat: isChat
             };
             if (this.openedConversations.findIndex(x => x.conversation_id === openedConversation.conversation_id) < 0) {
                 this.openedConversations.push(openedConversation);
