@@ -44,7 +44,7 @@ describe("Background dialog-list reducer", () => {
     it("should replace left part of dialog list in case of left intersection with reordering", () => {
         // arrange
         let dialogs = createDialogListWithIdRange(7, 10, "new", 1000);
-        dialogs.dialogs = [ { message: { id: 5, body: "new5", date: 570 } }, { message: { id: 4, body: "new4", date: 560 } }, { message: { id: 0, body: "new0", date: 550 } } ] as DialogInfo[];
+        dialogs.dialogs = [ { message: { conversationId: 5, body: "new5", date: 570 } }, { message: { conversationId: 4, body: "new4", date: 560 } }, { message: { conversationId: 0, body: "new0", date: 550 } } ] as DialogInfo[];
 
         // act
         let result = dialogListReducer(state, { type: DialogListActions.DIALOGS_UPDATED, payload: dialogs });
@@ -83,7 +83,7 @@ describe("Background dialog-list reducer", () => {
         for (let i = start; i <= end; i++) {
             let d = new DialogInfo();
             d.message = new SingleMessageInfo();
-            d.message.id = i;
+            d.message.conversationId = i;
             d.message.body = body + i;
             d.message.date = time - i;
             dialogList.dialogs.push(d);
