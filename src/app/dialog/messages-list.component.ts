@@ -21,7 +21,6 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     @Input() isChat: boolean;
     @Input() conversationId: number;
     @Input() markAsRead: Observable<boolean>;
-    @Input() historyUpdate: Observable<HistoryInfo>;
 
     participants: { [userId: number]: UserInfo } = {};
     userId: number;
@@ -44,8 +43,11 @@ export class MessagesListComponent implements OnInit, OnDestroy {
         console.log("messages list component init");
         this.userId = this.vkservice.getCurrentUserId();
 
-        this.subscriptions.push(this.historyUpdate
+        this.subscriptions.push(this.store.select(s => s.history)
+            .map(h => h.history[this.conversationId])
+            .filter(x => x ? true : false)
             .subscribe(history => {
+                console.log("HISTORY 1");
                 this.history = history.messages;
                 this.messagesCount = history.count;
                 this.historyToShow = this.getHistory(this.history);
@@ -84,7 +86,10 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     getHistory(messages: SingleMessageInfo[]): MessageViewModel[] {
         console.log("convert history: ", messages);
         if (!messages.length || !this.participants[messages[0].userId]) {
-            console.log("not enough data: ", this.participants);
+            console.trace(
+                "not enough data: ", this.participants,
+                "messages count", messages.length,
+                "first sender", messages.length ? this.participants[messages[0].userId] : undefined);
             return [];
         }
         let history: MessageViewModel[] = [];

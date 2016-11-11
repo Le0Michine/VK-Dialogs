@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
-import { Store } from "@ngrx/Store";
+import { Store } from "@ngrx/store";
+import { go } from "@ngrx/router-store";
 import { Title } from "@angular/platform-browser";
-import { Router } from "@angular/router";
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/combineLatest";
@@ -33,7 +33,6 @@ export class DialogListComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     constructor(
-        private router: Router,
         private title: Title,
         private vkservice: VKService,
         private dialogService: DialogService,
@@ -58,7 +57,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
                 dialog.userId.toString(),
                 title];
         }
-        this.router.navigate(link);
+        this.store.dispatch(go(link));
         this.store.dispatch({ type: CurrentConversationIdActions.UPDATED, payload: dialog.chatId || dialog.userId });
     }
 
@@ -81,13 +80,6 @@ export class DialogListComponent implements OnInit, OnDestroy {
         });
 
         this.vkservice.setOnline();
-
-        this.chromeapi.SendRequest({ name: "last_opened" }).subscribe((response: any) => {
-            if (response.last_opened) {
-                let lastOpened = response.last_opened;
-                this.router.navigate(["dialogs", lastOpened.type, lastOpened.id, lastOpened.title]);
-            }
-        });
 
         this.subscriptions.push(this.store.select(s => s.dialogs).subscribe(dialogs => {
                 console.log("DIALOGS", dialogs);

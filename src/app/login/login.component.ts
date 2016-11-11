@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { Store } from "@ngrx/Store";
-import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { go } from "@ngrx/router-store";
 import { TranslateService } from "ng2-translate/ng2-translate";
 
 import { VKService } from "../services";
@@ -18,7 +18,6 @@ import { BreadcrumbActions } from "../reducers";
 })
 export class LoginComponent {
     constructor(
-        private router: Router,
         private vkservice: VKService,
         private store: Store<AppStore>,
         private translate: TranslateService
@@ -28,12 +27,15 @@ export class LoginComponent {
         this.translate.get("authorize_btn").subscribe(value => {
             this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{ title: value, navigationLink: "" }] });
         });
+        if (this.vkservice.hasValidSession()) {
+            this.store.dispatch(go(["dialogs"]));
+        }
     }
 
     authorize() {
         this.vkservice.auth().subscribe(() => {
             console.log("authorization completed, go to dialogs");
-            this.router.navigate(["dialogs"]);
+            this.store.dispatch(go(["dialogs"]));
         });
     }
 }

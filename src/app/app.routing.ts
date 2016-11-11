@@ -6,7 +6,12 @@ import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login";
 import { AuthorizationGuard } from "./guards";
 
-const routes: Routes = [
+const getSavedRoute = function () {
+    let state = JSON.parse(localStorage.getItem("savedState"));
+    return state && state.router && state.router.path ? decodeURI(state.router.path) : "/dialogs";
+};
+
+export const routes: Routes = [
   {
     path: "dialogs/:type/:id/:title",
     component: DialogComponent,
@@ -23,14 +28,7 @@ const routes: Routes = [
   },
   {
     path: "",
-    redirectTo: "/dialogs",
+    redirectTo: getSavedRoute(),
     pathMatch: "full",
-  },
-  {
-    path: "popup.html",
-    redirectTo: "/dialogs",
-    pathMatch: "full"
   }
 ];
-
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes, { useHash: true });

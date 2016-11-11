@@ -1,7 +1,6 @@
 import { Component, ChangeDetectorRef, Renderer, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angular/core";
-import { Router, NavigationEnd } from "@angular/router";
-import { Location } from "@angular/common";
-import { Store } from "@ngrx/Store";
+import { Store } from "@ngrx/store";
+import { go } from "@ngrx/router-store";
 import { TranslateService } from "ng2-translate/ng2-translate";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
@@ -52,8 +51,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     constructor(
         private store: Store<AppStore>,
         private translate: TranslateService,
-        private location: Location,
-        private router: Router,
         private ref: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private dialogs: DialogService,
@@ -81,8 +78,8 @@ export class AppComponent implements AfterViewInit, OnInit {
             this.windowHeight = size.h + "px";
             this.ref.detectChanges();
         });
-        this.router.events.subscribe((event) => {
-            this.routeChanged();
+        this.store.select(s => s.router).map(r => r.path).subscribe((path) => {
+            this.routeChanged(path);
         });
         this.chromeapi.OnPortMessage("unread_count").map(x => x.data as number).subscribe(n => {
             this.unreadCount = n;
@@ -90,7 +87,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     onDialogSelect(dialog: DialogShortInfo) {
-        this.router.navigate(["dialogs", dialog.type === "profile" ? "dialog" : "chat", dialog.id, dialog.title]);
+        let link = ["dialogs", dialog.type === "profile" ? "dialog" : "chat", dialog.id, dialog.title];
+        this.store.dispatch(go(link));
     }
 
     private search(searchTerm: string) {
@@ -110,14 +108,14 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.isPopupMenuOpened = !this.isPopupMenuOpened;
     }
 
-    private routeChanged(): void {
-        let path: string[] = this.location.path().split("/").filter(s => s);
-        this.showSearchBar = path.length < 2 && !path.find(x => x === "authorize");
+    private routeChanged(pathURI: string): void {
+        this.showSearchBar = pathURI === "/dialogs";
+        this.ref.detectChanges();
     }
 
     private logOff() {
         this.chromeapi.SendMessage({name: "logoff"});
-        this.router.navigate(["authorize"]);
+        this.store.dispatch(go(["authorize"]));
     }
 
     private goToConversation() {

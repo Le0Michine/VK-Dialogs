@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, Renderer, EventEmitter } from "@angular/core";
 import { trigger, state, transition, style, animate, keyframes } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Title } from "@angular/platform-browser";
-import { Store } from "@ngrx/Store";
+import { Store } from "@ngrx/store";
+import { go } from "@ngrx/router-store";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/debounceTime";
@@ -56,7 +57,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     selectEmoji: EventEmitter<string> = new EventEmitter();
     onEmojiToggle: EventEmitter<boolean> = new EventEmitter();
     markAsRead: EventEmitter<boolean> = new EventEmitter();
-    historyUpdate: EventEmitter<HistoryInfo> = new EventEmitter();
     onSendMessageClick: EventEmitter<{}> = new EventEmitter();
     newAttachment: EventEmitter<MenuItem> = new EventEmitter();
     removeAttachment: EventEmitter<string> = new EventEmitter();
@@ -82,7 +82,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     constructor (
         private messagesService: DialogService,
         private vkservice: VKService,
-        private router: Router,
         private pageTitle: Title,
         private route: ActivatedRoute,
         private changeDetector: ChangeDetectorRef,
@@ -98,7 +97,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         console.log("specific dialog component init");
 
         this.route.params.subscribe(params => {
-            this.title = params["title"];
+            this.title = decodeURI(params["title"]);
             this.conversationId = +params["id"];
             let type = params["type"];
             this.isChat = type === "dialog" ? false : true;
@@ -125,7 +124,6 @@ export class DialogComponent implements OnInit, OnDestroy {
                     let historyInfo = new HistoryInfo();
                     historyInfo.messages = data.messages;
                     historyInfo.count = data.count;
-                    this.historyUpdate.emit(historyInfo);
                     if (!this.autoReadMessages) {
                         this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
                         this.changeDetector.detectChanges();
@@ -223,6 +221,7 @@ export class DialogComponent implements OnInit, OnDestroy {
             s.unsubscribe();
         }
         this.store.dispatch({ type: CurrentConversationIdActions.UPDATED, payload: null });
+        this.store.dispatch(go(["dialogs"]));
     }
 
     onMarkAsRead() {

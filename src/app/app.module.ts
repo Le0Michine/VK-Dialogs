@@ -1,9 +1,11 @@
-import { NgModule } from "@angular/core";
+import { NgModule, Inject } from "@angular/core";
+import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { TranslateModule } from "ng2-translate/ng2-translate";
-import { StoreModule, INITIAL_STATE } from "@ngrx/Store";
+import { StoreModule, INITIAL_STATE, Store } from "@ngrx/store";
+import { RouterStoreModule } from "@ngrx/router-store";
 
 import { AppComponent }  from "./app.component";
 import { DialogListComponent }  from "./dialogs-list";
@@ -13,7 +15,7 @@ import { EmojiComponent }  from "./emoji";
 import { PopupMenuComponent }  from "./popup-menu";
 import { BreadcrumbComponent }  from "./breadcrumbs";
 import { SearchComponent }  from "./search";
-import { routing } from "./app.routing";
+import { routes } from "./app.routing";
 
 import { DialogService } from "./services";
 import { VKService } from "./services";
@@ -21,17 +23,19 @@ import { ChromeAPIService } from "./services";
 import { OptionsService } from "./services";
 import { FileUploadService } from "./services";
 import { StoreSyncService } from "./services";
+import { StateResolverService } from "./services";
 import { PIPES } from "./pipes";
 import { AuthorizationGuard } from "./guards";
-import { appStore, INITIAL_APP_STATE } from "./app.store";
+import { appStore, INITIAL_APP_STATE, AppStore } from "./app.store";
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
-        routing,
+        RouterModule.forRoot(routes, { useHash: true }),
         TranslateModule.forRoot(),
-        StoreModule.provideStore(appStore)
+        StoreModule.provideStore(appStore),
+        RouterStoreModule.connectRouter()
     ],
     declarations: [
         AppComponent,
@@ -57,11 +61,20 @@ import { appStore, INITIAL_APP_STATE } from "./app.store";
         OptionsService,
         FileUploadService,
         AuthorizationGuard,
+        StateResolverService,
         StoreSyncService,
         {
             provide: INITIAL_STATE,
-            useValue: INITIAL_APP_STATE
+            useValue: JSON.parse(localStorage.getItem("savedState")) || INITIAL_APP_STATE
         }
     ]
 })
-export class AppModule { }
+export class AppModule {
+    constructor(
+        store: Store<AppStore>,
+        @Inject(INITIAL_STATE) initState: AppStore,
+        stateResolver: StateResolverService
+    ) {
+        store.subscribe(s => stateResolver.saveState(s));
+    }
+}
