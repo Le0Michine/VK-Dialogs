@@ -86,7 +86,7 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     getHistory(messages: SingleMessageInfo[]): MessageViewModel[] {
         console.log("convert history: ", messages);
         if (!messages.length || !this.participants[messages[0].userId]) {
-            console.trace(
+            console.log(
                 "not enough data: ", this.participants,
                 "messages count", messages.length,
                 "first sender", messages.length ? this.participants[messages[0].userId] : undefined);
