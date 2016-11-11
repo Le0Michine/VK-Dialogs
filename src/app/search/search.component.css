@@ -12,6 +12,8 @@ input {
     display: block;
     border: 1px solid white;
     border-radius: 1px;
+    position: absolute;
+    bottom: 0;
 }
 
 ul {
@@ -40,6 +42,11 @@ li.selected {
     display: flex;
 }
 
+.controls > span {
+    display: flex;
+    position: relative;
+}
+
 button {
     border: none;
     outline: none;
@@ -48,4 +55,14 @@ button {
 
 #searchInput {
     flex: 1;
+}
+
+.title {
+    cursor: pointer;
+    margin-top: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 235px;
 }

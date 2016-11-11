@@ -76,7 +76,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
         this.dialogService.init();
 
         this.translate.get("dialogs").subscribe(value => {
-            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{ title: value, href: "https://vk.com/im" }] });
+            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [] });
             this.title.setTitle(value);
         });
 

@@ -1,20 +1,23 @@
 <div class="search-widget" (keydown)="onKeyPress($event)">
     <div class="controls">
-        <button class="btn-search material-icons" (click)="setFocus()">search</button>
-        <input
-            #searchInput
-            id="searchInput"
-            name="searchInput"
-            type="text"
-            class="primary-color"
-            [placeholder]="placeholder | translate"
-            autocomplete="off"
-            [(ngModel)]="input"
-            (blur)="blur()"
-            (focus)="setFocus()"
-        >
+        <h1 class="title primary-color" (click)="setFocus()">{{ 'dialogs' | translate }}</h1>
+        <span>
+            <button class="btn-search material-icons" (click)="setFocus()">search</button>
+            <input
+                #searchInput
+                id="searchInput"
+                name="searchInput"
+                type="text"
+                class="primary-color"
+                [placeholder]="placeholder | translate"
+                autocomplete="off"
+                [(ngModel)]="input"
+                (blur)="blur()"
+                (focus)="setFocus()"
+            >
+            <div [@focusInOut]="focusState" class="underline"></div>
+        </span>
     </div>
-    <div [@focusInOut]="focusState" class="underline"></div>
     <ul *ngIf="showItems" @dropdown>
         <li
             *ngFor="let item of items; let i = index;"
