@@ -10,7 +10,7 @@ function save_options() {
             // showTyping: show_typing,
             windowSize: document.getElementById("windowSize").value,
             stickerSize: document.getElementById("stickerSize").value,
-            activatePreviewFeatures: document.getElementById("activatePreviewFeatures").checked,
+            // activatePreviewFeatures: document.getElementById("activatePreviewFeatures").checked,
             autoReadMessages: document.getElementById("autoReadMessages").checked
         }
     }, function() {
@@ -45,7 +45,7 @@ function restore_options() {
         // document.getElementById("show-typing-checkbox").checked = items.settings.showTyping;
         document.getElementById("windowSize").value = items.settings.windowSize;
         document.getElementById("stickerSize").value = items.settings.stickerSize;
-        document.getElementById("activatePreviewFeatures").checked = items.settings.activatePreviewFeatures;
+        // document.getElementById("activatePreviewFeatures").checked = items.settings.activatePreviewFeatures;
         document.getElementById("autoReadMessages").checked = items.settings.autoReadMessages;
     });
 }
@@ -68,8 +68,8 @@ function updateLocale() {
     document.getElementById("sticker-size-option").innerText = chrome.i18n.getMessage("stickerSizeOption");
     document.getElementById("autoread-option").innerText = chrome.i18n.getMessage("autoreadOption");
     document.getElementById("autoReadMessagesLabel").innerText = chrome.i18n.getMessage("autoReadMessagesLabel");
-    document.getElementById("preview-option").innerText = chrome.i18n.getMessage("previewOption");
-    document.getElementById("activatePreviewFeaturesLabel").innerText = chrome.i18n.getMessage("activatePreviewFeaturesLabel");
+    // document.getElementById("preview-option").innerText = chrome.i18n.getMessage("previewOption");
+    // document.getElementById("activatePreviewFeaturesLabel").innerText = chrome.i18n.getMessage("activatePreviewFeaturesLabel");
     document.getElementById("saveStatus").innerText = chrome.i18n.getMessage("optionsSaved");
     document.getElementById("saveBtn").innerText = chrome.i18n.getMessage("saveBtn");
     document.getElementById("resetBtn").innerText = chrome.i18n.getMessage("resetBtn");
