@@ -86,7 +86,7 @@ export class MessageInputComponent {
     }
 
     ngAfterViewInit() {
-        this.renderer.invokeElementMethod(this.input.nativeElement, "focus");
+        this.setFocusOnInput();
         this.subscriptions.push(this.selectEmoji.subscribe(emoji => this.onEmojiSelect(emoji)));
         this.subscriptions.push(this.onSendMessageClick.subscribe(() => this.sendMessage(this.inputText)));
         this.subscriptions.push(this.attachmentUploaded.subscribe(value => this.sendingBlocked = !value));
@@ -111,6 +111,10 @@ export class MessageInputComponent {
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
+    }
+
+    setFocusOnInput() {
+        this.renderer.invokeElementMethod(this.input.nativeElement, "focus");
     }
 
     onInput(event: Event): void {
@@ -176,6 +180,7 @@ export class MessageInputComponent {
         this.cacheCurrentMessage();
         this.inputText += emoji;
         this.updateInputMessage();
+        this.setFocusOnInput();
     }
 
     restoreCachedMessages(id, isChat) {
