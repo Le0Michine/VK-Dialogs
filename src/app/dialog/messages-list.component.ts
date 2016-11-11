@@ -2,7 +2,7 @@ import { Component, Input, Output, OnInit, OnDestroy, ChangeDetectorRef, ViewChi
 import { Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { Store } from "@ngrx/Store";
+import { Store } from "@ngrx/store";
 
 import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../datamodels";
 import { DialogService, VKService, ChromeAPIService, OptionsService } from "../services";

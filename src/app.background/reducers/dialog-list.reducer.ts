@@ -1,4 +1,4 @@
-import { ActionReducer, Action } from "@ngrx/Store";
+import { ActionReducer, Action } from "@ngrx/store";
 
 import { DialogListInfo, DialogInfo } from "../datamodels";
 

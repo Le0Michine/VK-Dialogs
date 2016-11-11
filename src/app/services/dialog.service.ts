@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http, Response, RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs/Observable";
-import { Store } from "@ngrx/Store";
+import { Store } from "@ngrx/store";
 
 import { VKService } from "./vk.service";
 import { SingleMessageInfo, DialogInfo, DialogListInfo, ChatInfo, DialogShortInfo, HistoryInfo } from "../datamodels";

@@ -1,7 +1,7 @@
 import { NgModule }      from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
-import { StoreModule, INITIAL_STATE } from "@ngrx/Store";
+import { StoreModule, INITIAL_STATE } from "@ngrx/store";
 
 import { BackgroundComponent }  from "./background.component";
 import { VKService } from "./services";
@@ -15,7 +15,7 @@ import { OptionsService } from "./services";
 import { appBackgroundStore, INITIAL_APP_STATE } from "./app-background.store";
 
 @NgModule({
-    imports:      [
+    imports: [
         BrowserModule,
         HttpModule,
         StoreModule.provideStore(appBackgroundStore)

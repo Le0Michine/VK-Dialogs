@@ -2,7 +2,7 @@ import { inject, TestBed, ComponentFixture } from "@angular/core/testing";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { DebugElement, ApplicationRef, Directive, Input } from "@angular/core";
-import { StoreModule, Store } from "@ngrx/Store";
+import { StoreModule, Store } from "@ngrx/store";
 
 import { BreadcrumbItem } from "../datamodels";
 import { BreadcrumbComponent } from "./breadcrumb.component";

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { Observable } from "rxjs/Observable";
-import { Store } from "@ngrx/Store";
+import { Store } from "@ngrx/store";
 
 import { BreadcrumbItem } from "../datamodels";
 import { AppStore } from "../app.store";
