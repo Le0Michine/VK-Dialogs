@@ -37,6 +37,7 @@ module.exports = (function(options) {
             sourceMapFilename: '[name].map',
         },
         plugins: [
+            new webpack.optimize.DedupePlugin(),
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,
                 compress: {

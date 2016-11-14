@@ -35,6 +35,7 @@ const iconNameReplacer = function (fileName) {
 var filesToCopy = [
     { from: '../lib/*.js', to: "./lib", toType: "dir" },
     { from: '../node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./lib", toType: "dir" },
+    { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
     { from: '../src/icons', to: "./icons", toType: "dir" },
     { from: '../src/app.options', to: "./app.options", toType: "dir" },
     { from: '../src/i18n', to: "./i18n", toType: "dir" },

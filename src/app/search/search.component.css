@@ -59,7 +59,7 @@ button {
 
 .title {
     cursor: pointer;
-    margin-top: 4px;
+    margin: 0;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;

@@ -38,9 +38,9 @@
 			class="dragBar material-icons primary-color-text"
 			(mousedown)="startResize([conversationsWrapper, inputWrapper], $event)"
 		>drag_handle</div>
-		<button class="btn btn-round primary-color pull-right material-icons send-padding" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ send | translate }}">send</button>
+		<button class="btn btn-round primary-color pull-right centering-container" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ send | translate }}"><i class="material-icons round-btn-icon">send</i></button>
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
-		<label for="fileUpload" class="btn primary-color file-upload btn-round pull-right material-icons" [class.disabled]="attachmentsUploadingCount" (mouseenter)="showAttachments()">attach_file
+		<label for="fileUpload" class="btn primary-color centering-container btn-round pull-right" [class.disabled]="attachmentsUploadingCount" (mouseenter)="showAttachments()"><i class="material-icons">attach_file</i>
 			<!-- <div class="spinner btn-round"></div> -->
 			<div class="attachments-count" *ngIf="attachments.length">{{attachments.length}}</div>
 		</label>

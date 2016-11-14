@@ -7,7 +7,6 @@ a {
 }
 
 .breadcrumb-item-title {
-    margin-top: 4px;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
