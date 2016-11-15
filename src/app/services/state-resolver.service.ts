@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class StateResolverService {
@@ -9,6 +10,6 @@ export class StateResolverService {
     }
 
     getState() {
-        return JSON.parse(localStorage.getItem(this.stateKey));
+        return Observable.of(JSON.parse(localStorage.getItem(this.stateKey)));
     }
 }

@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 import { StoreModule, INITIAL_STATE, Store } from "@ngrx/store";
-import { RouterStoreModule } from "@ngrx/router-store";
+import { RouterStoreModule, replace } from "@ngrx/router-store";
 
 import { TranslateModule } from "./translate";
 
@@ -26,8 +26,8 @@ import { FileUploadService } from "./services";
 import { StoreSyncService } from "./services";
 import { StateResolverService } from "./services";
 import { PIPES } from "./pipes";
-import { AuthorizationGuard, RedirectToDialog } from "./guards";
-import { appStore, AppStore, stateFactory } from "./app.store";
+import { AuthorizationGuard } from "./guards";
+import { rootReducer, AppStore, stateFactory } from "./app.store";
 
 @NgModule({
     imports: [
@@ -36,7 +36,7 @@ import { appStore, AppStore, stateFactory } from "./app.store";
         FormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
         TranslateModule.forRoot(),
-        StoreModule.provideStore(appStore),
+        StoreModule.provideStore(rootReducer),
         RouterStoreModule.connectRouter()
     ],
     declarations: [
@@ -63,7 +63,6 @@ import { appStore, AppStore, stateFactory } from "./app.store";
         OptionsService,
         FileUploadService,
         AuthorizationGuard,
-        RedirectToDialog,
         StateResolverService,
         StoreSyncService,
         {
@@ -75,10 +74,15 @@ import { appStore, AppStore, stateFactory } from "./app.store";
 export class AppModule {
     constructor(
         store: Store<AppStore>,
-        @Inject(INITIAL_STATE) initState: AppStore,
         stateResolver: StateResolverService
     ) {
+        stateResolver.getState().subscribe((state: AppStore) => {
+            if (state) {
+                store.dispatch({ type: "SET_NEW_STATE", payload: state });
+                let path = decodeURI(state.router.path);
+                store.dispatch(replace(path));
+            }
+        });
         store.subscribe(s => stateResolver.saveState(s));
-        store.first().subscribe(s => console.log("init state", s));
     }
 }
