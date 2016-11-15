@@ -4,12 +4,7 @@ import { DialogComponent } from "./dialog";
 import { DialogListComponent } from "./dialogs-list";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login";
-import { AuthorizationGuard } from "./guards";
-
-export function getSavedRoute() {
-    let state = JSON.parse(localStorage.getItem("savedState"));
-    return state && state.router && state.router.path ? decodeURI(state.router.path) : "/dialogs";
-};
+import { AuthorizationGuard, RedirectToDialog } from "./guards";
 
 export const routes: Routes = [
   {
@@ -29,6 +24,7 @@ export const routes: Routes = [
   {
     path: "",
     redirectTo: "/dialogs",
-    pathMatch: "full"
+    pathMatch: "full",
+    canActivate: [ RedirectToDialog ]
   }
 ];

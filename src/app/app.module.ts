@@ -79,5 +79,6 @@ export class AppModule {
         stateResolver: StateResolverService
     ) {
         store.subscribe(s => stateResolver.saveState(s));
+        store.first().subscribe(s => console.log("init state", s));
     }
 }
