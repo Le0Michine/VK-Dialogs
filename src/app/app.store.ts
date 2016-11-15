@@ -1,4 +1,8 @@
+import { combineReducers, Action } from "@ngrx/store";
+import { compose } from "@ngrx/core/compose";
 import { RouterState, routerReducer } from "@ngrx/router-store";
+import { storeLogger } from "ngrx-store-logger";
+
 import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo } from "./datamodels";
 import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer } from "./reducers";
 
@@ -11,6 +15,13 @@ export const appStore = {
     currentConversationId: currentConversationIdReducer,
     router: routerReducer
 };
+
+export function rootReducer (state: AppStore, action: Action){
+  if (action.type === "SET_NEW_STATE") {
+      state = Object.assign({}, state, action.payload);
+  }
+  return compose(storeLogger(), combineReducers)(appStore)(state, action);
+}
 
 export class AppStore {
     breadcrumbs: BreadcrumbItem[];
@@ -33,7 +44,7 @@ export const INITIAL_APP_STATE = {
 };
 
 export function stateFactory() {
-    return JSON.parse(localStorage.getItem("savedState")) || INITIAL_APP_STATE;
+    return /*JSON.parse(localStorage.getItem("savedState")) ||*/ INITIAL_APP_STATE;
 };
 
 export { BreadcrumbActions, HistoryActions, UserListActions, DialogListActions, ChatListActions, CurrentConversationIdActions } from "./reducers";

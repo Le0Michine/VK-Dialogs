@@ -72,6 +72,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     topPanel: string = "calc(100% - 130px - 45px)";
     bottomPanel: string = "calc(100% - 130px)";
     emojiPanel: string = "130px";
+    loadEmoji: boolean = false;
 
     scrollPosition: number = 1000000;
     scrollHeight: number = 1000000;
@@ -167,6 +168,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     ngAfterViewInit() {
         console.log("after view init");
         this.scrollToBottom();
+        setTimeout(() => { this.loadEmoji = true; }, 200);
     }
 
     scrollToBottom(): void {
@@ -246,6 +248,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
 
     toggleEmoji() {
+        this.loadEmoji = true;
         this.onEmojiToggle.emit(true);
     }
 

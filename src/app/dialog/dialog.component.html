@@ -9,6 +9,7 @@
 	></messages-list>
 </div>
 <emoji
+	*ngIf="loadEmoji"
 	[toggle]="onEmojiToggle"
 	[emojiPanelPosition]="emojiPanel"
 	(onSelect)="onEmojiSelect($event)"></emoji>
