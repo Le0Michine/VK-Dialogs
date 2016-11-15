@@ -45,4 +45,4 @@ export const ru = {
         "fwd_messages": "пересланные сообщения",
         "sticker": "стикер"
     }
-}
+};

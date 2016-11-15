@@ -45,4 +45,4 @@ export const en = {
         "fwd_messages": "Forwarded messages",
         "sticker": "sticker"
     }
-}
+};
