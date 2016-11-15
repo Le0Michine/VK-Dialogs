@@ -39,7 +39,7 @@ var filesToCopy = [
     { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
     { from: '../src/icons', to: "./icons", toType: "dir" },
     { from: '../src/app.options', to: "./app.options", toType: "dir" },
-    { from: '../src/i18n', to: "./i18n", toType: "dir" },
+    // { from: '../src/i18n', to: "./i18n", toType: "dir" },
     { from: '../src/_locales', to: "./_locales", toType: "dir" },
     { from: '../src/*.html', to: "./", toType: "dir", flatten: true },
     { from: '../src/*.css', to: "./", toType: "dir", flatten: true },
