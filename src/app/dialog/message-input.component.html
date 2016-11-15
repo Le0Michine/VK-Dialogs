@@ -3,7 +3,7 @@
 	<div #minput class="message-input pull-left text-normal border-primary"
 		contenteditable="true"
 		id="message_input"
-		(blur)="showLabelContent(getText(minput.childNodes))"
+		(blur)="showLabelContent()"
 		(keydown)="onKeyPress($event, minput)"
 		(input)="onInput($event)"
 		(paste)="removeStyle(minput.childNodes)"

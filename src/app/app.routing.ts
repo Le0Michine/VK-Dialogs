@@ -6,7 +6,7 @@ import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login";
 import { AuthorizationGuard } from "./guards";
 
-const getSavedRoute = function () {
+export function getSavedRoute() {
     let state = JSON.parse(localStorage.getItem("savedState"));
     return state && state.router && state.router.path ? decodeURI(state.router.path) : "/dialogs";
 };
@@ -28,7 +28,7 @@ export const routes: Routes = [
   },
   {
     path: "",
-    redirectTo: getSavedRoute(),
-    pathMatch: "full",
+    redirectTo: "/dialogs",
+    pathMatch: "full"
   }
 ];

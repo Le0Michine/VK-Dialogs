@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "declaration": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "pretty": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noFallthroughCasesInSwitch": true,
+    "outDir": "./ngfactory",
+    "rootDir": "./src",
+    "typeRoots": [ "./node_modules/@types" ],
+    "types": [
+      "core-js",
+      "jasmine",
+      "node",
+      "protractor",
+      "selenium-webdriver",
+      "source-map",
+      "uglify-js",
+      "webpack",
+      "chrome",
+      "jquery"
+    ]
+  },
+  "angularCompilerOptions": {
+    "debug": false,
+    "genDir": "aot",
+    "skipMetadataEmit" : true
+  },
+  "compileOnSave": false,
+  "files": [
+    "src/index.ts",
+    "src/install.ts",
+    "src/background.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

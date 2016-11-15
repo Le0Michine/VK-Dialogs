@@ -7,7 +7,7 @@ export class UsersActions {
     static USERS_UPDATED = "USERS_UPDATED";
 }
 
-export const usersReducer: ActionReducer<UserListInfo> = (state: UserListInfo, action: Action): UserListInfo => {
+export function usersReducer (state: UserListInfo, action: Action): UserListInfo {
     switch (action.type) {
         // payload -- UserInfo[]
         case UsersActions.USERS_LOADED:

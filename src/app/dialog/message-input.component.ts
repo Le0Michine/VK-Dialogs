@@ -103,9 +103,6 @@ export class MessageInputComponent {
         });
     }
 
-    ngOnChanges() {
-    }
-
     ngOnDestroy() {
         this.cacheCurrentMessage(true);
         for (let s of this.subscriptions) {

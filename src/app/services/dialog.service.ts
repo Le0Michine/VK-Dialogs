@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Http, Response, RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { Store } from "@ngrx/store";
 
@@ -12,7 +11,6 @@ import { AppStore, HistoryActions } from "../app.store";
 @Injectable()
 export class DialogService {
     constructor(
-        private http: Http,
         private vkservice: VKService,
         private chromeapi: ChromeAPIService,
         private store: Store<AppStore>

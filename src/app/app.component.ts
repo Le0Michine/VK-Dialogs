@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, Renderer, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { go } from "@ngrx/router-store";
-import { TranslateService } from "ng2-translate/ng2-translate";
+import { TranslateService } from "./translate";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/Observable/interval";
@@ -91,7 +91,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.store.dispatch(go(link));
     }
 
-    private search(searchTerm: string) {
+    search(searchTerm: string) {
         if (!searchTerm) {
             this.foundDialogs = [];
             return;
@@ -103,22 +103,22 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
     }
 
-    private openMenu(event: MouseEvent) {
+    openMenu(event: MouseEvent) {
         event.stopPropagation();
         this.isPopupMenuOpened = !this.isPopupMenuOpened;
     }
 
-    private routeChanged(pathURI: string): void {
+    routeChanged(pathURI: string): void {
         this.showSearchBar = pathURI === "/dialogs";
         this.ref.detectChanges();
     }
 
-    private logOff() {
+    logOff() {
         this.chromeapi.SendMessage({name: "logoff"});
         this.store.dispatch(go(["authorize"]));
     }
 
-    private goToConversation() {
+    goToConversation() {
         this.store.select(s => s.currentConversationId)
             .concatMap(id => this.store.select(s => s.history)
             .map(x => x.history[id]))
@@ -134,7 +134,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             });
     }
 
-    private openSettings() {
+    openSettings() {
         chrome.extension.getURL("/app.options/options.html");
         chrome.tabs.create({
             url: chrome.extension.getURL("/app.options/options.html"),
@@ -142,13 +142,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
     }
 
-    private openSeparateWindow() {
+    openSeparateWindow() {
         this.settings.windowSize.subscribe(size => {
             this.chromeapi.SendMessage({name: "open_separate_window", w: size.w, h: size.h});
         });
     }
 
-    private onMenuItemSelect(item: number): void {
+    onMenuItemSelect(item: number): void {
         console.log("menu item selected", item);
         this.isPopupMenuOpened = false;
         switch (item) {
@@ -169,13 +169,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         }
     }
 
-    private closePopupMenu() {
+    closePopupMenu() {
         if (this.isPopupMenuOpened) {
             this.isPopupMenuOpened = false;
         }
     }
 
-    private keyDown(event: KeyboardEvent) {
+    keyDown(event: KeyboardEvent) {
         if (event.ctrlKey && event.keyCode === 70) {// ctrl + f
             event.preventDefault();
             event.stopPropagation();

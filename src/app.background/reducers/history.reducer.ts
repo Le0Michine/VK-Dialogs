@@ -7,7 +7,7 @@ export class HistoryActions {
     static HISTORY_UPDATED = "HISTORY_UPDATED";
 }
 
-export const historyReducer: ActionReducer<HistoryListInfo> = (state: HistoryListInfo, action: Action): HistoryListInfo => {
+export function historyReducer (state: HistoryListInfo, action: Action): HistoryListInfo {
     switch (action.type) {
         case HistoryActions.HISTORY_LOADED:
             let newHistory = new HistoryListInfo();

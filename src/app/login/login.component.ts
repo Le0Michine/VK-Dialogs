@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { go } from "@ngrx/router-store";
-import { TranslateService } from "ng2-translate/ng2-translate";
+import { TranslateService } from "../translate";
 
 import { VKService } from "../services";
 import { AppStore } from "../app.store";

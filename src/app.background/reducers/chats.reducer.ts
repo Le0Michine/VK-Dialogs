@@ -7,7 +7,7 @@ export class ChatsActions {
     static CHATS_UPDATED = "CHATS_UPDATED";
 }
 
-export const chatsReducer: ActionReducer<ChatListInfo> = (state: ChatListInfo, action: Action): ChatListInfo => {
+export function chatsReducer (state: ChatListInfo, action: Action): ChatListInfo {
     switch (action.type) {
         case ChatsActions.CHATS_LOADED:
             let newChatList = new ChatListInfo();

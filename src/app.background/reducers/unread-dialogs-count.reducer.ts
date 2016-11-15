@@ -6,7 +6,7 @@ export class UnreadDialogsCountActions {
     static UPDATE = "UNREAD_DIALOGS_COUNT_UPDATE";
 }
 
-export const unreadDialogsCountReducer: ActionReducer<number> = (state: number, action: Action): number => {
+export function unreadDialogsCountReducer (state: number, action: Action): number {
     switch (action.type) {
         case UnreadDialogsCountActions.UPDATE:
             return action.payload;

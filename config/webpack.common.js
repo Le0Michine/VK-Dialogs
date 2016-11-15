@@ -7,6 +7,7 @@ const JsonReplacerPlugin = require('./json-replacer-plugin');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 const path = require('path');
 const fs = require('fs');
+const ngtools = require('@ngtools/webpack');
 
 const helpers = require('./helpers');
 
@@ -72,10 +73,17 @@ module.exports = function(options) {
     name: "main",
     context: path.join(__dirname),
     entry: {
-          "index": "../src/index.ts",
-          "background": "../src/background.ts",
-          "install": "../src/install.ts",
-          "vendor": "../src/vendor.ts"
+          // "vendor":     "../src/vendor.ts",
+          // "index":      "../src/index.ts",
+          "index.aot":  "../src/index.aot.ts",
+          // "background": "../src/background.ts",
+          "background": "../src/background.aot.ts",
+          // "install":    "../src/install.ts",
+          "install":    "../src/install.aot.ts",
+          "globals": [
+            "zone.js",
+            "reflect-metadata"
+          ]
     },
     output: {
       path: helpers.root('out'),
@@ -104,8 +112,11 @@ module.exports = function(options) {
         { 
           test: /\.js$/,
           exclude: '/node_modules/',
-          loader: 'babel',
-          query: { compact: true, presets: ['es2015'], minified: true, comments: false }
+          loader: 'babel-loader',
+          query: {
+            presets: ['es2015'],
+            plugins: ['transform-decorators-legacy', 'transform-class-properties']
+          }
         },
         {
           test: /\.html$/,
@@ -122,7 +133,11 @@ module.exports = function(options) {
       ]
     },
     plugins: [
-      
+      new ngtools.AotPlugin({
+          tsConfigPath: './tsconfig-aot.json',
+          baseDir: path.resolve(__dirname , '..'),
+          entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
+      }),
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false

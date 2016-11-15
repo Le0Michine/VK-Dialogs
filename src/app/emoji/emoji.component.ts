@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, Input, ChangeDetectorRef } from "@angu
 import { trigger, state, transition, style, animate, keyframes } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
-const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
+// const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
 
 @Component({
     selector: "emoji",
@@ -13,13 +13,13 @@ const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
             state("in", style({height: "210px", opacity: 1})),
             state("out", style({height: "0", opacity: 0, display: "none"})),
             transition("out => in", [
-                animate(`400ms ${animationCurve}`, keyframes([
+                animate(200, keyframes([
                     style({transform: "height", opacity: 0, height: "0", offset: 0}),
                     style({transform: "height", opacity: 1, height: "210px", offset: 1.0})
                 ]))
             ]),
             transition("in => out", [
-                animate(`400ms ${animationCurve}`, keyframes([
+                animate(200, keyframes([
                     style({transform: "height", opacity: 1, height: "210px", offset: 0}),
                     style({transform: "height", opacity: 0, height: "0", offset: 1.0})
                 ]))
@@ -33,7 +33,7 @@ const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
             state("out_r", style({transform: "translateX(100%)", opacity: 0, display: "none"})),
             state("out_l", style({transform: "translateX(-100%)", opacity: 0, display: "none"})),
             transition("* => *", [
-                animate(`300ms ${animationCurve}`)
+                animate(100)
             ])
         ])
     ]
@@ -43,12 +43,12 @@ export class EmojiComponent {
     @Input() toggle: Observable<boolean>;
     @Output() onSelect = new EventEmitter<string>();
 
-    private emojiCodePoints = [];
-    private currentTab: HTMLButtonElement = null;
-    private emojiPanelState: string = "out";
-    private canToggle: boolean = false;
+    emojiCodePoints = [];
+    currentTab: HTMLButtonElement = null;
+    emojiPanelState: string = "out";
+    canToggle: boolean = false;
 
-    private states = [
+    states = [
         {page: "smiles",   state: "in"},
         {page: "animals",  state: "out_r"},
         {page: "food",     state: "out_r"},

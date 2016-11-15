@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, trigger, state, transition, style, animate } from "@angular/core";
-import { TranslateService } from "ng2-translate/ng2-translate";
+import { TranslateService } from "../app/translate";
 import { ChromeAPIService } from "../app/services";
 
 @Component({
@@ -29,9 +29,9 @@ import { ChromeAPIService } from "../app/services";
     ]
 })
 export class InstallComponent {
-    private progress: number = 10;
+    progress: number = 10;
 
-    private steps = [
+    steps = [
         { name: "step_auth", progress: 10, state: "in"},
         { name: "step_privacy", progress: 30, state: "out_r"},
         { name: "step_spy", progress: 50, state: "out_r"},

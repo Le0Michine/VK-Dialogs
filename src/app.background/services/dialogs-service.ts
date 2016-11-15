@@ -145,7 +145,7 @@ export class DialogService {
 
         let subscription = Observable.interval(10000)
             .map(x => currentMessage)
-            .distinct((x, y) => x[key] === y[key])
+            .distinct(x => x[key])
             .subscribe(() => {
                 console.log("store current message: ", currentMessage);
                 save();

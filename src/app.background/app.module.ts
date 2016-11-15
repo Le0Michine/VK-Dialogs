@@ -12,7 +12,7 @@ import { ChromeAPIService } from "./services";
 import { FileUploadService } from "./services";
 import { OptionsService } from "./services";
 
-import { appBackgroundStore, INITIAL_APP_STATE } from "./app-background.store";
+import { appBackgroundStore, appStateFactory } from "./app-background.store";
 
 @NgModule({
     imports: [
@@ -32,7 +32,7 @@ import { appBackgroundStore, INITIAL_APP_STATE } from "./app-background.store";
         OptionsService,
         {
             provide: INITIAL_STATE,
-            useValue: INITIAL_APP_STATE
+            useFactory: appStateFactory
         }
     ]
 })

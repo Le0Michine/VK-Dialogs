@@ -105,7 +105,7 @@ export class VKService {
 
             return this.http.get(uri).map(response => response.json()).map(json => ErrorHelper.checkErrors(json) ? null : json.response);
             /** response: {count: number, items: Message[]} */
-        }).subscribe((result => {
+        }).subscribe(result => {
             if (result === 1) {
                 console.log("user online");
             }
@@ -114,7 +114,7 @@ export class VKService {
             }
         },
         error => console.error("Error occured while setting online: ", error),
-        () => console.log("set online reqest completed")));
+        () => console.log("set online reqest completed"));
     }
 
     performAPIRequest(method: string, parameters: string): Observable<any> {

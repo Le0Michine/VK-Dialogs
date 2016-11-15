@@ -7,7 +7,7 @@ export class DialogListActions {
     static DIALOGS_UPDATED = "DIALOGS_UPDATED";
 }
 
-export const dialogListReducer: ActionReducer<DialogListInfo> = (state: DialogListInfo, action: Action): DialogListInfo => {
+export function dialogListReducer (state: DialogListInfo, action: Action): DialogListInfo {
     switch (action.type) {
         case DialogListActions.DIALOGS_LOADED:
             return action.payload;

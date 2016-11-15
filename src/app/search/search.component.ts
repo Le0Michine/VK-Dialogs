@@ -95,7 +95,7 @@ export class SearchComponent implements AfterViewInit {
 
     blur() {
         this.focusState = "out";
-        this.placeholder = "";
+        this.placeholder = "empty";
         this.showItems = false;
         this.input = "";
     }

@@ -45,7 +45,9 @@ export class ChromeAPIService {
                     message.sender = sender;
                     handler(message);
                     return true;
-            }}),
+                }
+                return false;
+            }),
             (handler: (o: Object) => void) => chrome.runtime.onMessage.removeListener(handler)
         );
     }

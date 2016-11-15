@@ -2,7 +2,9 @@ import { NgModule, ChangeDetectorRef } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule, DomSanitizer } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
-import { TranslateModule } from "ng2-translate/ng2-translate";
+import { TranslateModule } from "../app/translate";
+import { ru } from "../app/translate/_ru";
+import { en } from "../app/translate/_en";
 
 import { InstallComponent }  from "./install.component";
 import { ChromeAPIService } from "../app/services";
@@ -10,8 +12,6 @@ import { ChromeAPIService } from "../app/services";
 @NgModule({
     imports: [
         BrowserModule,
-        HttpModule,
-        FormsModule,
         TranslateModule.forRoot()
     ],
     declarations: [

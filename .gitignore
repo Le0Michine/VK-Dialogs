@@ -1,5 +1,13 @@
 coverage/
 node_modules/
 out/
+aot/
+ngfactory/
+src/**/*.ngfactory.ts
+src/**/*.shim.ts
+src/**/*.js
+src/**/*.js.map
+src/**/*.metadata.json
+src/ng2-translate.bak/
 npm-debug.log
 .vscode

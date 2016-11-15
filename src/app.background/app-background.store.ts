@@ -22,4 +22,8 @@ export const INITIAL_APP_STATE = {
     history: new HistoryListInfo()
 };
 
+export function appStateFactory() {
+    return INITIAL_APP_STATE;
+}
+
 export { DialogListActions, UsersActions, ChatsActions, HistoryActions } from "./reducers";

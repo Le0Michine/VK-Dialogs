@@ -12,7 +12,7 @@ export const appStore = {
     router: routerReducer
 };
 
-export interface AppStore {
+export class AppStore {
     breadcrumbs: BreadcrumbItem[];
     users: UserListInfo;
     dialogs: DialogListInfo;
@@ -29,8 +29,11 @@ export const INITIAL_APP_STATE = {
     chats: new ChatListInfo(),
     history: new HistoryListInfo(),
     currentConversationId: -1,
-    // router: { path: "/dialogs" }
-    router: { path: "/dialogs/dialog/6807492/%D0%90%D0%BB%D1%91%D0%BD%D0%B0%20%D0%9C%D0%B8%D1%88%D0%B8%D0%BD%D0%B0" }
+    router: { path: "/dialogs" }
+};
+
+export function stateFactory() {
+    return JSON.parse(localStorage.getItem("savedState")) || INITIAL_APP_STATE;
 };
 
 export { BreadcrumbActions, HistoryActions, UserListActions, DialogListActions, ChatListActions, CurrentConversationIdActions } from "./reducers";

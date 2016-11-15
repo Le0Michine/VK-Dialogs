@@ -38,14 +38,14 @@
 			class="dragBar material-icons primary-color-text"
 			(mousedown)="startResize([conversationsWrapper, inputWrapper], $event)"
 		>drag_handle</div>
-		<button class="btn btn-round primary-color pull-right centering-container" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ send | translate }}"><i class="material-icons round-btn-icon">send</i></button>
+		<button class="btn btn-round primary-color pull-right centering-container" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ 'send' | translate }}"><i class="material-icons round-btn-icon">send</i></button>
 		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
 		<label for="fileUpload" class="btn primary-color centering-container btn-round pull-right" [class.disabled]="attachmentsUploadingCount" (mouseenter)="showAttachments()"><i class="material-icons">attach_file</i>
 			<!-- <div class="spinner btn-round"></div> -->
 			<div class="attachments-count" *ngIf="attachments.length">{{attachments.length}}</div>
 		</label>
 		<input multiple accept=".jpg,.png,.gif" id="fileUpload" type="file" (change)="uploadFiles($event)">
-		<button *ngIf="!autoReadMessages" [@flyInOut]="unreadMessages" class="btn btn-round primary-color pull-right material-icons" (click)="onMarkAsRead()" title="{{ mark_as_read | translate }}">done_all</button>
+		<button *ngIf="!autoReadMessages" [@flyInOut]="unreadMessages" class="btn btn-round primary-color pull-right material-icons" (click)="onMarkAsRead()" title="{{ 'mark_as_read' | translate }}">done_all</button>
 		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right material-icons" (click)="scrollToBottom()">play_for_work</button>
 	</div>
 	<message-input

@@ -3,9 +3,10 @@ import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
-import { TranslateModule } from "ng2-translate/ng2-translate";
 import { StoreModule, INITIAL_STATE, Store } from "@ngrx/store";
 import { RouterStoreModule } from "@ngrx/router-store";
+
+import { TranslateModule } from "./translate";
 
 import { AppComponent }  from "./app.component";
 import { DialogListComponent }  from "./dialogs-list";
@@ -25,11 +26,12 @@ import { FileUploadService } from "./services";
 import { StoreSyncService } from "./services";
 import { StateResolverService } from "./services";
 import { PIPES } from "./pipes";
-import { AuthorizationGuard } from "./guards";
-import { appStore, INITIAL_APP_STATE, AppStore } from "./app.store";
+import { AuthorizationGuard, RedirectToDialog } from "./guards";
+import { appStore, AppStore, stateFactory } from "./app.store";
 
 @NgModule({
     imports: [
+        HttpModule,
         BrowserModule,
         FormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
@@ -61,11 +63,12 @@ import { appStore, INITIAL_APP_STATE, AppStore } from "./app.store";
         OptionsService,
         FileUploadService,
         AuthorizationGuard,
+        RedirectToDialog,
         StateResolverService,
         StoreSyncService,
         {
             provide: INITIAL_STATE,
-            useValue: JSON.parse(localStorage.getItem("savedState")) || INITIAL_APP_STATE
+            useFactory: stateFactory
         }
     ]
 })

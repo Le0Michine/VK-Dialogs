@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { go } from "@ngrx/router-store";
 import { Title } from "@angular/platform-browser";
-import { TranslateService } from "ng2-translate/ng2-translate";
+import { TranslateService } from "../translate";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/combineLatest";
 
