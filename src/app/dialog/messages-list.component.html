@@ -4,7 +4,7 @@
 <div class="chat_action top-buffer" *ngIf="messagesCount && messagesCount <= history.length">
 	<span>{{'conversation_start' | translate}}</span>
 </div>
-<div class="message-block" *ngFor="let message of historyToShow | reverse">
+<div class="message-block clearfix" *ngFor="let message of historyToShow | reverse">
 	<div class="user-avatar pull-left" [class.online]="message.from.isOnline">
 		<a [href]="message.from.id | linkToUser" target="_blank">
 			<img alt="" [src]="getUserPhoto(message.from.id)" class="user-avatar-img" />
