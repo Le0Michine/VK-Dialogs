@@ -4,7 +4,7 @@ import { DialogComponent } from "./dialog";
 import { DialogListComponent } from "./dialogs-list";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./login";
-import { AuthorizationGuard, RedirectToDialog } from "./guards";
+import { AuthorizationGuard } from "./guards";
 
 export const routes: Routes = [
   {
@@ -24,7 +24,6 @@ export const routes: Routes = [
   {
     path: "",
     redirectTo: "/dialogs",
-    pathMatch: "full",
-    canActivate: [ RedirectToDialog ]
+    pathMatch: "full"
   }
 ];

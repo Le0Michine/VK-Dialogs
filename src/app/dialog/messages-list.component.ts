@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
+import "rxjs/add/observable/combineLatest";
 
 import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../datamodels";
 import { DialogService, VKService, ChromeAPIService, OptionsService } from "../services";
@@ -43,32 +44,20 @@ export class MessagesListComponent implements OnInit, OnDestroy {
         console.log("messages list component init");
         this.userId = this.vkservice.getCurrentUserId();
 
-        this.subscriptions.push(this.store.select(s => s.history)
-            .map(h => h.history[this.conversationId])
-            .filter(x => x ? true : false)
-            .subscribe(history => {
-                console.log("HISTORY 1");
+        this.subscriptions.push(
+            Observable.combineLatest(
+                this.store.select(s => s.history).map(h => h.history[this.conversationId]).filter(x => Boolean(x)),
+                this.store.select(s => s.users).map(u => u.users)
+            ).subscribe(([history, users]) => {
+                console.log("CONVERSATION");
                 this.history = history.messages;
                 this.messagesCount = history.count;
+                this.participants = users;
                 this.historyToShow = this.getHistory(this.history);
-                console.log("force update 1");
+                console.log("force update");
                 this.refreshView();
             })
         );
-
-        this.subscriptions.push(this.store.select(s => s.users)
-            .subscribe(users => {
-                this.participants = users.users;
-                this.historyToShow = this.getHistory(this.history);
-                console.log("force update 2");
-                this.refreshView();
-            },
-            error => this.errorHandler(error),
-            () => console.log("finished users update")
-        ));
-
-        this.messagesService.subscribeOnMessagesCountUpdate(count => this.messagesCount = count);
-
         this.subscriptions.push(this.markAsRead.subscribe(value => this.onMarkAsRead(value)));
     }
 
