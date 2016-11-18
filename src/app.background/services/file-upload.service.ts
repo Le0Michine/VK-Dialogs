@@ -21,7 +21,7 @@ export class FileUploadService {
     }
 
     getPhoto(photo: Photo): Observable<string> {
-        return this.vkservice.performAPIRequest(this.savePhotoMethod, `photo=${photo.photo}&server=${photo.server}&hash=${photo.hash}`)
+        return this.vkservice.performAPIRequest(this.savePhotoMethod, {photo: photo.photo, server: photo.server, hash: photo.hash})
             .map(response => {
                 console.log("got photo to send", response);
                 return `photo${response[0].owner_id}_${response[0].id}`;

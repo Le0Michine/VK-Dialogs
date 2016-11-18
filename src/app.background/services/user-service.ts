@@ -49,7 +49,7 @@ export class UserService {
 
     getUsers(uids: string, cache: boolean = true): Observable<{ [id: number]: UserInfo }> {
         return this.vkservice
-            .performAPIRequest("users.get", `user_ids=${uids}&fields=photo_50,online`)
+            .performAPIRequest("users.get", {user_ids: uids, fields: "photo_50,online"})
             .map(json => this.toUsersList(json));
     }
 

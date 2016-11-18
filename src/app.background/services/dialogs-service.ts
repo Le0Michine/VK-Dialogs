@@ -223,55 +223,62 @@ export class DialogService {
 
     getDialogs(count: number = 20, fromId: number = null): void {
         console.log("dialogs are requested");
+        let parameters = { count: count };
+        if (fromId) {
+            parameters["start_message_id"] = fromId;
+        }
         this.vkservice.performAPIRequest(
             this.getDialogsApiMethod,
-            `count=${count}${fromId ? "&start_message_id=" + fromId : ""}`)
-            .map(json => this.toDialogsInfo(json))
-            .subscribe(dialogList => {
-                this.store.dispatch({ type: DialogListActions.DIALOGS_UPDATED, payload: dialogList });
-                this.loadDialogUsers(dialogList);
-            });
+            parameters
+        ).map(json => this.toDialogsInfo(json))
+        .subscribe(dialogList => {
+            this.store.dispatch({ type: DialogListActions.DIALOGS_UPDATED, payload: dialogList });
+            this.loadDialogUsers(dialogList);
+        });
     }
 
     getHistory(id: number, chat: boolean, count: number = 20, fromId: number = null): Observable<HistoryInfo> {
         console.log("history is requested. id:" + id + ", chat:" + chat + ", cout:" + count + ", from_id:" + fromId);
-        return this.vkservice.performAPIRequest(
-            this.getHistoryApiMethod,
-            `${chat ? "chat_id=" + id : "user_id=" + id}${fromId ? "&start_message_id=" + fromId : ""}&count=${count}&rev=0`)
+        let parameters = { count: count, rev: 0 };
+        parameters[chat ? "chat_id" : "user_id"] = id;
+        if (fromId) {
+            parameters["start_message_id"] = fromId;
+        }
+        return this.vkservice.performAPIRequest(this.getHistoryApiMethod, parameters)
             .map(json => this.toHistoryViewModel(json));
     }
 
     getChatParticipants(chatId: number): void {
         console.log("chat participants requested");
-        this.vkservice.performAPIRequest(this.getChatApiMethod, `chat_ids=${chatId}&fields=photo_50,online`)
+        this.vkservice.performAPIRequest(this.getChatApiMethod, { chat_ids: chatId, fields: "photo_50,online" })
             .map(json => this.userService.toUsersList(json))
             .subscribe(users => this.store.dispatch({ type: UsersActions.USERS_UPDATED, payload: users }));
     }
 
     getChats(chatIds: string): void {
         console.log("chats requested", chatIds);
-        this.vkservice.performAPIRequest(this.getChatApiMethod, `chat_ids=${chatIds}&fields=photo_50,online`)
+        this.vkservice.performAPIRequest(this.getChatApiMethod, { chat_ids: chatIds, fields: "photo_50,online" })
             .map(json => this.toChatList(json))
             .subscribe(chats => this.store.dispatch({ type: ChatsActions.CHATS_UPDATED, payload: chats }));
     }
 
     markAsRead(ids: string): Observable<number> {
         console.log("mark as read message(s) with id: " + ids);
-        return this.vkservice.performAPIRequest(this.markAsReadApiMethod, `message_ids=${ids}`);
+        return this.vkservice.performAPIRequest(this.markAsReadApiMethod, { message_ids: ids });
     }
 
     sendMessage(id: number, message: string, chat: boolean, attachments: string): Observable<number> {
         console.log("sending message");
-        return this.vkservice.performAPIRequest(
-            this.sendMessageApiMethod,
-            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1&attachment=${attachments}`);
+        let parameters = { message: message, notification: 1, attachment: attachments };
+        parameters[chat ? "chat_id" : "user_id"] = id;
+        return this.vkservice.performAPIRequest(this.sendMessageApiMethod, parameters);
     }
 
     searchDialogs(searchTerm: string): Observable<DialogShortInfo[]> {
         console.log("search dialogs", searchTerm);
         return this.vkservice.performAPIRequest(
             this.searchDialogsApiMethod,
-            `&q=${searchTerm}&limit=10`
+            { q: searchTerm, limit: 10 }
         ).map(r => this.toDialogsShort(r));
     }
 
