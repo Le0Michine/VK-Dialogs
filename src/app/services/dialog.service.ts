@@ -6,14 +6,14 @@ import { VKService } from "./vk.service";
 import { SingleMessageInfo, DialogInfo, DialogListInfo, ChatInfo, DialogShortInfo, HistoryInfo } from "../datamodels";
 import { Channels } from "../../app.background/channels";
 import { ChromeAPIService } from "./chrome-api.service";
-import { AppStore, HistoryActions } from "../app.store";
+import { AppState, HistoryActions } from "../app.store";
 
 @Injectable()
 export class DialogService {
     constructor(
         private vkservice: VKService,
         private chromeapi: ChromeAPIService,
-        private store: Store<AppStore>
+        private store: Store<AppState>
     ) { }
 
     init() {

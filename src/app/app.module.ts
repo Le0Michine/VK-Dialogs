@@ -27,7 +27,7 @@ import { StoreSyncService } from "./services";
 import { StateResolverService } from "./services";
 import { PIPES } from "./pipes";
 import { AuthorizationGuard } from "./guards";
-import { rootReducer, AppStore, stateFactory } from "./app.store";
+import { rootReducer, AppState, stateFactory } from "./app.store";
 
 @NgModule({
     imports: [
@@ -73,10 +73,10 @@ import { rootReducer, AppStore, stateFactory } from "./app.store";
 })
 export class AppModule {
     constructor(
-        store: Store<AppStore>,
+        store: Store<AppState>,
         stateResolver: StateResolverService
     ) {
-        stateResolver.getState().subscribe((state: AppStore) => {
+        stateResolver.getState().subscribe((state: AppState) => {
             if (state) {
                 store.dispatch({ type: "SET_NEW_STATE", payload: state });
                 let path = decodeURI(state.router.path);

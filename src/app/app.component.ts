@@ -13,7 +13,7 @@ import { DialogService } from "./services";
 import { StoreSyncService } from "./services";
 import { MenuItem } from "./datamodels";
 import { DialogShortInfo } from "./datamodels";
-import { AppStore } from "./app.store";
+import { AppState } from "./app.store";
 
 const slideAnimationLength = 200;
 const rotateAnimationLength = 200;
@@ -49,7 +49,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     foundDialogs: DialogShortInfo[] = [];
 
     constructor(
-        private store: Store<AppStore>,
+        private store: Store<AppState>,
         private translate: TranslateService,
         private ref: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,

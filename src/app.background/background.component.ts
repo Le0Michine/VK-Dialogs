@@ -19,7 +19,7 @@ import { ChromeAPIService } from "./services";
 import { FileUploadService } from "./services";
 import { OptionsService } from "./services";
 import { Channels } from "./channels";
-import { AppBackgroundStore } from "./app-background.store";
+import { AppBackgroundState } from "./app-background.store";
 
 @Component({
     selector: "background-app",
@@ -31,7 +31,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private onUnreadCountUpdate: Subscription;
 
     constructor(
-        private store: Store<AppBackgroundStore>,
+        private store: Store<AppBackgroundState>,
         private http: Http,
         private dialogsService: DialogService,
         private userService: UserService,

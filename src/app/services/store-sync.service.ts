@@ -7,7 +7,7 @@ import { VKService } from "./vk.service";
 import { ChromeAPIService } from "./chrome-api.service";
 import { UserInfo, UserListInfo, ChatListInfo, HistoryListInfo, DialogListInfo } from "../datamodels";
 
-import { AppStore, HistoryActions, ChatListActions, DialogListActions, UserListActions } from "../app.store";
+import { AppState, HistoryActions, ChatListActions, DialogListActions, UserListActions } from "../app.store";
 
 @Injectable()
 export class StoreSyncService {
@@ -15,7 +15,7 @@ export class StoreSyncService {
 
     constructor(
         private chromeapi: ChromeAPIService,
-        private store: Store<AppStore>
+        private store: Store<AppState>
     ) { }
 
     init() {

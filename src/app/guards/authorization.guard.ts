@@ -5,12 +5,12 @@ import { go } from "@ngrx/router-store";
 
 import { VKService } from "../services";
 import { VKConsts } from "../vk-consts";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
 
-    constructor(private login: VKService, private router: Router, private store: Store<AppStore>) { }
+    constructor(private login: VKService, private router: Router, private store: Store<AppState>) { }
 
     canActivate() {
         if (window.localStorage.getItem(VKConsts.userDenied) === "true" || !this.login.hasValidSession()) {

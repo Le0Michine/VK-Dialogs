@@ -15,7 +15,7 @@ import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
 import { Channels } from "../channels";
-import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundStore } from "../app-background.store";
+import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundState } from "../app-background.store";
 
 @Injectable()
 export class DialogService {
@@ -35,7 +35,7 @@ export class DialogService {
     private maxDialogsCount: number;
 
     constructor(
-        private store: Store<AppBackgroundStore>,
+        private store: Store<AppBackgroundState>,
         private vkservice: VKService,
         private userService: UserService,
         private lpsService: LPSService,

@@ -7,7 +7,7 @@ import "rxjs/add/observable/combineLatest";
 
 import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../datamodels";
 import { DialogService, VKService, ChromeAPIService, OptionsService } from "../services";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 
 @Component({
     selector: "messages-list",
@@ -31,7 +31,7 @@ export class MessagesListComponent implements OnInit, OnDestroy {
     historyToShow = [];
 
     constructor (
-        private store: Store<AppStore>,
+        private store: Store<AppState>,
         private messagesService: DialogService,
         private vkservice: VKService,
         private router: Router,

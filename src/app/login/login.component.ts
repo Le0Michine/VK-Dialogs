@@ -4,7 +4,7 @@ import { go } from "@ngrx/router-store";
 import { TranslateService } from "../translate";
 
 import { VKService } from "../services";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 import { BreadcrumbActions } from "../reducers";
 
 @Component({
@@ -19,7 +19,7 @@ import { BreadcrumbActions } from "../reducers";
 export class LoginComponent {
     constructor(
         private vkservice: VKService,
-        private store: Store<AppStore>,
+        private store: Store<AppState>,
         private translate: TranslateService
     ) { }
 

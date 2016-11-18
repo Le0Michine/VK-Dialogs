@@ -12,13 +12,13 @@ import { ChromeAPIService } from "./services";
 import { FileUploadService } from "./services";
 import { OptionsService } from "./services";
 
-import { appBackgroundStore, appStateFactory } from "./app-background.store";
+import { appBackgroundState, appStateFactory } from "./app-background.store";
 
 @NgModule({
     imports: [
         BrowserModule,
         HttpModule,
-        StoreModule.provideStore(appBackgroundStore)
+        StoreModule.provideStore(appBackgroundState)
     ],
     declarations: [ BackgroundComponent ],
     bootstrap:    [ BackgroundComponent ],

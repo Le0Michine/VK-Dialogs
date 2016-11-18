@@ -6,7 +6,7 @@ import { storeLogger } from "ngrx-store-logger";
 import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo } from "./datamodels";
 import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer } from "./reducers";
 
-export const appStore = {
+export const appState = {
     breadcrumbs: breadcrumbReducer,
     users: userListReducer,
     dialogs: dialogListReducer,
@@ -16,14 +16,14 @@ export const appStore = {
     router: routerReducer
 };
 
-export function rootReducer (state: AppStore, action: Action){
+export function rootReducer (state: AppState, action: Action){
   if (action.type === "SET_NEW_STATE") {
       state = Object.assign({}, state, action.payload);
   }
-  return compose(storeLogger(), combineReducers)(appStore)(state, action);
+  return compose(storeLogger(), combineReducers)(appState)(state, action);
 }
 
-export class AppStore {
+export class AppState {
     breadcrumbs: BreadcrumbItem[];
     users: UserListInfo;
     dialogs: DialogListInfo;

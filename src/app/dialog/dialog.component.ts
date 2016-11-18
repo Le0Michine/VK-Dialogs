@@ -13,7 +13,7 @@ import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsS
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
 import { MenuItem } from "../datamodels";
 import { BreadcrumbActions, CurrentConversationIdActions } from "../reducers";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 
 @Component({
     selector: "messages",
@@ -90,7 +90,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         private fileUpload: FileUploadService,
         private renderer: Renderer,
         private settings: OptionsService,
-        private store: Store<AppStore>,
+        private store: Store<AppState>,
         private storeSync: StoreSyncService
     ) { }
 

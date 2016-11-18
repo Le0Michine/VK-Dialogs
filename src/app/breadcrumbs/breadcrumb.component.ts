@@ -3,7 +3,7 @@ import { Observable } from "rxjs/Observable";
 import { Store } from "@ngrx/store";
 
 import { BreadcrumbItem } from "../datamodels";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 
 @Component({
     selector: "breadcrumb",
@@ -18,7 +18,7 @@ export class BreadcrumbComponent {
     items: Observable<BreadcrumbItem[]>;
 
     constructor(
-        private store: Store<AppStore>
+        private store: Store<AppState>
     ) { }
 
     ngOnInit() {

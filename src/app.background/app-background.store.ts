@@ -1,14 +1,14 @@
 import { DialogListInfo, UserListInfo, ChatListInfo, HistoryListInfo } from "./datamodels";
 import { dialogListReducer, usersReducer, chatsReducer, historyReducer } from "./reducers";
 
-export const appBackgroundStore = {
+export const appBackgroundState = {
     users: usersReducer,
     dialogs: dialogListReducer,
     chats: chatsReducer,
     history: historyReducer
 };
 
-export interface AppBackgroundStore {
+export interface AppBackgroundState {
     users: UserListInfo;
     dialogs: DialogListInfo;
     chats: ChatListInfo;

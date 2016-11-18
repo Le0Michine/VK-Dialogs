@@ -9,7 +9,7 @@ import "rxjs/add/operator/combineLatest";
 import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo } from "../datamodels";
 import { VKService, DialogService, ChromeAPIService } from "../services";
 import { VKConsts } from "../vk-consts";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 import { BreadcrumbActions, HistoryActions, CurrentConversationIdActions } from "../app.store";
 
 @Component({
@@ -38,7 +38,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private chromeapi: ChromeAPIService,
         private changeDetector: ChangeDetectorRef,
-        private store: Store<AppStore>,
+        private store: Store<AppState>,
         private translate: TranslateService
     ) { }
 
