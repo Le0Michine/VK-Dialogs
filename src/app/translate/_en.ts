@@ -43,6 +43,7 @@ export const en = {
         "doc": "document",
         "wall": "wall post",
         "fwd_messages": "Forwarded messages",
-        "sticker": "sticker"
+        "sticker": "sticker",
+        "link": "link"
     }
 };

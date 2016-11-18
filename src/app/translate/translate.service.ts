@@ -52,7 +52,8 @@ export class TranslateService {
         }
         translation = translation || defaultTranslation;
         if (!translation && translation !== "") {
-            throw new Error(`Unable to find translation term by key ${term} in dictionary ${JSON.stringify(this.locales)}`);
+            console.warn(`Unable to find translation term by key ${term} for current lang ${this.currentLang} and default ${this.defaultLang}`);
+            translation = "";
         }
         if (params) {
             let keys = Object.keys(params);
