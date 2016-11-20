@@ -2,6 +2,8 @@ import { Component, EventEmitter, Output, Input, ChangeDetectorRef } from "@angu
 import { trigger, state, transition, style, animate, keyframes } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
+import { twemoji } from "../../../lib/twemoji";
+
 // const animationCurve = "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
 
 @Component({

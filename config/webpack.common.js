@@ -26,7 +26,7 @@ function versionReplacer(key, value) {
 }
 
 var filesToCopy = [
-    { from: '../lib/*.js', to: "./lib", toType: "dir" },
+    { from: '../lib/jquery.js', to: "./lib", toType: "dir" },
     { from: '../node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./lib", toType: "dir" },
     { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
     { from: '../src/app.options', to: "./app.options", toType: "dir" },

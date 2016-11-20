@@ -3,9 +3,10 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 
-import { DialogService, VKService, ChromeAPIService } from "../services";
+import { DialogService } from "../services";
 import { MenuItem, InputMessageState } from "../datamodels";
 import { AppState } from "../app.store";
+import { twemoji } from "../../../lib/twemoji";
 
 @Component({
     selector: "message-input",
@@ -73,10 +74,9 @@ export class MessageInputComponent {
     constructor (
         private store: Store<AppState>,
         private messagesService: DialogService,
-        private vkservice: VKService,
         private changeDetector: ChangeDetectorRef,
-        private chromeapi: ChromeAPIService,
-        private renderer: Renderer) { }
+        private renderer: Renderer
+    ) { }
 
     ngOnInit() {
         this.subscriptions.push(this.store.select(s => s.inputMessages)
