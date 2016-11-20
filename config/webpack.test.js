@@ -97,7 +97,7 @@ module.exports = function(options) {
      * Do not change, leave as is or it wont work.
      * See: https://github.com/webpack/karma-webpack#source-maps
      */
-    devtool: 'inline-source-map',
+    devtool: '#inline-source-map',
 
     /**
      * Options affecting the resolving of modules.
@@ -152,6 +152,16 @@ module.exports = function(options) {
           exclude: [/\.e2e\.ts$/]
         },
 
+        { 
+          test: /\.js$/,
+          exclude: '/node_modules/',
+          loader: 'babel-loader',
+          query: {
+            presets: ['es2015'],
+            plugins: ['transform-decorators-legacy', 'transform-class-properties']
+          }
+        },
+
         /**
          * Json loader support for *.json files.
          *
@@ -174,7 +184,7 @@ module.exports = function(options) {
          * See: https://github.com/webpack/raw-loader
          */
         { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] },
-        { test: /\.(jpg|png|gif)$/, loader: 'file' },
+        { test: /\.(jpg|png|gif)$/, loader: 'file-loader' },
         ...postLoaders
       ]
     },
