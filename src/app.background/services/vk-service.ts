@@ -229,6 +229,6 @@ export class VKService {
 
     private getTimeStamp() {
         let date = new Date(Date.now());
-        return date.toLocaleTimeString() + "." + date.getMilliseconds()
+        return date.toLocaleTimeString() + "." + date.getMilliseconds();
     }
 }
