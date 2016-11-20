@@ -7,8 +7,8 @@ import { en } from "./_en";
 
 @Injectable()
 export class TranslateService {
-    private defaultLang: string;
-    private currentLang: string;
+    private defaultLang: string = "en";
+    private currentLang: string = "en";
     private locales = { ru, en };
 
     constructor() { }
@@ -42,6 +42,7 @@ export class TranslateService {
 
         let translation: string = this.locales[this.currentLang];
         let defaultTranslation: string = this.locales[this.defaultLang];
+
         for (let k of term.split(".")) {
             if (translation) {
                 translation = translation[k];
