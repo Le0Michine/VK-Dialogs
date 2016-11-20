@@ -66,7 +66,6 @@ module.exports = function(options) {
     name: "main",
     context: path.join(__dirname),
     entry: {
-          // "vendor":     "../src/vendor.ts",
           // "index":      "../src/index.ts",
           "index":  "../src/index.aot.ts",
           // "background": "../src/background.ts",
@@ -126,11 +125,11 @@ module.exports = function(options) {
       ]
     },
     plugins: [
-      new ngtools.AotPlugin({
-          tsConfigPath: './tsconfig-aot.json',
-          baseDir: path.resolve(__dirname , '..'),
-          entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
-      }),
+      // new ngtools.AotPlugin({
+      //     tsConfigPath: './tsconfig-aot.json',
+      //     baseDir: path.resolve(__dirname , '..'),
+      //     entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
+      // }),
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false

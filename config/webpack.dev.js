@@ -20,7 +20,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
 const helpers = require('./helpers');
 
 const webpackOptions = {
-    filesToCopy: [{ from: '../src/icons/icons_dev', to: "./icons", toType: "dir", flatten: true }],
+    filesToCopy: [{ from: '../src/icons_dev', to: "./icons", toType: "dir", flatten: true }],
     env: ENV,
     cleanOutput: false
 };
