@@ -119,7 +119,6 @@ export class DialogListComponent implements OnInit, OnDestroy {
             sub.unsubscribe();
         }
         this.isDestroyed = true;
-        this.chromeapi.PostPortMessage("store_current_message");
     }
 
     refreshView() {

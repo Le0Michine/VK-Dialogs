@@ -1,35 +1,45 @@
 import { ActionReducer, Action } from "@ngrx/store";
 
-import { HistoryListInfo, HistoryInfo } from "../datamodels";
+import { HistoryListInfo, HistoryInfo, InputMessageState } from "../datamodels";
 
 export class HistoryActions {
-    static HISTORY_LOADED = "HISTORY_LOADED";
-    static HISTORY_UPDATED = "HISTORY_UPDATED";
+    static HISTORY_LOADED = "HISTORY/replace";
+    static HISTORY_UPDATED = "HISTORY/update";
+    static TYPE_MESSAGE = "HISTORY/type message";
+    static SEND_MESSAGE_PENDING = "HISTORY/sending message";
+    static SEND_MESSAGE_SUCCESS = "HISTORY/message sent";
 }
 
 export function historyReducer (state: HistoryListInfo, action: Action): HistoryListInfo {
     switch (action.type) {
         case HistoryActions.HISTORY_LOADED:
-            let newHistory = new HistoryListInfo();
-            newHistory.conversationIds.push(action.payload.conversationId);
-            newHistory.history[action.payload.conversationId] = action.payload;
-            return newHistory;
+            return replaceHistory(state, action);
         case HistoryActions.HISTORY_UPDATED:
-            let updatedHistory = Object.assign(new HistoryListInfo(), state);
-            let id = action.payload.conversationId;
-            if (!updatedHistory.history[id]) {
-                updatedHistory.conversationIds.push(id);
-                updatedHistory.history[id] = action.payload;
-            }
-            else {
-                updatedHistory.history[id] = mergeHistory(state.history[id], action.payload);
-            }
-
-            return updatedHistory;
+            return updateHistory(state, action);
         default:
             return state;
     };
 };
+
+function replaceHistory(state: HistoryListInfo, action: Action): HistoryListInfo {
+    let newHistory = new HistoryListInfo();
+    newHistory.conversationIds.push(action.payload.conversationId);
+    newHistory.history[action.payload.conversationId] = action.payload;
+    return newHistory;
+}
+
+function updateHistory(state: HistoryListInfo, action: Action): HistoryListInfo {
+    let updatedHistory = Object.assign(new HistoryListInfo(), state);
+    let id = action.payload.conversationId;
+    if (!updatedHistory.history[id]) {
+        updatedHistory.conversationIds.push(id);
+        updatedHistory.history[id] = action.payload;
+    }
+    else {
+        updatedHistory.history[id] = mergeHistory(state.history[id], action.payload);
+    }
+    return updatedHistory;
+}
 
 function mergeHistory(history1: HistoryInfo, history2: HistoryInfo): HistoryInfo {
     let result = Object.assign(new HistoryInfo(), history1);

@@ -3,8 +3,8 @@ import { compose } from "@ngrx/core/compose";
 import { RouterState, routerReducer } from "@ngrx/router-store";
 import { storeLogger } from "ngrx-store-logger";
 
-import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo } from "./datamodels";
-import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer } from "./reducers";
+import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo, InputMessageListInfo } from "./datamodels";
+import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer, inputMessageReducer } from "./reducers";
 
 export const appState = {
     breadcrumbs: breadcrumbReducer,
@@ -13,7 +13,8 @@ export const appState = {
     chats: chatListReducer,
     history: historyReducer,
     currentConversationId: currentConversationIdReducer,
-    router: routerReducer
+    router: routerReducer,
+    inputMessages: inputMessageReducer
 };
 
 export function rootReducer (state: AppState, action: Action){
@@ -31,6 +32,7 @@ export class AppState {
     history: HistoryListInfo;
     currentConversationId: number;
     router: RouterState;
+    inputMessages: InputMessageListInfo;
 }
 
 export const INITIAL_APP_STATE = {
@@ -40,7 +42,8 @@ export const INITIAL_APP_STATE = {
     chats: new ChatListInfo(),
     history: new HistoryListInfo(),
     currentConversationId: -1,
-    router: { path: "/dialogs" }
+    router: { path: "/dialogs" },
+    inputMessages: new InputMessageListInfo()
 };
 
 export function stateFactory() {

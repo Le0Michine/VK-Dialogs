@@ -1,5 +1,6 @@
 import { Injectable, Inject, EventEmitter } from "@angular/core";
 import { Http, Response, RequestOptionsArgs, RequestOptions } from "@angular/http";
+import { Store } from "@ngrx/store";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
@@ -15,6 +16,7 @@ import { VKService } from "./vk-service";
 import { ErrorHelper } from "../error-helper";
 import { LongPollServerInfo } from "../datamodels/long-poll-server.info";
 import { UserService } from "./user-service";
+import { AppBackgroundState } from "../app-background.store";
 
 @Injectable()
 export class LPSService {
@@ -26,6 +28,7 @@ export class LPSService {
     private server: LongPollServerInfo = null;
 
     constructor(
+        private store: Store<AppBackgroundState>,
         private http: Http,
         private vkservice: VKService) { }
 
@@ -187,7 +190,7 @@ export class LPSService {
 
     private getLongPollServer(): Observable<LongPollServerInfo> {
         console.log("lps requested");
-        return this.vkservice.performSingleAPIRequestsBatch(this.getLpsApiMethod, `use_ssl=1`)
+        return this.vkservice.performSingleAPIRequest(this.getLpsApiMethod, `use_ssl=1`)
             .timeout(35000, new Error("35s timeout occured"));
     }
 
@@ -203,7 +206,7 @@ export class LPSService {
         let uri: string = `http://${server.server}?act=a_check&key=${server.key}&ts=${server.ts}&wait=25&mode=2`;
         return Observable.merge(
             this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json()),
-            this.vkservice.onLogOff.concatMap(() => Observable.throw({
+            this.store.select(s => s.isAuthorized).filter(x => !x).concatMap(() => Observable.throw({
                 type: "Unauthorized",
                 message: "User logged off"
             }))

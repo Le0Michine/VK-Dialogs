@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild, ElementRef, Renderer, Input, Output, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { Store } from "@ngrx/store";
+
 import { DialogService, VKService, ChromeAPIService } from "../services";
-import { MenuItem } from "../datamodels";
+import { MenuItem, InputMessageState } from "../datamodels";
+import { AppState } from "../app.store";
 
 @Component({
     selector: "message-input",
@@ -26,7 +29,6 @@ export class MessageInputComponent {
     @Input() removeAttachment: Observable<string>;
 
     @Output() onMessageSent: EventEmitter<boolean> = new EventEmitter();
-    @Output() onAttachmentsUpdate: EventEmitter<MenuItem[]> = new EventEmitter();
     @Output() onUserInput: EventEmitter<string> = new EventEmitter();
 
     sendingBlocked: boolean = false;
@@ -43,19 +45,13 @@ export class MessageInputComponent {
 
     set attachments(value: MenuItem[]) {
         this._attachments = value;
-        this.onAttachmentsUpdate.emit(this._attachments);
         this.cacheCurrentMessage();
-    }
-
-    getAttachment(): string {
-        return this.attachments.map(x => x.id).join();
     }
 
     addAttachment(value: MenuItem) {
         if (value.id) {
             console.log("new attachment", value);
             this.attachments.push(value);
-            this.onAttachmentsUpdate.emit(this.attachments);
             this.cacheCurrentMessage();
         }
     }
@@ -66,7 +62,6 @@ export class MessageInputComponent {
 
     set inputText(value: string) {
         this._inputText = value;
-        this.cacheCurrentMessage();
         if (this._inputText && this._inputText.trim()) {
             this.inputLabelVisible = false;
         }
@@ -76,6 +71,7 @@ export class MessageInputComponent {
     }
 
     constructor (
+        private store: Store<AppState>,
         private messagesService: DialogService,
         private vkservice: VKService,
         private changeDetector: ChangeDetectorRef,
@@ -83,6 +79,13 @@ export class MessageInputComponent {
         private renderer: Renderer) { }
 
     ngOnInit() {
+        this.subscriptions.push(this.store.select(s => s.inputMessages)
+            .map(x => x.messages[this.conversationId])
+            .filter(x => Boolean(x))
+            .subscribe(m => {
+                this.sendingBlocked = m.state === InputMessageState.SENDING;
+            })
+        );
     }
 
     ngAfterViewInit() {
@@ -97,14 +100,14 @@ export class MessageInputComponent {
             let i = this.attachments.findIndex(x => x.id === value);
             if (i > -1) {
                 this.attachments.splice(i, 1);
-                this.onAttachmentsUpdate.emit(this.attachments);
                 this.cacheCurrentMessage();
             }
         });
     }
 
     ngOnDestroy() {
-        this.cacheCurrentMessage(true);
+        console.log("messages-input on destroy");
+        this.cacheCurrentMessage();
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
@@ -117,6 +120,7 @@ export class MessageInputComponent {
     onInput(event: Event): void {
         this.removeStyle(event.srcElement.childNodes);
         this.inputText = this.getText(event.srcElement.childNodes);
+        this.cacheCurrentMessage();
         this.onUserInput.emit(this.inputText);
     }
 
@@ -174,47 +178,33 @@ export class MessageInputComponent {
     }
 
     onEmojiSelect(emoji: string) {
-        this.cacheCurrentMessage();
         this.inputText += emoji;
         this.updateInputMessage();
         this.setFocusOnInput();
+        this.cacheCurrentMessage();
     }
 
     restoreCachedMessages(id, isChat) {
-        console.log("restore message");
-        let key = "cached_message_" + id + isChat;
-        let value = {};
-        value[key] = "";
-
-        this.chromeapi.SendRequest({
-            "name": "get_current_message",
-            "key": key
-        }).subscribe((response) => {
-            let message = response[key];
-            if (message) {
-                console.log("restored message", message, message.text, message.attachments);
-                this.inputText = message.text as string;
-                this.attachments = message.attachments || [];
-                this.updateInputMessage();
-            }
-        });
+        this.store.select(s => s.inputMessages)
+            .map(im => im.messages[this.conversationId])
+            .first()
+            .subscribe(message => {
+                if (message) {
+                    console.log("restored message", message, message.body, message.attachments);
+                    this.inputText = message.body;
+                    this._attachments = message.attachments || [];
+                    this.updateInputMessage();
+                }
+            });
     }
 
-    cacheCurrentMessage(last: boolean = false) {
-        let key = "cached_message_" + this.conversationId + this.isChat;
-        this.chromeapi.PostPortMessage({
-            name: "current_message",
-            key: key,
-            text: this.inputText,
-            attachments: this.attachments,
-            is_last: last
-        });
+    cacheCurrentMessage() {
+        this.messagesService.typeMessage(this.conversationId, { body: this.inputText, attachments: this.attachments }, this.isChat);
     }
 
     clearCache() {
         this.inputText = "";
         this.attachments = [];
-        this.cacheCurrentMessage(true);
         this.updateInputMessage();
     }
 
@@ -223,7 +213,7 @@ export class MessageInputComponent {
             console.warn("message is sending");
             return;
         }
-        if (!text && !this.getAttachment()) {
+        if (!text && !this.attachments.length) {
             console.log("message text is empty, nothing to send");
             return;
         }
@@ -233,24 +223,17 @@ export class MessageInputComponent {
 
         text = this.escape(text);
 
-        this.messagesService.sendMessage(this.conversationId, { body: text, attachments: this.getAttachment()}, this.isChat)
-            .subscribe(
-                message => {
-                    this.sendingBlocked = false;
-                    this.onMessageSent.emit(true);
+        this.messagesService.sendMessage(this.conversationId, { body: text, attachments: this.attachments }, this.isChat);
+
+        this.store.select(s => s.inputMessages)
+            .map(x => x.messages[this.conversationId])
+            .filter(x => Boolean(x) && x.state === InputMessageState.SENT || x.state === InputMessageState.FAIL)
+            .first()
+            .subscribe(m => {
+                this.onMessageSent.emit(m.state === InputMessageState.SENT);
+                if (m.state === InputMessageState.SENT) {
                     this.clearCache();
-                    console.log("result: ", message);
-                },
-                error => {
-                    this.errorHandler(error);
-                    this.sendingBlocked = false;
-                    this.onMessageSent.emit(true);
-                },
-                () => {
-                    console.log("message sent");
-                    this.clearCache();
-                    this.sendingBlocked = false;
-                    this.onMessageSent.emit(true);
+                }
             });
     }
 

@@ -1,7 +1,7 @@
 <div class="menu" [@openClose]="state">
 <ul>
     <li [class.selectable]="selectable" *ngFor="let item of menuItems" (click)="select(item.id)">
-        <div class="menu-item-text pull-left">{{item.termId || item.name | translate}}</div>
+        <div class="menu-item-text pull-left">{{item.termId ? (item.termId | translate) : item.name }}</div>
         <div *ngIf="deletable" class="menu-item-remove pull-right material-icons" (click)="remove(item.id)">clear</div>
     </li>
 </ul>
