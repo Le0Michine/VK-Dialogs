@@ -106,7 +106,6 @@ export class MessageInputComponent {
     }
 
     ngOnDestroy() {
-        console.log("messages-input on destroy");
         this.cacheCurrentMessage();
         for (let s of this.subscriptions) {
             s.unsubscribe();
