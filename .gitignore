@@ -11,4 +11,4 @@ src/**/*.metadata.json
 src/ng2-translate.bak/
 npm-debug.log
 .vscode
-out.zip
+*.zip
