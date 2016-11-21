@@ -44,6 +44,7 @@ export const en = {
         "wall": "wall post",
         "fwd_messages": "Forwarded messages",
         "sticker": "sticker",
-        "link": "link"
+        "link": "link",
+        "geo": "geoposition"
     }
 };

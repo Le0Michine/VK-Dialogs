@@ -118,7 +118,7 @@ export class MessagesListComponent implements OnInit, OnDestroy {
                 if (attachment.photo || attachment.doc ||
                         attachment.wall || attachment.link ||
                         attachment.video || attachment.sticker ||
-                        attachment.audio) {
+                        attachment.audio || attachment.geo) {
                     attachments.push(attachment);
                 }
                 else if (!attachment.fwd) {

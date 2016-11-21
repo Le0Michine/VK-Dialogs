@@ -33,7 +33,7 @@
 						<div *ngIf="attachment.sticker">
 							<img class="att_photo_img" [src]="attachment.sticker | stickerLink | async" />
 						</div>
-						<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio" class="clearfix att-doc-container">
+						<div *ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio || attachment.geo" class="clearfix att-doc-container">
 							<a class="att-doc-icon {{attachment | attachment_icon}}" [class.unread-text]="!item.isRead" [href]="attachment | attachment_url:item.user_id" target="_blank"></a>
 							<div class="attachment-description">
 								<a class="att-doc" [href]="attachment | attachment_url:item.user_id" [class.unread-text]="!item.isRead" target="_blank" title="{{attachment | attachment_title}}">{{attachment | attachment_title}}</a>
@@ -69,7 +69,7 @@
 													<div *ngIf="attachment.sticker">
 														<img class="att_photo_img" [src]="attachment.sticker | stickerLink | async" />
 													</div>
-													<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio" class="clearfix">
+													<div *ngIf="fwd_att.doc || fwd_att.wall || fwd_att.link || fwd_att.video || fwd_att.audio || fwd_att.geo" class="clearfix">
 														<a class="att-doc-icon {{fwd_att | attachment_icon}}" [href]="fwd_att | attachment_url:item.user_id" target="_blank"></a>
 														<div class="attachment-description narrow">
 															<a class="att-doc" [href]="fwd_att | attachment_url:item.user_id" target="_blank" title="{{fwd_att | attachment_title}}">{{fwd_att | attachment_title}}</a>

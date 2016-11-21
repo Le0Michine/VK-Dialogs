@@ -382,7 +382,7 @@ export class DialogService {
         let message = new SingleMessageInfo();
         message.action = json.action;
         message.actionMid = json.action_mid;
-        message.attachments = json.attachments;
+        message.attachments = json.attachments || [];
         message.body = json.body;
         message.userId = json.user_id;
         message.chatId = json.chat_id;
@@ -395,6 +395,9 @@ export class DialogService {
         message.photo50 = json.photo_50;
         message.title = json.title;
         message.conversationId = message.chatId || message.userId;
+        if (json.geo) {
+            message.attachments.push(Object.assign({ geo: json.geo }, { type: "geo" }));
+        }
         return message;
     }
 

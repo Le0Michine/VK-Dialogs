@@ -39,7 +39,7 @@ var filesToCopy = [
 var filesToIgnore = [
   "*.svg",
   "VK_icon.png",
-  "doc_icons.png"
+  // "doc_icons.png"
 ];
 
 var optionalPlugins = [];
@@ -117,7 +117,7 @@ module.exports = function(options) {
         },
         {
           test: /\.css$/,
-          loaders: ['to-string-loader', 'css-loader']
+          loaders: [/* 'to-string-loader', 'css-loader' */ 'raw-loader']
         },
         {
           test: /\.(jpg|png|gif)$/,
