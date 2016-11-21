@@ -5,10 +5,12 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/Observable/interval";
 import "rxjs/add/Observable/timer";
+import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/throttleTime";
 
 import { VKConsts } from "../app/vk-consts";
 import { SessionInfo, DialogListInfo, HistoryInfo } from "./datamodels";
+import { sendMessagePending, typeMessage, setBadge } from "./actions";
 
 import { AuthHelper } from "./auth-helper";
 import { VKService } from "./services";
@@ -19,7 +21,7 @@ import { ChromeAPIService } from "./services";
 import { FileUploadService } from "./services";
 import { OptionsService } from "./services";
 import { Channels } from "./channels";
-import { AppBackgroundStore } from "./app-background.store";
+import { AppBackgroundState } from "./app-background.store";
 
 @Component({
     selector: "background-app",
@@ -28,10 +30,9 @@ import { AppBackgroundStore } from "./app-background.store";
 export class BackgroundComponent implements OnInit, OnDestroy {
     private lastOpenedConversation: any = null;
     private subscriptions: Subscription[] = [];
-    private onUnreadCountUpdate: Subscription;
 
     constructor(
-        private store: Store<AppBackgroundStore>,
+        private store: Store<AppBackgroundState>,
         private http: Http,
         private dialogsService: DialogService,
         private userService: UserService,
@@ -47,10 +48,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         this.chromeapi.init();
 
         console.log("background init");
+        this.subscriptions.push(this.store.select(s => s.actionBadge).subscribe(v => this.chromeapi.UpdateActionBadge(v)));
+        Observable.combineLatest(this.store.select(s => s.dialogs), this.store.select(s => s.isAuthorized))
+            .map(([ dialogs, isAuthorized ]) => !isAuthorized ? "off" : dialogs.unread ? dialogs.unread + "" : "")
+            .subscribe(value => this.store.dispatch(setBadge(value)));
+
         this.vkservice.auth().subscribe(
             (session) => {
                 if (!session) {
-                    this.chromeapi.UpdateActionBadge("off");
                     chrome.contextMenus.removeAll();
                 }
                 else {
@@ -64,25 +69,9 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         this.chromeapi.registerObservable(this.store.select(s => s.dialogs).map(x => { return { name: "dialogs_update", data: x }; }));
         this.chromeapi.registerObservable(this.store.select(s => s.history).map(x => { return { name: "history_update", data: x }; }));
         this.chromeapi.registerObservable(this.store.select(s => s.users).map(x => { return { name: "users_update", data: x }; }));
+        this.chromeapi.registerObservable(this.store.select(s => s.inputMessages).map(x => { return { name: "input_message", data: x }; }));
 
         this.waitForAuthorizeRequest();
-        this.subscriptions.push(
-            this.chromeapi.OnMessage("last_opened").subscribe((message: any) => {
-                if (message.last_opened) {
-                    console.log("set last opened");
-                    this.lastOpenedConversation = message.last_opened;
-                }
-                else if (message.go_back) {
-                    console.log("go back");
-                    this.lastOpenedConversation = null;
-                }
-                else {
-                    console.log("get last opened", this.lastOpenedConversation);
-                    message.sendResponse({ last_opened: this.lastOpenedConversation });
-                }
-                return false;
-            })
-        );
 
         this.subscriptions.push(
             this.chromeapi.OnMessage("logoff")
@@ -140,17 +129,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
                 return true;
             })
         );
-
-        this.subscriptions.push(
-            this.chromeapi.OnMessage(Channels.sendMessageRequest).subscribe((message: any) => {
-                this.dialogsService.sendMessage(message.user_id, message.message_body, message.is_chat, message.attachments)
-                    .subscribe(messageId => {
-                        message.sendResponse({ data: messageId });
-                        console.log("message id sent: ", messageId);
-                    });
-                return true;
-            })
-        );
     }
 
     ngOnDestroy() {
@@ -173,9 +151,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             }
             this.vkservice.auth(true).subscribe((session) => {
                 console.log("authorized: ", session);
-                this.chromeapi.UpdateActionBadge("");
                 this.initServices();
-                // sub.unsubscribe();
                 this.createContextMenuItems();
                 if (message.sendResponse) {
                     message.sendResponse();
@@ -188,12 +164,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         this.lps.init();
         this.userService.init();
         this.dialogsService.init();
-        if (!this.onUnreadCountUpdate) {
-            this.onUnreadCountUpdate =
-                this.store.select(s => s.dialogs).subscribe((dialogList: DialogListInfo) => {
-                    this.chromeapi.UpdateActionBadge(dialogList.unread ? dialogList.unread + "" : "");
-                });
-        }
     }
 
     private setActive() {
@@ -236,13 +206,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private logOff() {
         console.log("LOG OFF");
         window.localStorage.setItem(VKConsts.userDenied, "true");
-        this.chromeapi.UpdateActionBadge("off");
         this.vkservice.logoff();
-        // this.waitForAuthorizeRequest();
-        if (this.onUnreadCountUpdate) {
-            this.onUnreadCountUpdate.unsubscribe();
-            this.onUnreadCountUpdate = null;
-        }
         chrome.contextMenus.removeAll();
     }
 
@@ -266,9 +230,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             title: chrome.i18n.getMessage("openInSeparateWindow"),
             contexts: ["browser_action"],
             onclick: () => {
-                let s = this.settings.windowSize.subscribe(size => {
+                this.settings.windowSize.first().subscribe(size => {
                     this.openSeparateWindow(size.w, size.h);
-                    s.unsubscribe();
                 });
             }
         };

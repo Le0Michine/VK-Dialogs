@@ -5,9 +5,10 @@ import { Store } from "@ngrx/store";
 
 import { VKService } from "./vk.service";
 import { ChromeAPIService } from "./chrome-api.service";
-import { UserInfo, UserListInfo, ChatListInfo, HistoryListInfo, DialogListInfo } from "../datamodels";
+import { UserInfo, UserListInfo, ChatListInfo, HistoryListInfo, DialogListInfo, InputMessageListInfo, InputMessageState } from "../datamodels";
 
-import { AppStore, HistoryActions, ChatListActions, DialogListActions, UserListActions } from "../app.store";
+import { AppState, HistoryActions, ChatListActions, DialogListActions, UserListActions } from "../app.store";
+import { replaceMessage } from "../actions";
 
 @Injectable()
 export class StoreSyncService {
@@ -15,7 +16,7 @@ export class StoreSyncService {
 
     constructor(
         private chromeapi: ChromeAPIService,
-        private store: Store<AppStore>
+        private store: Store<AppState>
     ) { }
 
     init() {
@@ -35,6 +36,10 @@ export class StoreSyncService {
         this.chromeapi.subscribeOnMessage("dialogs_update").map(x => x.data)
             .subscribe((x: DialogListInfo) =>
                 this.store.dispatch({ type: DialogListActions.UPDATE, payload: x })
+            );
+        this.chromeapi.subscribeOnMessage("input_message").map(x => x.data)
+            .subscribe((x: InputMessageListInfo) =>
+                this.store.dispatch(replaceMessage(x))
             );
 
         this.initialized = true;

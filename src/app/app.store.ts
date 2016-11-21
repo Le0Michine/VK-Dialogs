@@ -3,27 +3,28 @@ import { compose } from "@ngrx/core/compose";
 import { RouterState, routerReducer } from "@ngrx/router-store";
 import { storeLogger } from "ngrx-store-logger";
 
-import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo } from "./datamodels";
-import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer } from "./reducers";
+import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo, InputMessageListInfo } from "./datamodels";
+import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer, inputMessageReducer } from "./reducers";
 
-export const appStore = {
+export const appState = {
     breadcrumbs: breadcrumbReducer,
     users: userListReducer,
     dialogs: dialogListReducer,
     chats: chatListReducer,
     history: historyReducer,
     currentConversationId: currentConversationIdReducer,
-    router: routerReducer
+    router: routerReducer,
+    inputMessages: inputMessageReducer
 };
 
-export function rootReducer (state: AppStore, action: Action){
+export function rootReducer (state: AppState, action: Action){
   if (action.type === "SET_NEW_STATE") {
       state = Object.assign({}, state, action.payload);
   }
-  return compose(storeLogger(), combineReducers)(appStore)(state, action);
+  return compose(storeLogger(), combineReducers)(appState)(state, action);
 }
 
-export class AppStore {
+export class AppState {
     breadcrumbs: BreadcrumbItem[];
     users: UserListInfo;
     dialogs: DialogListInfo;
@@ -31,6 +32,7 @@ export class AppStore {
     history: HistoryListInfo;
     currentConversationId: number;
     router: RouterState;
+    inputMessages: InputMessageListInfo;
 }
 
 export const INITIAL_APP_STATE = {
@@ -40,7 +42,8 @@ export const INITIAL_APP_STATE = {
     chats: new ChatListInfo(),
     history: new HistoryListInfo(),
     currentConversationId: -1,
-    router: { path: "/dialogs" }
+    router: { path: "/dialogs" },
+    inputMessages: new InputMessageListInfo()
 };
 
 export function stateFactory() {

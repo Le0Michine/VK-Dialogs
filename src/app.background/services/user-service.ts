@@ -10,14 +10,14 @@ import { UserInfo } from "../datamodels";
 import { VKService } from "./vk-service";
 import { LPSService } from "./lps-service";
 
-import { UsersActions, AppBackgroundStore } from "../app-background.store";
+import { UsersActions, AppBackgroundState } from "../app-background.store";
 
 @Injectable()
 export class UserService {
     private initialized: boolean = false;
 
     constructor(
-        private store: Store<AppBackgroundStore>,
+        private store: Store<AppBackgroundState>,
         private vkservice: VKService,
         private lpsService: LPSService
     ) { }
@@ -49,7 +49,7 @@ export class UserService {
 
     getUsers(uids: string, cache: boolean = true): Observable<{ [id: number]: UserInfo }> {
         return this.vkservice
-            .performAPIRequest("users.get", `user_ids=${uids}&fields=photo_50,online`)
+            .performAPIRequestsBatch("users.get", {user_ids: uids, fields: "photo_50,online"})
             .map(json => this.toUsersList(json));
     }
 

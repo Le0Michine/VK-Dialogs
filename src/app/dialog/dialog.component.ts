@@ -13,7 +13,7 @@ import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsS
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
 import { MenuItem } from "../datamodels";
 import { BreadcrumbActions, CurrentConversationIdActions } from "../reducers";
-import { AppStore } from "../app.store";
+import { AppState } from "../app.store";
 
 @Component({
     selector: "messages",
@@ -90,7 +90,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         private fileUpload: FileUploadService,
         private renderer: Renderer,
         private settings: OptionsService,
-        private store: Store<AppStore>,
+        private store: Store<AppState>,
         private storeSync: StoreSyncService
     ) { }
 
@@ -119,15 +119,11 @@ export class DialogComponent implements OnInit, OnDestroy {
 
             this.subscriptions.push(this.store.select(s => s.history)
                 .map(h => h.history[this.conversationId])
-                .filter(x => x ? true : false)
+                .filter(x => Boolean(x))
                 .subscribe(data => {
                     console.log("HISTORY", data);
-                    let historyInfo = new HistoryInfo();
-                    historyInfo.messages = data.messages;
-                    historyInfo.count = data.count;
                     if (!this.autoReadMessages) {
-                        this.unreadMessages = (historyInfo.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
-                        this.changeDetector.detectChanges();
+                        this.unreadMessages = (data.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
                     }
                     else {
                         this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
@@ -162,6 +158,13 @@ export class DialogComponent implements OnInit, OnDestroy {
                     this.emojiPanel = "95px";
                 }
             })
+        );
+
+        this.subscriptions.push(
+            this.store.select(s => s.inputMessages)
+                .filter(x => x.conversationIds.indexOf(this.conversationId) > -1)
+                .map(x => x.messages[this.conversationId].attachments)
+                .subscribe(att => this.attachments = att)
         );
     }
 
@@ -214,11 +217,6 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         console.log("specific dialog component destroy");
-        this.chromeapi.SendMessage({
-            name: "last_opened",
-            last_opened: null,
-            go_back: true
-        });
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
@@ -278,12 +276,6 @@ export class DialogComponent implements OnInit, OnDestroy {
         });
     }
 
-    onAttachmentsUpdate(attachments: MenuItem[]): void {
-        console.log("update attachments", this.attachments, attachments);
-        this.attachments = attachments;
-        this.changeDetector.detectChanges();
-    }
-
     onAttachedFileRemove(fileId: string): void {
         console.log("removing", fileId);
         this.removeAttachment.emit(fileId);
@@ -295,25 +287,5 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     hideAttachments(): void {
         this.isAttachedFilesOpened = false;
-    }
-
-    uploadFilesFromClipboard(event: ClipboardEvent) {
-        // TODO: improve or remove
-        return;
-        /* let files: File[] = [];
-        if (event.clipboardData.files.length) {
-            for (let i = 0; i < event.clipboardData.files.length; i++) {
-                this.uploadFile(event.clipboardData.files.item(i));
-            }
-        }
-        else {
-            for(let i = 0; i < event.clipboardData.items.length; i++) {
-                let item = event.clipboardData.items[i];
-                console.log("clipboard item", item.kind, item.type);
-                if (item.kind === "file" && item.type.startsWith("image")) {
-                    this.uploadFile(item.getAsFile());
-                }
-            }
-        }*/
     }
 }

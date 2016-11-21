@@ -8,4 +8,7 @@ export * from "./dialog.info";
 export * from "./dialog-list.info";
 export * from "./dialog-short.info";
 export * from "./single-message.info";
+export * from "./input-message.info";
+export * from "./input-message-list.info";
+export * from "./input-message-state.enum";
 export * from "./session.info";

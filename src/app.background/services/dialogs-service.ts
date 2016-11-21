@@ -3,19 +3,22 @@ import { Store } from "@ngrx/store";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { Subject } from "rxjs/Subject";
+import "rxjs/add/operator/bufferCount";
 import "rxjs/add/operator/timeout";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/distinct";
 import "rxjs/add/operator/filter";
+import "rxjs/add/operator/debounceTime";
 
-import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo } from "../datamodels";
-import { DialogShortInfo, HistoryListInfo } from "../datamodels";
+import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo, InputMessageInfo } from "../datamodels";
+import { DialogShortInfo, HistoryListInfo, InputMessageState } from "../datamodels";
 import { VKService } from "./vk-service";
 import { UserService } from "./user-service";
 import { LPSService } from "./lps-service";
 import { ChromeAPIService } from "./chrome-api-service";
 import { Channels } from "../channels";
-import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundStore } from "../app-background.store";
+import { sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from "../actions";
+import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundState } from "../app-background.store";
 
 @Injectable()
 export class DialogService {
@@ -35,7 +38,7 @@ export class DialogService {
     private maxDialogsCount: number;
 
     constructor(
-        private store: Store<AppBackgroundStore>,
+        private store: Store<AppBackgroundState>,
         private vkservice: VKService,
         private userService: UserService,
         private lpsService: LPSService,
@@ -65,17 +68,6 @@ export class DialogService {
         });
 
         this.getDialogs();
-
-        this.chromeapi.OnMessage("get_current_message").subscribe(message => {
-            let v = {};
-            v[message.key] = "";
-            console.log("getting current message: ", v);
-            chrome.storage.sync.get(v, (value: any) => {
-                console.log("restored message: ", value);
-                message.sendResponse(value);
-                this.monitorCurrentMessage();
-            });
-        });
 
         this.chromeapi.onSubscribe.filter((s: string) => /^history_update_.+$/.test(s)).subscribe((s: string) => {
             console.log("subscribe on history update", s);
@@ -124,6 +116,40 @@ export class DialogService {
             });
             return true;
         });
+
+        this.store.select(s => s.inputMessages)
+            .map(m => m.conversationIds.map(i => m.messages[i]).filter(i => i.state === InputMessageState.SENDING))
+            .filter(m => m.length > 0)
+            .subscribe(messages => {
+                messages.forEach(m => this.sendMessage(m));
+            });
+
+        chrome.storage.sync.get({ "input_messages": [] }, (items: InputMessageInfo[]) => {
+            console.log("restored messages", items);
+            this.store.dispatch(restoreInputMessages(items["input_messages"] || []));
+        });
+
+        this.store.select(s => s.inputMessages)
+            .map(m => m.conversationIds.map(i => m.messages[i]).filter(i => i.state !== InputMessageState.SENDING))
+            .filter(m => m.length > 0)
+            .debounceTime(10000)
+            .subscribe(messages => {
+                chrome.storage.sync.set({ "input_messages": messages });
+            });
+
+        this.chromeapi.OnPortMessage("send_message").subscribe((message: any) => {
+            this.store.dispatch(sendMessagePending(message.data));
+        });
+
+        this.chromeapi.OnPortMessage("type_message")
+            .map(m => m.data)
+            .distinctUntilChanged((m1, m2) => JSON.stringify(m1) === JSON.stringify(m2))
+            // .bufferCount(3)
+            // .map(ms => ms[ms.length - 1])
+            .filter((m: InputMessageInfo) => m.state !== InputMessageState.SENDING)
+            .subscribe((message: any) => {
+                this.store.dispatch(typeMessage(message));
+            });
     }
 
     monitorCurrentMessage(): void {
@@ -223,56 +249,66 @@ export class DialogService {
 
     getDialogs(count: number = 20, fromId: number = null): void {
         console.log("dialogs are requested");
-        this.vkservice.performAPIRequest(
+        let parameters = { count };
+        if (fromId) {
+            parameters["start_message_id"] = fromId;
+        }
+        this.vkservice.performAPIRequestsBatch(
             this.getDialogsApiMethod,
-            `count=${count}${fromId ? "&start_message_id=" + fromId : ""}`)
-            .map(json => this.toDialogsInfo(json))
-            .subscribe(dialogList => {
-                this.store.dispatch({ type: DialogListActions.DIALOGS_UPDATED, payload: dialogList });
-                this.loadDialogUsers(dialogList);
-            });
+            parameters
+        ).map(json => this.toDialogsInfo(json))
+        .subscribe(dialogList => {
+            this.store.dispatch({ type: DialogListActions.DIALOGS_UPDATED, payload: dialogList });
+            this.loadDialogUsers(dialogList);
+        });
     }
 
     getHistory(id: number, chat: boolean, count: number = 20, fromId: number = null): Observable<HistoryInfo> {
         console.log("history is requested. id:" + id + ", chat:" + chat + ", cout:" + count + ", from_id:" + fromId);
-        return this.vkservice.performAPIRequest(
-            this.getHistoryApiMethod,
-            `${chat ? "chat_id=" + id : "user_id=" + id}${fromId ? "&start_message_id=" + fromId : ""}&count=${count}&rev=0`)
+        let parameters = { count: count, rev: 0 };
+        parameters[chat ? "chat_id" : "user_id"] = id;
+        if (fromId) {
+            parameters["start_message_id"] = fromId;
+        }
+        return this.vkservice.performAPIRequestsBatch(this.getHistoryApiMethod, parameters)
             .map(json => this.toHistoryViewModel(json));
     }
 
     getChatParticipants(chatId: number): void {
         console.log("chat participants requested");
-        this.vkservice.performAPIRequest(this.getChatApiMethod, `chat_ids=${chatId}&fields=photo_50,online`)
+        this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatId, fields: "photo_50,online" })
             .map(json => this.userService.toUsersList(json))
             .subscribe(users => this.store.dispatch({ type: UsersActions.USERS_UPDATED, payload: users }));
     }
 
     getChats(chatIds: string): void {
         console.log("chats requested", chatIds);
-        this.vkservice.performAPIRequest(this.getChatApiMethod, `chat_ids=${chatIds}&fields=photo_50,online`)
+        this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatIds, fields: "photo_50,online" })
             .map(json => this.toChatList(json))
             .subscribe(chats => this.store.dispatch({ type: ChatsActions.CHATS_UPDATED, payload: chats }));
     }
 
     markAsRead(ids: string): Observable<number> {
         console.log("mark as read message(s) with id: " + ids);
-        return this.vkservice.performAPIRequest(this.markAsReadApiMethod, `message_ids=${ids}`);
-    }
-
-    sendMessage(id: number, message: string, chat: boolean, attachments: string): Observable<number> {
-        console.log("sending message");
-        return this.vkservice.performAPIRequest(
-            this.sendMessageApiMethod,
-            `${chat ? "&chat_id=" : "&user_id="}${id}&message=${message}&notification=1&attachment=${attachments}`);
+        return this.vkservice.performAPIRequestsBatch(this.markAsReadApiMethod, { message_ids: ids });
     }
 
     searchDialogs(searchTerm: string): Observable<DialogShortInfo[]> {
         console.log("search dialogs", searchTerm);
-        return this.vkservice.performAPIRequest(
+        return this.vkservice.performAPIRequestsBatch(
             this.searchDialogsApiMethod,
-            `&q=${searchTerm}&limit=10`
+            { q: searchTerm, limit: 10 }
         ).map(r => this.toDialogsShort(r));
+    }
+
+    private sendMessage(message: InputMessageInfo): void {
+        console.log("sending message", message);
+        let parameters = { message: message.body, notification: 1, attachment: message.attachments.map(x => x.id).join() };
+        parameters[message.chatId ? "chat_id" : "user_id"] = message.conversationId;
+        this.vkservice.performAPIRequestsBatch(this.sendMessageApiMethod, parameters)
+            .subscribe(messageId => {
+                this.store.dispatch(messageId ? sendMessageSuccess(message.conversationId) : sendMessageFail(message.conversationId));
+            });
     }
 
     private loadOldDialogs(): void{

@@ -6,18 +6,18 @@ import { StoreModule, Store } from "@ngrx/store";
 
 import { BreadcrumbItem } from "../datamodels";
 import { BreadcrumbComponent } from "./breadcrumb.component";
-import { AppStore, appStore } from "../app.store";
+import { AppState, appState } from "../app.store";
 import { BreadcrumbActions } from "../reducers";
 
 describe("Breadcrumb component", () => {
     let fixture: ComponentFixture<BreadcrumbComponent>;
     let component: BreadcrumbComponent;
-    let store: Store<AppStore>;
+    let store: Store<AppState>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                StoreModule.provideStore(appStore)
+                StoreModule.provideStore(appState)
             ],
             declarations: [ BreadcrumbComponent ],
             schemas: [ NO_ERRORS_SCHEMA ]
@@ -27,7 +27,7 @@ describe("Breadcrumb component", () => {
         fixture.detectChanges();
     });
 
-    beforeEach(inject([ Store ], (appStore: Store<AppStore>) => {
+    beforeEach(inject([ Store ], (appStore: Store<AppState>) => {
         store = appStore;
     }));
 

@@ -18,8 +18,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
 const helpers = require('./helpers');
 
 const webpackOptions = {
-    filesToIgnore: ["snapchat.png"],
-    defaultIcon: "icon_19.png",
+    filesToCopy: [{ from: '../src/icons', to: "./icons", toType: "dir", flatten: true }],
     env: ENV,
     cleanOutput: true
 };
@@ -37,7 +36,6 @@ module.exports = (function(options) {
             sourceMapFilename: '[name].map',
         },
         plugins: [
-            new webpack.optimize.DedupePlugin(),
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,
                 compress: {

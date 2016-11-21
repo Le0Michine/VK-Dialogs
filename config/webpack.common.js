@@ -25,21 +25,11 @@ function versionReplacer(key, value) {
     return value;
 }
 
-const iconNameReplacer = function (fileName) {
-    return function (key, value) {
-        if (key === "default_icon") {
-            return "icons/" + fileName;
-        }
-    };
-};
-
 var filesToCopy = [
-    { from: '../lib/*.js', to: "./lib", toType: "dir" },
+    { from: '../lib/jquery.js', to: "./lib", toType: "dir" },
     { from: '../node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./lib", toType: "dir" },
     { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
-    { from: '../src/icons', to: "./icons", toType: "dir" },
     { from: '../src/app.options', to: "./app.options", toType: "dir" },
-    // { from: '../src/i18n', to: "./i18n", toType: "dir" },
     { from: '../src/_locales', to: "./_locales", toType: "dir" },
     { from: '../src/*.html', to: "./", toType: "dir", flatten: true },
     { from: '../src/*.css', to: "./", toType: "dir", flatten: true },
@@ -48,7 +38,8 @@ var filesToCopy = [
 
 var filesToIgnore = [
   "*.svg",
-  "VK_icon.png"
+  "VK_icon.png",
+  "doc_icons.png"
 ];
 
 var optionalPlugins = [];
@@ -57,6 +48,9 @@ module.exports = function(options) {
   isProd = options.env === 'production';
   if (options.filesToIgnore) {
       filesToIgnore = [...filesToIgnore, ...options.filesToIgnore];
+  }
+  if (options.filesToCopy) {
+      filesToCopy = [...filesToCopy, ...options.filesToCopy];
   }
 
   if (options.cleanOutput) {
@@ -73,9 +67,8 @@ module.exports = function(options) {
     name: "main",
     context: path.join(__dirname),
     entry: {
-          // "vendor":     "../src/vendor.ts",
           // "index":      "../src/index.ts",
-          "index.aot":  "../src/index.aot.ts",
+          "index":  "../src/index.aot.ts",
           // "background": "../src/background.ts",
           "background": "../src/background.aot.ts",
           // "install":    "../src/install.ts",
@@ -124,20 +117,20 @@ module.exports = function(options) {
         },
         {
           test: /\.css$/,
-          loader: 'raw-loader'
+          loaders: ['to-string-loader', 'css-loader']
         },
         {
           test: /\.(jpg|png|gif)$/,
-          loader: 'file'
+          loader: 'file-loader'
         }
       ]
     },
     plugins: [
-      new ngtools.AotPlugin({
-          tsConfigPath: './tsconfig-aot.json',
-          baseDir: path.resolve(__dirname , '..'),
-          entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
-      }),
+      // new ngtools.AotPlugin({
+      //     tsConfigPath: './tsconfig-aot.json',
+      //     baseDir: path.resolve(__dirname , '..'),
+      //     entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
+      // }),
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false
@@ -145,7 +138,7 @@ module.exports = function(options) {
       ),
       new JsonReplacerPlugin({
         inputFile: "src/manifest.json",
-        replacers: [ iconNameReplacer(options.defaultIcon), versionReplacer ]
+        replacers: [ versionReplacer ]
       }),
       new ForkCheckerPlugin(),
       new webpack.ContextReplacementPlugin(

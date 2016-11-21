@@ -30,7 +30,6 @@
 <div #inputWrapper id="inputWrapper"
 	[style.top]="bottomPanel | safeStyle"
 	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"
-	(paste)="uploadFilesFromClipboard($event)"
 	>
 	<div id="inputControls" class="row"
 		(mouseup)="stopResize([conversationsWrapper, inputWrapper], $event)"
@@ -58,7 +57,6 @@
 		[removeAttachment]="removeAttachment"
 		[attachmentUploaded]="attachmentUploaded"
 		(onMessageSent)="messageSent($event)"
-		(onAttachmentsUpdate)="onAttachmentsUpdate($event)"
 	></message-input>
 		<!--(onUserInput)="onInput.emit($event)"-->
 </div>
