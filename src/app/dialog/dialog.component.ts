@@ -164,7 +164,10 @@ export class DialogComponent implements OnInit, OnDestroy {
             this.store.select(s => s.inputMessages)
                 .filter(x => x.conversationIds.indexOf(this.conversationId) > -1)
                 .map(x => x.messages[this.conversationId].attachments)
-                .subscribe(att => this.attachments = att)
+                .subscribe(att => {
+                    this.attachments = att;
+                    this.changeDetector.detectChanges();
+                })
         );
     }
 
@@ -235,6 +238,7 @@ export class DialogComponent implements OnInit, OnDestroy {
         this.scrollHeight = max;
         this.autoScrollToBottom = max - current < 400;
         this.scrollToBottomAvailable = max - current < 400 ? "out" : "in";
+        this.changeDetector.detectChanges();
     }
 
     onEmojiSelect(event): void {
