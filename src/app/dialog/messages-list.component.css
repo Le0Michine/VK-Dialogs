@@ -104,6 +104,7 @@ pre {
 
 .att-doc-container {
     display: flex;
+    padding: 5px;
 }
 
 .att-doc {
@@ -127,10 +128,6 @@ pre {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-}
-
-.narrow {
-    width: 100px;
 }
 
 .att-doc-size {
