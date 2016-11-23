@@ -7,12 +7,12 @@
 <div class="message-block clearfix" *ngFor="let message of historyToShow | reverse">
 	<div class="user-avatar pull-left" [class.online]="message.from.isOnline">
 		<a [href]="message.from.id | linkToUser" target="_blank">
-			<img alt="" [src]="getUserPhoto(message.from.id)" class="user-avatar-img" />
+			<img alt="" [src]="message.from | userAvatar" class="user-avatar-img" />
 		</a>
 	</div>
 	<div class="message pull-left">
 		<div class="user-name-and-date">
-			<a [href]="message.from.id | linkToUser" target="_blank" class="user-name">{{getUserName(message.from.id)}}</a>
+			<a [href]="message.from.id | linkToUser" target="_blank" class="user-name">{{message.from | userFirstName}}</a>
 			<span class="message-timestamp space-left">{{message.date*1000 | date:(message.date | formatDate) }}</span>
 		</div>
 		<ul class="messages-list">
@@ -25,21 +25,21 @@
 						*ngIf="item.body"
 						[innerHTML]="item.body | cutLinks | emoji | safe" 
 						></pre>
-					<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": getUserName(item.userId), "user2": getUserName(item.actionMid)} }}</div>
+					<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": message.from | userFirstName, "user2": participants[item.actionMid] | userFirstName} }}</div>
 					<div class="message-attachment" *ngFor="let attachment of item.attachments">
 						<messages-attachment [attachment]="attachment" [isRead]="item.isRead"></messages-attachment>
 
 						<!-- fwd messages -->
 						<div *ngIf="attachment.fwd" class="fwd_messages">
-							<div *ngFor="let mts of attachment.fwd">
+							<div class="message-block clearfix" *ngFor="let mts of attachment.fwd">
 								<div class="fwd_msg_block" *ngIf="mts.from">
 									<div class="user-avatar inline" [class.online]="mts.from.isOnline">
 										<a [href]="mts.fromId | linkToUser" target="_blank">
-											<img alt="" [src]="getUserPhoto(mts.fromId)" class="user-avatar-img" />
+											<img alt="" [src]="mts.from | userAvatar" class="user-avatar-img" />
 										</a>
 									</div>
 									<div class="user-name-and-date inline space-left">
-										<a [href]="message.fromId | linkToUser" target="_blank" class="user-name block">{{getUserName(mts.fromId)}} {{isFwdFirst}} {{isFwdLast}}</a>
+										<a [href]="message.fromId | linkToUser" target="_blank" class="user-name block">{{mts.from | userFirstName}} {{isFwdFirst}} {{isFwdLast}}</a>
              							<span class="message-timestamp block">{{mts.date*1000 | date:(mts.date | formatDate)}}</span>
 									</div>
 									<div class="message">

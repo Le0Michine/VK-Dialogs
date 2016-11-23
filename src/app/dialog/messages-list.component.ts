@@ -165,20 +165,6 @@ export class MessagesListComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    getUserName(uid: number): string {
-        if (this.participants && this.participants[uid]) {
-            return this.participants[uid].firstName;
-        }
-        return "loading...";
-    }
-
-    getUserPhoto(uid: number): string {
-        if (this.participants && this.participants[uid] && this.participants[uid].photo50) {
-            return this.participants[uid].photo50;
-        }
-        return "http://vk.com/images/camera_c.gif";
-    }
-
     onMarkAsRead(value: boolean): void {
         if (!value) {
             return;

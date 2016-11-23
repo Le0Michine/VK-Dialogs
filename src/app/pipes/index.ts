@@ -17,6 +17,8 @@ import { ReversePipe } from "./message.pipe";
 import { SafeHtmlPipe, SafeStylePipe } from "./safe.pipe";
 import { StickerPipe } from "./sticker.pipe";
 import { EmojiPipe } from "./emoji.pipe";
+import { UserAvatarPipe } from "./user-avatar.pipe";
+import { UserFirstNamePipe } from "./user-first-name.pipe";
 
 export const PIPES = [
     MessageAttachmentIconPipe,
@@ -31,5 +33,7 @@ export const PIPES = [
     StickerPipe,
     EmojiPipe,
     SafeHtmlPipe,
-    SafeStylePipe
+    SafeStylePipe,
+    UserAvatarPipe,
+    UserFirstNamePipe
 ];
