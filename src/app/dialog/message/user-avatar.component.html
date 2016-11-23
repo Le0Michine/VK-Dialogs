@@ -1,0 +1,5 @@
+<div class="user-avatar" [class.online]="user.isOnline">
+	<a [href]="user.id | linkToUser" target="_blank">
+		<img alt="" [src]="user | userAvatar" class="user-avatar-img" />
+	</a>
+</div>

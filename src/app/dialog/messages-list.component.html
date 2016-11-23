@@ -5,26 +5,16 @@
 	<span>{{'conversation_start' | translate}}</span>
 </div>
 <div class="message-block clearfix" *ngFor="let message of historyToShow | reverse">
-	<div class="user-avatar pull-left" [class.online]="message.from.isOnline">
-		<a [href]="message.from.id | linkToUser" target="_blank">
-			<img alt="" [src]="message.from | userAvatar" class="user-avatar-img" />
-		</a>
-	</div>
+	<user-avatar [user]="message.from" class="pull-left"></user-avatar>
 	<div class="message pull-left">
-		<div class="user-name-and-date">
-			<a [href]="message.from.id | linkToUser" target="_blank" class="user-name">{{message.from | userFirstName}}</a>
-			<span class="message-timestamp space-left">{{message.date*1000 | date:(message.date | formatDate) }}</span>
-		</div>
+		<message-title [user]="message.from" [date]="message.date" [dateOnNewLine]="false"></message-title>
 		<ul class="messages-list">
 			<li class="message-item" *ngFor="let isFirst=first; let isLast=last; let item of message.messages | reverse" id="{{item.id}}">
 				<div class="message-body clearfix"
 					[class.unread]="!item.isRead"
 					[class.round-corners-top]="isFirst"
 					[class.round-corners-bottom]="isLast">
-					<pre class="message-body-internal text-normal"
-						*ngIf="item.body"
-						[innerHTML]="item.body | cutLinks | emoji | safe" 
-						></pre>
+					<message-body *ngIf="item.body" [body]="item.body"></message-body>
 					<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": message.from | userFirstName, "user2": participants[item.actionMid] | userFirstName} }}</div>
 					<div class="message-attachment" *ngFor="let attachment of item.attachments">
 						<messages-attachment [attachment]="attachment" [isRead]="item.isRead"></messages-attachment>
@@ -33,15 +23,8 @@
 						<div *ngIf="attachment.fwd" class="fwd_messages">
 							<div class="message-block clearfix" *ngFor="let mts of attachment.fwd">
 								<div class="fwd_msg_block" *ngIf="mts.from">
-									<div class="user-avatar inline" [class.online]="mts.from.isOnline">
-										<a [href]="mts.fromId | linkToUser" target="_blank">
-											<img alt="" [src]="mts.from | userAvatar" class="user-avatar-img" />
-										</a>
-									</div>
-									<div class="user-name-and-date inline space-left">
-										<a [href]="message.fromId | linkToUser" target="_blank" class="user-name block">{{mts.from | userFirstName}} {{isFwdFirst}} {{isFwdLast}}</a>
-             							<span class="message-timestamp block">{{mts.date*1000 | date:(mts.date | formatDate)}}</span>
-									</div>
+									<user-avatar [user]="mts.from" class="inline"></user-avatar>
+									<message-title [user]="mts.from" [date]="mts.date" [dateOnNewLine]="true" class="inline space-left"></message-title>
 									<div class="message">
 										<ul class="messages-list">
 											<li class="message-item message-body space-top border"
@@ -49,7 +32,7 @@
 												[class.round-corners-bottom]="isFwdLast"
 												*ngFor="let isFwdFirst=first; let isFwdLast=last; let msg of mts.messages"
 											>
-												<pre class="message-body-internal text-normal" [innerHTML]="msg.body | cutLinks | emoji | safe" *ngIf="msg.body"></pre>
+												<message-body *ngIf="msg.body" [body]="msg.body"></message-body>
 												<div class="fwd_message_attachment space-left" *ngFor="let fwd_att of msg.attachments">
 													<messages-attachment [attachment]="fwd_att" [isRead]="true"></messages-attachment>
 												</div>

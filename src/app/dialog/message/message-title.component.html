@@ -1,0 +1,4 @@
+<div class="user-name-and-date">
+	<a [href]="user.id | linkToUser" target="_blank" class="user-name" [class.block]="dateOnNewLine">{{ user | userFirstName }}</a>
+	<span class="message-timestamp" [class.block]="dateOnNewLine">{{ date * 1000 | date:(date | formatDate) }}</span>
+</div>

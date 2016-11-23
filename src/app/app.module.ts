@@ -10,7 +10,7 @@ import { TranslateModule } from "./translate";
 
 import { AppComponent }  from "./app.component";
 import { DialogListComponent }  from "./dialogs-list";
-import { DialogComponent, MessageInputComponent, MessagesListComponent, AttachmentComponent, AttachmentPhotoComponent, AttachmentDocComponent, AttachmentStickerComponent }  from "./dialog";
+import { DialogComponent, MessageInputComponent, MessagesListComponent, UserAvatarComponent, MessageTitleComponent, MessageBodyComponent, AttachmentComponent, AttachmentPhotoComponent, AttachmentDocComponent, AttachmentStickerComponent }  from "./dialog";
 import { LoginComponent }  from "./login";
 import { EmojiComponent }  from "./emoji";
 import { PopupMenuComponent }  from "./popup-menu";
@@ -54,6 +54,9 @@ import { rootReducer, AppState, stateFactory } from "./app.store";
         AttachmentPhotoComponent,
         AttachmentDocComponent,
         AttachmentStickerComponent,
+        UserAvatarComponent,
+        MessageTitleComponent,
+        MessageBodyComponent,
         ...PIPES
     ],
     bootstrap: [

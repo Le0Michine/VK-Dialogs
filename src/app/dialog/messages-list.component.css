@@ -70,22 +70,6 @@ pre {
     padding-top: 3px; 
 }
 
-.user-avatar {
-    height: 36px;
-    width: 36px;
-    position: relative;
-}
-
-.user-avatar-img {
-    cursor: pointer;
-    display: block;
-    height: 36px;
-    width: 36px;
-    border-radius: 50% 50% 50% 50%;
-    margin: 0px 0px 1px 2px;
-    background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
-}
-
 .online:after {
     bottom: -4%;
     right: -4%;
@@ -102,37 +86,6 @@ pre {
     width: fit-content;
     margin-left: 10px;
     width: calc(100% - 50px);
-}
-
-.user-name-and-date {
-    color: rgb(147, 147, 147);
-    height: 16px;
-}
-
-.user-name {
-    color: rgb(66, 100, 139);
-    cursor: pointer;
-    display: inline-block;
-    height: 15px;
-    max-width: 150px;
-    text-align: left;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    vertical-align: top;
-    white-space: nowrap;
-    border: 0px none rgb(66, 100, 139);
-    font: normal normal bold normal 12px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    outline: rgb(66, 100, 139) none 0px;
-    overflow: hidden;
-}
-
-.message-timestamp {
-    color: rgba(148, 148, 148, 0.6);
-    border: 0px none rgba(148, 148, 148, 0.6);
-    font: normal normal normal normal 12px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
-    outline: rgba(148, 148, 148, 0.6) none 0px;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .messages-list {
@@ -157,20 +110,6 @@ pre {
     /*width: fit-content;*/
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
-}
-
-.message-body-internal {
-    white-space: pre-line;
-    margin: 0;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    position: relative;
-    z-index: 50;
-    background: none;
-    border: none;
-    word-break: keep-all;
-    color: inherit;
-    overflow: hidden;
 }
 
 .chat_action {
