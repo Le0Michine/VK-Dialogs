@@ -1,0 +1,22 @@
+.att_photo {
+    padding: 3px;
+    width: fit-content;
+    border: 1px solid;
+    border-radius: 4px;
+    border-color: #4a6f97;
+    margin: 3px
+}
+
+.att_photo_img {
+    max-width: 100%;
+}
+
+.zoom-in {
+    cursor: -webkit-zoom-in;
+    height: 130px;
+}
+
+.zoom-out {
+    min-height: 130px;
+    cursor: -webkit-zoom-out;
+}

@@ -34,16 +34,16 @@ export class MessageAttachmentSubTitlePipe {
     name: "attachment_url"
 })
 export class MessageAttachmentUrlPipe {
-    transform(attachment, uid) {
+    transform(attachment, uid = undefined) {
         let tmp = attachment.doc || attachment.audio || attachment.video || attachment.wall || attachment.link;
         if (attachment.doc || attachment.audio || attachment.link) {
             return tmp.url;
         }
         else if (attachment.wall) {
-            return "https://vk.com/im?sel=" + uid + "&w=wall" + tmp.to_id + "_" + tmp.id;
+            return `https://vk.com/im?w=wall${tmp.to_id}_${tmp.id}`;
         }
         else if (attachment.video) {
-            return "https://vk.com/im?sel=" + uid + "&z=video" + tmp.owner_id + "_" + tmp.id + "%" + tmp.access_key;
+            return `https://vk.com/im?sel=${uid}&z=video${tmp.owner_id}_${tmp.id}%${tmp.access_key}`;
         } else if (attachment.geo) {
             // http://maps.google.com/?ie=UTF8&hq=&ll=35.028028+-106.536655&z=13&q=35.028028+-106.536655
             // image https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794

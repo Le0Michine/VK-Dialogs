@@ -1,0 +1,7 @@
+<div class="clearfix att-doc-container">
+	<a class="att-doc-icon {{doc | attachment_icon}}" [class.unread-text]="!isRead" [href]="doc | attachment_url" target="_blank"></a>
+	<div class="attachment-description">
+		<a class="att-doc" [href]="doc | attachment_url" [class.unread-text]="!isRead" target="_blank" [title]="doc | attachment_title">{{doc | attachment_title}}</a>
+		<div class="att-doc-size" [class.unread-text]="!isRead">{{doc | attachment_size}}</div>
+	</div>
+</div>
