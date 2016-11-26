@@ -10,7 +10,21 @@ import { TranslateModule } from "./translate";
 
 import { AppComponent }  from "./app.component";
 import { DialogListComponent }  from "./dialogs-list";
-import { DialogComponent, MessageInputComponent, MessagesHistoryComponent, MessagesListComponent, UserAvatarComponent, MessageTitleComponent, MessageBodyComponent, AttachmentComponent, AttachmentPhotoComponent, AttachmentDocComponent, AttachmentStickerComponent, ForwardedMessagesComponent }  from "./dialog";
+import {
+    DialogComponent,
+    MessageInputComponent,
+    MessagesHistoryComponent,
+    MessagesListComponent,
+    UserAvatarComponent,
+    MessageTitleComponent,
+    MessageBodyComponent,
+    AttachmentComponent,
+    AttachmentPhotoComponent,
+    AttachmentDocComponent,
+    AttachmentStickerComponent,
+    ForwardedMessagesComponent
+}  from "./dialog";
+
 import { LoginComponent }  from "./login";
 import { EmojiComponent }  from "./emoji";
 import { PopupMenuComponent }  from "./popup-menu";
