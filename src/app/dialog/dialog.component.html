@@ -2,11 +2,11 @@
 	[style.height]="topPanel | safeStyle"
 	(scroll)="onScroll(conversationsWrapper.scrollTop, conversationsWrapper.scrollHeight)"
 	>
-	<messages-list
+	<messages-history
 		[conversationId]="conversationId"
 		[isChat]="isChat"
 		[markAsRead]="markAsRead"
-	></messages-list>
+	></messages-history>
 </div>
 <emoji
 	*ngIf="loadEmoji"

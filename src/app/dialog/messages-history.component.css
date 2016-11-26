@@ -1,0 +1,27 @@
+.chat_action {
+    font: normal italic bold normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    text-align: center;
+    color: #777;
+    min-height: 35px;
+}
+
+#load_old {
+    cursor: pointer;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    padding-top: 10px;
+}
+
+#load_old:hover {
+    background-image: linear-gradient(to right, #ebf0f4, rgba(66, 100, 139, 0.1), #ebf0f4) !important;
+}
+
+#load_old_link {
+    width: 50%;
+    text-align: center;
+    font: normal normal bold normal 12px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0px 0px 0px;
+    text-decoration: underline;
+}

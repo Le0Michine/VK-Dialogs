@@ -1,44 +1,43 @@
-<div id="load_old" (click)="loadOldMessages()" *ngIf="!messagesCount || messagesCount > history.length">
-	<i class="material-icons">history</i>
-</div>
-<div class="chat_action top-buffer" *ngIf="messagesCount && messagesCount <= history.length">
-	<span>{{'conversation_start' | translate}}</span>
-</div>
-<div class="message-block clearfix" *ngFor="let message of historyToShow | reverse">
-	<user-avatar [user]="message.from" class="pull-left"></user-avatar>
-	<div class="message pull-left">
-		<message-title [user]="message.from" [date]="message.date" [dateOnNewLine]="false"></message-title>
+<div class="message-block clearfix" *ngFor="let message of historyToShow">
+	<user-avatar [user]="message.from" class="user-avatar"></user-avatar>
+	<message-title class="left-buffer inline" [user]="message.from" [date]="message.date" [dateOnNewLine]="false"></message-title>
+	<div class="message">
 		<ul class="messages-list">
-			<li class="message-item" *ngFor="let isFirst=first; let isLast=last; let item of message.messages | reverse" id="{{item.id}}">
-				<div class="message-body clearfix"
-					[class.unread]="!item.isRead"
+			<li class="message-item"
+				*ngFor="let isFirst=first; let isLast=last; let item of message.messages"
+			>
+				<div class="message-body"
+					[class.unread]="item.isUnread"
 					[class.round-corners-top]="isFirst"
-					[class.round-corners-bottom]="isLast">
+					[class.round-corners-bottom]="isLast"
+				>
 					<message-body *ngIf="item.body" [body]="item.body"></message-body>
 					<div *ngIf="item.action" class="chat_action">{{ item | chatAction | translate:{"user": message.from | userFirstName, "user2": participants[item.actionMid] | userFirstName} }}</div>
 					<div class="message-attachment" *ngFor="let attachment of item.attachments">
-						<messages-attachment [attachment]="attachment" [isRead]="item.isRead"></messages-attachment>
+						<messages-attachment [attachment]="attachment" [isRead]="!item.isUnread"></messages-attachment>
 
 						<!-- fwd messages -->
 						<div *ngIf="attachment.fwd" class="fwd_messages">
 							<div class="message-block clearfix" *ngFor="let mts of attachment.fwd">
-								<div class="fwd_msg_block" *ngIf="mts.from">
-									<user-avatar [user]="mts.from" class="inline"></user-avatar>
-									<message-title [user]="mts.from" [date]="mts.date" [dateOnNewLine]="true" class="inline space-left"></message-title>
-									<div class="message">
-										<ul class="messages-list">
-											<li class="message-item message-body space-top border"
+								<user-avatar [user]="mts.from" class="user-avatar"></user-avatar>
+								<message-title [user]="mts.from" [date]="mts.date" [dateOnNewLine]="true" class="left-buffer inline"></message-title>
+								<div class="message">
+									<ul class="messages-list">
+										<li class="message-item"
+											*ngFor="let isFwdFirst=first; let isFwdLast=last; let msg of mts.messages"
+										>
+											<div class="message-body"
+												[class.unread]="msg.isUnread"
 												[class.round-corners-top]="isFwdFirst"
 												[class.round-corners-bottom]="isFwdLast"
-												*ngFor="let isFwdFirst=first; let isFwdLast=last; let msg of mts.messages"
 											>
 												<message-body *ngIf="msg.body" [body]="msg.body"></message-body>
-												<div class="fwd_message_attachment space-left" *ngFor="let fwd_att of msg.attachments">
+												<div class="message-attachment" *ngFor="let fwd_att of msg.attachments">
 													<messages-attachment [attachment]="fwd_att" [isRead]="true"></messages-attachment>
 												</div>
-											</li>
-										</ul>
-									</div>
+											</div>
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>

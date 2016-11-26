@@ -37,37 +37,13 @@
     padding: 5px;
 }
 
-pre {
-    border-radius: 0;
-}
-
 .round-corners-bottom {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
 .round-corners-top {
-    /*border-top-left-radius: 10px;*/
     border-top-right-radius: 10px;
-}
-
-
-.fwd_msg_block {
-    max-width: 80%;
-}
-
-.fwd_messages {
-    border-left: 2px rgba(66, 100, 139, 0.3)  solid;
-    clear: both;
-    left: 3px;
-    position: relative;
-    float: none;
-    padding-left: 3px;
-    width: 300px;
-}
-
-.fwd_message_attachment {
-    padding-top: 3px; 
 }
 
 .online:after {
@@ -86,6 +62,7 @@ pre {
     width: fit-content;
     margin-left: 10px;
     width: calc(100% - 50px);
+    float: left;
 }
 
 .messages-list {
@@ -152,14 +129,48 @@ pre {
     display: block;
 }
 
-.space-left {
-    margin-left: 4px;
+.left-buffer {
+    margin-left: 10px;
 }
 
 .space-top {
     margin-top: 4px;
 }
 
-.border {
-    border: 1px solid;
+.user-avatar {
+    float: left;
+}
+
+.fwd_messages {
+    border-left: 2px rgba(66, 100, 139, 0.3)  solid;
+    clear: both;
+    left: 3px;
+    position: relative;
+    float: none;
+    padding-left: 3px;
+    width: 300px;
+}
+
+.fwd_messages .message-block {
+    max-width: 80%;
+    padding-left: initial;
+}
+
+.fwd_messages .left-buffer {
+    margin-left: 4px;
+}
+
+.fwd_messages .user-avatar {
+    float: none;
+    display: inline-block;
+}
+
+.fwd_messages .message {
+    float: none;
+    display: inline-block;
+}
+
+.fwd_messages .message-attachment {
+    padding-top: 3px; 
+    margin-left: 4px;
 }
