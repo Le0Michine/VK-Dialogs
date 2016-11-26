@@ -1,6 +1,6 @@
 <div class="message-block clearfix" *ngFor="let message of historyToShow">
 	<user-avatar [user]="message.from" class="user-avatar"></user-avatar>
-	<message-title class="left-buffer inline" [user]="message.from" [date]="message.date" [dateOnNewLine]="false"></message-title>
+	<message-title class="left-buffer inline" [user]="message.from" [date]="message.date" [dateOnNewLine]="isForwarded"></message-title>
 	<div class="message">
 		<ul class="messages-list">
 			<li class="message-item"
@@ -17,7 +17,7 @@
 						<messages-attachment [attachment]="attachment" [isRead]="!item.isUnread"></messages-attachment>
 
 						<!-- fwd messages -->
-						<div *ngIf="attachment.fwd" class="fwd_messages">
+						<!--<div *ngIf="attachment.fwd" class="fwd_messages">
 							<div class="message-block clearfix" *ngFor="let mts of attachment.fwd">
 								<user-avatar [user]="mts.from" class="user-avatar"></user-avatar>
 								<message-title [user]="mts.from" [date]="mts.date" [dateOnNewLine]="true" class="left-buffer inline"></message-title>
@@ -40,7 +40,7 @@
 									</ul>
 								</div>
 							</div>
-						</div>
+						</div>-->
 						<div *ngIf="!attachment.type">
 							{{attachment}}
 						</div>

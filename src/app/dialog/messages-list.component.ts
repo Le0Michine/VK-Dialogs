@@ -13,4 +13,5 @@ import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../d
 })
 export class MessagesListComponent {
     @Input() historyToShow: any[];
+    @Input() isForwarded: boolean;
 }
