@@ -3,19 +3,18 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 
-import { DialogService } from "../services";
-import { MenuItem, InputMessageState } from "../datamodels";
-import { AppState } from "../app.store";
-import { twemoji } from "../../../lib/twemoji";
+import { DialogService } from "../../services";
+import { MenuItem, InputMessageState } from "../../datamodels";
+import { AppState } from "../../app.store";
+import { twemoji } from "../../../../lib/twemoji";
 
 @Component({
     selector: "message-input",
     templateUrl: "message-input.component.html",
     styleUrls: [
         "message-input.component.css",
-        "../css/round-buttons.css",
-        "../css/font-style.css",
-        "../css/color-scheme.css"
+        "../../css/round-buttons.css",
+        "../../css/color-scheme.css"
     ]
 })
 export class MessageInputComponent {

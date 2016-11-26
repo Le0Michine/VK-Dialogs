@@ -6,11 +6,11 @@ import { DebugElement, ApplicationRef, Directive, Input } from "@angular/core";
 import { StoreModule, Store } from "@ngrx/store";
 
 import { MessageInputComponent } from "./message-input.component";
-import { AppState, appState } from "../app.store";
-import { TranslateModule } from "../translate";
-import { DialogService } from "../services";
-import { replaceMessage } from "../actions";
-import { UserListInfo, DialogListInfo, ChatListInfo, HistoryListInfo, InputMessageListInfo, MenuItem } from "../datamodels";
+import { AppState, appState } from "../../app.store";
+import { TranslateModule } from "../../translate";
+import { DialogService } from "../../services";
+import { replaceMessage } from "../../actions";
+import { UserListInfo, DialogListInfo, ChatListInfo, HistoryListInfo, InputMessageListInfo, MenuItem } from "../../datamodels";
 
 class DialogServiceTest {
     sendMessage(id: number, message: any, chat: boolean): void {}

@@ -1,3 +1,3 @@
-export * from "./user-avatar.component";
-export * from "./message-title.component";
-export * from "./message-body.component";
+export * from "./user-avatar";
+export * from "./message-title";
+export * from "./message-body";

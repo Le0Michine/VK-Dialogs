@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { UserInfo } from "../../datamodels";
+import { UserInfo } from "../../../datamodels";
 
 @Component({
     selector: "message-title",

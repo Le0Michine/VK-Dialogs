@@ -4,8 +4,7 @@ import { Component, Input } from "@angular/core";
     selector: "message-body",
     templateUrl: "message-body.component.html",
     styleUrls: [
-        "message-body.component.css",
-        "../../css/font-style.css"
+        "message-body.component.css"
     ]
 })
 export class MessageBodyComponent {
