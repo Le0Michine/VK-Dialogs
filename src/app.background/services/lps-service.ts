@@ -190,7 +190,7 @@ export class LPSService {
 
     private getLongPollServer(): Observable<LongPollServerInfo> {
         console.log("lps requested");
-        return this.vkservice.performSingleAPIRequest(this.getLpsApiMethod, `use_ssl=1`)
+        return this.vkservice.performSingleAPIRequest(this.getLpsApiMethod, { use_ssl: 1 })
             .timeout(35000, new Error("35s timeout occured"));
     }
 

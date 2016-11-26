@@ -144,8 +144,6 @@ export class DialogService {
         this.chromeapi.OnPortMessage("type_message")
             .map(m => m.data)
             .distinctUntilChanged((m1, m2) => JSON.stringify(m1) === JSON.stringify(m2))
-            // .bufferCount(3)
-            // .map(ms => ms[ms.length - 1])
             .filter((m: InputMessageInfo) => m.state !== InputMessageState.SENDING)
             .subscribe((message: any) => {
                 this.store.dispatch(typeMessage(message));
@@ -305,7 +303,7 @@ export class DialogService {
         console.log("sending message", message);
         let parameters = { message: message.body, notification: 1, attachment: message.attachments.map(x => x.id).join() };
         parameters[message.chatId ? "chat_id" : "user_id"] = message.conversationId;
-        this.vkservice.performAPIRequestsBatch(this.sendMessageApiMethod, parameters)
+        this.vkservice.performSingleAPIRequest(this.sendMessageApiMethod, parameters)
             .subscribe(messageId => {
                 this.store.dispatch(messageId ? sendMessageSuccess(message.conversationId) : sendMessageFail(message.conversationId));
             });

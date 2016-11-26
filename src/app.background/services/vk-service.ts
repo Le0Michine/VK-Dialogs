@@ -149,7 +149,11 @@ export class VKService {
         return this.httpRequest.filter(r => Boolean(r[id])).take(1).map(r => r[id]);
     }
 
-    performSingleAPIRequest(method: string, parameters: string): Observable<any> {
+    performSingleAPIRequest(method: string, parameters: any): Observable<any> {
+        let parametersArray = [];
+        for (let p of Object.keys(parameters)) {
+            parametersArray.push(`${p}=${parameters[p]}`);
+        }
         let result = this.getSession().concatMap(session => {
             if (!session) {
                 console.log("session is null, not authorized");
@@ -160,8 +164,8 @@ export class VKService {
                 });
             }
             let url = `${VKConsts.apiUrl}${method}?access_token=${session.accessToken}&v=${VKConsts.apiVersion}&lang=${this.lang}`;
-            if (parameters) {
-                url += "&" + parameters;
+            if (parametersArray.length) {
+                url += "&" + parametersArray.join("&");
             }
             console.log(`perform api request to url ${url}`);
             return Observable.of(url);

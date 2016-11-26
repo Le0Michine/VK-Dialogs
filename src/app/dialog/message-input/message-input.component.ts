@@ -189,7 +189,7 @@ export class MessageInputComponent {
             .subscribe(message => {
                 if (message) {
                     console.log("restored message", message, message.body, message.attachments);
-                    this.inputText = message.body;
+                    this.inputText = decodeURI(message.body);
                     this._attachments = message.attachments || [];
                     this.updateInputMessage();
                 }
