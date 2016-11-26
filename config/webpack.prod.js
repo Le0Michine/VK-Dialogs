@@ -55,10 +55,10 @@ module.exports = (function(options) {
                     join_vars: true,
                     drop_console: true,
                     drop_debugger: true,
-                    //unsafe: true,
+                    // unsafe: true,
                     hoist_vars: true,
                     negate_iife: true,
-                    //side_effects: true,
+                    // side_effects: true,
                     screw_ie8: true
                 },
               mangle: {
