@@ -5,7 +5,7 @@ import { Component, Input } from "@angular/core";
     templateUrl: "attachment-doc.component.html",
     styleUrls: [
         "attachment-doc.component.css",
-        "../../css/color-scheme.css"
+        "../../../css/color-scheme.css"
     ]
 })
 export class AttachmentDocComponent {

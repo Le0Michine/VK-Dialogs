@@ -5,16 +5,16 @@ import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 import "rxjs/add/observable/combineLatest";
 
-import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../datamodels";
-import { DialogService, VKService, ChromeAPIService, OptionsService } from "../services";
-import { AppState } from "../app.store";
+import { MessageViewModel, SingleMessageInfo, UserInfo, HistoryInfo } from "../../datamodels";
+import { DialogService, VKService, ChromeAPIService, OptionsService } from "../../services";
+import { AppState } from "../../app.store";
 
 @Component({
     selector: "messages-history",
     templateUrl: "messages-history.component.html",
     styleUrls: [
         "messages-history.component.css",
-        "../css/color-scheme.css"
+        "../../css/color-scheme.css"
     ]
 })
 export class MessagesHistoryComponent implements OnInit, OnDestroy {
