@@ -5,5 +5,5 @@ export class MessageViewModel {
     fromId: number;
     messages: SingleMessageInfo[] = [];
     date: number;
-    isUnread: boolean;
+    isRead: boolean;
 }

@@ -1,25 +1,3 @@
 <div class="fwd_messages">
-	<div class="message-block clearfix" *ngFor="let mts of messages">
-		<user-avatar [user]="mts.from" class="user-avatar"></user-avatar>
-		<message-title [user]="mts.from" [date]="mts.date" [dateOnNewLine]="true" class="left-buffer inline"></message-title>
-		<div class="message">
-			<ul class="messages-list">
-				<li class="message-item"
-					*ngFor="let isFwdFirst=first; let isFwdLast=last; let msg of mts.messages"
-				>
-					<div class="message-body"
-						[class.unread]="msg.isUnread"
-						[class.round-corners-top]="isFwdFirst"
-						[class.round-corners-bottom]="isFwdLast"
-					>
-						<message-body *ngIf="msg.body" [body]="msg.body"></message-body>
-						<div class="message-attachment" *ngFor="let fwd_att of msg.attachments">
-							<messages-attachment [attachment]="fwd_att" [isRead]="true"></messages-attachment>
-						</div>
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<!--<messages-list [historyToShow]="messages" [isForwarder]="true"></messages-list>-->
+	<messages-list class="forwarded" [historyToShow]="messages" [isForwarded]="true"></messages-list>
 </div>

@@ -52,7 +52,7 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
                 this.history = history.messages;
                 this.messagesCount = history.count;
                 this.participants = users;
-                this.historyToShow = this.getHistory(this.history);
+                this.historyToShow = this.getHistory(this.history.concat([]).reverse());
                 console.log("force update");
                 this.refreshView();
             })
@@ -85,7 +85,7 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
         let uid = messages[0].fromId;
         mts.from = this.participants[uid] || new UserInfo();
         mts.date = messages[0].date;
-        mts.isUnread = !messages[0].isRead;
+        mts.isRead = messages[0].isRead;
 
         for (let message of messages) {
             message.attachments = this.getMessageAttachments(message);
@@ -96,22 +96,21 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
                     mts.messages.push(message);
             }
             else {
-                mts.messages = mts.messages.reverse();
                 history.push(mts);
                 mts = new MessageViewModel();
                 mts.from = this.participants[message.fromId] || new UserInfo();
                 mts.messages.push(message);
                 mts.date = message.date;
                 uid = message.fromId;
+                mts.isRead = message.isRead;
             }
         }
         history.push(mts);
         console.log("history: ", history);
-        return history.reverse();
+        return history;
     }
 
     getMessageAttachments(message: SingleMessageInfo) {
-        console.log("get attachments");
         let attachments = [];
         if (message.attachments) {
             for (let attachment of message.attachments) {
@@ -131,23 +130,21 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
             attachment.type = "fwd";
             attachment.fwd = this.convertFwdMessages(message.fwdMessages);
             attachments.push(attachment);
-            console.log("fwd: ", attachment);
         }
         return attachments;
     }
 
     convertFwdMessages(messages: SingleMessageInfo[]) {
         /** body, date, user_id, attachments */
-        console.log("convert forwarded messages");
         let result: any[] = [];
         if (!messages || messages.length === 0) return [];
         let messageModel: MessageViewModel = new MessageViewModel();
         messageModel.date = messages[0].date;
         messageModel.from = this.participants[messages[0].userId] || new UserInfo();
         messageModel.fromId = messages[0].userId;
-        messageModel.isUnread = false;
         messages[0].attachments = this.getMessageAttachments(messages[0]);
         messageModel.messages = [messages[0]];
+        messageModel.isRead = true;
         for (let i = 1; i < messages.length; i++) {
             messages[i].attachments = this.getMessageAttachments(messages[i]);
             if (messageModel.fromId === messages[i].userId) {
@@ -160,6 +157,7 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
                 messageModel.from = this.participants[messages[i].userId] || new UserInfo();
                 messageModel.fromId = messages[0].userId;
                 messageModel.messages = [messages[i]];
+                messageModel.isRead = true;
             }
         }
         result.push(messageModel);
