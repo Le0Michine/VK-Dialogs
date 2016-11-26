@@ -10,7 +10,6 @@ import { AppState } from "../app.store";
     templateUrl: "breadcrumb.component.html",
     styleUrls: [
         "../css/color-scheme.css",
-        "../css/font-style.css",
         "./breadcrumb.component.css"
     ]
 })

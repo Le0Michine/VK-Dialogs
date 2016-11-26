@@ -11,7 +11,6 @@ const ENTER = 13;
     selector: "search-autocomplete",
     templateUrl: "search.component.html",
     styleUrls: [
-        "../css/font-style.css",
         "../css/round-buttons.css",
         "../css/color-scheme.css",
         "search.component.css"

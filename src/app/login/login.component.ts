@@ -12,8 +12,7 @@ import { BreadcrumbActions } from "../reducers";
     templateUrl: "login.component.html",
     styleUrls: [
         "login.component.css",
-        "../css/color-scheme.css",
-        "../css/font-style.css"
+        "../css/color-scheme.css"
        ]
 })
 export class LoginComponent {

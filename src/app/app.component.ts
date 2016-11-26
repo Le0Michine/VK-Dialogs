@@ -22,7 +22,6 @@ const rotateAnimationLength = 200;
     selector: "my-app",
     templateUrl: "app.component.html",
     styleUrls: [
-        "css/font-style.css",
         "css/round-buttons.css",
         "css/color-scheme.css",
         "app.component.css"

@@ -99,3 +99,11 @@ img.styleless {
             font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 }
+
+.text-normal {
+    font: normal normal normal normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
+}
+
+*:not(.material-icons) {
+    font: normal normal normal normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+}
