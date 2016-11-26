@@ -8,6 +8,7 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/last";
 
 import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsService, StoreSyncService } from "../services";
 import { SingleMessageInfo, HistoryInfo } from "../datamodels";
@@ -97,12 +98,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     ngOnInit() {
         console.log("specific dialog component init");
 
-        this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
-            if (!minimized && this.autoReadMessages) {
-                this.onMarkAsRead();
-            }
-        });
-
         this.route.params.subscribe(params => {
             this.title = decodeURI(params["title"]);
             this.conversationId = +params["id"];
@@ -137,6 +132,31 @@ export class DialogComponent implements OnInit, OnDestroy {
                     else {
                         this.scrollHeight += 1000000;
                     }
+
+                    this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
+                        if (!minimized && this.autoReadMessages) {
+                            this.onMarkAsRead();
+                        } else if (minimized && this.autoReadMessages) {
+                            Observable.merge(
+                                Observable
+                                    .interval(1000)
+                                    .concatMap(() => this.chromeapi.isCurrentWindowMinimized())
+                                    .filter(isMin => !isMin)
+                                    .map(() => true),
+                                this.store.select(s => s.history)
+                                    .map(h => h.history[this.conversationId])
+                                    .filter(x => Boolean(x))
+                                    .take(2)
+                                    .last()
+                                    .map(() => false)
+                                ).first()
+                                .subscribe(x => {
+                                    if (x) {
+                                        this.onMarkAsRead();
+                                    }
+                                });
+                        }
+                    });
                 })
             );
 

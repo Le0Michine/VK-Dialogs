@@ -108,7 +108,7 @@ export class ChromeAPIService {
     isCurrentWindowMinimized(): Observable<boolean> {
         return Observable.create(observer => {
             chrome.windows.getCurrent((chromeWindow) => {
-                console.log("current window state", chromeWindow.state);
+                console.log("current window state", chromeWindow.state, chromeWindow);
                 observer.next(chromeWindow.state === "minimized");
                 observer.complete();
             });
