@@ -97,6 +97,12 @@ export class DialogComponent implements OnInit, OnDestroy {
     ngOnInit() {
         console.log("specific dialog component init");
 
+        this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
+            if (!minimized && this.autoReadMessages) {
+                this.onMarkAsRead();
+            }
+        });
+
         this.route.params.subscribe(params => {
             this.title = decodeURI(params["title"]);
             this.conversationId = +params["id"];
@@ -124,13 +130,6 @@ export class DialogComponent implements OnInit, OnDestroy {
                     console.log("HISTORY", data);
                     if (!this.autoReadMessages) {
                         this.unreadMessages = (data.messages.findIndex(m => !m.isRead && !m.out) > -1) ? "in" : "out";
-                    }
-                    else {
-                        this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
-                            if (!minimized) {
-                                this.onMarkAsRead();
-                            }
-                        });
                     }
                     if (this.autoScrollToBottom) {
                         setTimeout(() => this.scrollToBottom(), 0);
