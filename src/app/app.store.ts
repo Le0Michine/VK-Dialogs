@@ -19,9 +19,13 @@ export const appState = {
 
 export function rootReducer (state: AppState, action: Action){
   if (action.type === "SET_NEW_STATE") {
-      state = Object.assign({}, state, action.payload);
+    state = Object.assign({}, state, action.payload);
   }
-  return compose(storeLogger(), combineReducers)(appState)(state, action);
+  if (!process.env.PRODUCTION) {
+    return compose(storeLogger(), combineReducers)(appState)(state, action);
+  } else {
+    return compose(combineReducers)(appState)(state, action);
+  }
 }
 
 export class AppState {

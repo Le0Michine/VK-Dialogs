@@ -146,6 +146,9 @@ module.exports = function(options) {
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
         helpers.root('src') // location of your src
       ),
+      new webpack.DefinePlugin({
+        'process.env.PRODUCTION': JSON.stringify(isProd)
+      }),  
       ...optionalPlugins
     ]
   }

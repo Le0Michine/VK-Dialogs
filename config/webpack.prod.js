@@ -12,7 +12,7 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'production';
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
 
 const helpers = require('./helpers');

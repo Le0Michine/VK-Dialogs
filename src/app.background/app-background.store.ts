@@ -46,7 +46,11 @@ export function rootReducer (state: AppBackgroundState, action: Action){
   if (action.type === "SET_NEW_STATE") {
       state = Object.assign({}, state, action.payload);
   }
-  return compose(storeLogger(), combineReducers)(appBackgroundState)(state, action);
+  if (!process.env.PRODUCTION) {
+    return compose(storeLogger(), combineReducers)(appBackgroundState)(state, action);
+  } else {
+    return compose(combineReducers)(appBackgroundState)(state, action);
+  }
 }
 
 export { DialogListActions, UsersActions, ChatsActions, HistoryActions, InputMessageActions } from "./reducers";
