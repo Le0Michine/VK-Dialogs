@@ -18,6 +18,19 @@ export class ChromeAPIDumbService {
     }
 
     SendMessage(message): void {
+        if (message.name === "open_separate_window") {
+            chrome.windows.create({
+                type: "panel",
+                focused: true,
+                state: "docked",
+                width: 300,
+                height: 400,
+                url: "index.html"
+            }, (window) => {
+                console.dir(window);
+                window.alwaysOnTop = true;
+            });
+        }
     }
 
     OnPortMessage(name): Observable<any> {
