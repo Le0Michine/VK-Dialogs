@@ -1,6 +1,6 @@
 {
     "appName": {
-        "message": "Messenger for VK"
+        "message": "VK dialogs"
     },
     "appDesc": {
         "message": "This extension allows to chat with friends in VK in a browser popup window."
