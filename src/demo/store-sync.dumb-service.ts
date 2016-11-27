@@ -4,9 +4,7 @@ import { Observable } from "rxjs/Observable";
 @Injectable()
 export class StoreSyncDumbService {
     subscribeOnHistory() {
-        return Observable.create(observer => {
-            // do nothing
-        });
+        return Observable.create(observer => {}).subscribe(() => {});
     }
 
     init() {

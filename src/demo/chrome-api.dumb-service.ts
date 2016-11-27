@@ -6,15 +6,21 @@ import "rxjs/add/observable/bindCallback";
 @Injectable()
 export class ChromeAPIDumbService {
     subscribeOnMessage(on: string): Observable<any> {
-        return Observable.create(observer => {});
+        return Observable.create(observer => {
+            observer.complete();
+        });
     }
 
     OnMessage(name: string): Observable<any> {
-        return Observable.create(observer => {});
+        return Observable.create(observer => {
+            observer.complete();
+        });
     }
 
     SendRequest(message): Observable<any> {
-        return Observable.create(observer => {});
+        return Observable.create(observer => {
+            observer.complete();
+        });
     }
 
     SendMessage(message): void {
@@ -34,7 +40,9 @@ export class ChromeAPIDumbService {
     }
 
     OnPortMessage(name): Observable<any> {
-        return Observable.create(observer => {});
+        return Observable.create(observer => {
+            observer.complete();
+        });
     }
 
     PostPortMessage(message): void {

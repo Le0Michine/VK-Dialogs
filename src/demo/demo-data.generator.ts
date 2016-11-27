@@ -7,7 +7,7 @@ export function generateDemoData() {
         users: generateUsers(),
         dialogs: generateDialogs(),
         chats: new ChatListInfo(),
-        history: new HistoryListInfo(),
+        history: generateHistory(),
         currentConversationId: -1,
         router: { path: "/dialogs" },
         inputMessages: new InputMessageListInfo()
@@ -41,7 +41,7 @@ function generateDialogs() {
     dialogs.count = 5;
     dialogs.unread = 1;
     dialogs.dialogs = [
-        createDialog("著郵行教問岡阪言覧食制英金近不染無使合。感経転根識衛土会題阿造年足蛯転。応事報世団親拡江化奨格院披持。段二著読口者際楽自富詳顔会全添禁終売", 5),
+        createDialog("Hi", 5),
         createDialog("Ke eca malcit gramatika sezononomo, ig kiu amen vatto. Sat deko kial lasta jh. Mega foren miloj po tri, vol de onjo propozicio sekvinbero, meze trafe respondvorto dev ju.", 4),
         createDialog("Um aus aremt Schiet d'Musek, ké gewëss d'Kirmes mat, wielen iweral derfir do mir.", 3),
         createDialog("My name is Bond, James Bond", 2),
@@ -65,4 +65,34 @@ function createDialog(body: string, id: number, unreadCount: number = 0) {
         userId: id
     } as SingleMessageInfo;
     return dialog;
+}
+
+function generateHistory() {
+    let history = new HistoryListInfo();
+    history.conversationIds = [ 1 ];
+    history.history = {
+        5: {
+            conversationId: 5,
+            conversationTitle: " ... ",
+            count: 2,
+            isChat: false,
+            messages: [
+                createMessage("Hi", 5, false),
+                createMessage("Hi!", 1, true)
+            ]
+        }
+    };
+    return history;
+}
+
+function createMessage(body: string, fromId: number, out: boolean) {
+    let message = new SingleMessageInfo();
+    message.body = body;
+    message.id = 12345;
+    message.date = Date.now() / 1000;
+    message.fromId = fromId;
+    message.out = out;
+    message.isRead = true;
+    message.userId = fromId;
+    return message;
 }
