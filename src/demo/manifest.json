@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+    "name": "VK dialogs demo",
+    "description": "description",
+    "version": "2.6.3.510",
+    "default_locale": "ru",
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "options_page": "app.options/options.html",
+    "browser_action": {
+        "default_icon": "icons/icon_19.png",
+        "default_popup": "index.html"
+    },
+    "icons": {
+        "16": "icons/icon_16.png",
+        "48": "icons/icon_48.png",
+        "64": "icons/icon_64.png",
+        "128": "icons/icon_128.png"
+    },
+    "permissions": [
+        "tabs",
+        "storage",
+        "management",
+        "notifications",
+        "contextMenus",
+        "http://vk.com/*",
+        "http://*.vk.me/*",
+        "https://api.vk.com/method/*",
+        "http://imv4.vk.com/*",
+        "http://*.vk.com/*",
+        "https://pu.vk.com/*",
+        "https://*.vk.com/*"
+    ]
+}

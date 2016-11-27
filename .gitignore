@@ -1,8 +1,8 @@
 coverage/
 node_modules/
 out/
-aot/
-ngfactory/
+/demo/
+compile/
 src/**/*.ngfactory.ts
 src/**/*.shim.ts
 src/**/*.js
