@@ -15,7 +15,7 @@
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "./ngfactory",
+    "outDir": "./compile/ngfactory",
     "rootDir": "./src",
     "typeRoots": [ "./node_modules/@types" ],
     "types": [
@@ -33,7 +33,7 @@
   },
   "angularCompilerOptions": {
     "debug": false,
-    "genDir": "aot",
+    "genDir": "compile/aot",
     "skipMetadataEmit" : true
   },
   "compileOnSave": false,

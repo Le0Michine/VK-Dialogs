@@ -5,7 +5,7 @@ import { enableProdMode } from "@angular/core";
  * App Module
  * our top level module that holds all of our components
  */
-import { AppInstallModuleNgFactory } from "../aot/src/app.installguide/app.module.ngfactory";
+import { AppInstallModuleNgFactory } from "../compile/aot/src/app.installguide/app.module.ngfactory";
 
 /*
  * Bootstrap our Angular app with a top level NgModule
