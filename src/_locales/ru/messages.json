@@ -6,7 +6,7 @@
         "message": "Позволяет вести переписку с друзьями вконтакте не открывая VK.com."
     },
     "chromeExtOptions": {
-        "message": "Настройки расширения"
+        "message": "Диалоги VK: настройки"
     },
     "langOptions": {
         "message": "Язык:"

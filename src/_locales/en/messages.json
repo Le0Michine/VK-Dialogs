@@ -6,7 +6,7 @@
         "message": "This extension allows to chat with friends in VK in a browser popup window."
     },
     "chromeExtOptions": {
-        "message": "Chrome Extension Options"
+        "message": "VK dialogs: options"
     },
     "langOptions": {
         "message": "My primary language:"

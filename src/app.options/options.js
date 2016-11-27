@@ -59,7 +59,8 @@ function onload() {
 }
 
 function updateLocale() {
-    document.getElementById("options-title-heading").innerText = chrome.i18n.getMessage("chromeExtOptions");
+    document.getElementById("logo_title").innerText = chrome.i18n.getMessage("chromeExtOptions");
+    // document.getElementById("options-title-heading").innerText = chrome.i18n.getMessage("chromeExtOptions");
     document.getElementById("lang-option").innerText = chrome.i18n.getMessage("langOptions");
     document.getElementById("privacy-option").innerText = chrome.i18n.getMessage("privacyOptions");
     document.getElementById("set-online-checkbox-label").innerText = chrome.i18n.getMessage("setOnlineOption");
