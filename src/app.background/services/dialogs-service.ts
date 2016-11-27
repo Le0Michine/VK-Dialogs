@@ -301,9 +301,9 @@ export class DialogService {
 
     private sendMessage(message: InputMessageInfo): void {
         console.log("sending message", message);
-        let parameters = { message: message.body, notification: 1, attachment: message.attachments.map(x => x.id).join() };
+        let parameters = { message: message.body, attachment: message.attachments.map(x => x.id).join() };
         parameters[message.chatId ? "chat_id" : "user_id"] = message.conversationId;
-        this.vkservice.performSingleAPIRequest(this.sendMessageApiMethod, parameters)
+        this.vkservice.performAPIPostRequest(this.sendMessageApiMethod, parameters)
             .subscribe(messageId => {
                 this.store.dispatch(messageId ? sendMessageSuccess(message.conversationId) : sendMessageFail(message.conversationId));
             });

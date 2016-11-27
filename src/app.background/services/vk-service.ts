@@ -149,6 +149,36 @@ export class VKService {
         return this.httpRequest.filter(r => Boolean(r[id])).take(1).map(r => r[id]);
     }
 
+    performAPIPostRequest(method: string, body: any): Observable<any> {
+        return this.getSession().concatMap(session => {
+            if (!session) {
+                console.log("session is null, not authorized");
+                this.authorized = false;
+                return Observable.throw({
+                    type: "Unauthorized",
+                    message: "Unable to get session"
+                });
+            }
+            let url = `${VKConsts.apiUrl}${method}`;
+            body.access_token = session.accessToken;
+            body.v = VKConsts.apiVersion;
+            body.lang = this.lang;
+            let requestData = new FormData();
+            for (let p of Object.keys(body)) {
+                requestData.append(p, body[p]);
+            }
+            console.log(`perform post api request to url ${url}`);
+            return Observable.of({ url, requestData });
+        })
+        .concatMap(({ url, requestData }) => this.createAjaxPostRequest(url, requestData))
+        .concatMap((json: any) => ErrorHelper.checkErrors(json) || !json.response ? Observable.throw(json) : Observable.of(json.response))
+        .retryWhen(error => {
+            console.warn("failed api request: ", error);
+            return error.delay(500);
+        })
+        .take(100);
+    }
+
     performSingleAPIRequest(method: string, parameters: any): Observable<any> {
         let parametersArray = [];
         for (let p of Object.keys(parameters)) {
@@ -188,6 +218,28 @@ export class VKService {
 
     getCurrentUserId(): number {
         return this.sessionInfo.userId;
+    }
+
+    private createAjaxPostRequest(url: string, requestData: FormData): Observable<any> {
+        return Observable.create((observer: any) => {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: requestData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: (data, textStatus, jqXHR) => {
+                        observer.next(data);
+                        observer.complete();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown)
+                    {
+                        console.log("ERRORS: " + textStatus);
+                        observer.error(textStatus);
+                    }
+                });
+            });
     }
 
     private performHttpRequest(url: string) {

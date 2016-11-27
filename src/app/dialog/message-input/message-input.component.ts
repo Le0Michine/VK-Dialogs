@@ -219,8 +219,6 @@ export class MessageInputComponent {
         this.onMessageSent.emit(false);
         this.sendingBlocked = true;
 
-        text = this.escape(text);
-
         this.messagesService.sendMessage(this.conversationId, { body: text, attachments: this.attachments }, this.isChat);
 
         this.store.select(s => s.inputMessages)
@@ -249,9 +247,5 @@ export class MessageInputComponent {
 
     errorHandler(error) {
         console.error("An error occurred", error);
-    }
-
-    escape(text) {
-        return encodeURI(text.trim());
     }
 }

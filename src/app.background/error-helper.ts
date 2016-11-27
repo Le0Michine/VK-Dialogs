@@ -24,3 +24,15 @@ export class ErrorHelper {
         return 0;
     }
 }
+
+/*
+captcha_img: "https://api.vk.com/captcha.php?sid=826852769372&s=1"
+captcha_sid: "826852769372"
+error_code: 14
+error_msg: "Captcha needed"
+*/
+
+/*
+error_code: 9
+error_msg: "Flood control: same message already sent"
+*/
