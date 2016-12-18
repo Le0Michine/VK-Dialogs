@@ -34,7 +34,8 @@ export const en = {
         "chat_photo_remove": "{{user}} removed the conversation cover",
         "chat_photo_update": "{{user}} updated the conversation cover",
         "chat_create": "{{user}} created a conversation",
-        "chat_invite_user": "{{user}} invited {{user2}}"
+        "chat_invite_user": "{{user}} has come back",
+        "chat_invite_user2": "{{user}} invited {{user2}}"
     },
     "attachment": {
         "photo": "photo",

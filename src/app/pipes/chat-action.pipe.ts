@@ -18,7 +18,7 @@ export class ChatActionPipe {
             case "chat_create":
                 return "actions.chat_create";
             case "chat_invite_user":
-                return "actions.chat_invite_user";
+                return message.actionMid !== message.userId ? "actions.chat_invite_user2" : "actions.chat_invite_user";
             default:
                 return message.action;
         }

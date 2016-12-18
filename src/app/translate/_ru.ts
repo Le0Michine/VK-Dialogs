@@ -34,7 +34,8 @@ export const ru = {
         "chat_photo_remove": "{{user}} удалил(а) фото беседы",
         "chat_photo_update": "{{user}} добавил(а) фото беседы",
         "chat_create": "{{user}} создал(а) беседу",
-        "chat_invite_user": "{{user}} пригласил(а) {{user2}}"
+        "chat_invite_user": "пользователь {{user}} вернулся",
+        "chat_invite_user2": "{{user}} пригласил(а) {{user2}}"
     },
     "attachment": {
         "photo": "фото",
