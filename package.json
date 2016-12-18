@@ -7,7 +7,7 @@
   "license": "ISC",
   "scripts": {
     "build": "npm run build:dev",
-    "build:dev": "webpack --config config/webpack.dev.js --progress --profile --display-error-details --env.clean false",
+    "build:dev": "webpack --config config/webpack.dev.js --watch --progress --profile --display-error-details --env.clean false",
     "build:demo": "webpack --config config/webpack.demo.js --progress --profile --display-error-details",
     "build:prod": "npm run compile && webpack --config config/webpack.prod.js --progress --profile --display-error-details",
     "compile": "ngc -p tsconfig-aot.json",
