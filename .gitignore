@@ -9,6 +9,6 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.metadata.json
 src/ng2-translate.bak/
-npm-debug.log
+npm-debug.log*
 .vscode
 *.zip

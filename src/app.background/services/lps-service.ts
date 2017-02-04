@@ -191,7 +191,8 @@ export class LPSService {
     private getLongPollServer(): Observable<LongPollServerInfo> {
         console.log("lps requested");
         return this.vkservice.performSingleAPIRequest(this.getLpsApiMethod, { use_ssl: 1 })
-            .timeout(35000, new Error("35s timeout occured"));
+            // .timeout(35000, new Error("35s timeout occured"));
+            .timeout(35000);
     }
 
     private startLongPollRequest(server: LongPollServerInfo) {
@@ -205,7 +206,8 @@ export class LPSService {
         console.log(new Date(Date.now()) + " perform a long poll request: ", server);
         let uri: string = `http://${server.server}?act=a_check&key=${server.key}&ts=${server.ts}&wait=25&mode=2`;
         return Observable.merge(
-            this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json()),
+            // this.http.get(uri).timeout(35000, new Error("35s timeout occured")).map(response => response.json()),
+            this.http.get(uri).timeout(35000).map(response => response.json()),
             this.store.select(s => s.isAuthorized).filter(x => !x).concatMap(() => Observable.throw({
                 type: "Unauthorized",
                 message: "User logged off"
