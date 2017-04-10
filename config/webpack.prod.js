@@ -23,17 +23,11 @@ const webpackOptions = {
     cleanOutput: true
 };
 
-/**
- * Webpack configuration
- *
- * See: http://webpack.github.io/docs/configuration.html#cli
- */
 module.exports = (function(options) {
     return webpackMerge(commonConfig(webpackOptions), {
         output: {
             path: helpers.root('out'),
-            filename: "[name].js",
-            sourceMapFilename: '[name].map',
+            filename: "[name].js"
         },
         plugins: [
             new webpack.optimize.UglifyJsPlugin({

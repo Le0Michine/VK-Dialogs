@@ -1,0 +1,43 @@
+/* You can add global styles to this file, and also import other style files */
+@charset 'UTF8';
+
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap-sprockets";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
+
+@import './app/styles/_variables';
+@import './app/styles/_font-style';
+@import './app/styles/_color-scheme';
+@import './app/styles/_round-buttons';
+@import './app/styles/_emoji';
+@import './app/styles/_scrollbar';
+@import './app/styles/_loading-spinner';
+
+h1 {
+  color: #369;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 150%;
+}
+html, body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.styleless, #message_input > pre {
+    font: normal normal normal normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif !important;
+    color: black;
+    cursor: text;
+}
+
+img.styleless {
+    display: none !important;
+}
+
+.white-text {
+    color: white;
+}
+
+.centering-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

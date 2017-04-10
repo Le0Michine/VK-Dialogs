@@ -1,0 +1,76 @@
+$primary-color: #5281b9;
+$primary-color-dark: #42648b;
+$text-normal-color: #000;
+$text-normal-color-light: #fff;
+$text-secondary-color-light: lightgray;
+$text-secondary-color-dark: #777;
+
+.primary-color, .unread-marker, .unread-count {
+    color: white;
+    background-color: $primary-color;
+}
+
+.text-normal-color {
+    color: $text-normal-color;
+}
+
+.text-normal-color-light {
+    color: $text-normal-color-light;
+}
+
+.text-primary-color {
+    color: $primary-color;
+}
+
+.text-primary-color-dark {
+    color: $primary-color-dark;
+}
+
+.text-secondary-color-dark {
+    color: $text-secondary-color-dark;
+}
+
+.text-secondary-color-light {
+    color: $text-secondary-color-light;
+}
+
+.primary-color-text {
+    color: $primary-color;
+}
+
+.border-primary {
+    border-color: $primary-color;
+}
+
+.secondary-color, .unread {
+    color: black;
+    background-color: #c1def9;
+}
+
+.unread-text {
+    color: black;
+}
+
+.unread-marker {
+    top: 22px;
+    right: 0;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.unread-count {
+    top: 22px;
+    right: 0;
+    color: white;
+    height: 18px;
+    min-width: 18px;
+    width: fit-content;
+    text-align: center;
+    border-radius: 9px / 50%;
+    font: normal normal bold normal 12px / 18px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    padding: 0px 6px;
+    box-sizing: border-box;
+    position: absolute;
+}

@@ -1,0 +1,15 @@
+.body {
+    white-space: pre-line;
+    margin: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    // padding-bottom: 0;
+    position: relative;
+    z-index: 50;
+    background: none;
+    border: none;
+    // word-break: keep-all;
+    word-break: break-word;
+    color: inherit;
+    overflow: hidden;
+}

@@ -1,0 +1,30 @@
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    .spinner {
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        border-top: $spinner-border-style $spinner-border-color-light;
+        border-right: $spinner-border-style $spinner-border-color-light;
+        border-bottom: $spinner-border-style $spinner-border-color-light;
+        border-left: $spinner-border-style $spinner-border-color-dark;
+        transform: rotate(270deg);
+        animation: rotating 2s linear infinite;
+        opacity: 0.7;
+    }
+}

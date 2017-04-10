@@ -1,6 +1,7 @@
 coverage/
 node_modules/
 out/
+dist/
 /demo/
 compile/
 src/**/*.ngfactory.ts
@@ -12,3 +13,4 @@ src/ng2-translate.bak/
 npm-debug.log*
 .vscode
 *.zip
+.DS_Store

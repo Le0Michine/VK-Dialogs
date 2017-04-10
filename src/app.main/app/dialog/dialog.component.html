@@ -1,0 +1,62 @@
+<div #conversationsWrapper id="conversationWrapper"
+	[style.height]="topPanel | safeStyle"
+	(scroll)="onScroll(conversationsWrapper.scrollTop, conversationsWrapper.scrollHeight)"
+	>
+	<app-messages-history
+		[selectedPeerId]="selectedPeerId"
+		[isChat]="isChat"
+		[markAsRead]="markAsRead"
+	></app-messages-history>
+</div>
+<app-emoji
+	*ngIf="loadEmoji"
+	[toggle]="onEmojiToggle"
+	[emojiPanelPosition]="emojiPanel"
+	(onSelect)="onEmojiSelect($event)"></app-emoji>
+<div
+	id="attachedFiles"
+	class="ontop"
+	*ngIf="isAttachedFilesOpened"
+	[style.bottom]="emojiPanel | safeStyle"
+	(mouseleave)="hideAttachments()">
+	<app-popup-menu
+		[selectable]="false"
+		[deletable]="true"
+		[state]="isAttachedFilesOpened"
+		[menuItems]="attachments"
+		(onRemove)="onAttachedFileRemove($event)">
+	</app-popup-menu>
+</div>
+<div #inputWrapper id="inputWrapper"
+	[style.top]="bottomPanel | safeStyle"
+	(mouseleave)="stopResize([conversationsWrapper, inputWrapper], $event)"
+	>
+	<div id="inputControls" class="row"
+		(mouseup)="stopResize([conversationsWrapper, inputWrapper], $event)"
+	>
+		<div
+			class="dragBar material-icons primary-color-text"
+			(mousedown)="startResize([conversationsWrapper, inputWrapper], $event)"
+		>drag_handle</div>
+		<button class="btn btn-round primary-color pull-right centering-container" [class.disabled]="!sendEnabled" (click)="onSendMessageClick.emit()" title="{{ 'send' | translate }}"><i class="material-icons round-btn-icon">send</i></button>
+		<div class="emoji-smile-icon pull-right" (click)="toggleEmoji()"></div>
+		<label for="fileUpload" class="btn primary-color centering-container btn-round pull-right" [class.disabled]="attachmentsUploadingCount" (mouseenter)="showAttachments()"><i class="material-icons round-btn-icon">attach_file</i>
+			<!-- <div class="spinner btn-round"></div> -->
+			<div class="attachments-count" *ngIf="attachments.length">{{attachments.length}}</div>
+		</label>
+		<input multiple accept=".jpg,.png,.gif" id="fileUpload" type="file" (change)="uploadFiles($event)">
+		<button *ngIf="!autoReadMessages" [@flyInOut]="unreadMessages" class="btn btn-round primary-color pull-right centering-container" (click)="onMarkAsRead()" title="{{ 'mark_as_read' | translate }}"><i class="material-icons round-btn-icon">done_all</i></button>
+		<button [@flyInOut]="scrollToBottomAvailable" class="btn primary-color btn-round pull-right centering-container" (click)="scrollToBottom()"><i class="material-icons round-btn-icon">play_for_work</i></button>
+	</div>
+	<app-message-input
+		[peerId]="selectedPeerId"
+		[isChat]="isChat"
+		[selectEmoji]="selectEmoji"
+		[onSendMessageClick]="onSendMessageClick"
+		[newAttachment]="newAttachment"
+		[removeAttachment]="removeAttachment"
+		[attachmentUploaded]="attachmentUploaded"
+		(onMessageSent)="messageSent($event)"
+	></app-message-input>
+		<!--(onUserInput)="onInput.emit($event)"-->
+</div>

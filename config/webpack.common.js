@@ -4,21 +4,15 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const JsonReplacerPlugin = require('./json-replacer-plugin');
-const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 const path = require('path');
 const fs = require('fs');
-const ngtools = require('@ngtools/webpack');
 
 const helpers = require('./helpers');
 
 function versionReplacer(key, value) {
     if (key === "version") {
-        var numbers = value.split(".");
-        var major = numbers[0];
-        var minor = numbers[1];
-        var revision = numbers[2];
-        var build = Number(numbers[3]) + 1;
-        var version = major + "." + minor + "." + revision + "." + build;
+        const [major, minor, revision, build] = value.split(".").map(x => +x);
+        const version = `${major}.${minor}.${revision}.${build + 1}`;
         console.log("update version to ", version);
         return version;
     }
@@ -26,20 +20,16 @@ function versionReplacer(key, value) {
 }
 
 var filesToCopy = [
-    { from: '../lib/jquery.js', to: "./lib", toType: "dir" },
-    { from: '../node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./lib", toType: "dir" },
-    { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
+    // { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
+    { from: '../dist/app.main/MaterialIcons-Regular.*', to: "./", toType: "dir", flatten: true },
     { from: '../src/app.options', to: "./app.options", toType: "dir" },
-    { from: '../src/_locales', to: "./_locales", toType: "dir" },
-    { from: '../src/*.html', to: "./", toType: "dir", flatten: true },
-    { from: '../src/*.css', to: "./", toType: "dir", flatten: true },
-    { from: '../src/*.json', to: "./", toType: "dir", flatten: true }
+    { from: '../_locales', to: "./_locales", toType: "dir" },
+    { from: '../manifest.json', to: "./", toType: "dir", flatten: true }
 ];
 
 var filesToIgnore = [
   "*.svg",
-  "VK_icon.png",
-  // "doc_icons.png"
+  "VK_icon.png"
 ];
 
 var optionalPlugins = [];
@@ -67,88 +57,62 @@ module.exports = function(options) {
     name: "main",
     context: path.join(__dirname),
     entry: {
-          // "index":      "../src/index.ts",
-          "index":  "../src/index.aot.ts",
-          // "background": "../src/background.ts",
-          "background": "../src/background.aot.ts",
-          // "install":    "../src/install.ts",
-          "install":    "../src/install.aot.ts",
-          "globals": [
-            "zone.js",
-            "reflect-metadata"
-          ]
+      "index":  "../src/app.main.bundle.js",
+      "background":  "../src/app.background.bundle.js"
     },
     output: {
       path: helpers.root('out'),
       filename: "[name].js",
-      sourceMapFilename: '[name].map',
+      // sourceMapFilename: '[name].map',
     },
     resolve: {
       extensions: ['.ts', '.js'],
       modules: [helpers.root("src"), "node_modules"]
     },
     module: {
-      loaders: [ 
-        {
-          test: /\.ts$/,
-          loaders: [
-            '@angularclass/hmr-loader?pretty=' + !isProd + '&prod=' + isProd,
-            'awesome-typescript-loader',
-            'angular2-template-loader'
-          ],
-          exclude: [/\.(spec|e2e)\.ts$/]
-        },
-        {
-          test: /\.json$/,
-          loader: 'json-loader'
-        },
+      loaders: [
         { 
           test: /\.js$/,
           exclude: '/node_modules/',
           loader: 'babel-loader',
-          query: {
+          options: {
             presets: ['es2015'],
-            plugins: ['transform-decorators-legacy', 'transform-class-properties']
+            compact: false
           }
-        },
-        {
-          test: /\.html$/,
-          loaders: ['raw-loader'/*, 'html-minify-loader'*/]
-        },
-        {
-          test: /\.css$/,
-          loaders: [/* 'to-string-loader', 'css-loader' */ 'raw-loader']
-        },
-        {
-          test: /\.(jpg|png|gif)$/,
-          loader: 'file-loader'
         }
       ]
     },
     plugins: [
-      // new ngtools.AotPlugin({
-      //     tsConfigPath: './tsconfig-aot.json',
-      //     baseDir: path.resolve(__dirname , '..'),
-      //     entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
-      // }),
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false
         }
       ),
       new JsonReplacerPlugin({
-        inputFile: "src/manifest.json",
+        inputFile: "manifest.json",
         replacers: [ versionReplacer ]
       }),
-      new ForkCheckerPlugin(),
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
         helpers.root('src') // location of your src
       ),
+      new HtmlWebpackPlugin({
+          title: 'VK-Dialogs',
+          chunks: ['index'],
+          filename: 'index.html',
+          template: '../src/app.main.ejs'
+      }),
+      new HtmlWebpackPlugin({
+          title: 'VK-Dialogs-background',
+          chunks: ['background'],
+          filename: 'background.html',
+          template: '../src/app.background.ejs'
+      }),
       new webpack.DefinePlugin({
-        'process.env.PRODUCTION': JSON.stringify(isProd)
-      }),  
+        'process.env.PRODUCTION': JSON.stringify('production'),
+        'process.env.NODE_ENV': JSON.stringify('production')
+      }),
       ...optionalPlugins
     ]
   }

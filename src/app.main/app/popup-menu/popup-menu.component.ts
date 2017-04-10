@@ -1,0 +1,50 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { animate, trigger, style, keyframes, state, transition } from '@angular/animations';
+
+import { MenuItem } from '../datamodels';
+
+@Component({
+    selector: 'app-popup-menu',
+    templateUrl: 'popup-menu.component.html',
+    styleUrls: [ 'popup-menu.component.scss' ],
+    animations: [
+        trigger('openClose', [
+            state('in', style({ 'max-height': '500px', display: 'block', opacity: 1 })),
+            transition('void => *', animate(400, keyframes([
+                style({ transform: 'max-height', 'max-height': 0, offset: 0 }),
+                style({ transform: 'max-height', 'max-height': '500px', offset: 1})
+            ]))),
+            transition('* => void', animate(400, keyframes([
+                style({ transform: 'max-height', 'max-height': '500px', offset: 0}),
+                style({ transform: 'max-height', 'max-height': 0, offset: 1 })
+            ])))
+        ])
+    ]
+})
+export class PopupMenuComponent {
+    _state = 'out';
+
+    @Output() onSelect: EventEmitter<number> = new EventEmitter();
+    @Output() onRemove: EventEmitter<number> = new EventEmitter();
+
+    @Input() menuItems: MenuItem[];
+    @Input() deletable: boolean;
+    @Input() selectable: boolean;
+
+    @Input('state')
+    set state(value) {
+        this._state = Boolean(value) ? 'in' : 'out';
+    }
+
+    get state(): string {
+        return this._state;
+    }
+
+    select(value: number): void {
+        this.onSelect.emit(value);
+    }
+
+    remove(value: number): void {
+        this.onRemove.emit(value);
+    }
+}

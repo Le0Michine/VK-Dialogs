@@ -1,0 +1,7 @@
+<div id="load_old" (click)="loadOldMessages()" *ngIf="!messagesCount || messagesCount > history.length">
+	<i class="material-icons">history</i>
+</div>
+<div class="chat_action top-buffer" *ngIf="messagesCount && messagesCount <= history.length">
+	<span>{{'conversation_start' | translate}}</span>
+</div>
+<app-messages-list [historyToShow]="historyToShow" [participants]="participants"></app-messages-list>
