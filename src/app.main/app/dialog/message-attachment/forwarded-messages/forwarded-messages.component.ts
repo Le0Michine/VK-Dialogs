@@ -1,5 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
+import { UserInfo } from '../../../datamodels';
+
 @Component({
     selector: 'app-forwarded-messages',
     templateUrl: 'forwarded-messages.component.html',
@@ -8,4 +10,5 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 })
 export class ForwardedMessagesComponent {
     @Input() messages: any;
+    @Input() users: {[id: number]: UserInfo} = {};
 }

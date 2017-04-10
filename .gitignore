@@ -1,7 +1,11 @@
 coverage/
 node_modules/
 out/
-dist/
+dist/app.main/
+dist/app.background/
+dist/app.options/
+dist/icons/
+dist/_locales/
 /demo/
 compile/
 src/**/*.ngfactory.ts

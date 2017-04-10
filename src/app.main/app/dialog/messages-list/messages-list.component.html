@@ -20,7 +20,7 @@
 						</div>
 						<div *ngIf="item.action" class="chat_action text-secondary-color-dark">{{ item | chatAction:getUserSex(item.fromId) | translate:{"user": getUserInfo(message.fromId) | userFirstName, "user2": getUserInfo(item.actionMid) | userFirstName} }}</div>
 						<div class="message-attachment text-primary-color" *ngFor="let attachment of item.attachments">
-							<app-messages-attachment [attachment]="attachment" [isRead]="message.isRead"></app-messages-attachment>
+							<app-messages-attachment [attachment]="attachment" [isRead]="message.isRead" [users]="participants"></app-messages-attachment>
 							<div *ngIf="!attachment.type">
 								{{attachment}}
 							</div>

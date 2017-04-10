@@ -5,4 +5,4 @@
 	[doc]="attachment"
 	[isRead]="isRead"
 ></app-messages-attachment-doc>
-<app-forwarded-messages *ngIf="attachment.fwd" [messages]="attachment.fwd"></app-forwarded-messages>
+<app-forwarded-messages *ngIf="attachment.fwd" [messages]="attachment.fwd" [users]="users"></app-forwarded-messages>

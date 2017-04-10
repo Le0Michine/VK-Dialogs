@@ -8,6 +8,8 @@
     "build": "ng build",
     "build.main": "ng build -a main --aot",
     "build.back": "ng build -a background --aot",
+    "build.dev.0": "ng build -a 0",
+    "build.dev.1": "ng build -a 1",
     "build.aot.0": "ng build -a 0 --aot",
     "build.aot.1": "ng build -a 1 --aot",
     "build.prod.0": "ng build -a 0 --aot --prod --output-hashing none --extract-css false",
