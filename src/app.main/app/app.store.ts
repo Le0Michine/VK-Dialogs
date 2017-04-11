@@ -4,9 +4,9 @@ import { RouterState, routerReducer } from '@ngrx/router-store';
 import { storeLogger } from 'ngrx-store-logger';
 
 import { environment } from '../../environments/environment';
-import { BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo, InputMessageListInfo } from './datamodels';
+import { DialogListFilterInfo, BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo, InputMessageListInfo } from './datamodels';
 // tslint:disable-next-line:max-line-length
-import { breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer, inputMessageReducer } from './reducers';
+import { dialogListFilterReducer, breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer, inputMessageReducer } from './reducers';
 
 export const appState = {
     breadcrumbs: breadcrumbReducer,
@@ -16,7 +16,8 @@ export const appState = {
     history: historyReducer,
     currentConversationId: currentConversationIdReducer,
     router: routerReducer,
-    inputMessages: inputMessageReducer
+    inputMessages: inputMessageReducer,
+    dialogsFilter: dialogListFilterReducer
 };
 
 export function rootReducer (state: AppState, action: Action) {
@@ -30,7 +31,7 @@ export function rootReducer (state: AppState, action: Action) {
   }
 }
 
-export class AppState {
+export interface AppState {
     breadcrumbs: BreadcrumbItem[];
     users: UserListInfo;
     dialogs: DialogListInfo;
@@ -39,9 +40,10 @@ export class AppState {
     currentConversationId: number;
     router: RouterState;
     inputMessages: InputMessageListInfo;
+    dialogsFilter: DialogListFilterInfo;
 }
 
-export const INITIAL_APP_STATE = {
+export const INITIAL_APP_STATE: AppState = {
     breadcrumbs: [],
     users: { userIds: [], users: {} } as UserListInfo,
     dialogs: { dialogs: [] } as DialogListInfo,
@@ -49,7 +51,8 @@ export const INITIAL_APP_STATE = {
     history: { conversationIds: [], history: {} } as HistoryListInfo,
     currentConversationId: -1,
     router: { path: '/dialogs' },
-    inputMessages: { conversationIds: [], messages: {} } as InputMessageListInfo
+    inputMessages: { conversationIds: [], messages: {} } as InputMessageListInfo,
+    dialogsFilter: {} as DialogListFilterInfo
 };
 
 export function stateFactory() {

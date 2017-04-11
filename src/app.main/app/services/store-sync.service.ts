@@ -6,10 +6,10 @@ import { Store } from '@ngrx/store';
 import { VKService } from './vk.service';
 import { ChromeAPIService } from './chrome-api.service';
 // tslint:disable-next-line:max-line-length
-import { UserInfo, UserListInfo, ChatListInfo, HistoryListInfo, DialogListInfo, InputMessageListInfo, InputMessageState } from '../datamodels';
+import { DialogListFilterInfo, UserInfo, UserListInfo, ChatListInfo, HistoryListInfo, DialogListInfo, InputMessageListInfo, InputMessageState } from '../datamodels';
 
 import { AppState, HistoryActions, ChatListActions, DialogListActions, UserListActions } from '../app.store';
-import { replaceMessage } from '../actions';
+import { replaceMessage, replaceDialogListFilter } from '../actions';
 
 @Injectable()
 export class StoreSyncService {
@@ -44,12 +44,16 @@ export class StoreSyncService {
             .subscribe((x: InputMessageListInfo) =>
                 this.store.dispatch(replaceMessage(x))
             );
+        this.chromeapi.subscribeOnMessage('dialog_list_filter').map(x => x.data)
+            .subscribe((x: DialogListFilterInfo) =>
+                this.store.dispatch(replaceDialogListFilter(x))
+            );
 
         this.initialized = true;
     }
 
-    subscribeOnHistory(conversatioId: number, isChat: boolean): Subscription {
-        return this.chromeapi.subscribeOnMessage(`history_update_${conversatioId}_${isChat}`)
+    subscribeOnHistory(peerId: number, isChat: boolean): Subscription {
+        return this.chromeapi.subscribeOnMessage(`history_update_${peerId}_${isChat}`)
             .subscribe(() => {});
     }
 }

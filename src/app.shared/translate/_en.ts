@@ -19,7 +19,9 @@ export const en = {
         'settings': 'Options',
         'openInVk': 'Go to VK',
         'openInWindow': 'Open in window',
-        'logOff': 'Log off'
+        'logOff': 'Log off',
+        'showAllDialogs': 'All dialogs',
+        'showUnreadDialogs': 'Unread dialogs'
     },
     'setup': {
         // tslint:disable-next-line:max-line-length

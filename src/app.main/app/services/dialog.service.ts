@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { VKService } from './vk.service';
-import { SingleMessageInfo, DialogInfo, DialogListInfo, ChatInfo, DialogShortInfo, HistoryInfo, InputMessageInfo } from '../datamodels';
+import { DialogListFilterInfo, SingleMessageInfo, DialogInfo, DialogListInfo, ChatInfo, DialogShortInfo, HistoryInfo, InputMessageInfo } from '../datamodels';
 import { Channels } from '../../../app.shared/channels';
 import { ChromeAPIService } from './chrome-api.service';
 import { AppState, HistoryActions } from '../app.store';
@@ -47,6 +47,10 @@ export class DialogService {
             attachments: message.attachments
         } as InputMessageInfo;
         this.chromeapi.PostPortMessage({ name: 'type_message', data: inputMessageInfo });
+    }
+
+    setDialogListFilter(filter: DialogListFilterInfo) {
+        this.chromeapi.PostPortMessage({ name: 'set_dialog_list_filter', data: filter });
     }
 
     searchDialog(searchTerm: string): Observable<DialogShortInfo[]> {

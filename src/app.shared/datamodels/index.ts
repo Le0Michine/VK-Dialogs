@@ -6,6 +6,7 @@ export * from './history.info';
 export * from './history-list.info';
 export * from './dialog.info';
 export * from './dialog-list.info';
+export * from './dialog-list-filter.info';
 export * from './dialog-short.info';
 export * from './single-message.info';
 export * from './input-message.info';

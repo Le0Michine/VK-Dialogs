@@ -9,7 +9,7 @@ import { OptionsService } from './services';
 import { DialogService } from './services';
 import { StoreSyncService } from './services';
 import { MenuItem } from './datamodels';
-import { DialogShortInfo } from './datamodels';
+import { DialogShortInfo, DialogListFilterInfo } from './datamodels';
 import { AppState } from './app.store';
 
 const slideAnimationLength = 200;
@@ -31,12 +31,22 @@ export class AppComponent implements AfterViewInit, OnInit {
     windowWidth = '300px';
     windowHeight = '400px';
 
-    popupMenuItems: MenuItem[] = [
+    private dialogListFilter: DialogListFilterInfo = {} as DialogListFilterInfo;
+    private _popupMenuItems: MenuItem[] = [
         {name: 'settings', id: 1, termId: 'menuItems.settings'},
         {name: 'openInVk', id: 2, termId: 'menuItems.openInVk'},
         {name: 'openInWindow', id: 3, termId: 'menuItems.openInWindow'},
         {name: 'logOff', id: 4, termId: 'menuItems.logOff'}
     ];
+
+    get popupMenuItems(): MenuItem[] {
+        return [
+            ...this._popupMenuItems,
+            this.dialogListFilter.unread
+                ? { name: 'filterUnreadDialogs', id: 5, termId: 'menuItems.showAllDialogs'}
+                : { name: 'filterUnreadDialogs', id: 5, termId: 'menuItems.showUnreadDialogs'}
+        ];
+    }
 
     foundDialogs: DialogShortInfo[] = [];
 
@@ -76,6 +86,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.chromeapi.OnPortMessage('unread_count').map(x => x.data as number).subscribe(n => {
             this.unreadCount = n;
         });
+        this.store.select(s => s.dialogsFilter).subscribe(f => this.dialogListFilter = f);
     }
 
     onDialogSelect(dialog: DialogShortInfo) {
@@ -155,6 +166,9 @@ export class AppComponent implements AfterViewInit, OnInit {
                 break;
             case 4: // "logOff"
                 this.logOff();
+                break;
+            case 5: // "show all/unread"
+                this.dialogs.setDialogListFilter({ unread: !this.dialogListFilter.unread } as DialogListFilterInfo);
                 break;
             default:
                 console.error('wrong menu item');

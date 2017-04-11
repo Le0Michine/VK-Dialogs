@@ -61,6 +61,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
         this.chromeapi.registerObservable(this.store.select(s => s.chats).map(x => { return { name: 'chats_update', data: x }; }));
         this.chromeapi.registerObservable(this.store.select(s => s.dialogs).map(x => { return { name: 'dialogs_update', data: x }; }));
+        this.chromeapi.registerObservable(this.store.select(s => s.dialogsFilter).map(x => { return { name: 'dialog_list_filter', data: x }; }));
         this.chromeapi.registerObservable(this.store.select(s => s.history).map(x => { return { name: 'history_update', data: x }; }));
         this.chromeapi.registerObservable(this.store.select(s => s.users).map(x => { return { name: 'users_update', data: x }; }));
         this.chromeapi.registerObservable(this.store.select(s => s.inputMessages).map(x => { return { name: 'input_message', data: x }; }));

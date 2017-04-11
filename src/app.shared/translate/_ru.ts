@@ -19,7 +19,9 @@ export const ru = {
         'settings': 'Настройки',
         'openInVk': 'Перейти в ВК',
         'openInWindow': 'Открыть в окне',
-        'logOff': 'Выйти из ВК'
+        'logOff': 'Выйти из ВК',
+        'showAllDialogs': 'Все диалоги',
+        'showUnreadDialogs': 'Непрочитанные'
     },
     'setup': {
         // tslint:disable-next-line:max-line-length

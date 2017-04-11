@@ -1,5 +1,5 @@
 export * from './chrome-api-service';
-export * from './dialogs-service';
+export * from './dialogs.service';
 export * from './lps-service';
 export * from './notification-service';
 export * from './options.service';

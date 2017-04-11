@@ -3,14 +3,14 @@ import { Store } from '@ngrx/store';
 import { Observable, Observer, Subject } from 'rxjs/Rx';
 import * as _ from 'lodash';
 
-import { UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo, InputMessageInfo } from '../datamodels';
+import { DialogListFilterInfo, UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo, InputMessageInfo } from '../datamodels';
 import { DialogShortInfo, HistoryListInfo, InputMessageState } from '../datamodels';
 import { VKService } from './vk-service';
 import { UserService } from './user-service';
 import { LPSService } from './lps-service';
 import { ChromeAPIService } from './chrome-api-service';
 import { Channels } from '../../../app.shared/channels';
-import { sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from '../actions';
+import { updateDialogListFilter, sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from '../actions';
 import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundState } from '../app-background.store';
 import { VKUtils } from '../vk-utils';
 
@@ -26,6 +26,7 @@ export class DialogService {
 
     private openedConversations: any[] = [];
     private initialized = false;
+    private dialogListFilter: DialogListFilterInfo = {} as DialogListFilterInfo;
 
     private dialogsCount = 20;
 
@@ -142,6 +143,17 @@ export class DialogService {
             .subscribe((message: any) => {
                 this.store.dispatch(typeMessage(message));
             });
+
+        this.chromeapi.OnPortMessage('set_dialog_list_filter')
+            .map(m => m.data)
+            .subscribe((f: DialogListFilterInfo) => {
+                this.store.dispatch(updateDialogListFilter(f));
+            });
+
+        this.store.select(s => s.dialogsFilter).subscribe(f => {
+            this.dialogListFilter = f;
+            this.getDialogs(20, null, f.unread);
+        })
     }
 
     monitorCurrentMessage(): void {
@@ -241,17 +253,23 @@ export class DialogService {
 
     }
 
-    getDialogs(count: number = 20, fromId: number = null): void {
+    getDialogs(count: number = 20, fromId: number = null, getUnread: boolean = false): void {
         console.log('dialogs are requested');
         const parameters = { count };
         if (fromId) {
             parameters['start_message_id'] = fromId;
         }
+        parameters['unread'] = this.dialogListFilter.unread ? 1 : 0;
+        parameters['unanswered'] = this.dialogListFilter.unanswered ? 1 : 0;
+        parameters['important'] = this.dialogListFilter.important ? 1 : 0;
         this.vkservice.performAPIRequestsBatch(
             this.getDialogsApiMethod,
             parameters
         ).map(json => this.toDialogsInfo(json))
         .subscribe(dialogList => {
+            if (this.dialogListFilter.unread) {
+                dialogList.unread = dialogList.count;
+            }
             this.store.dispatch({ type: DialogListActions.DIALOGS_UPDATED, payload: dialogList });
             this.loadDialogUsers(dialogList);
         });
