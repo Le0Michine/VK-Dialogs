@@ -43,6 +43,7 @@ import { StateResolverService } from './services';
 import { PIPES } from './pipes';
 import { AuthorizationGuard } from './guards';
 import { rootReducer, AppState, stateFactory } from './app.store';
+import { DialogListFilterComponent } from './dialog-list-filter/dialog-list-filter.component';
 
 @NgModule({
     imports: [
@@ -75,6 +76,7 @@ import { rootReducer, AppState, stateFactory } from './app.store';
         UserAvatarComponent,
         MessageTitleComponent,
         MessageBodyComponent,
+        DialogListFilterComponent,
         ...PIPES
     ],
     bootstrap: [

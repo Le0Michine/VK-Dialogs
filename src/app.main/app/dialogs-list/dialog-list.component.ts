@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { go } from '@ngrx/router-store';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '../../../app.shared/translate';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
-import { DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo, UserSex } from '../datamodels';
+import { DialogShortInfo, DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo, UserSex } from '../datamodels';
 import { VKService, DialogService, ChromeAPIService } from '../services';
 import { VKConsts } from '../../../app.shared/datamodels';
 import { AppState } from '../app.store';
@@ -29,7 +29,19 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
     dialogs: DialogInfo[] = [];
 
-    subscriptions: Subscription[] = [];
+    private subscriptions: Subscription[] = [];
+
+    private minTop = 6;
+    private maxTop = 45;
+    private lastScrollPosition = 0;
+    private currentTop = 45;
+
+    public searchFocus: Subject<boolean> = new Subject();
+    public foundDialogs: DialogShortInfo[] = [];
+
+    public get containerHeight(): string {
+        return `calc(100% - ${this.currentTop}px)`;
+    }
 
     constructor(
         private title: Title,
@@ -40,6 +52,19 @@ export class DialogListComponent implements OnInit, OnDestroy {
         private store: Store<AppState>,
         private translate: TranslateService
     ) { }
+
+    onDialogSelect(dialog: DialogShortInfo) {
+        const link = ['dialogs', dialog.type === 'profile' ? 'dialog' : 'chat', dialog.id, dialog.title];
+        this.store.dispatch(go(link));
+    }
+
+    keyDown(event: KeyboardEvent) {
+        if (event.ctrlKey && event.keyCode === 70) { // ctrl + f
+            event.preventDefault();
+            event.stopPropagation();
+            this.searchFocus.next(true);
+        }
+    }
 
     gotoDialog(dialog: SingleMessageInfo) {
         let link: string[];
@@ -151,7 +176,25 @@ export class DialogListComponent implements OnInit, OnDestroy {
         return (this.users[uid] || { sex: UserSex.undefined }).sex;
     }
 
-    getDialogs(): DialogView[] {
+    public onScroll(event): void {
+        const scrollDelta = this.lastScrollPosition - event.target.scrollTop;
+        this.lastScrollPosition = event.target.scrollTop;
+        this.currentTop = Math.max(this.minTop, Math.min(this.maxTop, this.currentTop + scrollDelta));
+    }
+
+    public search(searchTerm: string): void {
+        // if (!searchTerm) {
+        //     this.foundDialogs = [];
+        //     return;
+        // }
+        this.subscriptions.push(this.dialogService.searchDialog(searchTerm).subscribe(result => {
+            console.log('got search result', result);
+            this.foundDialogs = result;
+            this.changeDetector.detectChanges();
+        }));
+    }
+
+    public getDialogs(): DialogView[] {
         if (!this.users) {
             console.log('not enough data');
             return [];

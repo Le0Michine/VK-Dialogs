@@ -134,7 +134,7 @@ export class DialogComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.scrollHeight += 1000000;
                     }
 
-                    this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
+                    this.subscriptions.push(this.chromeapi.isCurrentWindowMinimized().subscribe(minimized => {
                         if (!minimized && this.autoReadMessages) {
                             this.onMarkAsRead();
                         } else if (minimized && this.autoReadMessages) {
@@ -157,7 +157,7 @@ export class DialogComponent implements OnInit, OnDestroy, AfterViewInit {
                                     }
                                 });
                         }
-                    });
+                    }));
                 })
             );
 

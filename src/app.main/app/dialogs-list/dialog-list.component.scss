@@ -28,10 +28,21 @@ li:hover {
     border-radius: 4px 0 0 4px;
 }
 
+.dialog-list-container {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 45px);
+    bottom: 0;
+}
+
+.dialog-list-filter-container {
+    height: 39px;
+}
+
 .dialogs-list {
     box-sizing: border-box;
-    height: calc(100% - 45px);
     width: 100%;
+    height: calc(100% - 39px);
     bottom: 0;
     position: absolute;
     overflow-y: auto;

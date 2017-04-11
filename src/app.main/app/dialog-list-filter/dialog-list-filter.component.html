@@ -1,0 +1,37 @@
+<div class="filters-container">
+  <div class="dialogs-search-container">
+    <!--<app-search-autocomplete class="inline"></app-search-autocomplete>-->
+    <span class="dialogs-search-icon material-icons">search</span>
+    <input
+      #searchInput
+      type="text"
+      class="dialogs-search"
+      id="searchInput"
+      name="searchInput"
+      [placeholder]="placeholder | translate"
+      autocomplete="off"
+      [(ngModel)]="input"
+      (blur)="blur()"
+      (focus)="setFocus()"
+      (keydown)="onKeyPress($event)"
+    >
+  </div>
+  <div>
+    <button class="btn-filter material-icons">filter_list</button>
+  </div>
+</div>
+
+<div *ngIf="showItems">
+  <ul @dropdown *ngIf="items?.length; else empty" class="text-normal-color">
+      <li *ngFor="let item of items; let i = index;"
+          class="text-normal-color"
+          [class.selected]="i === _selectedItem"
+          (mousedown)="select(item)"
+          (mouseover)="onHover(i)"
+      >{{item.title}}</li>
+  </ul>
+</div>
+
+<ng-template #empty>
+  <div class="empty-result text-secondary-color-dark">No items</div>
+</ng-template>
