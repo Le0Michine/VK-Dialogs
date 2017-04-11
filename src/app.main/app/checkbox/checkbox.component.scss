@@ -53,12 +53,10 @@
     display: table;
     width: 6.66667px;
     height: 13.33333px;
-    border-width: 2px;
-    border-style: solid;
-    border-top: 0;
-    border-left: 0;
     content: "";
-    border-color: rgba(255,255,255,0.87);
+    border: 2px solid rgba(255,255,255,0.87);
+    border-left: none;
+    border-top: none;
 }
 
 .checkbox-material-label {
