@@ -1,6 +1,7 @@
 export class BreadcrumbItem {
-    backArrow: boolean;
     title: string;
-    navigationLink: string;
-    href: string;
+    backArrow?: boolean;
+    navigationLink?: string;
+    href?: string;
+    translatable?: boolean;
 }

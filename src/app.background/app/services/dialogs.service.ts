@@ -10,7 +10,7 @@ import { UserService } from './user-service';
 import { LPSService } from './lps-service';
 import { ChromeAPIService } from './chrome-api-service';
 import { Channels } from '../../../app.shared/channels';
-import { updateDialogListFilter, sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from '../actions';
+import { updateDialogList, updateDialogListUnread, updateDialogListFilter, sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from '../actions';
 import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundState } from '../app-background.store';
 import { VKUtils } from '../vk-utils';
 
@@ -269,8 +269,10 @@ export class DialogService {
         .subscribe(dialogList => {
             if (this.dialogListFilter.unread) {
                 dialogList.unread = dialogList.count;
+                this.store.dispatch(updateDialogListUnread(dialogList));
+            } else {
+                this.store.dispatch(updateDialogList(dialogList));
             }
-            this.store.dispatch({ type: DialogListActions.DIALOGS_UPDATED, payload: dialogList });
             this.loadDialogUsers(dialogList);
         });
     }

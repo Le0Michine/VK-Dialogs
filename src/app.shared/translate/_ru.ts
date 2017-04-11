@@ -15,6 +15,10 @@ export const ru = {
     'options_btn': 'Открыть параметры',
     'type_text_here': 'Вводите сообщение здесь…',
     'empty': '',
+    'noUnreadDialogs': 'Нет непрочитанных диалогов',
+    'dialogFilter': {
+        'onlyUnread': 'Непрочитанные'
+    },
     'menuItems': {
         'settings': 'Настройки',
         'openInVk': 'Перейти в ВК',

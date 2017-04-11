@@ -15,6 +15,10 @@ export const en = {
     'options_btn': 'Open extension options',
     'type_text_here': 'Type your text here…',
     'empty': '',
+    'noUnreadDialogs': 'No unread dialogs',
+    'dialogFilter': {
+        'onlyUnread': 'Only unread'
+    },
     'menuItems': {
         'settings': 'Options',
         'openInVk': 'Go to VK',

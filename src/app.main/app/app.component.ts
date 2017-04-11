@@ -22,8 +22,6 @@ const rotateAnimationLength = 200;
 })
 export class AppComponent implements AfterViewInit, OnInit {
     @ViewChild('main') mainDiv: ElementRef;
-    showSearchBar = true;
-    searchFocus: Subject<boolean> = new Subject();
     title = '';
     unreadCount = 6;
     isPopupMenuOpened = false;
@@ -40,24 +38,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     ];
 
     get popupMenuItems(): MenuItem[] {
-        return [
-            ...this._popupMenuItems,
-            this.dialogListFilter.unread
-                ? { name: 'filterUnreadDialogs', id: 5, termId: 'menuItems.showAllDialogs'}
-                : { name: 'filterUnreadDialogs', id: 5, termId: 'menuItems.showUnreadDialogs'}
-        ];
+        return [...this._popupMenuItems];
     }
 
     foundDialogs: DialogShortInfo[] = [];
 
     constructor(
+        private ref: ChangeDetectorRef,
+        private renderer: Renderer,
         private store: Store<AppState>,
         private translate: TranslateService,
-        private ref: ChangeDetectorRef,
         private chromeapi: ChromeAPIService,
         private dialogs: DialogService,
         private settings: OptionsService,
-        private renderer: Renderer,
         private storeSync: StoreSyncService
     ) {
         translate.setDefaultLang('en');
@@ -79,9 +72,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             this.windowWidth = size.w + 'px';
             this.windowHeight = size.h + 'px';
             this.ref.detectChanges();
-        });
-        this.store.select(s => s.router).map(r => r.path).subscribe((path) => {
-            this.routeChanged(path);
         });
         this.chromeapi.OnPortMessage('unread_count').map(x => x.data as number).subscribe(n => {
             this.unreadCount = n;
@@ -109,11 +99,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     openMenu(event: MouseEvent) {
         event.stopPropagation();
         this.isPopupMenuOpened = !this.isPopupMenuOpened;
-    }
-
-    routeChanged(pathURI: string): void {
-        this.showSearchBar = pathURI === '/dialogs';
-        this.ref.detectChanges();
     }
 
     logOff() {
@@ -167,9 +152,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             case 4: // "logOff"
                 this.logOff();
                 break;
-            case 5: // "show all/unread"
-                this.dialogs.setDialogListFilter({ unread: !this.dialogListFilter.unread } as DialogListFilterInfo);
-                break;
             default:
                 console.error('wrong menu item');
         }
@@ -178,14 +160,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     closePopupMenu() {
         if (this.isPopupMenuOpened) {
             this.isPopupMenuOpened = false;
-        }
-    }
-
-    keyDown(event: KeyboardEvent) {
-        if (event.ctrlKey && event.keyCode === 70) { // ctrl + f
-            event.preventDefault();
-            event.stopPropagation();
-            this.searchFocus.next(true);
         }
     }
 }

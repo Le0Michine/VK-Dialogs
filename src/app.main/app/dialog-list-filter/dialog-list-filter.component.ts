@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, Input, Output, EventEmitter, ElementRef, 
 import { animate, trigger, style, keyframes, state, transition } from '@angular/animations';
 import { Observable } from 'rxjs/Rx';
 
+import { fadeInOut } from '../animations';
+
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
 const ENTER = 13;
@@ -44,7 +46,8 @@ const ENTER = 13;
             transition(':leave', [
                 animate('200ms ease-out', style({ 'opacity': 0 }))
             ])
-        ])
+        ]),
+        fadeInOut
     ]
 })
 export class DialogListFilterComponent implements OnInit, AfterViewInit {
@@ -52,12 +55,15 @@ export class DialogListFilterComponent implements OnInit, AfterViewInit {
     @ViewChild('searchInput') searchField: ElementRef;
     @Input() items;
     @Input() focus: Observable<boolean>;
+    @Input() filterUnread: boolean;
+    @Output() filterUnreadChange: EventEmitter<boolean> = new EventEmitter();
     @Output() onInput = new EventEmitter();
     @Output() onSelect = new EventEmitter();
 
     focusState = 'out';
     placeholder = '';
-    showItems = false;
+    public showItems = false;
+    public showFilters = false;
     private _input: string;
     public _selectedItem: number = -1;
 
@@ -129,5 +135,9 @@ export class DialogListFilterComponent implements OnInit, AfterViewInit {
     onHover(i: number) {
         this._selectedItem = i;
         this.ref.detectChanges();
+    }
+
+    public onFilterUnreadChange(value: boolean): void {
+        this.filterUnreadChange.emit(value);
     }
 }

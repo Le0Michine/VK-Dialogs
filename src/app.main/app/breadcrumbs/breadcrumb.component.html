@@ -7,6 +7,9 @@
         <a *ngIf="item.navigationLink" routerLink="{{item.navigationLink}}"></a>
         <a *ngIf="item.href" [href]="item.href" target="_blank"></a>
         <div *ngIf="item.leftArrow" class="material-icons pull-left">chevron_left</div>
-        <h1 class="breadcrumb-item-title primary-color">{{item.title}}</h1><i *ngIf="!last" class="material-icons">chevron_right</i>
+        <h1 class="breadcrumb-item-title primary-color"><span *ngIf="!item.translatable; else translatableItem">{{item.title}}</span></h1><i *ngIf="!last" class="material-icons">chevron_right</i>
+        <ng-template #translatableItem>
+            {{item.title | translate}}
+        </ng-template>
     </div>
 </div>

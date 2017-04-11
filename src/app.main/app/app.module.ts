@@ -30,7 +30,6 @@ import { LoginComponent } from './login/login.component';
 import { EmojiComponent } from './emoji/emoji.component';
 import { PopupMenuComponent } from './popup-menu/popup-menu.component';
 import { BreadcrumbComponent } from './breadcrumbs/breadcrumb.component';
-import { SearchComponent } from './search/search.component';
 import { routes } from './app.routing';
 
 import { DialogService } from './services/dialog.service';
@@ -44,6 +43,7 @@ import { PIPES } from './pipes';
 import { AuthorizationGuard } from './guards';
 import { rootReducer, AppState, stateFactory } from './app.store';
 import { DialogListFilterComponent } from './dialog-list-filter/dialog-list-filter.component';
+import { CheckboxComponent } from './checkbox/checkbox.component';
 
 @NgModule({
     imports: [
@@ -66,7 +66,6 @@ import { DialogListFilterComponent } from './dialog-list-filter/dialog-list-filt
         LoginComponent,
         EmojiComponent,
         PopupMenuComponent,
-        SearchComponent,
         BreadcrumbComponent,
         AttachmentComponent,
         AttachmentPhotoComponent,
@@ -77,7 +76,8 @@ import { DialogListFilterComponent } from './dialog-list-filter/dialog-list-filt
         MessageTitleComponent,
         MessageBodyComponent,
         DialogListFilterComponent,
-        ...PIPES
+        ...PIPES,
+        CheckboxComponent
     ],
     bootstrap: [
         AppComponent

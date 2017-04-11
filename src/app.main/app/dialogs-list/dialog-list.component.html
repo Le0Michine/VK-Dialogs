@@ -2,12 +2,15 @@
 	<div class="dialog-list-filter-container">
 		<app-dialog-list-filter
 			[items]="foundDialogs"
+			[filterUnread]="dialogListFilters.unread"
+			(filterUnreadChange)="onFilterUnreadChange($event)"
 			(onInput)="search($event)"
 			(onSelect)="onDialogSelect($event)"
 			[focus]="searchFocus"
 		></app-dialog-list-filter>
 	</div>
 	<ul class="dialogs-list" (scroll)="onScroll($event)">
+		<li *ngIf="!dialogsToShow.length" class="dialogs-list__empty-warning">{{ 'noUnreadDialogs' | translate }}</li>
 		<li *ngFor="let dialog of dialogsToShow; let isFirst=first" (click)="gotoDialog(dialog.message)" class="dialog-li" id="{{ dialog.message.conversationId }}">
 			<div class="dialog-div" [class.borderless]="isFirst">
 				<div class="user-avatar-div">

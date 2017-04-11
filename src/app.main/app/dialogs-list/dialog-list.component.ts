@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { TranslateService } from '../../../app.shared/translate';
 import { Subscription, Subject } from 'rxjs/Rx';
 
-import { DialogShortInfo, DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo, UserSex } from '../datamodels';
+import { DialogListFilterInfo, DialogShortInfo, DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo, UserSex } from '../datamodels';
 import { VKService, DialogService, ChromeAPIService } from '../services';
 import { VKConsts } from '../../../app.shared/datamodels';
 import { AppState } from '../app.store';
@@ -36,6 +36,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
     private lastScrollPosition = 0;
     private currentTop = 45;
 
+    public dialogListFilters: DialogListFilterInfo = {} as DialogListFilterInfo;
     public searchFocus: Subject<boolean> = new Subject();
     public foundDialogs: DialogShortInfo[] = [];
 
@@ -98,7 +99,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
         this.dialogService.init();
 
         this.translate.get('dialogs').subscribe(value => {
-            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [] });
+            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{title: 'dialogs', href: 'https://vk.com/im', translatable: true}] });
             this.title.setTitle(value);
         });
 
@@ -134,6 +135,10 @@ export class DialogListComponent implements OnInit, OnDestroy {
             error => this.errorHandler(error),
             () => console.log('finished chats update'))
         );
+
+        this.subscriptions.push(this.store.select(s => s.dialogsFilter).subscribe(f => {
+            this.dialogListFilters = f;
+        }));
     }
 
     ngOnDestroy() {
@@ -183,10 +188,6 @@ export class DialogListComponent implements OnInit, OnDestroy {
     }
 
     public search(searchTerm: string): void {
-        // if (!searchTerm) {
-        //     this.foundDialogs = [];
-        //     return;
-        // }
         this.subscriptions.push(this.dialogService.searchDialog(searchTerm).subscribe(result => {
             console.log('got search result', result);
             this.foundDialogs = result;
@@ -234,6 +235,11 @@ export class DialogListComponent implements OnInit, OnDestroy {
             dialogs.push(dts);
         }
         return dialogs;
+    }
+
+    public onFilterUnreadChange(value: boolean) {
+        this.dialogListFilters.unread = value;
+        this.dialogService.setDialogListFilter({ unread: value });
     }
 
     errorHandler(error): void {
