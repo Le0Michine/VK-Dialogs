@@ -61,7 +61,6 @@ export class DialogListFilterComponent implements OnInit, AfterViewInit {
     @Output() onSelect = new EventEmitter();
 
     focusState = 'out';
-    placeholder = '';
     public showItems = false;
     public showFilters = false;
     private _input: string;
@@ -95,7 +94,6 @@ export class DialogListFilterComponent implements OnInit, AfterViewInit {
     }
 
     setFocus() {
-        this.placeholder = 'search_in_dialogs';
         this.focusState = 'in';
         this.showItems = true;
         this.renderer.invokeElementMethod(this.searchField.nativeElement, 'focus');
