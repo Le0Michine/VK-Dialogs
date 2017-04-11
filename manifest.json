@@ -3,7 +3,7 @@
     "name": "__MSG_appName__",
     "description": "__MSG_appDesc__",
     "default_locale": "ru",
-    "version": "2.6.4.95",
+    "version": "2.6.4.99",
     "options_page": "app.options/options.html",
     "background": {
         "page": "background.html"

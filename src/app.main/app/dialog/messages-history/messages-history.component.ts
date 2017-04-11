@@ -99,11 +99,19 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
     }
 
     private groupBySender(messages: SingleMessageInfo[]): OneSenderMessagesGroup[] {
-        return _.chain(messages)
-            .groupBy(x => x.fromId)
-            .toPairs()
-            .map(pair => _.zipObject(['fromId', 'messages'], [+pair[0], pair[1]]) as OneSenderMessagesGroup)
-            .value();
+        return _(messages)
+            .reduce((acc, value, key) => {
+                if (acc.length && acc[acc.length - 1][0].fromId === value.fromId) {
+                    acc[acc.length - 1].push(value);
+                } else {
+                    acc.push([value]);
+                }
+                return acc;
+            }, [])
+            .map(x => ({
+                fromId: x[0].fromId,
+                messages: x
+            }));
     }
 
     getMessageAttachments(message: SingleMessageInfo) {
@@ -137,7 +145,6 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
         if (!messages || messages.length === 0) {
             return [];
         }
-        console.info('converting fwd msgs', messages);
         messages.forEach(m => m.attachments = this.getMessageAttachments(m));
         const result = this.groupByDateAndSender(messages);
 
