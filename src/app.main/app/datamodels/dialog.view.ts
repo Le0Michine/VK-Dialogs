@@ -13,6 +13,7 @@ export interface IDialogView {
 }
 
 export class DialogView implements IDialogView {
+    peerId: number;
     message: SingleMessageInfo;
     unread: number;
     photos: string[] = ['http://vk.com/images/camera_c.gif'];

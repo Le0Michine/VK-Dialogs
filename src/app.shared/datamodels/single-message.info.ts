@@ -1,5 +1,8 @@
+import { MessageAttachment } from './message-attachments';
+
 export interface SingleMessageInfo {
     id: number;
+    randomId: number;
     peerId: number;
     userId: number;
     chatId: number;
@@ -12,7 +15,7 @@ export interface SingleMessageInfo {
     actionMid: number;
     title: string;
     fwdMessages: SingleMessageInfo[];
-    attachments: any;
+    attachments: MessageAttachment[];
     photo50: string;
     clear?: boolean;
 }

@@ -49,6 +49,16 @@
     box-sizing: border-box;
 }
 
+.att-doc-preview {
+    max-width: 100%;
+}
+
+.preview-spoiler {
+    .show-hide {
+        // border-bottom: 1px dashed currentColor;
+    }
+}
+
 .att_doc_img {
     background: url("../../../../../icons/doc_icons.png") no-repeat;
 }
@@ -67,4 +77,69 @@
 
 .att_zip_img {
     background: url("../../../../../icons/doc_icons.png") no-repeat 0px -30px;
+}
+
+.preview-video-container {
+    position: relative;
+
+    .preview-video-controls {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+        text-align: center;
+
+        .video-progress-bar {
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            height: 3px;
+            background: white;
+            transition: width .3s;
+        }
+
+        .play, .pause {
+            position: relative;
+            top: 50%;
+            margin-top: -20px;
+            font-size: 40px;
+            opacity: 0;
+            display: none;
+            transition: opacity .2s ease-in-out;
+            vertical-align: middle;
+            pointer-events: none;
+        }
+    }
+
+    video {
+        cursor: pointer;
+
+        & + .preview-video-controls {
+            & > .play {
+                display: none;
+            }
+
+            & > .pause {
+                display: inline-block;
+            }
+        }
+
+        &:hover + .preview-video-controls {
+            .play, .pause {
+                opacity: 1;
+            }
+        }
+
+        &.paused + .preview-video-controls {
+            & > .play {
+                display: inline-block;
+            }
+
+            & > .pause {
+                display: none;
+            }
+        }
+    }
 }

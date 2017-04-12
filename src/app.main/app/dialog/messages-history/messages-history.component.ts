@@ -83,7 +83,6 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
             m.attachments = this.getMessageAttachments(m);
         });
         const history = this.groupByDateAndSender(messages);
-        console.log('history: ', history);
         return history;
     }
 
@@ -91,30 +90,39 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
         return _.chain(messages)
             .groupBy(x => Math.trunc(x.date / 86400))
             .toPairs()
-            .map(pair => ({
-                date: +pair[0] * 86400000,
-                messages: this.groupBySender(pair[1] as SingleMessageInfo[])
-            }))
+            .map(pair => {
+                const [date, messages] = pair as [string, SingleMessageInfo[]];
+                return {
+                    date: +date * 86400000,
+                    messages: this.groupBySender(messages),
+                    groupId: +`${messages[0].id}${messages.length}`
+                } as OneDayMessagesGroup;
+            })
             .value();
     }
 
     private groupBySender(messages: SingleMessageInfo[]): OneSenderMessagesGroup[] {
         return _(messages)
-            .reduce((acc, value, key) => {
-                if (acc.length && acc[acc.length - 1][0].fromId === value.fromId) {
-                    acc[acc.length - 1].push(value);
+            .reduce((acc: SingleMessageInfo[][], value: SingleMessageInfo) => {
+                if (acc.length && _.head(_.last(acc)).fromId === value.fromId) {
+                    _.last(acc).push(value);
                 } else {
                     acc.push([value]);
                 }
                 return acc;
             }, [])
-            .map(x => ({
-                fromId: x[0].fromId,
-                messages: x
-            }));
+            .map(x => {
+                const head = (_.head(x) || {}) as SingleMessageInfo;
+                return {
+                    fromId: head.fromId,
+                    date: head.date,
+                    messages: x,
+                    groupId: +`${head.id}${x.length}`
+                } as OneSenderMessagesGroup;
+            });
     }
 
-    getMessageAttachments(message: SingleMessageInfo) {
+    private getMessageAttachments(message: SingleMessageInfo) {
         const attachments = [];
         if (message.attachments) {
             for (const attachment of message.attachments) {
@@ -140,39 +148,13 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
         return attachments;
     }
 
-    convertFwdMessages(messages: SingleMessageInfo[]): OneDayMessagesGroup[] {
+    private convertFwdMessages(messages: SingleMessageInfo[]): OneDayMessagesGroup[] {
         /** body, date, user_id, attachments */
         if (!messages || messages.length === 0) {
             return [];
         }
         messages.forEach(m => m.attachments = this.getMessageAttachments(m));
         const result = this.groupByDateAndSender(messages);
-
-        // messages[0].attachments = this.getMessageAttachments(messages[0]);
-        // let messageModel: MessageViewModel = {
-        //     date: messages[0].date,
-        //     from: this.participants[messages[0].userId] || new UserInfo(),
-        //     fromId: messages[0].userId,
-        //     messages: [messages[0]],
-        //     isRead: true
-        // };
-        // for (let i = 1; i < messages.length; i++) {
-        //     // messages[i].attachments = this.getMessageAttachments(messages[i]);
-        //     if (messageModel.fromId === messages[i].userId) {
-        //         messageModel.messages.push(messages[i]);
-        //     } else {
-        //         result.push(messageModel);
-        //         messageModel = {
-        //             date: messages[i].date,
-        //             from: this.participants[messages[i].userId] || new UserInfo(),
-        //             fromId: messages[0].userId,
-        //             messages: [messages[i]],
-        //             isRead: true
-        //         };
-        //     }
-        // }
-        // result.push(messageModel);
-        console.log('fwd', result);
         return result;
     }
 
@@ -203,25 +185,5 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
 
     loadOldMessages(): void {
         this.messagesService.loadOldMessages(this.selectedPeerId);
-    }
-
-    changePhotoSize(img: HTMLImageElement, photo: any): void {
-        if (img.src === photo.photo_130) {
-            img.src = photo.photo_604;
-            img.classList.add('zoom_out');
-            img.classList.remove('zoom_in');
-        } else if (img.src === photo.photo_604) {
-            img.src = photo.photo_130;
-            img.classList.add('zoom_in');
-            img.classList.remove('zoom_out');
-        }
-    }
-
-    floor(x: number) {
-        return Math.floor(x);
-    }
-
-    errorHandler(error): void {
-        console.error('An error occurred', error);
     }
 }

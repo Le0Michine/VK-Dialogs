@@ -13,7 +13,7 @@ export class AttachmentPhotoComponent implements OnInit {
     photoSrc: string;
 
     ngOnInit() {
-        this.photoSrc = this.photo.photo_130;
+        this.photoSrc = this.photo.photo_604 || this.photo.photo_130 || this.photo.photo_75;
     }
 
     changePhotoSize(): void {

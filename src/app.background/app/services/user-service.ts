@@ -8,6 +8,7 @@ import { VKService } from './vk-service';
 import { LPSService } from './lps-service';
 
 import { UsersActions, AppBackgroundState } from '../app-background.store';
+import { UserMapper } from '../api-model-mappers';
 
 @Injectable()
 export class UserService {
@@ -47,23 +48,7 @@ export class UserService {
     getUsers(uids: string, cache: boolean = true): Observable<{ [id: number]: UserInfo }> {
         return this.vkservice
             .performAPIRequestsBatch('users.get', {user_ids: uids, fields: 'photo_50,online,sex'})
-            .map(json => this.toUsersList(json));
-    }
-
-    toUsersList(json): UserInfo[] {
-        return json.map(userJson => this.toUserViewModel(userJson));
-    }
-
-    toUserViewModel(json): UserInfo {
-        const user = {
-            id: json.id,
-            firstName: json.first_name,
-            lastName: json.last_name,
-            photo50: json.photo_50,
-            isOnline: json.online,
-            sex: json.sex
-        };
-        return user;
+            .map(json => UserMapper.toUsersList(json));
     }
 
     errorHandler(error, comment: string): void {

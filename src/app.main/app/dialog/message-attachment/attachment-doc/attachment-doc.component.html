@@ -1,3 +1,20 @@
+<div class="preview-spoiler" *ngIf="canShowPreview()">
+	<!--<div class="show-hide btn btn-link" (click)="showPreview = !showPreview">Show/hide preview</div>-->
+	<!--<div *ngIf="showPreview">-->
+		<div class="preview-video-container">
+			<video #videoPreview *ngIf="getPreviewVideoUrl(); else staticPreview" width="100%" loop appVideoControl (progress)="onVideoProgress($event)">
+				<source [src]="getPreviewVideoUrl()" type="video/mp4">
+			</video>
+			<div class="preview-video-controls">
+				<span class="play material-icons text-normal-color-light">play_circle_outline</span>
+				<span class="pause material-icons text-normal-color-light">pause_circle_outline</span>
+			</div>
+		</div>
+		<ng-template #staticPreview>
+			<img class="att-doc-preview" [src]="getPreviewUrl()">
+		</ng-template>
+	<!--</div>-->
+</div>
 <div class="clearfix att-doc-container">
 	<a class="att-doc-icon {{doc | attachment_icon}}" [class.unread-text]="!isRead" [href]="doc | attachment_url" target="_blank"></a>
 	<div class="attachment-description">

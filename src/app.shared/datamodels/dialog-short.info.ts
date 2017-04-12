@@ -1,4 +1,4 @@
-export class DialogShortInfo {
+export interface DialogShortInfo {
     id: number;
     type: string;
     title: string;

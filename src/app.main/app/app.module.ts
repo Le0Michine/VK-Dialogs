@@ -44,6 +44,7 @@ import { AuthorizationGuard } from './guards';
 import { rootReducer, AppState, stateFactory } from './app.store';
 import { DialogListFilterComponent } from './dialog-list-filter/dialog-list-filter.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
+import { VideoControlDirective } from './video-control/video-control.directive';
 
 @NgModule({
     imports: [
@@ -77,7 +78,8 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
         MessageBodyComponent,
         DialogListFilterComponent,
         ...PIPES,
-        CheckboxComponent
+        CheckboxComponent,
+        VideoControlDirective
     ],
     bootstrap: [
         AppComponent

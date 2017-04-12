@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-import { SingleMessageInfo, UserInfo, HistoryInfo, OneDayMessagesGroup, UserSex } from '../../datamodels';
+import { SingleMessageInfo, UserInfo, HistoryInfo, OneDayMessagesGroup, OneSenderMessagesGroup, UserSex } from '../../datamodels';
 
 @Component({
     selector: 'app-messages-list',
@@ -19,5 +19,17 @@ export class MessagesListComponent {
 
     public getUserSex(uid: number): UserSex {
         return (this.participants[uid] || { sex: UserSex.undefined }).sex;
+    }
+
+    public trackByOneDayMessagesGroup(oneDayMessagesGroup: OneDayMessagesGroup): number {
+        return oneDayMessagesGroup ? oneDayMessagesGroup.groupId : null;
+    }
+
+    public trackByOneSenderMessagesGroup(oneSenderMessagesGroup: OneSenderMessagesGroup): number {
+        return oneSenderMessagesGroup ? oneSenderMessagesGroup.groupId : null;
+    }
+
+    public trackByMessageId(message: SingleMessageInfo): number {
+        return message.id;
     }
 }

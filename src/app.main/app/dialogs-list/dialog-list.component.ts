@@ -159,11 +159,11 @@ export class DialogListComponent implements OnInit, OnDestroy {
         }
     }
 
-    getUserName(uid: number) {
+    getUserName(uid: number): string {
         if (this.users && this.users[uid]) {
-            return this.users[uid].firstName + ' ' + this.users[uid].lastName;
+            return this.users[uid].fullName || `${this.users[uid].firstName} ${this.users[uid].lastName}`;
         }
-        return 'loading...';
+        return `${uid}`;
     }
 
     getUserFirstName(uid: number) {
@@ -179,6 +179,10 @@ export class DialogListComponent implements OnInit, OnDestroy {
             return this.users[uid].photo50;
         }
         return 'http://vk.com/images/camera_c.gif';
+    }
+
+    public trackByDialogId(dialog: DialogView) {
+        return dialog && dialog.message ? dialog.message.peerId : null;
     }
 
     public getUserSex(uid: number): UserSex {
@@ -209,9 +213,10 @@ export class DialogListComponent implements OnInit, OnDestroy {
             const uid = dialog.message.userId;
             const message = dialog.message;
             const dts = new DialogView();
+            // dts.peerId = message.peerId;
             dts.message = message;
             dts.unread = dialog.unreadCount;
-            dts.title = !message.title || message.title === ' ... ' ? this.getUserName(uid) : message.title;
+            dts.title = (!message.title || message.title === ' ... ') ? this.getUserName(uid) : message.title;
             dts.sender = this.getUserFirstName(message.fromId);
 
             if (message.fwdMessages) {

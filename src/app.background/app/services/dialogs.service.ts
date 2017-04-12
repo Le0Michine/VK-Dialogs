@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Observer, Subject } from 'rxjs/Rx';
 import * as _ from 'lodash';
 
-import { DialogListFilterInfo, UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo, InputMessageInfo } from '../datamodels';
+import { OneDayMessagesGroup, DialogListFilterInfo, UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo, InputMessageInfo } from '../datamodels';
 import { DialogShortInfo, HistoryListInfo, InputMessageState } from '../datamodels';
 import { VKService } from './vk-service';
 import { UserService } from './user-service';
@@ -13,6 +13,7 @@ import { Channels } from '../../../app.shared/channels';
 import { updateDialogList, updateDialogListUnread, updateDialogListFilter, sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from '../actions';
 import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundState } from '../app-background.store';
 import { VKUtils } from '../vk-utils';
+import { MessageMapper, UserMapper } from '../api-model-mappers';
 
 @Injectable()
 export class DialogService {
@@ -265,7 +266,7 @@ export class DialogService {
         this.vkservice.performAPIRequestsBatch(
             this.getDialogsApiMethod,
             parameters
-        ).map(json => this.toDialogsInfo(json))
+        ).map(json => MessageMapper.toDialogsInfo(json, this.vkservice.getCurrentUserId()))
         .subscribe(dialogList => {
             if (this.dialogListFilter.unread) {
                 dialogList.unread = dialogList.count;
@@ -285,20 +286,20 @@ export class DialogService {
             parameters['start_message_id'] = fromId;
         }
         return this.vkservice.performAPIRequestsBatch(this.getHistoryApiMethod, parameters)
-            .map(json => this.toHistoryViewModel(json));
+            .map(json => MessageMapper.toHistoryViewModel(json, this.vkservice.getCurrentUserId()));
     }
 
     getChatParticipants(chatId: number): void {
         console.log('chat participants requested');
         this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatId, fields: 'photo_50,online,sex' })
-            .map(json => this.userService.toUsersList(json))
+            .map(json => UserMapper.toUsersList(json))
             .subscribe(users => this.store.dispatch({ type: UsersActions.USERS_UPDATED, payload: users }));
     }
 
     getChats(chatIds: string): void {
         console.log('chats requested', chatIds);
         this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatIds, fields: 'photo_50,online,sex' })
-            .map(json => this.toChatList(json))
+            .map(json => MessageMapper.toChatList(json))
             .subscribe(chats => this.store.dispatch({ type: ChatsActions.CHATS_UPDATED, payload: chats }));
     }
 
@@ -312,7 +313,7 @@ export class DialogService {
         return this.vkservice.performAPIRequestsBatch(
             this.searchDialogsApiMethod,
             { q: searchTerm, limit: 10 }
-        ).map(r => this.toDialogsShort(r));
+        ).map(r => MessageMapper.toDialogsShort(r));
     }
 
     private sendMessage(message: InputMessageInfo): void {
@@ -354,86 +355,6 @@ export class DialogService {
                 () => console.log('old messages loaded')
             );
         });
-    }
-
-    private toDialogsShort(json): DialogShortInfo[] {
-        const dialogs: DialogShortInfo[] = [];
-        for (const x of json) {
-            const dialog = new DialogShortInfo();
-            dialog.id = VKUtils.getPeerId(x.id, x.type === 'chat' ? x.id : 0);
-            dialog.title = x.title || x.first_name + ' ' + x.last_name;
-            dialog.type = x.type;
-            dialogs.push(dialog);
-        }
-        return dialogs;
-    }
-
-    private toChatList(json): ChatInfo[] {
-        return json.map(jsonChat => this.toChatViewModel(jsonChat));
-    }
-
-    private toHistoryViewModel(json): HistoryInfo {
-        const messages = json.items.map(x => this.toSingleMessageViewModel(x));
-        return {
-            count: json.count,
-            messages: messages,
-            peerId: messages.length ? messages[0].peerId : 0,
-            isChat: messages.length && messages[0].chatId ? true : false,
-            conversationTitle: messages.length ? messages[0].title : ''
-        };
-    }
-
-    private toChatViewModel(json): ChatInfo {
-        return {
-            adminId: json.admin_id,
-            id: json.id,
-            title: json.title,
-            users: json.users.map(u => this.userService.toUserViewModel(u)),
-            type: json.type
-        };
-    }
-
-    private toSingleMessageViewModel(json): SingleMessageInfo {
-        const message: SingleMessageInfo = {
-            id: json.id,
-            peerId: VKUtils.getPeerId(json.user_id, json.chat_id),
-            action: json.action,
-            actionMid: json.action_mid,
-            attachments: this.toAttachmentsViewModel(json.attachments || [], json.geo),
-            body: json.body,
-            userId: json.user_id,
-            chatId: json.chat_id,
-            date: json.date,
-            fromId: json.from_id || (json.out ? this.vkservice.getCurrentUserId() : json.user_id),
-            fwdMessages: json.fwd_messages ? json.fwd_messages.map(x => this.toSingleMessageViewModel(x)) : null,
-            isRead: !!json.read_state,
-            out: !!json.out,
-            photo50: json.photo_50,
-            title: json.title
-        };
-        return message;
-    }
-
-    private toAttachmentsViewModel(jsonAttachments: any[], jsongeo: any): any {
-        if (jsongeo) {
-            jsonAttachments.push(Object.assign({ geo: jsongeo }, { type: 'geo' }));
-        }
-        return jsonAttachments;
-    }
-
-    private toDialogViewModel(json): DialogInfo {
-        return {
-            unreadCount: json.unread,
-            message: this.toSingleMessageViewModel(json.message)
-        };
-    }
-
-    private toDialogsInfo(json): DialogListInfo {
-        return {
-            dialogs: json.items.map(x => this.toDialogViewModel(x)),
-            count: json.count,
-            unread: json.unread_dialogs
-        };
     }
 
     private handleError(error: any): void {

@@ -2,6 +2,7 @@ export interface UserInfo {
     id: number;
     firstName: string;
     lastName: string;
+    fullName: string;
     isOnline: boolean;
     photo50: string;
     sex: UserSex;
