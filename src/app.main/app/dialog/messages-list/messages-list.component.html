@@ -25,7 +25,8 @@
 								{{attachment}}
 							</div>
 						</div>
-						<div *ngIf="!item.body && !isFirst" class="message-timestamp" [ngClass]="item.clear ? 'text-normal-color-light' : 'text-secondary-color-light'">{{item.date * 1000 | date:'shortTime'}}</div>
+						<div *ngIf="!item.body && !isFirst" class="message-timestamp"><span *ngIf="item.clear; else outOfBodyTimestamp" class="text-normal-color-light">{{item.date * 1000 | date:'shortTime'}}</span></div>
+						<ng-template #outOfBodyTimestamp><span [ngClass]="item.isRead ? 'text-secondary-color-light' : 'text-normal-color'">{{item.date * 1000 | date:'shortTime'}}</span></ng-template>
 					</div>
 				</li>
 			</ul>
