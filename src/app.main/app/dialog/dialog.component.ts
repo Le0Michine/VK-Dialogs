@@ -116,13 +116,6 @@ export class DialogComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.subscriptions.push(this.storeSync.subscribeOnHistory(this.selectedPeerId, this.isChat));
 
-            this.store.select(s => s.dialogs).take(1).subscribe(d => {
-                const dialog = d.dialogs.find(x => x.message.peerId === this.selectedPeerId);
-                if (dialog && dialog.message.title !== '' && dialog.message.title !== ' ... ') {
-                    this.title = dialog.message.title;
-                }
-            });
-
             this.subscriptions.push(this.store.select(s => s.history)
                 .map(h => h.history[this.selectedPeerId])
                 .filter(x => Boolean(x))
