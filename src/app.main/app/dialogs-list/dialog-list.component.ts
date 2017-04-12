@@ -72,7 +72,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
     gotoDialog(dialog: SingleMessageInfo) {
         let link: string[];
-        let title = '';
+        let title = dialog.title;
         if (dialog.chatId) {
             link = ['dialogs', 'chat', dialog.peerId.toString(), dialog.title];
         } else {

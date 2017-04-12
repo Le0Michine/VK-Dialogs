@@ -116,11 +116,11 @@ export class DialogListFilterComponent implements OnInit, AfterViewInit {
         if (!this.items || !this.items.length) {
             this._selectedItem = -1;
         } else if (event.keyCode === UP_ARROW) {
-            this._selectedItem = this._selectedItem === 0 ? this.items.length - 1 : this._selectedItem - 1;
+            this._selectedItem = this._selectedItem <= 0 ? this.items.length - 1 : this._selectedItem - 1;
             event.stopPropagation();
             event.preventDefault();
         } else if (event.keyCode === DOWN_ARROW) {
-            this._selectedItem = this._selectedItem === this.items.length - 1 ? 0 : this._selectedItem + 1;
+            this._selectedItem = this._selectedItem >= this.items.length - 1 ? 0 : this._selectedItem + 1;
             event.stopPropagation();
             event.preventDefault();
         } else if (event.keyCode === ENTER && this._selectedItem > -1) {
