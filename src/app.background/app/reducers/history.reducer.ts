@@ -42,6 +42,9 @@ function updateHistory(state: HistoryListInfo, action: HistoryInfo): HistoryList
 
 function mergeHistory(history1: HistoryInfo, history2: HistoryInfo): HistoryInfo {
     const result = Object.assign({}, history1);
+    if (!history2.messages.length) {
+        return result;
+    }
     const newIdHead = history2.messages[0].id;
     const newIdTail = history2.messages[history2.messages.length - 1].id;
 

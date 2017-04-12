@@ -360,7 +360,7 @@ export class DialogService {
         const dialogs: DialogShortInfo[] = [];
         for (const x of json) {
             const dialog = new DialogShortInfo();
-            dialog.id = x.id;
+            dialog.id = VKUtils.getPeerId(x.id, x.type === 'chat' ? x.id : 0);
             dialog.title = x.title || x.first_name + ' ' + x.last_name;
             dialog.type = x.type;
             dialogs.push(dialog);
