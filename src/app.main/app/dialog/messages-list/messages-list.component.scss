@@ -98,6 +98,10 @@ $message-bubble-border-radius: 5px;
     bottom: 0;
     font-size: 10px;
     white-space: nowrap;
+
+    & > span {
+        font-size: inherit;
+    }
 }
 
 .message-body {
