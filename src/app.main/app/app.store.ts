@@ -4,9 +4,10 @@ import { RouterState, routerReducer } from '@ngrx/router-store';
 import { storeLogger } from 'ngrx-store-logger';
 
 import { environment } from '../../environments/environment';
-import { DialogListFilterInfo, BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo, InputMessageListInfo } from './datamodels';
 // tslint:disable-next-line:max-line-length
-import { dialogListFilterReducer, breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, currentConversationIdReducer, inputMessageReducer } from './reducers';
+import { SelectedConversation, DialogListFilterInfo, BreadcrumbItem, HistoryListInfo, ChatListInfo, DialogListInfo, UserListInfo, InputMessageListInfo } from './datamodels';
+// tslint:disable-next-line:max-line-length
+import { dialogListFilterReducer, breadcrumbReducer, historyReducer, userListReducer, dialogListReducer, chatListReducer, selectedConversationReducer, inputMessageReducer } from './reducers';
 
 export const appState = {
     breadcrumbs: breadcrumbReducer,
@@ -14,7 +15,7 @@ export const appState = {
     dialogs: dialogListReducer,
     chats: chatListReducer,
     history: historyReducer,
-    currentConversationId: currentConversationIdReducer,
+    selectedConversation: selectedConversationReducer,
     router: routerReducer,
     inputMessages: inputMessageReducer,
     dialogsFilter: dialogListFilterReducer
@@ -37,7 +38,7 @@ export interface AppState {
     dialogs: DialogListInfo;
     chats: ChatListInfo;
     history: HistoryListInfo;
-    currentConversationId: number;
+    selectedConversation: SelectedConversation;
     router: RouterState;
     inputMessages: InputMessageListInfo;
     dialogsFilter: DialogListFilterInfo;
@@ -49,7 +50,7 @@ export const INITIAL_APP_STATE: AppState = {
     dialogs: { dialogs: [] } as DialogListInfo,
     chats: { chatIds: [], chats: {} } as ChatListInfo,
     history: { conversationIds: [], history: {} } as HistoryListInfo,
-    currentConversationId: -1,
+    selectedConversation: {} as SelectedConversation,
     router: { path: '/dialogs' },
     inputMessages: { conversationIds: [], messages: {} } as InputMessageListInfo,
     dialogsFilter: {} as DialogListFilterInfo
@@ -60,4 +61,4 @@ export function stateFactory() {
 };
 
 // tslint:disable-next-line:max-line-length
-export { BreadcrumbActions, HistoryActions, UserListActions, DialogListActions, ChatListActions, CurrentConversationIdActions } from './reducers';
+export { BreadcrumbActions, HistoryActions, UserListActions, DialogListActions, ChatListActions, SelectedConversationActions } from './reducers';

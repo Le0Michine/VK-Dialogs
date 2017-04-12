@@ -5,11 +5,13 @@ import { Title } from '@angular/platform-browser';
 import { TranslateService } from '../../../app.shared/translate';
 import { Subscription, Subject } from 'rxjs/Rx';
 
+// tslint:disable-next-line:max-line-length
 import { DialogListFilterInfo, DialogShortInfo, DialogInfo, UserInfo, ChatInfo, DialogView, SingleMessageInfo, UserSex } from '../datamodels';
 import { VKService, DialogService, ChromeAPIService } from '../services';
+import { selectConversation, updateBreadcrumbs } from '../actions';
 import { VKConsts } from '../../../app.shared/datamodels';
 import { AppState } from '../app.store';
-import { BreadcrumbActions, HistoryActions, CurrentConversationIdActions } from '../app.store';
+import { BreadcrumbActions, HistoryActions, SelectedConversationActions } from '../app.store';
 
 @Component({
   selector: 'app-dialogs',
@@ -57,6 +59,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
     onDialogSelect(dialog: DialogShortInfo) {
         const link = ['dialogs', dialog.type === 'profile' ? 'dialog' : 'chat', dialog.id, dialog.title];
         this.store.dispatch(go(link));
+        this.store.dispatch(selectConversation(dialog.title, dialog.id));
     }
 
     keyDown(event: KeyboardEvent) {
@@ -69,11 +72,12 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
     gotoDialog(dialog: SingleMessageInfo) {
         let link: string[];
+        let title = '';
         if (dialog.chatId) {
             link = ['dialogs', 'chat', dialog.peerId.toString(), dialog.title];
         } else {
             const user: UserInfo = this.users[dialog.userId];
-            const title: string = !dialog.title || dialog.title === ' ... ' ? user.firstName + ' ' + user.lastName : dialog.title;
+            title = !dialog.title || dialog.title === ' ... ' ? user.firstName + ' ' + user.lastName : dialog.title;
             this.title.setTitle(title);
             link = [
                 'dialogs',
@@ -82,7 +86,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
                 title];
         }
         this.store.dispatch(go(link));
-        this.store.dispatch({ type: CurrentConversationIdActions.UPDATED, payload: dialog.peerId });
+        this.store.dispatch(selectConversation(title, dialog.peerId));
     }
 
     loadOldDialogs() {
@@ -99,7 +103,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
         this.dialogService.init();
 
         this.translate.get('dialogs').subscribe(value => {
-            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{title: 'dialogs', href: 'https://vk.com/im', translatable: true}] });
+            this.store.dispatch(updateBreadcrumbs([{title: 'dialogs', href: 'https://vk.com/im', translatable: true}]));
             this.title.setTitle(value);
         });
 

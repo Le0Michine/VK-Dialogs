@@ -9,8 +9,9 @@ import { Observable, Subscription } from 'rxjs/Rx';
 
 import { DialogService, VKService, ChromeAPIService, FileUploadService, OptionsService, StoreSyncService } from '../services';
 import { SingleMessageInfo, HistoryInfo } from '../datamodels';
+import { closeSelectedConversation, updateBreadcrumbs } from '../actions';
 import { MenuItem } from '../datamodels';
-import { BreadcrumbActions, CurrentConversationIdActions } from '../reducers';
+import { BreadcrumbActions, SelectedConversationActions } from '../reducers';
 import { AppState } from '../app.store';
 
 @Component({
@@ -98,9 +99,11 @@ export class DialogComponent implements OnInit, OnDestroy, AfterViewInit {
             const type = params['type'];
             this.isChat = type === 'dialog' ? false : true;
 
-            // tslint:disable-next-line:max-line-length
-            this.store.dispatch({ type: BreadcrumbActions.BREADCRUMBS_UPDATED, payload: [{ title: this.title, navigationLink: 'dialogs', leftArrow: true }] });
-            this.pageTitle.setTitle(this.title);
+            this.subscriptions.push(this.store.select(s => s.selectedConversation).subscribe(x => {
+                this.store.dispatch(updateBreadcrumbs([{ title: x.title, navigationLink: 'dialogs', backArrow: true }]));
+                this.pageTitle.setTitle(x.title);
+                this.title = x.title;
+            }));
 
             this.chromeapi.SendMessage({
                 name: 'last_opened',
@@ -243,7 +246,7 @@ export class DialogComponent implements OnInit, OnDestroy, AfterViewInit {
         for (const s of this.subscriptions) {
             s.unsubscribe();
         }
-        this.store.dispatch({ type: CurrentConversationIdActions.UPDATED, payload: null });
+        this.store.dispatch(closeSelectedConversation());
         this.store.dispatch(go(['dialogs']));
     }
 

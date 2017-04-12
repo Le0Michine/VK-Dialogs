@@ -3,6 +3,7 @@ import { compose } from '@ngrx/core/compose';
 import { storeLogger } from 'ngrx-store-logger';
 import { environment } from '../../environments/environment';
 
+// tslint:disable-next-line:max-line-length
 import { DialogListFilterInfo, DialogListInfo, UserListInfo, ChatListInfo, HistoryListInfo, InputMessageListInfo, SessionInfo } from './datamodels';
 // tslint:disable-next-line:max-line-length
 import { dialogListFilterReducer, dialogListReducer, usersReducer, chatsReducer, historyReducer, inputMessageReducer, authorizationReducer, actionBadgeReducer, sessionReducer } from './reducers';

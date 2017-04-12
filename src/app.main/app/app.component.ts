@@ -107,9 +107,9 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     goToConversation() {
-        this.store.select(s => s.currentConversationId)
-            .concatMap(id => this.store.select(s => s.history)
-            .map(x => x.history[id]))
+        this.store.select(s => s.selectedConversation)
+            .concatMap(selectedConversation => this.store.select(s => s.history)
+            .map(x => x.history[selectedConversation.peerId]))
             .subscribe(h => {
                 let url = 'https://vk.com/im';
                 if (h) {
