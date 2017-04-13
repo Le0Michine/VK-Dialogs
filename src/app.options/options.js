@@ -56,6 +56,11 @@ function onload() {
     console.dir(document.getElementById('saveBtn'));
     document.getElementById('saveBtn').addEventListener('click', save_options);
     document.getElementById('resetBtn').addEventListener('click', restore_options);
+    document.getElementById('reloadBtn').addEventListener('click', restore_options);
+}
+
+function reload() {
+    chrome.runtime.reload();
 }
 
 function updateLocale() {

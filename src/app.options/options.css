@@ -143,3 +143,8 @@ h1 {
     display: inline-block;
     border: 1px solid #cacaca;
 }
+
+#reloadBtn {
+    display: none;
+    pointer-events: none;
+}
