@@ -108,12 +108,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     goToConversation() {
         this.store.select(s => s.selectedConversation)
-            .concatMap(selectedConversation => this.store.select(s => s.history)
-            .map(x => x.history[selectedConversation.peerId]))
-            .subscribe(h => {
+            .take(1)
+            .subscribe(selectedConversation => {
+                console.log('open VK in tab');
                 let url = 'https://vk.com/im';
-                if (h) {
-                    url += `?sel=${h.isChat ? 'c' : ''}${h.peerId}`;
+                if (selectedConversation) {
+                    url += `?sel=${selectedConversation.peerId}`;
                 }
                 chrome.tabs.create({
                     url: url,
