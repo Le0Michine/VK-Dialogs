@@ -161,7 +161,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
     getUserName(uid: number): string {
         if (this.users && this.users[uid]) {
-            return this.users[uid].fullName || `${this.users[uid].firstName} ${this.users[uid].lastName}`;
+            return this.users[uid].fullName;
         }
         return `${uid}`;
     }
