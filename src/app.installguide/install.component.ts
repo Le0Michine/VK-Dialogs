@@ -95,14 +95,14 @@ export class InstallComponent {
     openFlags() {
         chrome.tabs.create({
             url: 'chrome://flags/#enable-panels',
-            selected: true
+            active: true
         });
     }
 
     openOptions() {
         chrome.tabs.create({
             url: 'app.options/options.html',
-            selected: true
+            active: true
         });
     }
 

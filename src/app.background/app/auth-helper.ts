@@ -46,7 +46,7 @@ export class AuthHelper {
 
         const observable = Observable.bindCallback((callback: (s: SessionInfo) => void) => {
             AuthHelper.addTabListener(callback);
-            chrome.tabs.create({url: authUrl, selected: forced}, tab => AuthHelper.tabId = tab.id);
+            chrome.tabs.create({url: authUrl, active: forced}, tab => AuthHelper.tabId = tab.id);
         });
         AuthHelper.currentAuthorisation = observable();
         return AuthHelper.currentAuthorisation;

@@ -117,7 +117,7 @@ export class AppComponent implements AfterViewInit, OnInit {
                 }
                 chrome.tabs.create({
                     url: url,
-                    selected: true
+                    active: true
                 });
             });
     }
@@ -126,7 +126,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         chrome.extension.getURL('/app.options/options.html');
         chrome.tabs.create({
             url: chrome.extension.getURL('/app.options/options.html'),
-            selected: true
+            active: true
         });
     }
 
