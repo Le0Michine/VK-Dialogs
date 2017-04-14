@@ -1,3 +1,5 @@
+require('./options.scss');
+
 // Saves options to chrome.storage
 function save_options() {
     var lang = document.getElementById("targetLangSel").value;
