@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const JsonReplacerPlugin = require('./json-replacer-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 
@@ -22,7 +23,6 @@ function versionReplacer(key, value) {
 var filesToCopy = [
     // { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
     { from: '../dist/app.main/MaterialIcons-Regular.*', to: "./", toType: "dir", flatten: true },
-    { from: '../src/app.options', to: "./app.options", toType: "dir" },
     { from: '../_locales', to: "./_locales", toType: "dir" },
     { from: '../manifest.json', to: "./", toType: "dir", flatten: true }
 ];
@@ -35,7 +35,7 @@ var filesToIgnore = [
 var optionalPlugins = [];
 
 module.exports = function(options) {
-  isProd = options.env === 'production';
+  const isProd = options.env === 'production';
   if (options.filesToIgnore) {
       filesToIgnore = [...filesToIgnore, ...options.filesToIgnore];
   }
@@ -53,12 +53,28 @@ module.exports = function(options) {
       );
   }
 
+  let htmlMinifyOptions = undefined;
+  if (isProd) {
+    htmlMinifyOptions = {
+      caseSensitive: true,
+      collapseBooleanAttributes: true,
+      collapseInlineTagWhitespace: true,
+      collapseWhitespace: true,
+      conservativeCollapse: true,
+      minifyCSS: true,
+      removeComments: true,
+      useShortDoctype: true
+    };
+  }
+
   return {
     name: "main",
     context: path.join(__dirname),
     entry: {
       "index":  "../src/app.main.bundle.js",
-      "background":  "../src/app.background.bundle.js"
+      "background":  "../src/app.background.bundle.js",
+      "install":  "../src/app.install.bundle.js",
+      "options":  "../src/app.options/options.js"
     },
     output: {
       path: helpers.root('out'),
@@ -79,6 +95,16 @@ module.exports = function(options) {
             presets: ['es2015'],
             compact: false
           }
+        },
+        {
+          test: /\.scss$/,
+          use: [{
+            loader: "style-loader" // creates style nodes from JS strings
+          }, {
+            loader: "css-loader" // translates CSS into CommonJS
+          }, {
+            loader: "sass-loader" // compiles Sass to CSS
+          }]
         }
       ]
     },
@@ -98,16 +124,33 @@ module.exports = function(options) {
         helpers.root('src') // location of your src
       ),
       new HtmlWebpackPlugin({
-          title: 'VK-Dialogs',
+          title: 'VK Dialogs',
           chunks: ['index'],
           filename: 'index.html',
-          template: '../src/app.main.ejs'
+          template: '../src/app.main.ejs',
+          minify: htmlMinifyOptions
       }),
       new HtmlWebpackPlugin({
-          title: 'VK-Dialogs-background',
+          title: 'VK Dialogs background',
           chunks: ['background'],
           filename: 'background.html',
-          template: '../src/app.background.ejs'
+          template: '../src/app.background.ejs',
+          minify: htmlMinifyOptions
+      }),
+      new HtmlWebpackPlugin({
+          title: 'VK Dialogs install',
+          chunks: ['install'],
+          filename: 'install.html',
+          template: '../src/app.install.ejs',
+          minify: htmlMinifyOptions
+      }),
+      new HtmlWebpackPlugin({
+          title: 'VK Dialogs options',
+          chunks: ['options'],
+          filename: 'options.html',
+          template: '../src/app.options/options.ejs',
+          inject: true,
+          minify: htmlMinifyOptions
       }),
       new webpack.DefinePlugin({
         'process.env.PRODUCTION': JSON.stringify('production'),

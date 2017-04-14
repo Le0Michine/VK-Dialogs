@@ -4,6 +4,7 @@ out/
 dist/app.main/
 dist/app.background/
 dist/app.options/
+dist/app.install/
 dist/icons/
 dist/_locales/
 /demo/

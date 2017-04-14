@@ -1,11 +1,12 @@
-import { Component, ChangeDetectorRef, trigger, state, transition, style, animate } from '@angular/core';
-import { TranslateService } from '../app.shared/translate';
-import { ChromeAPIService } from '../app.main/app/services';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { trigger, state, transition, style, animate } from '@angular/animations';
+import { TranslateService } from '../../app.shared/translate';
+import { ChromeAPIService } from '../../app.main/app/services';
 
 @Component({
     selector: 'app-install',
     templateUrl: 'install.component.html',
-    styleUrls: ['install.component.css'],
+    styleUrls: ['install.component.scss'],
     animations: [
         trigger('flyInOut', [
             state('in', style({transform: 'translateX(0)'})),
@@ -35,7 +36,6 @@ export class InstallComponent {
         { name: 'step_auth', progress: 10, state: 'in'},
         { name: 'step_privacy', progress: 30, state: 'out_r'},
         { name: 'step_spy', progress: 50, state: 'out_r'},
-        // { name: "step_panels", progress: 70, state: "out_r"},
         { name: 'step_last', progress: 100, state: 'out_r'},
     ];
 
@@ -95,14 +95,14 @@ export class InstallComponent {
     openFlags() {
         chrome.tabs.create({
             url: 'chrome://flags/#enable-panels',
-            active: true
+            selected: true
         });
     }
 
     openOptions() {
         chrome.tabs.create({
-            url: 'app.options/options.html',
-            active: true
+            url: 'options.html',
+            selected: true
         });
     }
 

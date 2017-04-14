@@ -8,6 +8,7 @@ const commonConfig = require('./webpack.common.js'); // the settings that are co
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
+const ZipBundlerPlugin = require('webpack-zip-bundler');
 
 /**
  * Webpack Constants
@@ -30,6 +31,7 @@ module.exports = (function(options) {
             filename: "[name].js"
         },
         plugins: [
+            new ZipBundlerPlugin(),
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,
                 compress: {
