@@ -25,6 +25,8 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
     messagesCount: number;
     subscriptions: Subscription[] = [];
     historyToShow: OneDayMessagesGroup[] = [];
+    shownMessagesCount = 20;
+    showOldHistoryLoadingSpinner = false;
 
     constructor (
         private store: Store<AppState>,
@@ -49,7 +51,7 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
                 this.history = history.messages;
                 this.messagesCount = history.count;
                 this.participants = users;
-                this.historyToShow = this.splitHistoryIntoGroups(this.history.concat([]).reverse());
+                this.convertModel();
                 console.log('force update');
                 this.refreshView();
             })
@@ -62,6 +64,16 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
         for (const sub of this.subscriptions) {
             sub.unsubscribe();
         }
+    }
+
+    convertModel() {
+        if (this.history.length >= this.shownMessagesCount - 5) {
+            this.showOldHistoryLoadingSpinner = false;
+        }
+        if (Math.abs(this.history.length - this.shownMessagesCount) < 5) {
+            this.shownMessagesCount = this.history.length;
+        }
+        this.historyToShow = this.splitHistoryIntoGroups(this.history.slice(0, this.shownMessagesCount).reverse());
     }
 
     refreshView() {
@@ -91,11 +103,11 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
             .groupBy(x => Math.trunc(x.date / 86400))
             .toPairs()
             .map(pair => {
-                const [date, messages] = pair as [string, SingleMessageInfo[]];
+                const [date, messagesGroup] = pair as [string, SingleMessageInfo[]];
                 return {
                     date: +date * 86400000,
-                    messages: this.groupBySender(messages),
-                    groupId: +`${messages[0].id}${messages.length}`
+                    messages: this.groupBySender(messagesGroup),
+                    groupId: +`${messagesGroup[0].id}${messagesGroup.length}`
                 } as OneDayMessagesGroup;
             })
             .value();
@@ -184,6 +196,12 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
     }
 
     loadOldMessages(): void {
-        this.messagesService.loadOldMessages(this.selectedPeerId);
+        this.shownMessagesCount += 20;
+        if (this.history.length >= this.shownMessagesCount) {
+            this.convertModel();
+        } else {
+            this.showOldHistoryLoadingSpinner = true;
+            this.messagesService.loadOldMessages(this.selectedPeerId);
+        }
     }
 }

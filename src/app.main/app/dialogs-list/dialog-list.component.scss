@@ -226,7 +226,7 @@
     border: none;
 }
 
-#load_old {
+#load_old, .load-old-dialogs-spinner-container {
     cursor: pointer;
     width: 100%;
     bottom: 0px;
@@ -234,6 +234,14 @@
     text-align: center;
     position: relative;
     padding-top: 10px;
+}
+
+.load-old-dialogs-spinner-container {
+    cursor: default;
+
+    .spinner-small {
+        margin: auto;
+    }
 }
 
 #load_old:hover {

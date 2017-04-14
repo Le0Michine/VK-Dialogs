@@ -29,4 +29,14 @@ function performUpgrade() {
 
 function openReleaseNotes() {
   console.log('open tab describing new version');
+
+  if (!window.localStorage.getItem('not_first_time')) {
+    console.log('open tab describing new version');
+    window.localStorage.setItem('not_first_time', 'true');
+    chrome.tabs.create({
+        url: 'install.html',
+        active: true
+    });
+  }
 }
+

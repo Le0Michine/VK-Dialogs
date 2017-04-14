@@ -30,6 +30,8 @@ export class DialogListComponent implements OnInit, OnDestroy {
     i = 0;
 
     dialogs: DialogInfo[] = [];
+    shownDialogsCount = 20;
+    showOldDialogsLoadingSpinner = false;
 
     private subscriptions: Subscription[] = [];
 
@@ -90,7 +92,13 @@ export class DialogListComponent implements OnInit, OnDestroy {
     }
 
     loadOldDialogs() {
-        this.dialogService.loadOldDialogs();
+        this.shownDialogsCount += 19;
+        if (this.dialogs.length >= this.shownDialogsCount) {
+            this.convertModel();
+        } else {
+            this.showOldDialogsLoadingSpinner = true;
+            this.dialogService.loadOldDialogs();
+        }
     }
 
     track(d, i) {
@@ -113,7 +121,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
                 console.log('DIALOGS', dialogs);
                 this.dialogs = dialogs.dialogs;
                 this.dialogsCount = dialogs.count;
-                this.dialogsToShow = this.getDialogs();
+                this.convertModel();
                 this.refreshView();
             },
             error => this.errorHandler(error),
@@ -123,7 +131,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.store.select(s => s.users).subscribe(users => {
                     console.log('USERS', users);
                     this.users = users.users;
-                    this.dialogsToShow = this.getDialogs();
+                    this.convertModel();
                     this.refreshView();
                 },
                 error => this.errorHandler(error),
@@ -133,7 +141,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.store.select(s => s.chats).subscribe(chats => {
                 this.chats = chats.chats;
-                this.dialogsToShow = this.getDialogs();
+                this.convertModel();
                 this.refreshView();
             },
             error => this.errorHandler(error),
@@ -151,6 +159,13 @@ export class DialogListComponent implements OnInit, OnDestroy {
             sub.unsubscribe();
         }
         this.isDestroyed = true;
+    }
+
+    convertModel() {
+        if (this.dialogs.length >= this.shownDialogsCount) {
+            this.showOldDialogsLoadingSpinner = false;
+        }
+        this.dialogsToShow = this.getDialogs(this.dialogs.slice(0, this.shownDialogsCount));
     }
 
     refreshView() {
@@ -203,13 +218,13 @@ export class DialogListComponent implements OnInit, OnDestroy {
         }));
     }
 
-    public getDialogs(): DialogView[] {
+    public getDialogs(data: DialogInfo[]): DialogView[] {
         if (!this.users) {
             console.log('not enough data');
             return [];
         }
         const dialogs: DialogView[] = [];
-        for (const dialog of this.dialogs) {
+        for (const dialog of data) {
             const uid = dialog.message.userId;
             const message = dialog.message;
             const dts = new DialogView();

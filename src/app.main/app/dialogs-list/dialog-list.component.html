@@ -35,8 +35,15 @@
 				</div>
 			</div>
 		</li>
-		<div id="load_old" (click)="loadOldDialogs()" *ngIf="dialogsCount && dialogsCount > dialogs.length">
-			<i class="material-icons">history</i>
+		<div *ngIf="dialogsCount && (dialogsCount > dialogs.length || dialogsCount > shownDialogsCount)">
+			<div id="load_old" (click)="loadOldDialogs()" *ngIf="!showOldDialogsLoadingSpinner; else oldDialogsLoadingSpinner">
+				<i class="material-icons">history</i>
+			</div>
+			<ng-template #oldDialogsLoadingSpinner>
+				<div class="load-old-dialogs-spinner-container">
+					<div class="spinner-small"></div>
+				</div>
+			</ng-template>
 		</div>
 	</ul>
 </div>
