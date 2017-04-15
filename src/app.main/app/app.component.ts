@@ -123,9 +123,9 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     openSettings() {
-        chrome.extension.getURL('/app.options/options.html');
+        chrome.extension.getURL('options.html');
         chrome.tabs.create({
-            url: chrome.extension.getURL('/app.options/options.html'),
+            url: chrome.extension.getURL('options.html'),
             active: true
         });
     }

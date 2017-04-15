@@ -4,7 +4,7 @@
     "short_name": "__MSG_appName__",
     "description": "__MSG_appDesc__",
     "default_locale": "ru",
-    "version": "2.7.4.145",
+    "version": "2.7.4.146",
     "options_page": "options.html",
     "background": {
         "page": "background.html"
