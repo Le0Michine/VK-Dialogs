@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject  } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject, ReplaySubject } from 'rxjs/Rx';
+
+import { WindowSize, Settings } from '../../../app.shared/datamodels';
 
 @Injectable()
 export class OptionsService {
@@ -10,6 +12,9 @@ export class OptionsService {
     activatePreviewFeatures: BehaviorSubject<boolean>;
     stickerSize: BehaviorSubject<number>;
     autoReadMessages: BehaviorSubject<boolean>;
+    showNotifications: BehaviorSubject<boolean>;
+    playSoundNotifications: BehaviorSubject<boolean>;
+    notificationSound: BehaviorSubject<string>;
 
     private defaultSettings: Settings = new Settings();
 
@@ -60,6 +65,9 @@ export class OptionsService {
         this.activatePreviewFeatures = new BehaviorSubject(settings.activatePreviewFeatures);
         this.stickerSize = new BehaviorSubject(this.stickerSizes[settings.stickerSize]);
         this.autoReadMessages = new BehaviorSubject(settings.autoReadMessages);
+        this.showNotifications = new BehaviorSubject(settings.showNotifications);
+        this.playSoundNotifications = new BehaviorSubject(settings.playSoundNotifications);
+        this.notificationSound = new BehaviorSubject(settings.notificationSound);
     }
 
     private updateSettings(settings: Settings): void {
@@ -76,24 +84,17 @@ export class OptionsService {
         if (settings.activatePreviewFeatures !== this.currentSettings.activatePreviewFeatures) {
             this.activatePreviewFeatures.next(settings.activatePreviewFeatures);
         }
+        if (settings.showNotifications !== this.currentSettings.showNotifications) {
+            this.showNotifications.next(settings.showNotifications);
+        }
+        if (settings.playSoundNotifications !== this.currentSettings.playSoundNotifications) {
+            this.playSoundNotifications.next(settings.playSoundNotifications);
+        }
+        if (settings.notificationSound !== this.currentSettings.notificationSound) {
+            this.notificationSound.next(settings.notificationSound);
+        }
         this.windowSize.next(this.windowSizes[settings.windowSize]);
         this.stickerSize.next(this.stickerSizes[settings.stickerSize]);
         this.autoReadMessages.next(settings.autoReadMessages);
     }
-}
-
-class Settings {
-    currentLang = 'ru';
-    setOnline = false;
-    showTyping = false;
-    windowSize = 'medium';
-    activatePreviewFeatures = false;
-    stickerSize = 'large';
-    autoReadMessages = true;
-}
-
-export class WindowSize {
-    size: string;
-    w: number;
-    h: number;
 }

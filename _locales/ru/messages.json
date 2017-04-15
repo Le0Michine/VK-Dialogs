@@ -26,6 +26,12 @@
     "autoReadMessagesLabel": {
         "message": "отмечать входящие прочитанными"
     },
+    "showNotificationsLabel": {
+        "message": "показывать всплывающие уведомления"
+    },
+    "playNotificationSoundLabel": {
+        "message": "звуковые оповещения"
+    },
     "previewOption": {
         "message": "Бета функциональность:"
     },

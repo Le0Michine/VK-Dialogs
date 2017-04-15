@@ -26,6 +26,12 @@
     "autoReadMessagesLabel": {
         "message": "auto read inbox messages"
     },
+    "showNotificationsLabel": {
+        "message": "show popup notifications"
+    },
+    "playNotificationSoundLabel": {
+        "message": "play notification sound"
+    },
     "previewOption": {
         "message": "Preview features:"
     },

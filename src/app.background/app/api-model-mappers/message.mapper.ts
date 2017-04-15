@@ -71,7 +71,7 @@ export class MessageMapper {
             isRead: !!json.read_state,
             out: !!json.out,
             photo50: json.photo_50,
-            title: json.title
+            title: json.title !== ' ... ' ? json.title : ''
         };
         const geo = MessageMapper.toGeoAttachment(json.geo);
         if (geo) {

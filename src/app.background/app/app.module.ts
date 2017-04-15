@@ -4,7 +4,16 @@ import { HttpModule } from '@angular/http';
 import { StoreModule, INITIAL_STATE } from '@ngrx/store';
 
 import { BackgroundComponent } from './background.component';
-import { VKService, UserService, DialogService, LPSService, ChromeAPIService, FileUploadService, OptionsService } from './services';
+import {
+    VKService,
+    UserService,
+    DialogService,
+    LPSService,
+    ChromeAPIService,
+    FileUploadService,
+    OptionsService,
+    NotificationService
+} from './services';
 import { appBackgroundState, appStateFactory, rootReducer } from './app-background.store';
 
 @NgModule({
@@ -23,6 +32,7 @@ import { appBackgroundState, appStateFactory, rootReducer } from './app-backgrou
         ChromeAPIService,
         FileUploadService,
         OptionsService,
+        NotificationService,
         {
             provide: INITIAL_STATE,
             useFactory: appStateFactory

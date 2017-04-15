@@ -24,15 +24,24 @@ var filesToCopy = [
     // { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
     { from: '../dist/app.main/MaterialIcons-Regular.*', to: "./", toType: "dir", flatten: true },
     { from: '../_locales', to: "./_locales", toType: "dir" },
+    { from: '../src/assets/sounds', to: "./assets/sounds", toType: "dir" },
     { from: '../manifest.json', to: "./", toType: "dir", flatten: true }
 ];
 
 var filesToIgnore = [
-  "*.svg",
-  "VK_icon.png"
+  "icon.svg",
+  "icon_new.svg",
+  "VK_icon.png",
+  ".DS_Store",
+  ".gitkeep"
 ];
 
 var optionalPlugins = [];
+
+const extractSass = new ExtractTextPlugin({
+    filename: "[name].css",
+    disable: true
+});
 
 module.exports = function(options) {
   const isProd = options.env === 'production';
@@ -89,10 +98,17 @@ module.exports = function(options) {
       loaders: [
         {
           test: /\.tsx?$/,
-          exclude: /\.spec\.tsx?$/,
+          exclude: [ /\.spec\.tsx?$/, '/src/' ],
           loader: 'ts-loader'
         },
-        { 
+        {
+          test: /\.svg$/,
+          loader: 'url-loader',
+          options: {
+            limit: 1000
+          }
+        },
+        {
           test: /\.js$/,
           exclude: '/node_modules/',
           loader: 'babel-loader',
@@ -114,6 +130,7 @@ module.exports = function(options) {
       ]
     },
     plugins: [
+      // extractSass,
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false
@@ -160,6 +177,10 @@ module.exports = function(options) {
       new webpack.DefinePlugin({
         'process.env.PRODUCTION': JSON.stringify('production'),
         'process.env.NODE_ENV': JSON.stringify('production')
+      }),
+      new ExtractTextPlugin({
+        filename: "[name].css",
+        disable: process.env.NODE_ENV === "development"
       }),
       ...optionalPlugins
     ]

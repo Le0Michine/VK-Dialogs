@@ -1,3 +1,4 @@
+export * from './settings';
 export * from './user.info';
 export * from './user-list.info';
 export * from './chat.info';

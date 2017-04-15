@@ -5,8 +5,10 @@ dist/app.main/
 dist/app.background/
 dist/app.options/
 dist/app.install/
+dist/assets/
 dist/icons/
 dist/_locales/
+dist/options*
 /demo/
 compile/
 src/**/*.metadata.json

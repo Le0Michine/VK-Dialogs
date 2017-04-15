@@ -59,8 +59,27 @@
                     <input id="autoReadMessages" type="checkbox" class="checkbox">
                     <label for="autoReadMessages" id="autoReadMessagesLabel">auto read inbox messages</label>
                 </div>
-            </div><!--
+            </div>
             <div class="options_row">
+                <div id="notification-option" class="option_name">Notifications:</div>
+                <div class="options-column">
+                    <div class="option_picker">
+                        <input id="showNotifications" type="checkbox" class="checkbox">
+                        <label for="showNotifications" id="showNotificationsLabel">show notifications</label>
+                    </div>
+                    <div class="option_picker">
+                        <input id="playNotificationSound" type="checkbox" class="checkbox">
+                        <label for="playNotificationSound" id="playNotificationSoundLabel">play notification sound</label>
+                    </div>
+                    <div class="option_picker">
+                        <select id="notificationSound" class="jfk-button jfk-button-standard">
+                        </select>
+                        <div id="playSoundBtn" class="jfk-button-standard jfk-button play"></div>
+                        <!--<label for="playNotificationSound" id="playNotificationSoundLabel">play notification sound</label>-->
+                    </div>
+                </div>
+            </div>
+            <!--<div class="options_row">
                 <div id="preview-option" class="option_name">Beta functionality:</div>
                 <div class="option_picker">
                     <input id="activatePreviewFeatures" type="checkbox" class="checkbox">
@@ -69,9 +88,9 @@
             </div>-->
 
             <div class="buttons">
-                <div id="saveBtn" class="jfk-button-action jfk-button" style="-webkit-user-select: none;">Save</div>
-                <div id="resetBtn" class="jfk-button-standard jfk-button" style="-webkit-user-select: none;">Reset</div>
-                <div id="reloadBtn" class="jfk-button-standard jfk-button" style="-webkit-user-select: none;">Reload app</div>
+                <div id="saveBtn" class="jfk-button-action jfk-button">Save</div>
+                <div id="resetBtn" class="jfk-button-standard jfk-button">Reset</div>
+                <div id="reloadBtn" class="jfk-button-standard jfk-button">Reload app</div>
                 <span id="saveStatus" style="display:none;">Options saved.</span>
             </div>
         </div>

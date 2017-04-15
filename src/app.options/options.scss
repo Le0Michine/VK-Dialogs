@@ -148,3 +148,16 @@ h1 {
     display: none;
     pointer-events: none;
 }
+
+.play {
+    display: inline-block;
+    width: 27px;
+    min-width: 27px;
+    min-height: 27px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    background-image: url(../assets/icons/ic_play_arrow_black_24px.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}

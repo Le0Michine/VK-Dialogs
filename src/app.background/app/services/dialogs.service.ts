@@ -3,17 +3,23 @@ import { Store } from '@ngrx/store';
 import { Observable, Observer, Subject } from 'rxjs/Rx';
 import * as _ from 'lodash';
 
+// tslint:disable-next-line:max-line-length
 import { OneDayMessagesGroup, DialogListFilterInfo, UserInfo, SingleMessageInfo, ChatInfo, HistoryInfo, DialogInfo, DialogListInfo, InputMessageInfo } from '../datamodels';
 import { DialogShortInfo, HistoryListInfo, InputMessageState } from '../datamodels';
 import { VKService } from './vk-service';
-import { UserService } from './user-service';
+import { UserService } from './user.service';
 import { LPSService } from './lps-service';
 import { ChromeAPIService } from './chrome-api-service';
+import { OptionsService } from './options.service';
+import { NotificationService } from './notification.service';
 import { Channels } from '../../../app.shared/channels';
+// tslint:disable-next-line:max-line-length
 import { updateDialogList, updateDialogListUnread, updateDialogListFilter, sendMessageSuccess, sendMessageFail, typeMessage, sendMessagePending, restoreInputMessages } from '../actions';
 import { UsersActions, HistoryActions, DialogListActions, ChatsActions, AppBackgroundState } from '../app-background.store';
 import { VKUtils } from '../vk-utils';
 import { MessageMapper, UserMapper } from '../api-model-mappers';
+import { VKConsts, UserListInfo, Settings } from '../../../app.shared/datamodels';
+import { ChromeNotificationBuilder } from '../../../app.shared/utils';
 
 @Injectable()
 export class DialogService {
@@ -38,7 +44,9 @@ export class DialogService {
         private vkservice: VKService,
         private userService: UserService,
         private lpsService: LPSService,
-        private chromeapi: ChromeAPIService
+        private chromeapi: ChromeAPIService,
+        private settings: OptionsService,
+        private notifications: NotificationService
     ) { }
 
     init(): void {
@@ -58,6 +66,7 @@ export class DialogService {
         });
 
         this.lpsService.messageUpdate.subscribe(() => this.updateMessages());
+        this.lpsService.newMessage.subscribe((mid: number) => this.showNotification(mid));
         this.lpsService.resetHistory.subscribe(() => {
             console.log('reset history');
             this.updateMessages();
@@ -154,7 +163,7 @@ export class DialogService {
         this.store.select(s => s.dialogsFilter).subscribe(f => {
             this.dialogListFilter = f;
             this.getDialogs(20, null, f.unread);
-        })
+        });
     }
 
     monitorCurrentMessage(): void {
@@ -200,6 +209,27 @@ export class DialogService {
             sub.unsubscribe();
             subscription.unsubscribe();
             save();
+        });
+    }
+
+    showNotification(mid: number): void {
+        Observable.combineLatest(
+            this.settings.showNotifications.take(1),
+            this.settings.playSoundNotifications.take(1),
+            this.settings.notificationSound.take(1)
+        ).subscribe(([show, playSound, track]: [boolean, boolean, string]) => {
+            if (show || playSound) {
+                this.getMessage(mid).subscribe(({ message, user }) => {
+                    if (!message.out) {
+                        if (!show) {
+                            this.notifications.playNotificationSound(track);
+                        } else {
+                            this.notifications.showNottfication(message, user, playSound, track);
+                        }
+                    }
+                });
+            } else if (playSound) {
+            }
         });
     }
 
@@ -254,6 +284,23 @@ export class DialogService {
 
     }
 
+    getMessage(mid: number): Observable<{message: SingleMessageInfo, user: UserInfo}> {
+        return this.vkservice.performAPIRequestsBatch(
+            this.getMessageApiMethod,
+            { message_ids: mid }
+        )
+        .map(json => MessageMapper.toSingleMessageViewModel(json.items[0], this.vkservice.getCurrentUserId()))
+        .concatMap((message: SingleMessageInfo) => {
+            return this.store.select(s => s.users).first().concatMap((users: UserListInfo) => {
+                if (users.users[message.fromId]) {
+                    return Observable.of({ message, user: users.users[message.fromId] });
+                } else {
+                    return this.userService.getUsers(`${message.fromId}`).map(user => ({ message, user: user[message.fromId] }));
+                }
+            });
+        });
+    }
+
     getDialogs(count: number = 20, fromId: number = null, getUnread: boolean = false): void {
         console.log('dialogs are requested');
         const parameters = { count };
@@ -291,14 +338,14 @@ export class DialogService {
 
     getChatParticipants(chatId: number): void {
         console.log('chat participants requested');
-        this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatId, fields: 'photo_50,online,sex' })
+        this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatId, fields: VKConsts.defaultUserFields })
             .map(json => UserMapper.toUsersList(json))
             .subscribe(users => this.store.dispatch({ type: UsersActions.USERS_UPDATED, payload: users }));
     }
 
     getChats(chatIds: string): void {
         console.log('chats requested', chatIds);
-        this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatIds, fields: 'photo_50,online,sex' })
+        this.vkservice.performAPIRequestsBatch(this.getChatApiMethod, { chat_ids: chatIds, fields: VKConsts.defaultUserFields })
             .map(json => MessageMapper.toChatList(json))
             .subscribe(chats => this.store.dispatch({ type: ChatsActions.CHATS_UPDATED, payload: chats }));
     }

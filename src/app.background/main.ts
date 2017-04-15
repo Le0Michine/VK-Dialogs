@@ -21,6 +21,7 @@ function performUpgrade() {
 
   if (VersionComparerUtil.compareVersions(lastInstalledVersion || '0.0.0.0', '2.6.4.13') <= 0) {
     localStorage.removeItem('savedState');
+    openReleaseNotes();
   }
 
   if (!lastInstalledVersion) {
@@ -28,8 +29,6 @@ function performUpgrade() {
   }
 
   localStorage.setItem(currentVersionKey, currentVersion);
-
-  openReleaseNotes();
 }
 
 function openReleaseNotes() {

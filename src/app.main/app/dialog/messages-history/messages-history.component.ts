@@ -22,7 +22,7 @@ export class MessagesHistoryComponent implements OnInit, OnDestroy {
     participants: { [userId: number]: UserInfo } = {};
     userId: number;
     history: SingleMessageInfo[] = [];
-    messagesCount: number;
+    messagesCount: number = -1;
     subscriptions: Subscription[] = [];
     historyToShow: OneDayMessagesGroup[] = [];
     shownMessagesCount = 20;

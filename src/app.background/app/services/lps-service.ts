@@ -8,12 +8,13 @@ import { VKConsts } from '../../../app.shared/datamodels';
 import { VKService } from './vk-service';
 import { ErrorHelper } from '../error-helper';
 import { LongPollServerInfo } from '../../../app.shared/datamodels/long-poll-server.info';
-import { UserService } from './user-service';
+import { UserService } from './user.service';
 import { AppBackgroundState } from '../app-background.store';
 
 @Injectable()
 export class LPSService {
     messageUpdate: EventEmitter<{}> = new EventEmitter();
+    newMessage: EventEmitter<number> = new EventEmitter();
     userUpdate: EventEmitter<string> = new EventEmitter();
     resetHistory: EventEmitter<{}> = new EventEmitter();
 
@@ -77,6 +78,7 @@ export class LPSService {
                 case 4:
                     /* 4,$message_id,$flags,$from_id,$timestamp,$subject,$text,$attachments -- add a new message */
                     messagesUpdate++;
+                    this.newMessage.emit(+update[1]);
                     break;
                 case 6:
                     /* 6,$peer_id,$local_id -- read all incoming messages with $peer_id until $local_id */

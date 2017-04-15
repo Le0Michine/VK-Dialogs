@@ -4,8 +4,8 @@
     "description": "__MSG_appDesc__",
     "default_locale": "ru",
     "version": "2.6.4.45",
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-    "options_page": "app.options/options.html",
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
+    "options_page": "options.html",
     "background": {
         "page": "app.background/background.html"
     },
@@ -31,6 +31,8 @@
         "http://imv4.vk.com/*",
         "http://*.vk.com/*",
         "https://pu.vk.com/*",
-        "https://*.vk.com/*"
+        "https://*.vk.com/*",
+        "https://pp.userapi.com/*",
+        "https://cdn2.iconfinder.com/*"
     ]
 }
