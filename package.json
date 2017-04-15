@@ -92,6 +92,7 @@
     "protractor": "~5.1.0",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
+    "ts-loader": "^2.0.3",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
     "typescript": "^2.2.2",

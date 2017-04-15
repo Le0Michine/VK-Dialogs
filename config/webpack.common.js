@@ -74,7 +74,7 @@ module.exports = function(options) {
       "index":  "../src/app.main.bundle.js",
       "background":  "../src/app.background.bundle.js",
       "install":  "../src/app.install.bundle.js",
-      "options":  "../src/app.options/options.js"
+      "options":  "../src/app.options/options.ts"
     },
     output: {
       path: helpers.root('out'),
@@ -87,6 +87,11 @@ module.exports = function(options) {
     },
     module: {
       loaders: [
+        {
+          test: /\.tsx?$/,
+          exclude: /\.spec\.tsx?$/,
+          loader: 'ts-loader'
+        },
         { 
           test: /\.js$/,
           exclude: '/node_modules/',
