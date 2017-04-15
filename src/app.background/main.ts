@@ -2,6 +2,7 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
+import { VersionComparerUtil } from '../app.shared/utils/version-comparer.util';
 import { environment } from '../environments/environment';
 
 performUpgrade();
@@ -18,8 +19,12 @@ function performUpgrade() {
   const manifest = chrome.runtime.getManifest();
   const currentVersion = manifest.version;
 
-  if (!lastInstalledVersion || lastInstalledVersion === '2.6.4.13') {
+  if (VersionComparerUtil.compareVersions(lastInstalledVersion || '0.0.0.0', '2.6.4.13') <= 0) {
     localStorage.removeItem('savedState');
+  }
+
+  if (!lastInstalledVersion) {
+    firstInstall();
   }
 
   localStorage.setItem(currentVersionKey, currentVersion);
@@ -29,14 +34,11 @@ function performUpgrade() {
 
 function openReleaseNotes() {
   console.log('open tab describing new version');
-
-  if (!window.localStorage.getItem('not_first_time')) {
-    console.log('open tab describing new version');
-    window.localStorage.setItem('not_first_time', 'true');
-    chrome.tabs.create({
-        url: 'install.html',
-        active: true
-    });
-  }
 }
 
+function firstInstall() {
+  chrome.tabs.create({
+      url: 'install.html',
+      active: true
+  });
+}
