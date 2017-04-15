@@ -5,6 +5,8 @@ export interface UserInfo {
     fullName: string;
     isOnline: boolean;
     photo50: string;
+    photo100?: string;
+    photo200?: string;
     sex: UserSex;
 }
 

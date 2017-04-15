@@ -9,6 +9,7 @@ import { LPSService } from './lps-service';
 
 import { UsersActions, AppBackgroundState } from '../app-background.store';
 import { UserMapper } from '../api-model-mappers';
+import { VKConsts } from '../../../app.shared/datamodels';
 
 @Injectable()
 export class UserService {
@@ -47,7 +48,7 @@ export class UserService {
 
     getUsers(uids: string, cache: boolean = true): Observable<{ [id: number]: UserInfo }> {
         return this.vkservice
-            .performAPIRequestsBatch('users.get', {user_ids: uids, fields: 'photo_50,online,sex'})
+            .performAPIRequestsBatch('users.get', { user_ids: uids, fields: VKConsts.defaultUserFields })
             .map(json => UserMapper.toUsersList(json));
     }
 
