@@ -9,13 +9,22 @@ const path = require('path');
 const fs = require('fs');
 
 const helpers = require('./helpers');
+let currentVersion = '';
 
 function versionReplacer(key, value) {
     if (key === "version") {
         const [major, minor, revision, build] = value.split(".").map(x => +x);
         const version = `${major}.${minor}.${revision}.${build + 1}`;
+        currentVersion = `${major}.${minor}.${revision}`;
         console.log("update version to ", version);
         return version;
+    }
+    return value;
+}
+
+function packageVersionReplacer(key, value) {
+    if (key === "version") {
+        return currentVersion || '0.0.0';
     }
     return value;
 }
@@ -80,9 +89,9 @@ module.exports = function(options) {
     name: "main",
     context: path.join(__dirname),
     entry: {
-      "index":  "../src/app.main.bundle.js",
-      "background":  "../src/app.background.bundle.js",
-      "install":  "../src/app.install.bundle.js",
+      // "index":  "../src/app.main.bundle.js",
+      // "background":  "../src/app.background.bundle.js",
+      // "install":  "../src/app.install.bundle.js",
       "options":  "../src/app.options/options.ts"
     },
     output: {
@@ -139,6 +148,10 @@ module.exports = function(options) {
       new JsonReplacerPlugin({
         inputFile: "manifest.json",
         replacers: [ versionReplacer ]
+      }),
+      new JsonReplacerPlugin({
+        inputFile: "package.json",
+        replacers: [ packageVersionReplacer ]
       }),
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
