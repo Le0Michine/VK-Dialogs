@@ -1,0 +1,36 @@
+<div class="one-day-messages-group" *ngFor="let oneDayMessagesGroup of historyToShow; trackBy:trackByOneDayMessagesGroup">
+	<div class="messages-group-date text-primary-color-dark">{{oneDayMessagesGroup.date | date:'mediumDate'}}</div>
+	<div class="message-block clearfix" *ngFor="let message of oneDayMessagesGroup.messages; trackBy:trackByOneSenderMessagesGroup">
+		<app-user-avatar [user]="getUserInfo(message.fromId)" class="user-avatar user-avatar-container"></app-user-avatar>
+		<app-message-title class="left-buffer inline" [user]="getUserInfo(message.fromId)" [date]="message?.messages[0]?.date" [dateOnNewLine]="isForwarded"></app-message-title>
+		<div class="message inline">
+			<ul class="messages-list">
+				<li class="message-item"
+					*ngFor="let isFirst=first; let isLast=last; let item of message.messages; trackBy:trackByMessageId"
+				>
+					<div [id]="item.id"
+						class="message-body"
+						[class.unread]="!item.isRead"
+						[class.round-corners-top]="isFirst"
+						[class.round-corners-bottom]="isLast"
+						[class.message-body--clear]="item.clear"
+					>
+						<div *ngIf="item.body" class="message-body-container">
+							<app-message-body [body]="item.body"></app-message-body>
+							<div *ngIf="!isFirst" class="message-timestamp" [ngClass]="item.isRead ? 'text-secondary-color-light' : 'text-normal-color'">{{item.date * 1000 | date:'shortTime'}}</div>
+						</div>
+						<div *ngIf="item.action" class="chat_action text-secondary-color-dark">{{ item | chatAction:getUserSex(item.fromId) | translate:{"user": getUserInfo(message.fromId) | userFirstName, "user2": getUserInfo(item.actionMid) | userFirstName} }}</div>
+						<div class="message-attachment text-primary-color" *ngFor="let attachment of item.attachments">
+							<app-messages-attachment [attachment]="attachment" [isRead]="message.isRead" [users]="participants"></app-messages-attachment>
+							<div *ngIf="!attachment.type">
+								{{attachment}}
+							</div>
+						</div>
+						<div *ngIf="!item.body && !isFirst" class="message-timestamp"><span *ngIf="item.clear; else outOfBodyTimestamp" class="text-normal-color-light">{{item.date * 1000 | date:'shortTime'}}</span></div>
+						<ng-template #outOfBodyTimestamp><span [ngClass]="item.isRead ? 'text-secondary-color-light' : 'text-normal-color'">{{item.date * 1000 | date:'shortTime'}}</span></ng-template>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

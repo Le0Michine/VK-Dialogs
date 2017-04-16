@@ -1,7 +1,3 @@
-/**
- * @author: @AngularClass
- */
-
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
 
@@ -31,13 +27,8 @@ const webpackOptions = {
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
 module.exports = (function(env) {
-    webpackOptions.cleanOutput = env.clean;
+    // webpackOptions.cleanOutput = env.clean;
     return webpackMerge(commonConfig(webpackOptions), {
-        output: {
-            path: helpers.root('out'),
-            filename: "[name].js",
-            sourceMapFilename: '[name].map',
-        },
-        devtool: 'cheap-module-source-map'
+        // devtool: 'cheap-module-source-map'
     });
 });

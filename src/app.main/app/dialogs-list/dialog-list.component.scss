@@ -1,0 +1,253 @@
+.dialogs .badge {
+    display: inline-block;
+    font-size: small;
+    color: white;
+    padding: 0.8em 0.7em 0 0.7em;
+    background-color: #607D8B;
+    line-height: 1em;
+    position: relative;
+    left: -1px;
+    top: -4px;
+    height: 1.8em;
+    margin-right: .8em;
+    border-radius: 4px 0 0 4px;
+}
+
+.dialog-list-container {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 45px);
+    bottom: 0;
+}
+
+.dialog-list-filter-container {
+    height: 39px;
+}
+
+.dialogs-list {
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100% - 39px);
+    bottom: 0;
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 2px 2px 2px 2px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+
+    &__empty-warning {
+        width: 100%;
+        padding: 5px;
+        font-style: italic;
+        text-align: center;
+
+
+    }
+}
+
+.dialog-li {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 71px;
+    width: 100%;
+    padding: 0 0 0 15px;
+
+    &:hover {
+        color: #607D8B;
+        background-color: #DDD;
+    }
+}
+
+.user-avatar-div {
+    cursor: pointer;
+    height: 52px;
+    width: 52px;
+    display: inline-block;
+    flex: 1;
+}
+
+.user_avatar {
+    cursor: pointer;
+    display: block;
+    height: 50px;
+    width: 50px;
+    border: 0px none rgba(0, 0, 0, 0);
+    border-radius: 50% 50% 50% 50%;
+    margin: 0px 0px 1px 2px;
+    background: rgb(250, 251, 252) url("https://vk.com/images/camera_100.png") repeat scroll 0% 0% / cover padding-box border-box;
+}
+
+.mini_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 50% 50% 50% 50%;
+    margin: 0.5px 0.5px 0.5px 0.5px;
+}
+
+.top_left_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    top: 0px;
+    border-radius: 100% 0% 0% 0%;
+    float:left;
+    margin: 0px 0.5px 0.5px 0px;
+}
+
+.top_right_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 100% 0% 0%;
+    margin: 0px 0px 0.5px 0.5px;
+}
+
+.bottom_left_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 0% 0% 100%;
+    float: left;
+    margin: 0.5px 0.5px 0px 0px;
+}
+
+.bottom_right_avatar {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    border-radius: 0% 0% 100% 0%;
+    margin: 0.5px 0px 0px 0.5px;
+}
+
+.online:after {
+    border: 2px solid #fff;
+    height: 12px;
+    width: 12px;
+    content: '';
+    position: absolute;
+    background-color: #8ac176;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+.dialog-div {
+    cursor: pointer;
+    height: 71px;
+    position: relative;
+    border-top: 1px solid rgb(231, 232, 236);
+    margin: 0;
+    padding: 10px 15px 0px 0px;
+    display: flex;
+}
+
+.dialog-content-div {
+    box-sizing: border-box;
+    padding: 0;
+    margin-left: 10px;
+    width: calc(100% - 65px);
+    position: relative;
+}
+
+.last-message-date {
+    color: rgb(147, 147, 147);
+    opacity: 0.7;
+}
+
+@media screen and (max-width: 300px) {
+    .last-message-date {
+        display: block;
+        width: 100%;
+        float: left !important;
+    }
+}
+
+@media screen and (max-width: 110px) {
+    .dialog-content-text {
+        display: none;
+    }
+
+    .unread-marker {
+        float: left;
+    }
+
+    .unread-count {
+        float: left;
+    }
+}
+
+.dialog-title-div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgb(34, 34, 34);
+    cursor: pointer;
+    height: 19px;
+    text-align: left;
+    max-width: 100%;
+    margin: 0;
+    display: inline-block;
+}
+
+.dialog-title-span {
+    max-width: 100%;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+}
+
+.message_body {
+    color: rgb(139, 147, 155);
+    cursor: pointer;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80%;
+    overflow: hidden;
+}
+
+.dialog_attachments {
+    color: #4a6f97;
+}
+
+.borderless {
+    border: none;
+}
+
+#load_old, .load-old-dialogs-spinner-container {
+    cursor: pointer;
+    width: 100%;
+    bottom: 0px;
+    height: 50px;
+    text-align: center;
+    position: relative;
+    padding-top: 10px;
+}
+
+.load-old-dialogs-spinner-container {
+    cursor: default;
+
+    .spinner-small {
+        margin: auto;
+    }
+}
+
+#load_old:hover {
+    background-image: linear-gradient(to right, #ebf0f4, rgba(66, 100, 139, 0.1), #ebf0f4) !important;
+}
+
+.chat_action {
+    font-style: italic;
+}

@@ -1,0 +1,230 @@
+$message-bubble-border-radius: 5px;
+
+#chat_spacer {
+    position: absolute;
+    padding-top: 110px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#chat_body {
+    position: relative;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 0px 0px 0px;
+    transition: height .5s;
+}
+
+.max-width-80 {
+    max-width: 80%;
+}
+
+.one-day-messages-group {
+    .messages-group-date {
+        position: sticky;
+        top: 10px;
+        z-index: 150;
+        margin: 5px auto;
+        width: fit-content;
+        padding: 3px 5px;
+        border-radius: 11px / 50%;
+        font-size: 10px;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    }
+}
+
+.message-block {
+    position: relative;
+    width: 100%;
+    min-height: 55px;
+    height: fit-content;
+    padding-left: 10px;
+}
+
+.message-attachment {
+    height: fit-content;
+    position: relative;
+    z-index: 50;
+    padding: 5px;
+}
+
+.round-corners-bottom {
+    border-bottom-left-radius: $message-bubble-border-radius;
+    border-bottom-right-radius: $message-bubble-border-radius;
+}
+
+.round-corners-top {
+    border-top-right-radius: $message-bubble-border-radius;
+}
+
+.message {
+    width: fit-content;
+    margin-left: 10px;
+    width: calc(100% - 50px);
+    float: left;
+}
+
+.messages-list {
+    width: fit-content;
+    max-width: calc(100% - 50px);
+    list-style: none outside none;
+    padding-left: 0px;
+    position: relative;
+}
+
+.message-item {
+    box-sizing: border-box;
+    position: relative;
+    // width: 100%;
+    width: fit-content;
+    max-width: 100%;
+    list-style: none outside none;
+    margin: 4px 0 0 0;
+}
+
+.message-timestamp {
+    position: absolute;
+    text-align: right;
+    display: inline-block;
+    padding: 0 5px;
+    padding-left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 10px;
+    white-space: nowrap;
+
+    & > span {
+        font-size: inherit;
+    }
+}
+
+.message-body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    border-top-right-radius: $message-bubble-border-radius;
+    border-bottom-right-radius: $message-bubble-border-radius;
+    border-top-left-radius: $message-bubble-border-radius;
+    border-bottom-left-radius: $message-bubble-border-radius;
+
+    &.unread {
+        background-color: #c1def9;
+    }
+
+    &--clear {
+        background: transparent;
+        box-shadow: none;
+
+        .message-timestamp {
+            border-radius: 3px;
+            background: rgba(0, 0, 0, .3);
+            font-weight: bold;
+            padding: 3px;
+            z-index: 50;
+        }
+    }
+}
+
+.chat_action {
+    font: normal italic bold normal 13px -apple-system, BlinkMacSystemFont, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
+    text-align: center;
+    min-height: 35px;
+}
+
+.top-buffer {
+    margin-top: 10px;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.left-buffer {
+    margin-left: 10px;
+}
+
+.user-avatar {
+    float: left;
+}
+
+.user-avatar-container {
+    position: sticky;
+    top: 10px;
+    margin-bottom: 22px;
+    display: inline-block;
+    z-index: 100;
+}
+
+.message-body-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    .message-timestamp {
+        position: relative;
+        align-self: flex-end;
+        margin-left: auto;
+        display: inline-block;
+        text-align: right;
+    }
+}
+
+:host(.forwarded) {
+    .message-body {
+        &.unread {
+            background: white;
+        }
+    }
+
+    .messages-group-date {
+        position: relative;
+        display: block;
+        box-shadow: none;
+        background: transparent;
+        margin: 0;
+        top: 0;
+        display: none;
+    }
+
+    .message-block {
+        max-width: 100%;
+        padding-left: initial;
+    }
+
+    .left-buffer {
+        margin-left: 4px;
+    }
+
+    .user-avatar {
+        float: none;
+        position: relative;
+        display: inline-block;
+    }
+
+    .user-avatar-container {
+        margin: 0;
+        top: 0;
+    }
+
+    .message {
+        float: none;
+        display: block;
+        margin-left: 4px;
+        width: initial;
+    }
+
+    .message-attachment {
+        padding-top: 3px; 
+        margin-left: 4px;
+    }
+
+    .messages-list {
+        max-width: 100%;
+    }
+}

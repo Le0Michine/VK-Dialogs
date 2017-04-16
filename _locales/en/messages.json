@@ -1,0 +1,65 @@
+{
+    "appName": {
+        "message": "VK dialogs"
+    },
+    "appDesc": {
+        "message": "This extension allows to chat with friends in VK in a browser popup window."
+    },
+    "chromeExtOptions": {
+        "message": "VK dialogs: options"
+    },
+    "langOptions": {
+        "message": "My primary language:"
+    },
+    "privacyOptions": {
+        "message": "Privacy settings:"
+    },
+    "windowSizeOption": {
+        "message": "Window size:"
+    },
+    "stickerSizeOption": {
+        "message": "Sticker size:"
+    },
+    "autoreadOption": {
+        "message": "Auto read:"
+    },
+    "autoReadMessagesLabel": {
+        "message": "auto read inbox messages"
+    },
+    "showNotificationsLabel": {
+        "message": "show popup notifications"
+    },
+    "playNotificationSoundLabel": {
+        "message": "play notification sound"
+    },
+    "previewOption": {
+        "message": "Preview features:"
+    },
+    "activatePreviewFeaturesLabel": {
+        "message": "activate preview functionality"
+    },
+    "optionsSaved": {
+        "message": "Options saved."
+    },
+    "saveBtn": {
+        "message": "Save"
+    },
+    "resetBtn": {
+        "message": "Reset"
+    },
+    "sendBtn": {
+        "message": "Send"
+    },
+    "setOnlineOption": {
+        "message": "Shown as \"online\""
+    },
+    "showTypingOption": {
+        "message": "Shown typing"
+    },
+    "openInSeparateWindow": {
+        "message": "Open in a separate window"
+    },
+    "logOff": {
+        "message": "Log off"
+    }
+}

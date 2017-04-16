@@ -70,9 +70,8 @@ module.exports = function() {
           test: /\.js$/,
           exclude: '/node_modules/',
           loader: 'babel-loader',
-          query: {
-            presets: ['es2015'],
-            plugins: ['transform-decorators-legacy', 'transform-class-properties']
+          options: {
+            presets: ['es2015']
           }
         },
         {

@@ -1,0 +1,8 @@
+<app-messages-attachment-photo *ngIf="attachment.photo" [photo]="attachment.photo"></app-messages-attachment-photo>
+<app-messages-attachment-sticker *ngIf="attachment.sticker" [sticker]="attachment.sticker"></app-messages-attachment-sticker>
+<app-messages-attachment-doc
+	*ngIf="attachment.doc || attachment.wall || attachment.link || attachment.video || attachment.audio || attachment.geo"
+	[doc]="attachment"
+	[isRead]="isRead"
+></app-messages-attachment-doc>
+<app-forwarded-messages *ngIf="attachment.fwd" [messages]="attachment.fwd" [users]="users"></app-forwarded-messages>

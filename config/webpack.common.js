@@ -4,21 +4,16 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const JsonReplacerPlugin = require('./json-replacer-plugin');
-const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
-const ngtools = require('@ngtools/webpack');
 
 const helpers = require('./helpers');
 
 function versionReplacer(key, value) {
     if (key === "version") {
-        var numbers = value.split(".");
-        var major = numbers[0];
-        var minor = numbers[1];
-        var revision = numbers[2];
-        var build = Number(numbers[3]) + 1;
-        var version = major + "." + minor + "." + revision + "." + build;
+        const [major, minor, revision, build] = value.split(".").map(x => +x);
+        const version = `${major}.${minor}.${revision}.${build + 1}`;
         console.log("update version to ", version);
         return version;
     }
@@ -26,26 +21,30 @@ function versionReplacer(key, value) {
 }
 
 var filesToCopy = [
-    { from: '../lib/jquery.js', to: "./lib", toType: "dir" },
-    { from: '../node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./lib", toType: "dir" },
-    { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
-    { from: '../src/app.options', to: "./app.options", toType: "dir" },
-    { from: '../src/_locales', to: "./_locales", toType: "dir" },
-    { from: '../src/*.html', to: "./", toType: "dir", flatten: true },
-    { from: '../src/*.css', to: "./", toType: "dir", flatten: true },
-    { from: '../src/*.json', to: "./", toType: "dir", flatten: true }
+    // { from: '../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
+    { from: '../dist/app.main/MaterialIcons-Regular.*', to: "./", toType: "dir", flatten: true },
+    { from: '../_locales', to: "./_locales", toType: "dir" },
+    { from: '../src/assets/sounds', to: "./assets/sounds", toType: "dir" },
+    { from: '../manifest.json', to: "./", toType: "dir", flatten: true }
 ];
 
 var filesToIgnore = [
-  "*.svg",
+  "icon.svg",
+  "icon_new.svg",
   "VK_icon.png",
-  // "doc_icons.png"
+  ".DS_Store",
+  ".gitkeep"
 ];
 
 var optionalPlugins = [];
 
+const extractSass = new ExtractTextPlugin({
+    filename: "[name].css",
+    disable: true
+});
+
 module.exports = function(options) {
-  isProd = options.env === 'production';
+  const isProd = options.env === 'production';
   if (options.filesToIgnore) {
       filesToIgnore = [...filesToIgnore, ...options.filesToIgnore];
   }
@@ -63,92 +62,126 @@ module.exports = function(options) {
       );
   }
 
+  let htmlMinifyOptions = undefined;
+  if (isProd) {
+    htmlMinifyOptions = {
+      caseSensitive: true,
+      collapseBooleanAttributes: true,
+      collapseInlineTagWhitespace: true,
+      collapseWhitespace: true,
+      conservativeCollapse: true,
+      minifyCSS: true,
+      removeComments: true,
+      useShortDoctype: true
+    };
+  }
+
   return {
     name: "main",
     context: path.join(__dirname),
     entry: {
-          // "index":      "../src/index.ts",
-          "index":  "../src/index.aot.ts",
-          // "background": "../src/background.ts",
-          "background": "../src/background.aot.ts",
-          // "install":    "../src/install.ts",
-          "install":    "../src/install.aot.ts",
-          "globals": [
-            "zone.js",
-            "reflect-metadata"
-          ]
+      "index":  "../src/app.main.bundle.js",
+      "background":  "../src/app.background.bundle.js",
+      "install":  "../src/app.install.bundle.js",
+      "options":  "../src/app.options/options.ts"
     },
     output: {
       path: helpers.root('out'),
       filename: "[name].js",
-      sourceMapFilename: '[name].map',
+      // sourceMapFilename: '[name].map',
     },
     resolve: {
       extensions: ['.ts', '.js'],
       modules: [helpers.root("src"), "node_modules"]
     },
     module: {
-      loaders: [ 
+      loaders: [
         {
-          test: /\.ts$/,
-          loaders: [
-            '@angularclass/hmr-loader?pretty=' + !isProd + '&prod=' + isProd,
-            'awesome-typescript-loader',
-            'angular2-template-loader'
-          ],
-          exclude: [/\.(spec|e2e)\.ts$/]
+          test: /\.tsx?$/,
+          exclude: [ /\.spec\.tsx?$/, '/src/' ],
+          loader: 'ts-loader'
         },
         {
-          test: /\.json$/,
-          loader: 'json-loader'
-        },
-        { 
-          test: /\.js$/,
-          exclude: '/node_modules/',
-          loader: 'babel-loader',
-          query: {
-            presets: ['es2015'],
-            plugins: ['transform-decorators-legacy', 'transform-class-properties']
+          test: /\.svg$/,
+          loader: 'url-loader',
+          options: {
+            limit: 1000
           }
         },
         {
-          test: /\.html$/,
-          loaders: ['raw-loader'/*, 'html-minify-loader'*/]
+          test: /\.js$/,
+          exclude: '/node_modules/',
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015'],
+            compact: false
+          }
         },
         {
-          test: /\.css$/,
-          loaders: [/* 'to-string-loader', 'css-loader' */ 'raw-loader']
-        },
-        {
-          test: /\.(jpg|png|gif)$/,
-          loader: 'file-loader'
+          test: /\.scss$/,
+          use: [{
+            loader: "style-loader" // creates style nodes from JS strings
+          }, {
+            loader: "css-loader" // translates CSS into CommonJS
+          }, {
+            loader: "sass-loader" // compiles Sass to CSS
+          }]
         }
       ]
     },
     plugins: [
-      // new ngtools.AotPlugin({
-      //     tsConfigPath: './tsconfig-aot.json',
-      //     baseDir: path.resolve(__dirname , '..'),
-      //     entryModule: path.join(path.resolve(__dirname , '..'), 'src', 'app', 'app.module') + '#AppModule'
-      // }),
+      // extractSass,
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false
         }
       ),
       new JsonReplacerPlugin({
-        inputFile: "src/manifest.json",
+        inputFile: "manifest.json",
         replacers: [ versionReplacer ]
       }),
-      new ForkCheckerPlugin(),
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
         helpers.root('src') // location of your src
       ),
+      new HtmlWebpackPlugin({
+          title: 'VK Dialogs',
+          chunks: ['index'],
+          filename: 'index.html',
+          template: '../src/app.main.ejs',
+          minify: htmlMinifyOptions
+      }),
+      new HtmlWebpackPlugin({
+          title: 'VK Dialogs background',
+          chunks: ['background'],
+          filename: 'background.html',
+          template: '../src/app.background.ejs',
+          minify: htmlMinifyOptions
+      }),
+      new HtmlWebpackPlugin({
+          title: 'VK Dialogs install',
+          chunks: ['install'],
+          filename: 'install.html',
+          template: '../src/app.install.ejs',
+          minify: htmlMinifyOptions
+      }),
+      new HtmlWebpackPlugin({
+          title: 'VK Dialogs options',
+          chunks: ['options'],
+          filename: 'options.html',
+          template: '../src/app.options/options.ejs',
+          inject: true,
+          minify: htmlMinifyOptions
+      }),
       new webpack.DefinePlugin({
-        'process.env.PRODUCTION': JSON.stringify(isProd)
-      }),  
+        'process.env.PRODUCTION': JSON.stringify('production'),
+        'process.env.NODE_ENV': JSON.stringify('production')
+      }),
+      new ExtractTextPlugin({
+        filename: "[name].css",
+        disable: process.env.NODE_ENV === "development"
+      }),
       ...optionalPlugins
     ]
   }

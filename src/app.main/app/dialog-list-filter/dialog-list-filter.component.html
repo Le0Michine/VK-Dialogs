@@ -1,0 +1,46 @@
+<div class="filters-container">
+  <div class="dialogs-search-container">
+    <span class="dialogs-search-icon material-icons">search</span>
+    <input
+      #searchInput
+      type="text"
+      class="dialogs-search"
+      id="searchInput"
+      name="searchInput"
+      [placeholder]="'search_in_dialogs' | translate"
+      autocomplete="off"
+      [(ngModel)]="input"
+      (blur)="blur()"
+      (focus)="setFocus()"
+      (keydown)="onKeyPress($event)"
+    >
+  </div>
+  <div>
+    <button class="btn-filter material-icons" (click)="showFilters = !showFilters">filter_list</button>
+  </div>
+</div>
+
+<div class="dialog-list-filters" *ngIf="showFilters">
+  <ul class="dialog-list-filters__list">
+    <li>
+      <app-checkbox [(value)]="filterUnread" (valueChange)="onFilterUnreadChange($event)">{{'dialogFilter.onlyUnread' | translate}}</app-checkbox>
+    </li>
+  </ul>
+</div>
+<div @fadeInOut (click)="showFilters = false" class="shadow" *ngIf="showFilters"></div>
+
+<div @fadeInOut *ngIf="showItems">
+  <ul @dropdown *ngIf="items?.length; else empty" class="search-results text-normal-color">
+      <li *ngFor="let item of items; let i = index;"
+          class="text-normal-color"
+          [class.selected]="i === _selectedItem"
+          (mousedown)="select(item)"
+          (mouseover)="onHover(i)"
+      >{{item.title}}</li>
+  </ul>
+  <div class="shadow"></div>
+</div>
+
+<ng-template #empty>
+  <div class="empty-result text-secondary-color-dark">No items</div>
+</ng-template>

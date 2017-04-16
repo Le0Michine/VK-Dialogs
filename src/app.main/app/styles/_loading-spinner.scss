@@ -1,0 +1,25 @@
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    .spinner {
+        @include spinner(80px, 80px, 1em);
+    }
+}
+
+.spinner-small {
+    @include spinner(25px, 25px, 3px);
+}

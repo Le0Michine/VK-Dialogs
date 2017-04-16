@@ -1,0 +1,16 @@
+<div *ngIf="messagesCount && (messagesCount > history.length || messagesCount > shownMessagesCount); else conversationStart">
+	<div id="load_old" (click)="loadOldMessages()" *ngIf="!showOldHistoryLoadingSpinner; else oldHistoryLoadingSpinner">
+		<i class="material-icons">history</i>
+	</div>
+	<ng-template #oldHistoryLoadingSpinner>
+		<div class="load-old-dialogs-spinner-container">
+			<div class="spinner-small"></div>
+		</div>
+	</ng-template>
+</div>
+<ng-template #conversationStart>
+	<div class="chat_action top-buffer">
+		<span>{{'conversation_start' | translate}}</span>
+	</div>
+</ng-template>
+<app-messages-list [historyToShow]="historyToShow" [participants]="participants"></app-messages-list>

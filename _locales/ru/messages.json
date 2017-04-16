@@ -1,0 +1,65 @@
+{
+    "appName": {
+        "message": "Диалоги VK"
+    },
+    "appDesc": {
+        "message": "Позволяет вести переписку с друзьями вконтакте не открывая VK.com."
+    },
+    "chromeExtOptions": {
+        "message": "Диалоги VK: настройки"
+    },
+    "langOptions": {
+        "message": "Язык:"
+    },
+    "privacyOptions": {
+        "message": "Настройки приватности:"
+    },
+    "windowSizeOption": {
+        "message": "Размер окна:"
+    },
+    "stickerSizeOption": {
+        "message": "Размер стикеров:"
+    },
+    "autoreadOption": {
+        "message": "Авто-прочтение:"
+    },
+    "autoReadMessagesLabel": {
+        "message": "отмечать входящие прочитанными"
+    },
+    "showNotificationsLabel": {
+        "message": "показывать всплывающие уведомления"
+    },
+    "playNotificationSoundLabel": {
+        "message": "звуковые оповещения"
+    },
+    "previewOption": {
+        "message": "Бета функциональность:"
+    },
+    "activatePreviewFeaturesLabel": {
+        "message": ""
+    },
+    "optionsSaved": {
+        "message": "Настройки сохранены."
+    },
+    "saveBtn": {
+        "message": "Сохранить"
+    },
+    "resetBtn": {
+        "message": "Сбросить"
+    },
+    "sendBtn": {
+        "message": "Отправить"
+    },
+    "setOnlineOption": {
+        "message": "Виден \"в сети\""
+    },
+    "showTypingOption": {
+        "message": "Показывать печать"
+    },
+    "openInSeparateWindow": {
+        "message": "Открыть в отдельном окне"
+    },
+    "logOff": {
+        "message": "Выйти из VK"
+    }
+}

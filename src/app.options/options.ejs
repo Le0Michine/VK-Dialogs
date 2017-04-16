@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= htmlWebpackPlugin.options.title %></title>
+    </head>
+    <body>
+        <div id="content">
+            <h1>
+                <div>
+                    <p id="logo_title">VK dialogs options</p>
+                </div>
+            </h1>
+            <div class="option_row">
+                <div id="lang-option" class="option_name">My primary language:</div>
+                <div class="option_picker">
+                    <select id="targetLangSel" class="jfk-button jfk-button-standard">
+                        <option value="en">English</option>
+                        <option value="ru">Russian</option>
+                    </select>
+                </div>
+            </div>
+            <div class="options_row">
+                <div id="privacy-option" class="option_name">Privacy settings:</div>
+                <div class="options-column">
+                    <div class="option_picker">
+                        <input id="set-online-checkbox" type="checkbox" class="checkbox">
+                        <label for="set-online-checkbox" id="set-online-checkbox-label">Shown as online</label>
+                    </div><!--
+                    <div class="option_picker">
+                        <input id="show-typing-checkbox" type="checkbox" class="checkbox">
+                        <label for="show-typing-checkbox" id="show-typing-checkbox-label">Show typing</label>
+                    </div>-->
+                </div>
+            </div>
+            <div class="options_row">
+                <div id="window-size-option" class="option_name">Window size:</div>
+                <div class="option_picker">
+                    <select id="windowSize" class="jfk-button jfk-button-standard">
+                        <option value="small">S</option>
+                        <option value="medium">M</option>
+                        <option value="large">L</option>
+                        <option value="extraLarge">XL</option>
+                    </select>
+                </div>
+            </div>
+            <div class="options_row">
+                <div id="sticker-size-option" class="option_name">Sticker size:</div>
+                <div class="option_picker">
+                    <select id="stickerSize" class="jfk-button jfk-button-standard">
+                        <option value="small">S</option>
+                        <option value="medium">M</option>
+                        <option value="large">L</option>
+                    </select>
+                </div>
+            </div>
+            <div class="options_row">
+                <div id="autoread-option" class="option_name">Auto read:</div>
+                <div class="option_picker">
+                    <input id="autoReadMessages" type="checkbox" class="checkbox">
+                    <label for="autoReadMessages" id="autoReadMessagesLabel">auto read inbox messages</label>
+                </div>
+            </div>
+            <div class="options_row">
+                <div id="notification-option" class="option_name">Notifications:</div>
+                <div class="options-column">
+                    <div class="option_picker">
+                        <input id="showNotifications" type="checkbox" class="checkbox">
+                        <label for="showNotifications" id="showNotificationsLabel">show notifications</label>
+                    </div>
+                    <div class="option_picker">
+                        <input id="playNotificationSound" type="checkbox" class="checkbox">
+                        <label for="playNotificationSound" id="playNotificationSoundLabel">play notification sound</label>
+                    </div>
+                    <div class="option_picker">
+                        <select id="notificationSound" class="jfk-button jfk-button-standard">
+                        </select>
+                        <div id="playSoundBtn" class="jfk-button-standard jfk-button play"></div>
+                        <!--<label for="playNotificationSound" id="playNotificationSoundLabel">play notification sound</label>-->
+                    </div>
+                </div>
+            </div>
+            <!--<div class="options_row">
+                <div id="preview-option" class="option_name">Beta functionality:</div>
+                <div class="option_picker">
+                    <input id="activatePreviewFeatures" type="checkbox" class="checkbox">
+                    <label for="activatePreviewFeatures" id="activatePreviewFeaturesLabel">activate preview features</label>
+                </div>
+            </div>-->
+
+            <div class="buttons">
+                <div id="saveBtn" class="jfk-button-action jfk-button">Save</div>
+                <div id="resetBtn" class="jfk-button-standard jfk-button">Reset</div>
+                <div id="reloadBtn" class="jfk-button-standard jfk-button">Reload app</div>
+                <span id="saveStatus" style="display:none;">Options saved.</span>
+            </div>
+        </div>
+    </body>
+</html>
