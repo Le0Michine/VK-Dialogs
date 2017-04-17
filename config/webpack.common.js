@@ -90,9 +90,9 @@ module.exports = function(options) {
     name: "main",
     context: path.join(__dirname),
     entry: {
-      // "index":  "../src/app.main.bundle.js",
-      // "background":  "../src/app.background.bundle.js",
-      // "install":  "../src/app.install.bundle.js",
+      "index":  "../src/app.main.bundle.js",
+      "background":  "../src/app.background.bundle.js",
+      "install":  "../src/app.install.bundle.js",
       "options":  "../src/app.options/options.ts"
     },
     output: {
