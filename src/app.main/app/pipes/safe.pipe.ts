@@ -18,3 +18,21 @@ export class SafeStylePipe implements PipeTransform {
         return this.sanitizer.bypassSecurityTrustStyle(css);
     }
 }
+
+@Pipe({ name: 'safeResourceUrl' })
+export class SafeRecourseUrlPipe implements PipeTransform {
+    constructor(private sanitizer: DomSanitizer) { }
+
+    transform(url) {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+}
+
+@Pipe({ name: 'safeUrl' })
+export class SafeUrlPipe implements PipeTransform {
+    constructor(private sanitizer: DomSanitizer) { }
+
+    transform(url) {
+        return this.sanitizer.bypassSecurityTrustUrl(url);
+    }
+}

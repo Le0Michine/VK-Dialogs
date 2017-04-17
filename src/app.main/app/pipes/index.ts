@@ -13,7 +13,7 @@ import { ChatActionPipe } from './chat-action.pipe';
 import { CutLinksPipe } from './cut-links.pipe';
 import { FormatDatePipe } from './format-date.pipe';
 import { LinkToUserPipe } from './link-to-user.pipe';
-import { SafeHtmlPipe, SafeStylePipe } from './safe.pipe';
+import { SafeHtmlPipe, SafeStylePipe, SafeUrlPipe, SafeRecourseUrlPipe } from './safe.pipe';
 import { StickerPipe } from './sticker.pipe';
 import { EmojiPipe } from './emoji.pipe';
 import { UserAvatarPipe } from './user-avatar.pipe';
@@ -32,6 +32,8 @@ export const PIPES = [
     EmojiPipe,
     SafeHtmlPipe,
     SafeStylePipe,
+    SafeUrlPipe,
+    SafeRecourseUrlPipe,
     UserAvatarPipe,
     UserFirstNamePipe
 ];

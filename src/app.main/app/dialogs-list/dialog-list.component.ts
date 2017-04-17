@@ -10,6 +10,7 @@ import { DialogListFilterInfo, DialogShortInfo, DialogInfo, UserInfo, ChatInfo, 
 import { VKService, DialogService, ChromeAPIService } from '../services';
 import { selectConversation, updateBreadcrumbs } from '../actions';
 import { VKConsts } from '../../../app.shared/datamodels';
+import { VKUtils } from '../../../app.shared/vk-utils';
 import { AppState } from '../app.store';
 import { BreadcrumbActions, HistoryActions, SelectedConversationActions } from '../app.store';
 
@@ -193,7 +194,7 @@ export class DialogListComponent implements OnInit, OnDestroy {
         if (this.users && this.users[uid] && this.users[uid].photo50) {
             return this.users[uid].photo50;
         }
-        return 'http://vk.com/images/camera_c.gif';
+        return VKUtils.getAvatarPlaceholder();
     }
 
     public trackByDialogId(dialog: DialogView) {

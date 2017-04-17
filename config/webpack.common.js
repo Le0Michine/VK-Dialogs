@@ -34,6 +34,7 @@ var filesToCopy = [
     { from: '../dist/app.main/MaterialIcons-Regular.*', to: "./", toType: "dir", flatten: true },
     { from: '../_locales', to: "./_locales", toType: "dir" },
     { from: '../src/assets/sounds', to: "./assets/sounds", toType: "dir" },
+    { from: '../src/assets/images', to: "./assets/images", toType: "dir" },
     { from: '../manifest.json', to: "./", toType: "dir", flatten: true }
 ];
 

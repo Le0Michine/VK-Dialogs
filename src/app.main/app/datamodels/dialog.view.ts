@@ -1,4 +1,5 @@
 import { SingleMessageInfo } from './';
+import { VKUtils } from '../../../app.shared/vk-utils';
 
 export interface IDialogView {
     message: SingleMessageInfo;
@@ -16,7 +17,7 @@ export class DialogView implements IDialogView {
     peerId: number;
     message: SingleMessageInfo;
     unread: number;
-    photos: string[] = ['http://vk.com/images/camera_c.gif'];
+    photos: string[] = [ VKUtils.getAvatarPlaceholder() ];
     title = 'loading...';
     dateFormat = 'MMM d y';
     sender: string;
