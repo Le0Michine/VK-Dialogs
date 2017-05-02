@@ -5,6 +5,8 @@ import { AppModule } from './app/app.module';
 import { VersionComparerUtil } from '../app.shared/utils/version-comparer.util';
 import { environment } from '../environments/environment';
 
+import { Settings } from '../app.shared/datamodels';
+
 performUpgrade();
 
 if (environment.production) {
@@ -19,8 +21,9 @@ function performUpgrade() {
   const manifest = chrome.runtime.getManifest();
   const currentVersion = manifest.version;
 
-  if (VersionComparerUtil.compareVersions(lastInstalledVersion || '0.0.0.0', '2.6.4.13') <= 0) {
+  if (VersionComparerUtil.compareVersions(lastInstalledVersion || '0.0.0.0', '2.8.0.32') <= 0) {
     localStorage.removeItem('savedState');
+    overrideNotificationSettings();
     openReleaseNotes();
   }
 
@@ -40,4 +43,14 @@ function firstInstall() {
       url: 'install.html',
       active: true
   });
+}
+
+function overrideNotificationSettings() {
+  if (window.localStorage.getItem('settings')) {
+    const settings: Settings = JSON.parse(window.localStorage.getItem('settings'));
+    settings.playSoundNotifications = false;
+    settings.showNotifications = false;
+    window.localStorage.setItem('settings', JSON.stringify(settings));
+    chrome.storage.sync.set({ 'settings': settings });
+  }
 }

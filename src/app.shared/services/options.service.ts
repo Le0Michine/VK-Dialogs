@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject  } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
+
+import { Settings, WindowSize } from '../datamodels';
 
 @Injectable()
 export class OptionsService {
@@ -80,20 +82,4 @@ export class OptionsService {
         this.stickerSize.next(this.stickerSizes[settings.stickerSize]);
         this.autoReadMessages.next(settings.autoReadMessages);
     }
-}
-
-class Settings {
-    currentLang = 'ru';
-    setOnline = false;
-    showTyping = false;
-    windowSize = 'medium';
-    activatePreviewFeatures = false;
-    stickerSize = 'large';
-    autoReadMessages = true;
-}
-
-export class WindowSize {
-    size: string;
-    w: number;
-    h: number;
 }

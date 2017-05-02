@@ -6,8 +6,8 @@ export class Settings {
     activatePreviewFeatures = false;
     stickerSize = 'large';
     autoReadMessages = true;
-    showNotifications = true;
-    playSoundNotifications = true;
+    showNotifications = false;
+    playSoundNotifications = false;
     notificationSound = 'shrt.mp3';
 }
 
