@@ -13,7 +13,15 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+startApp();
+
+function startApp() {
+  platformBrowserDynamic().bootstrapModule(AppModule).catch(error => {
+    console.warn(error);
+    console.warn('recovering');
+    startApp();
+  });
+}
 
 function performUpgrade() {
   const currentVersionKey = 'currentVersion';
@@ -40,8 +48,8 @@ function openReleaseNotes() {
 
 function firstInstall() {
   chrome.tabs.create({
-      url: 'install.html',
-      active: true
+    url: 'install.html',
+    active: true
   });
 }
 

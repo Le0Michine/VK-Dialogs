@@ -41,7 +41,10 @@ export class ChromeAPIService {
                         binding.events.push(message.eventName);
                         this.observables.forEach(o => o.first().subscribe(m => {
                             if (m.name === message.eventName) {
-                                binding.port.postMessage(m);
+                                if (!this.postMessage(binding.port, m)) {
+                                    // remove binding
+                                    this.bindings = this.bindings.filter(x => x !== binding);
+                                }
                             }
                         }));
                         if (message.eventName in this.subscriptionsCounter) {
@@ -79,7 +82,12 @@ export class ChromeAPIService {
         o.subscribe(
             (next: any) => {
                 console.log('next event:', next, 'bindings:', this.bindings);
-                this.bindings.filter(x => x.events.includes(next.name)).forEach(b => b.port.postMessage(next));
+                this.bindings.filter(x => x.events.includes(next.name))
+                    .forEach(b => {
+                        if (!this.postMessage(b.port, next)) {
+                            this.bindings = this.bindings.filter(x => x !== b);
+                        }
+                    });
             },
             (error) => {
                 console.error('error occured in observer: ', error);
@@ -178,6 +186,16 @@ export class ChromeAPIService {
             if (this.subscriptionsCounter[s] === 0) {
                 this.onUnsubscribe.next({ name: s });
             }
+        }
+    }
+
+    private postMessage(port: chrome.runtime.Port, message: any): boolean {
+        try {
+            port.postMessage(message);
+            return true;
+        } catch (ex) {
+            console.warn('Failed to post message on port', ex);
+            return false;
         }
     }
 }
