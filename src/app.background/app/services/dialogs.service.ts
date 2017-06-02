@@ -117,7 +117,11 @@ export class DialogService {
         this.chromeapi.OnMessage('search_dialog').subscribe((message) => {
             this.searchDialogs(message.data).subscribe(result => {
                 console.log('got search result', result);
-                message.sendResponse({ data: result });
+                try {
+                    message.sendResponse({ data: result });
+                } catch (e) {
+
+                }
             });
             return true;
         });

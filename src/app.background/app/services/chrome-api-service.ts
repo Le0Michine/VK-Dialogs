@@ -108,7 +108,7 @@ export class ChromeAPIService {
             (handler: (o: Object) => void) => chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if (message.name === name) {
                     console.log('got message', message);
-                    message.sendResponse = sendResponse;
+                    message.sendResponse = (args) => this.sendResponse(sendResponse, args);
                     message.sender = sender;
                     handler(message);
                     return true;
@@ -196,6 +196,14 @@ export class ChromeAPIService {
         } catch (ex) {
             console.warn('Failed to post message on port', ex);
             return false;
+        }
+    }
+
+    private sendResponse(callback, args) {
+        try {
+            callback(args);
+        } catch (e) {
+            console.warn('Failed to post response message on port', e);
         }
     }
 }
